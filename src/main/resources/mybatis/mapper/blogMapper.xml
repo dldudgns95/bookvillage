@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gdu.myhome.dao.BlogMapper">
+
+  <!-- Dto 안에 Dto가 들어간 경우 따로 설정이 필요하다. -->
+  <resultMap  type="BlogDto"     id="BlogMap">
+    <id     column="BLOG_NO"     property="blogNo" />
+    <result column="TITLE"       property="title" />
+    <result column="CONTENTS"    property="contents" />
+    <result column="HIT"         property="hit" />
+    <result column="IP"          property="ip" />
+    <result column="CREATED_AT"  property="createdAt" />
+    <result column="MODIFIED_AT" property="modifiedAt" />
+    <association javaType="UserDto"   property="userDto">
+      <id     column="USER_NO"        property="userNo" />
+      <result column="EMAIL"          property="email" />
+      <result column="PW"             property="pw" />
+      <result column="NAME"           property="name" />
+      <result column="GENDER"         property="gender" />
+      <result column="MOBILE"         property="mobile" />
+      <result column="POSTCODE"       property="postcode" />
+      <result column="ROAD_ADDRESS"   property="roadAddress" />
+      <result column="JIBUN_ADDRESS"  property="jibunAddress" />
+      <result column="DETAIL_ADDRESS" property="detailAddress" />
+      <result column="AGREE"          property="agree" />
+      <result column="STATE"          property="state" />
+      <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result column="JOINED_AT"      property="joinedAt" />
+    </association>
+  </resultMap>
+  
+  <resultMap type="CommentDto" id="CommentMap">
+    <id     column="COMMENT_NO" property="commentNo" />
+    <result column="CONTENTS"    property="contents" />
+    <result column="BLOG_NO"    property="blogNo" />
+    <result column="CREATED_AT" property="createdAt" />
+    <result column="STATUS"     property="status" />
+    <result column="DEPTH"      property="depth" />
+    <result column="GROUP_NO"   property="groupNo" />
+    <association javaType="UserDto"   property="userDto">
+      <id     column="USER_NO"        property="userNo" />
+      <result column="EMAIL"          property="email" />
+      <result column="PW"             property="pw" />
+      <result column="NAME"           property="name" />
+      <result column="GENDER"         property="gender" />
+      <result column="MOBILE"         property="mobile" />
+      <result column="POSTCODE"       property="postcode" />
+      <result column="ROAD_ADDRESS"   property="roadAddress" />
+      <result column="JIBUN_ADDRESS"  property="jibunAddress" />
+      <result column="DETAIL_ADDRESS" property="detailAddress" />
+      <result column="AGREE"          property="agree" />
+      <result column="STATE"          property="state" />
+      <result column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result column="JOINED_AT"      property="joinedAt" />
+    </association>
+  </resultMap>
+  
+  <!-- 
+    처리 순서
+    1. BLOG_SEQ.NEXTVAL 값을 먼저(order="BEFORE") 파라미터로 전달된 BlogDto의 blogNo에 저장(keyProperty="blogNo")한다.
+    2. 저장된 blogNo를 INSERT문에서 사용한다.
+  -->
+  <insert id="insertBlog" parameterType="BlogDto">
+    <selectKey order="BEFORE" keyProperty="blogNo" resultType="int">
+      SELECT BLOG_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO BLOG_T(
+        BLOG_NO
+      , TITLE
+      , CONTENTS
+      , USER_NO
+      , IP
+      , CREATED_AT
+      , MODIFIED_AT
+    ) VALUES(
+        #{blogNo}
+      , #{title}
+      , #{contents}
+      , #{userDto.userNo}
+      , #{ip}
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')      
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+    )    
+  </insert>
+  
+  <insert id="insertBlogImage" parameterType="BlogImageDto">
+    INSERT INTO BLOG_IMAGE_T(
+        BLOG_NO
+      , IMAGE_PATH
+      , FILESYSTEM_NAME
+    ) VALUES(
+        #{blogNo}
+      , #{imagePath}
+      , #{filesystemName}
+    )
+  </insert>
+  
+  <select id="getBlogImageInYesterday" resultType="BlogImageDto">
+    SELECT BLOG_NO, IMAGE_PATH, FILESYSTEM_NAME
+      FROM BLOG_IMAGE_T
+     WHERE IMAGE_PATH = '/blog/' || TO_CHAR(SYSDATE - 1, 'YYYY/MM/DD')
+  </select>
+  
+  <select id="getBlogCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BLOG_T
+  </select>
+  
+  
+  <select id="getBlogList" parameterType="Map" resultMap="BlogMap">
+    SELECT A.BLOG_NO, A.TITLE, A.CONTENTS, A.USER_NO, A.HIT, A.IP, A.CREATED_AT, A.MODIFIED_AT, A.EMAIL
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY B.BLOG_NO DESC) AS RN, B.BLOG_NO, B.TITLE, B.CONTENTS, B.USER_NO, B.HIT, B.IP, B.CREATED_AT, B.MODIFIED_AT, U.EMAIL
+              FROM USER_T U INNER JOIN BLOG_T B
+                ON U.USER_NO = B.USER_NO) A
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <update id="updateHit" parameterType="int">
+    UPDATE BLOG_T
+       SET HIT = HIT + 1
+     WHERE BLOG_NO = #{blogNo}
+  </update>
+  
+  <select id="getBlog" parameterType="int" resultMap="BlogMap">
+    SELECT B.BLOG_NO, B.TITLE, B.CONTENTS, B.HIT, B.IP, B.CREATED_AT, B.MODIFIED_AT, U.USER_NO, U.EMAIL, U.NAME
+      FROM USER_T U, BLOG_T B
+     WHERE U.USER_NO = B.USER_NO
+       AND B.BLOG_NO = #{blogNo}
+  </select>
+  
+  <select id="getBlogImage" parameterType="int" resultType="BlogImageDto">
+    SELECT BLOG_NO, IMAGE_PATH, FILESYSTEM_NAME
+      FROM BLOG_IMAGE_T
+     WHERE BLOG_NO = #{blogNo}
+  </select>
+  
+  <update id="updateBlog" parameterType="BlogDto">
+    UPDATE BLOG_T
+       SET TITLE = #{title}
+         , CONTENTS = #{contents}
+         , MODIFIED_AT = TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+     WHERE BLOG_NO = #{blogNo}
+  </update>
+  
+  <delete id="deleteBlog" parameterType="int">
+    DELETE
+      FROM BLOG_T
+     WHERE BLOG_NO = #{blogNo}
+  </delete>
+  
+  <delete id="deleteBlogImage" parameterType="int">
+    DELETE
+      FROM BLOG_IMAGE_T
+     WHERE BLOG_NO = #{blogNo}
+  </delete>
+  
+  <insert id="insertComment" parameterType="CommentDto">
+    INSERT INTO COMMENT_T(
+        COMMENT_NO
+      , CONTENTS
+      , USER_NO
+      , BLOG_NO
+      , CREATED_AT
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+    ) VALUES(
+        COMMENT_SEQ.NEXTVAL
+      , #{contents}
+      , #{userDto.userNo}
+      , #{blogNo}
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+      , 1
+      , 0
+      , COMMENT_SEQ.CURRVAL
+    )
+  </insert>
+  
+  <select id="getCommentCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM COMMENT_T
+     WHERE BLOG_NO = #{blogNo}
+  </select>
+  
+  <select id="getCommentList" parameterType="Map" resultMap="CommentMap">
+    SELECT A.COMMENT_NO, A.CONTENTS, A.BLOG_NO, A.CREATED_AT, A.STATUS, A.DEPTH, A.GROUP_NO, A.USER_NO, A.NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, DEPTH ASC, COMMENT_NO DESC) AS RN, C.COMMENT_NO, C.CONTENTS, C.BLOG_NO, C.CREATED_AT, C.STATUS, C.DEPTH, C.GROUP_NO, U.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN COMMENT_T C
+                ON U.USER_NO = C.USER_NO
+             WHERE C.BLOG_NO = #{blogNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <insert id="insertCommentReply" parameterType="CommentDto">
+    INSERT INTO COMMENT_T(
+        COMMENT_NO
+      , CONTENTS
+      , USER_NO
+      , BLOG_NO
+      , CREATED_AT
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+    ) VALUES(
+        COMMENT_SEQ.NEXTVAL
+      , #{contents}
+      , #{userDto.userNo}
+      , #{blogNo}
+      , TO_CHAR(SYSDATE,'YYYY-MM-DD HH24:MI:SS')
+      , 1
+      , 1
+      , #{groupNo}
+    )
+  </insert>
+  
+  <update id="deleteComment" parameterType="int">
+    UPDATE COMMENT_T
+       SET STATUS = 0
+     WHERE COMMENT_NO = #{commentNo}
+  </update>
+  
+  
+  
+
+</mapper>

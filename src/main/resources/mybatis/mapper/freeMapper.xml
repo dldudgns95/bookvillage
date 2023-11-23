@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.gdu.myhome.dao.FreeMapper">
+
+  <!-- 원글 달기 -->
+  <insert id="insertFree" parameterType="FreeDto">
+    INSERT INTO FREE_T(
+        FREE_NO
+      , EMAIL
+      , CONTENTS
+      , CREATED_AT
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+      , GROUP_ORDER  
+    ) VALUES(
+        FREE_SEQ.NEXTVAL
+      , #{email}
+      , #{contents}
+      , SYSTIMESTAMP
+      , 1
+      , 0
+      , FREE_SEQ.CURRVAL
+      , 0
+    )
+  </insert>
+  
+  <select id="getFreeCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FREE_T
+  </select>
+  
+  <select id="getFreeList" parameterType="Map" resultType="FreeDto">
+    SELECT FREE_NO, EMAIL, CONTENTS, CREATED_AT, STATUS, DEPTH, GROUP_NO, GROUP_ORDER
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, GROUP_ORDER ASC) AS RN, FREE_NO, EMAIL, CONTENTS, CREATED_AT, STATUS, DEPTH, GROUP_NO, GROUP_ORDER
+              FROM FREE_T)
+    WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 댓글 달기 1 : 기존 댓글들의 GROUP_ORDER를 증가시키기 -->
+  <update id="updateGroupOrder" parameterType="FreeDto">    <!-- parameterType="FreeDto"는 원글을 의미함 -->
+    UPDATE FREE_T
+       SET GROUP_ORDER = GROUP_ORDER + 1 
+     WHERE GROUP_NO = #{groupNo}
+       AND GROUP_ORDER > #{groupOrder}
+  </update>
+  
+  <!-- 댓글 달기 2 : 댓글 삽입하기 -->
+  <insert id="insertReply" parameterType="FreeDto">  <!-- parameterType="FreeDto"는 댓글을 의미함 -->
+    INSERT INTO FREE_T(
+        FREE_NO
+      , EMAIL
+      , CONTENTS
+      , CREATED_AT
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+      , GROUP_ORDER  
+    ) VALUES(
+        FREE_SEQ.NEXTVAL
+      , #{email}
+      , #{contents}
+      , SYSTIMESTAMP
+      , 1
+      , #{depth}
+      , #{groupNo}
+      , #{groupOrder}
+    )
+  </insert>
+  
+  <!-- 게시글 삭제 -->
+  <update id="deleteFree" parameterType="int">
+    UPDATE FREE_T
+       SET STATUS = 0
+     WHERE FREE_NO = #{freeNo}
+  </update>
+  
+  <!-- 검색결과 개수 -->
+  <!-- 
+    ${ }   전달된 값을 그대로 사용한다. 쿼리문을 구성하는 구문 자체를 처리할 때 사용한다.
+    #{ }   전달된 값을 따옴표('')로 묶어서 사용한다.
+  -->
+  <select id="getSearchCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM FREE_T
+     WHERE STATUS = 1
+       AND ${column} LIKE '%' || #{query} || '%'
+  </select>
+  
+  <select id="getSearchList" parameterType="Map" resultType="FreeDto">
+    SELECT FREE_NO, EMAIL, CONTENTS, CREATED_AT, STATUS, DEPTH, GROUP_NO, GROUP_ORDER
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, GROUP_ORDER ASC) AS RN, FREE_NO, EMAIL, CONTENTS, CREATED_AT, STATUS, DEPTH, GROUP_NO, GROUP_ORDER
+              FROM FREE_T
+             WHERE STATUS = 1
+               AND ${column} LIKE '%' || #{query} || '%')
+    WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+</mapper>
