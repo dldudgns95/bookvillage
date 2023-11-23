@@ -1,5 +1,5 @@
 package kr.co.bookvillage.service;
 
-public interface NoticeService {
+public interface SupportService {
 
 }
