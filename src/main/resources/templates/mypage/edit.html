@@ -36,7 +36,28 @@
       </ul>      
     </div>
     
-    <div class="mypage" style="width: 70%; display: inline-block;">멤버1 마이페이지</div>
+    <div class="mypage" style="width: 70%; display: inline-block;">
+      
+      <h3>회원정보수정</h3>
+      
+      <hr>
+      
+      <div>
+        <form id="frm_modify" method="post">
+          <div>
+          <label for="email">이메일 : </label>
+          <input type="text" id="email" name="email" value="@{session.user.email}" readonly>
+          </div>
+          <div>
+          <label for="name">이름 : </label>
+          <input type="text" id="name" name="name" value="@{session.user.name}">
+          </div>
+          
+          
+        </form>
+      </div>
+      
+    </div>
     
   </div>
   
