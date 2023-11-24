@@ -11,15 +11,11 @@
   </settings>
   
   <typeAliases>
-    <typeAlias alias="UserDto"         type="com.gdu.myhome.dto.UserDto"/>
-    <typeAlias alias="LeaveUserDto"    type="com.gdu.myhome.dto.LeaveUserDto"/>
-    <typeAlias alias="InactiveUserDto" type="com.gdu.myhome.dto.InactiveUserDto"/>
-    <typeAlias alias="FreeDto"         type="com.gdu.myhome.dto.FreeDto"/>
-    <typeAlias alias="BlogDto"         type="com.gdu.myhome.dto.BlogDto"/>
-    <typeAlias alias="BlogImageDto"    type="com.gdu.myhome.dto.BlogImageDto"/>
-    <typeAlias alias="CommentDto"      type="com.gdu.myhome.dto.CommentDto"/>
-    <typeAlias alias="UploadDto"      type="com.gdu.myhome.dto.UploadDto"/>
-    <typeAlias alias="AttachDto"      type="com.gdu.myhome.dto.AttachDto"/>
+    <typeAlias alias="UserDto"                 type="kr.co.bookvillage.dto.UserDto"/>
+    <typeAlias alias="InactiveUserDto"         type="kr.co.bookvillage.dto.InactiveUserDto"/>
+    <typeAlias alias="AccessDto"                type="kr.co.bookvillage.dto.AccessDto"/>
+
+
   </typeAliases>
 
 </configuration>
