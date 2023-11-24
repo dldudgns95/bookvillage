@@ -20,18 +20,18 @@ public class WebMvcConfig implements WebMvcConfigurer {
   
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(requiredLoginInterceptor)
-      .addPathPatterns("/");
-    
-    registry.addInterceptor(shouldNotLoginInterceptor)
-      .addPathPatterns("/");
+//    registry.addInterceptor(requiredLoginInterceptor)
+//      .addPathPatterns("/");
+//    
+//    registry.addInterceptor(shouldNotLoginInterceptor)
+//      .addPathPatterns("/");
   }
   
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    registry.addResourceHandler("/**")
-      .addResourceLocations("classpath:/static/", "classpath:/templates/");
- 
+//    registry.addResourceHandler("/**")
+//      .addResourceLocations("classpath:/static/", "classpath:/templates/");
+// 
   }
   
 }
