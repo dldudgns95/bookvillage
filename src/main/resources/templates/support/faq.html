@@ -115,33 +115,7 @@
       </div>
    </div>
    </div>
-   <script th:inline="javascript">
-	    const fnAddResult = () => {
-        let addResult = /*[[${addResult}]]*/ null;
-        if(addResult !== null){
-          if(addResult === 1){
-            alert('FAQ가 작성되었습니다.');
-          } else {
-            alert('FAQ 작성이 실패했습니다.');
-          }
-        }
-      }
-      
-      const fnRemoveResult = () => {
-        let removeResult = /*[[${removeResult}]]*/ null;
-        if(removeResult !== null){
-          if(removeResult === 1){
-            alert('FAQ이 삭제되었습니다.');
-            $('#upload_list').empty();
-          } else {
-            alert('FAQ 삭제가 실패했습니다.');
-          }
-        }
-      }
-    
-      fnAddResult();
-      fnRemoveResult();
-   </script>
+
 </div>
     
 </body>
