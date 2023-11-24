@@ -4,6 +4,7 @@ spring:
     hikari:
       driver-class-name: net.sf.log4jdbc.sql.jdbcapi.DriverSpy
       jdbc-url: jdbc:log4jdbc:oracle:thin:@localhost:1521:xe
+<<<<<<< HEAD
       username: ENC(A+ZTQDDDrHpalWUcji+w2w==)
       password: ENC(OF1db35XUVMxUfmMeZyCSQ==)
   mail:
@@ -11,13 +12,22 @@ spring:
     port: 587
     username: ENC(NdBNVDrib/tzqn7p9ZAyAlOB0SwsjdOFNNiNJDWZmDQ=)
     password: ENC(l694FiqH6d+3YTRYBFy/eK4X+tQjyj5sXSXt3RoWohA=)
+=======
+      username: ENC(wyGJ+AyHooFqMR9OhBAxww==)
+      password: ENC(MZnEBe2GOAuE5aR0P/shog==)
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ENC(obt3sH4uW/Aw7joeRGQGWiccwRN27sN+wJWIKsj4hvs=)
+    password: ENC(Yn98euTftvWuMJBeyHxgpqj/Rax91BooCAoOhhDHvH8=)
+>>>>>>> main
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-#  main:
+# main:
 #    web-application-type: none  # Do not use embeded tomcat
 
 # mybatis
