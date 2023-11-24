@@ -8,25 +8,25 @@
   <!-- Console에 로그를 찍는 Appender -->
   <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="com.gdu.myhome.logback.MyLogbackLayout"/>
+      <layout class="kr.co.bookvillage.logback.MyLogbackLayout"/>
     </encoder>
   </appender>
     
   <!-- 매일 새로운 로그 파일을 만드는 RollingFileAppender -->
   <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-      <fileNamePattern>/logs/myhome.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+      <fileNamePattern>/logs/bookvillage.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
       <maxFileSize>100MB</maxFileSize>  <!-- 한 파일의 최대 크기 -->
       <maxHistory>30</maxHistory>       <!-- 파일 최대 갯수 -->
       <totalSizeCap>3GB</totalSizeCap>  <!-- 모든 파일의 최대 크기 -->
     </rollingPolicy>
     <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-      <layout class="com.gdu.myhome.logback.MyLogbackLayout"/>
+      <layout class="kr.co.bookvillage.logback.MyLogbackLayout"/>
     </encoder>
   </appender>
   
   <!-- Application Loggers -->
-  <logger name="com.gdu.myhome" level="debug" />
+  <logger name="kr.co.bookvillage" level="debug" />
   
   <!-- 3rdparty Loggers -->
   <logger name="org.springframework" level="info" />
