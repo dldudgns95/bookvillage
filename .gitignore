@@ -4,6 +4,8 @@
 # Ignore logback.xml file
 logback.xml
 
+MyFileUtils.java
+
 # custom
 email.properties
 pom.properties
