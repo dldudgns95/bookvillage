@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head></head>
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
 
 <style>
   .flex_div {
@@ -24,7 +24,15 @@
       <div>1:1문의</div>
     </div>
     
-    <div><a th:href="@{/admin/updateBook.do}"><button type="button" id="btn_update_book">도서업데이트</button></a></div>
+    <div>
+      <form th:action="@{/admin/insertBooks.do}" method="get">
+        <select name="QueryType">
+          <option value="ItemNewAll">신간 전체 리스트</option>
+          <option value="Bestseller">베스트셀러</option>
+        </select>
+        <button type="submit">도서업데이트</button>
+      </form>
+    </div>
 
   </div>
   
