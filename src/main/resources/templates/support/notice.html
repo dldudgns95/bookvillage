@@ -36,12 +36,14 @@
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
+      <h5 style="text-align: center;">공지사항</h5>
       <div>
-        <!-- 관리자로 로그인 한 경우 -->
-        <th:block th:if="${session.user != null and session.user.state == 9}">
-          <a th:href="@{/support/noticewrite.form}">
+		  <a th:href="@{/support/noticewrite.form}">
             <button type="button" class="btn btn-outline-primary">새 공지 작성하기</button>
           </a>
+        <!-- 관리자로 로그인 한 경우 -->
+        <th:block th:if="${session.user != null and session.user.state == 9}">
+          
         </th:block>
       </div>
       <div class="child2">
@@ -100,6 +102,5 @@
       fnRemoveResult();
    </script>
 </div>
-      <div th:replace="~{/layout/footer::footer}"></div>
 </body>
 </html>

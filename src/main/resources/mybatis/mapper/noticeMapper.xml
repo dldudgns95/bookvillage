@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.NoticeMapper">
+<insert id="insertNotice" parameterType="NoticeDto">
+	<selectKey order="BEFORE" resultType="int" keyProperty="ntNo">
+		SELECT NOTICE_SEQ.NEXTVAL
+		  FROM DUAL
+	</selectKey>
+	INSERT INTO NOTICE(
+		NT_NO
+	   ,NT_TITLE
+	   ,NT_CONTENT
+	   ,NT_DATE
+	) VALUES (
+		#{ntNo}
+	   ,#{ntTitle}
+	   ,#{ntContent}
+	   ,SYSDATE
+	)
+</insert>
+
+</mapper>
