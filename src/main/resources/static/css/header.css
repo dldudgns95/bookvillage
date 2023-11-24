@@ -1,0 +1,93 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+.header_wrap {
+  width: 100%;
+  margin: 0 auto;
+  padding-top: 10px; 
+  position: relative;
+}
+
+.logo {
+  width: 350px;
+  height: 150px;
+  display: inline-block;
+  background-image: url(../image/big_logo_name.png);
+  background-size: 100%;
+  margin: 10px 20px 10px 70px;
+  cursor: pointer;
+
+}
+
+.search_bar {
+  display: inline-block;
+  margin: 90px 30px 40px 30px; 
+   position: absolute;
+}
+
+.search_bar input {
+  padding: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: 3px solid rgb(37, 94, 188);
+}
+
+
+
+.login_wrap {
+  width: 100%;
+  height: 64px;
+  position: absolute;
+  top: 10px;
+}
+
+.ico_user_group {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  right: 0;
+}
+
+.ico_user_group a {
+  display: inline-block;
+  margin-left: 15px;
+}
+
+.ico_user_group i {
+  width: 24px;
+}
+
+.gnb_wrap {
+  width: 100%;
+  height: 48px;
+}
+
+.gnb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+
+.gnb li {
+  width: 100%;
+}
+
+.gnb a {
+  display: block;
+  width: 100%;
+  text-align: center;
+  line-height: 48px;
+  cursor: pointer;
+}
+.banner {
+  position: absolute;
+  width: 1200px;
+  height: 300px;
+  background-image: url(../image/long_banner1.png);
+   background-position: right;
+}
