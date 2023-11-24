@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,java,eclipse,maven
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,java,eclipse,maven
 
+# Ignore logback.xml file
+logback.xml
+
 # custom
 email.properties
 pom.properties
@@ -206,6 +209,7 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+
 
 # End of https://www.toptal.com/developers/gitignore/api/macos
 
