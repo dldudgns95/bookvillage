@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
     sb.append("&start=1");
     sb.append("&SearchTarget=Book");
     sb.append("&output=JS");
-    sb.append("&cover=Big");
+    sb.append("&Cover=Big");
     sb.append("&Version=20131101");
     
     JSONObject obj = null;
@@ -77,7 +77,6 @@ public class AdminServiceImpl implements AdminService {
     for(Object lists : array) {
       try {
         JSONObject list = (JSONObject)lists;
-        System.out.println(list.getString("isbn13"));
         String pubdate = list.getString("pubDate");
         Date date = java.sql.Date.valueOf(pubdate);
         BookDto bookDto = BookDto.builder()
@@ -91,15 +90,15 @@ public class AdminServiceImpl implements AdminService {
             .categoryName(list.getString("categoryName"))
             .categoryId(list.getInt("categoryId"))
             .build();
+        System.out.println(bookDto);
         adminMapper.insertBook(bookDto);
       } catch (Exception e) {
+          // e.printStackTrace();
           count--;
-        continue;
       } finally {
         count++;
       }
     }
-    System.out.println(count);
     return count;
   }
   
