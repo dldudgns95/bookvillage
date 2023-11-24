@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('책빌리지')}"></head>
+
+<style>
+  .side_bar {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+  }
+  
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="side_bar">
+      <h3 style="border-bottom: 1px solid gray;">마이페이지</h3>
+      <ul id="side_list">
+        <li>회원정보수정</li>
+        <li>도서대출/반납내역</li>
+        <li>도서반납신청</li>
+        <li>관심도서</li>
+        <li>도서후기</li>
+        <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
+      </ul>      
+    </div>
+    
+    <div style="width: 70%; display: inline-block;">멤버1 마이페이지</div>
+    
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
