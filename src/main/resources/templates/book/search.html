@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
+
+<script th:src="@{/js/common.js}"></script>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+
+    <div class="wrap wrap_9 search_wrap">
+    
+      <nav class="breadcrumb">
+        <ul class="b_menu">
+          <li class="home">
+            <span class="home_ico">
+              <em class="blind"><i class="fa-solid fa-house"></i></em>
+            </span>
+          </li>
+          <li class>
+            <a href="#none">자료검색</a>
+            <div class="dep_list" style="display: none;">
+              <ul>
+                <li class>
+                  <a th:href="@{/book/search.do}">자료검색</a>
+                </li>
+                <li class>
+                  <a href="#none">나만의 도서관</a>
+                </li>
+                <li class>
+                  <a href="#none">고객센터</a>
+                </li>
+                <li class>
+                  <a href="#none">시설안내</a>
+                </li>
+                <li class>
+                  <a href="#none">로그인</a>
+                </li>
+                <li class>
+                  <a href="#none">회원가입</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <strong class="current"></strong>
+          </li>
+        </ul>
+      </nav>
+      
+      
+      <h3 class="title">소장자료 검색</h3>
+      <div>
+        <br><br><br><br><br><br>
+      </div>
+    
+      <div class="search_area">
+        <form id="search" name="search" action="/search/result" method="get">
+          <input type="hidden" name="pageNum" value="1">
+          <input type="hidden" name="pageSize" value="10">
+          <div class="search_select">
+            <select name="ss" id="ss" class="btn btn-outline-secondary">
+              <option value="total" selected>전체</option>
+              <option value="title">제목</option>
+              <option value="author">저자</option>
+            </select>
+          </div>
+          <div class="search_text">
+            <input type="text" id="st" name="st" placeholder="검색어를 입력하세요."> 
+          </div>
+          <div class="search_btn">
+            <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
+          </div>
+        </form>
+      </div>
+      
+      
+    
+    </div>
+
+      <script th:inline="javascript">
+      //breadcrumb
+        $('.breadcrumb .b_menu > li > a').on('mouseover focus', function(event){
+          var speed = 400;
+          if ($(this).next('.breadcrumb .dep_list').css('display')=='none') {
+            $('.breadcrumb .dep_list').slideUp(speed);
+            $(this).next('.breadcrumb .dep_list').slideDown(speed);
+            $('.breadcrumb .dep_list').removeClass('on');
+            $(this).parent('li').addClass('on');
+          }else{
+            $('.breadcrumb .dep_list').slideUp(speed);
+            $('.breadcrumb .b_menu > li').removeClass('on');
+          }
+        });
+      
+        $(".breadcrumb .b_menu > li").on("mouseleave", function(event){
+          $(".breadcrumb .dep_list").slideUp("600");
+          $('.breadcrumb .b_menu > li').removeClass('on');
+        });
+      
+        $(window).on('resize',function(){
+          if($(window).innerWidth() > 768){
+            $('#fullmenu_nav').animate({left: '-100%'}, 350);
+            $('.mask').remove();
+            $('body').removeClass('hidden');
+            $('#fullmenu_nav ul li').removeClass('open');
+            $('#fullmenu_nav ul').removeAttr('style');
+            $('ul.tab_list').removeAttr('style');
+          }
+        });
+      
+        $('.breadcrumb .b_menu > li.no a').removeAttr("href");
+        $('.breadcrumb .b_menu > li.no').children('ul').remove();
+      </script>
+  
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
