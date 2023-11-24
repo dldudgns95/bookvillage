@@ -13,7 +13,11 @@
   <typeAliases>
     <typeAlias alias="UserDto"                 type="kr.co.bookvillage.dto.UserDto"/>
     <typeAlias alias="InactiveUserDto"         type="kr.co.bookvillage.dto.InactiveUserDto"/>
+<<<<<<< HEAD
     <typeAlias alias="AccessDto"                type="kr.co.bookvillage.dto.AccessDto"/>
+=======
+    <typeAlias alias="AccessDto"               type="kr.co.bookvillage.dto.AccessDto"/>
+>>>>>>> sujin
 
 
   </typeAliases>
