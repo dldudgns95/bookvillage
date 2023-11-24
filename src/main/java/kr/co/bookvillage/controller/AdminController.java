@@ -3,6 +3,7 @@ package kr.co.bookvillage.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -22,9 +23,9 @@ public class AdminController {
   }
   
   @GetMapping("/insertBooks.do")
-  public String insertBooks(HttpServletRequest request) throws Exception {
-    adminService.insertBook(request);
-    return null;
+  public String insertBooks(HttpServletRequest request, Model model) throws Exception {
+    model.addAttribute("bookCount", adminService.insertBook(request));
+    return "admin/list";
   }
   
 }

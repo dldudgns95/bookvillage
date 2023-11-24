@@ -36,6 +36,16 @@
 
   </div>
   
+  <script>
+    const fnBookCount = () => {
+      let bookCount = /*[[${bookCount}]]*/ null;
+      if(bookCount !== null) {
+        alert(bookCount + '개의 책이 업데이트되었습니다.');
+      }
+    }  
+    fnBookCount();  
+  </script>
+  
   <div th:replace="~{/layout/footer::footer}"></div>
 
 </body>

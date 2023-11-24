@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 public class BookDto {
-  private int isbn;
+  private String isbn;
   private String title;
   private String cover;
   private String author;
@@ -21,5 +21,5 @@ public class BookDto {
   private String description;
   private int status;
   private String categoryName;
-  private String categoryId;
+  private int categoryId;
 }

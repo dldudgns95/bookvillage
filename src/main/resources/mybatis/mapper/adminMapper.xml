@@ -6,7 +6,7 @@
 <mapper namespace="kr.co.bookvillage.dao.AdminMapper">
 
   <insert id="insertBook" parameterType="bookDto">
-    INSERT IGNORE INTO BOOK(
+    INSERT INTO BOOK(
       ISBN
     , TITLE
     , COVER
