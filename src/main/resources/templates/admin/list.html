@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head></head>
+
+<style>
+  .flex_div {
+    display: flex;
+  }
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div>
+    <h1>관리자 페이지</h1>
+    <div class="flex_div">
+      <div>회원관리</div>
+      <div>도서관리</div>     
+      <div>희망도서 신청내역</div>
+      <div>시설관리</div>
+      <div>공지사항</div>
+      <div>1:1문의</div>
+    </div>
+    
+    <div><a th:href="@{/admin/updateBook.do}"><button type="button" id="btn_update_book">도서업데이트</button></a></div>
+
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
