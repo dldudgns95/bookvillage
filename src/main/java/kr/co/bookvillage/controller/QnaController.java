@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.co.bookvillage.service.QnaService;
+//import kr.co.bookvillage.service.QnaService;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/qna")
@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 @Controller
 public class QnaController {
 	
-	 private final QnaService qnaService;
- 
+	 //private final QnaService qnaService;
+	 // 목록보기
 	@GetMapping("/list.do")
 	  public String list(HttpServletRequest request, Model model) {
-		qnaService.loadQnaList(request, model);
+		//qnaService.loadQnaList(request, model);
 	    return "qna/list";
 	  }
 }
