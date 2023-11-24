@@ -10,13 +10,11 @@ DROP SEQUENCE FACILITY_SEQ;
 DROP SEQUENCE FAQ_SEQ;
 DROP SEQUENCE ATTACH_NT_SEQ;
 DROP SEQUENCE NOTICE_SEQ;
-DROP SEQUENCE INACTIVE_USER;
 DROP SEQUENCE ACCESS_T_SEQ;
 DROP SEQUENCE USER_T_SEQ;
 
 CREATE SEQUENCE USER_T_SEQ NOCACHE;
 CREATE SEQUENCE ACCESS_T_SEQ NOCACHE;
-CREATE SEQUENCE INACTIVE_USER;
 CREATE SEQUENCE NOTICE_SEQ NOCACHE;
 CREATE SEQUENCE ATTACH_NT_SEQ NOCACHE;
 CREATE SEQUENCE FAQ_SEQ NOCACHE;
@@ -205,7 +203,7 @@ CREATE TABLE BOOK_APPLY (
 
 
 CREATE TABLE BOOK (
-	ISBN	        NUMBER	             NOT NULL,
+	ISBN	        VARCHAR2(13 BYTE)	 NOT NULL,
 	TITLE	        VARCHAR2(1000 BYTE)	 NOT NULL,
 	COVER	        VARCHAR2(2000 BYTE)	 NULL,
 	AUTHOR	        VARCHAR2(200 BYTE)	 NULL,
@@ -214,7 +212,7 @@ CREATE TABLE BOOK (
 	DESCRIPTION	    VARCHAR2(2000 BYTE)	 NULL,
 	STATUS	        NUMBER           	 NULL,
 	CATEGORY_NAME	VARCHAR2(1000 BYTE)  NULL,
-	CATEGORY_ID	    VARCHAR2(100 BYTE)   NULL,
+	CATEGORY_ID	    NUMBER               NULL,
     CONSTRAINT      PK_BOOK              PRIMARY KEY(ISBN)
 );
 
@@ -228,6 +226,7 @@ CREATE TABLE SCORE (
     CONSTRAINT  FK1_SCORE      FOREIGN KEY(ISBN)           REFERENCES BOOK(ISBN)    ON DELETE CASCADE,
     CONSTRAINT  FK2_SCORE     FOREIGN KEY(USER_NO)        REFERENCES USER_T(USER_NO) ON DELETE CASCADE
 );
+
 
 CREATE TABLE WISH (
 	ISBN	    NUMBER         NOT NULL,
@@ -251,7 +250,8 @@ CREATE TABLE BOOK_CHECKOUT (
   CONSTRAINT FK2_BOOK_CHECKOUT FOREIGN KEY(ISBN) REFERENCES BOOK(ISBN)
 );
 
----------------------------------------회원 삽입
+
+--회원 삽입
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user1@naver.com', '1111', 'User1', '010-1111-1111', 0, 0, 0, 0, '2023-11-11', '2023-11-10', 1);
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user2@naver.com', '2222', 'User2', '010-2222-2222', 1, 1, 0, 0, '2023-10-11', '2023-10-10', 1);
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user3@naver.com', '3333', 'User3', '010-3333-3333', 2, 0, 0, 0, '2023-09-11', '2023-09-10', 1);
@@ -262,6 +262,144 @@ INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user7@naver.com', '7777', 'User7'
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user8@naver.com', '8888', 'User8', '010-8888-8888', 1, 0, 0, 0, '2023-04-11', '2023-04-10', 1);
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user9@naver.com', '9999', 'User9', '010-9999-9999', 2, 1, 0, 0, '2023-03-11', '2023-03-10', 1);
 
----------------------------------------관 삽입
+--관리자 삽입
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1010', 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1);
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1111', 'User11', '010-1010-1010', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
+
+
+--휴면 회원 삽입
+
+INSERT INTO INACTIVE_USER (USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, INACTIVE_DATE)
+VALUES (USER_T_SEQ.NEXTVAL, 'user13@naver.com', '1313', 'User13', '010-1313-1313', 0, 0, 0, 1, '2021-01-01', '2020-12-12', '2022-05-01');
+
+
+--도서 삽입
+INSERT INTO BOOK VALUES(
+    9788938116017
+  , '2024 핵심 전기기사 필기 - 핵심요점정리 최근 7년 과년도 문제'
+  , 'https://image.aladin.co.kr/product/32933/45/coversum/8938116018_1.jpg'
+  , '검정연구회 (지은이)'
+  , '동일출판사'
+  , '2024-01-20'
+  , '과목별로 꼭 필요한 핵심내용과 과목별 핵심요약에 따른 유형별 문제를 수록하여 핵심내용을 쉽게 이해할 수 있도록 하였다. 최근7년(2017~2023년) 과년도문제를 수록하여 새로 출제된 문제와 유형을 쉽게 파악할 수 있도록 하였다.'
+  , 1
+  , '국내도서>수험서/자격증>국가기술자격>전기>전기기능사/기사/산업기사'
+  , 181324
+);
+
+INSERT INTO BOOK VALUES(
+    9791185098586
+  , '성경의 이미지'
+  , 'https://image.aladin.co.kr/product/32933/43/coversum/k882936942_1.jpg'
+  , '프레스 샌더스 (지은이), 이철민 (옮긴이)'
+  , '터치북스'
+  , '2023-11-22'
+  , NULL
+  , 1
+  , '국내도서>종교/역학>기독교(개신교)>기독교(개신교) 목회/신학>신학일반'
+  , 51592
+);
+
+INSERT INTO BOOK VALUES(
+    9791171249305
+  , '불멸의 그대에게 20'
+  , 'https://image.aladin.co.kr/product/32933/43/coversum/k872936942_1.jpg'
+  , '오이마 요시토키 (지은이), 김동욱 (옮긴이)'
+  , '대원씨아이(만화)'
+  , '2023-11-24'
+  , NULL
+  , 1
+  , '국내도서>만화>본격장르만화>판타지>드라마틱 판타지'
+  , 181324
+);
+
+INSERT INTO BOOK VALUES (
+    9791171245765,
+    '길티 이노센스 7',
+    'https://image.aladin.co.kr/product/32933/40/coversum/k772936942_1.jpg',
+    '윤한 (지은이)',
+    '대원씨아이(만화)',
+    TO_DATE('2023-11-24', 'YYYY-MM-DD'),
+    '',
+    1,
+    '국내도서>만화>순정만화>그 남자들의 사랑',
+    6130
+);
+
+INSERT INTO BOOK VALUES (
+    9791192908595,
+    '저는 측면이 좀 더 낫습니다만 - 하마터면 열심히 살 뻔했던 작가 하완의 자발적 경로 이탈 에세이, 수정증보판',
+    'https://image.aladin.co.kr/product/32933/39/coversum/k632936942_1.jpg',
+    '하완 (지은이)',
+    '세미콜론',
+    TO_DATE('2023-11-20', 'YYYY-MM-DD'),
+    '2018년 봄, 혜성처럼 나타나 출판계를 뜨겁게 뒤흔든 『하마터면 열심히 살 뻔했다』의 하완 작가가 돌아왔다. 1년이 넘는 시간 동안 베스트셀러 순위를 굳건히 지켰고, 방송과 광고 심지어 도서 제목에서도 수많은 패러디를 만들어냈으며, 계절마다 다양한 버전의 리커버를 탄생시킨, 자칭 \u2018야매 득도 에세이\u2019에서 조금 새로워진 모습으로. 이번엔 \u2018자발적 경로 이탈 에세이\u2019를 표방한다.',
+    1,
+    '국내도서>에세이>한국에세이',
+    51371
+);
+
+INSERT INTO BOOK VALUES (
+    9791197678653,
+    '골프취업학개론',
+    'https://image.aladin.co.kr/product/32933/37/coversum/k532936942_1.jpg',
+    '오상민 (지은이)',
+    '신사우동호랑이',
+    TO_DATE('2023-12-11', 'YYYY-MM-DD'),
+    '골프업계 취업과 이직을 준비하는 사람들을 위한 강의형식의 책이다. 책을 끝까지 읽으면 좋은 강의를 한 번 듣는 것과 같다. 여러 번 반복해서 읽으면 좋은 습관이 몸에 배기 때문에 취업 확률을 자연스럽게 높일 수 있다.',
+    1,
+    '국내도서>건강/취미>골프',
+    53524
+);
+
+INSERT INTO BOOK VALUES (
+    9791170950875,
+    '흑막 용을 키우게 되었다 시즌 1 : 3',
+    'https://image.aladin.co.kr/product/32933/35/coversum/k522936942_1.jpg',
+    '소탄 (지은이), 달슬 (원작)',
+    '오렌지디',
+    TO_DATE('2023-11-24', 'YYYY-MM-DD'),
+    '',
+    1,
+    '국내도서>만화>인터넷 연재 만화',
+    7443
+);
+
+INSERT INTO BOOK VALUES (
+    9788959408290,
+    '안중근 평전 - 3판',
+    'https://image.aladin.co.kr/product/32933/34/coversum/8959408298_1.jpg',
+    '김삼웅 (지은이)',
+    '시대의창',
+    TO_DATE('2023-12-01', 'YYYY-MM-DD'),
+    '안중근 의사의 사상이 어떻게 형성되었는지 그리고 하얼빈 의거와 이후 공판투쟁 모습 등 그의 행적이 어떠했는지를 역사적 사료와 증언기록을 통해 보여준다. 그뿐 아니라 안중근 의사의 처형 전후에 대한 여러 사람의 증언과 기록을 통해 그날의 상황을 최대한 객관적이고 사실적으로 묘사하려 노력했다.',
+    1,
+    '국내도서>역사>한국근현대사>일제치하/항일시대',
+    141
+);
+
+INSERT INTO BOOK VALUES (
+    9791170950868,
+    '흑막 용을 키우게 되었다 시즌 1 : 2',
+    'https://image.aladin.co.kr/product/32933/32/coversum/k432936942_1.jpg',
+    '소탄 (지은이), 달슬 (원작)',
+    '오렌지디',
+    TO_DATE('2023-11-24', 'YYYY-MM-DD'),
+    '',
+    1,
+    '국내도서>만화>인터넷 연재 만화',
+    7443
+);
+
+INSERT INTO BOOK VALUES (
+    8809904205564,
+    '새콤달콤 캐치 티니핑 시즌4 마그네틱 코디숍',
+    'https://image.aladin.co.kr/product/32933/30/coversum/k402936942_1.jpg',
+    '아이누리 편집부 (지은이)',
+    '아이누리',
+    TO_DATE('2023-11-24', 'YYYY-MM-DD'),
+    '마그네틱 코디숍은 자석으로 옷을 갈아 입히는 신개념의 인형 옷 놀이 이다. 인형을 반침대에 끼워서 세운후 여러가지 옷과 악세서리로 코디해 보자. 자석스티커로 반영구적으로 사용이 가능하며 붙였다 떼어다가 쉬워 놀이가 더욱 재미있다. 인형놀이가 끝난 후 인형과 자석 옷은 케이스에 넣어 보관하자.',
+    1,
+    '국내도서>유아>놀이책>유아 놀이책 기타',
+    49525
+);
