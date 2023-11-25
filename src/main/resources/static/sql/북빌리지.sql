@@ -51,9 +51,9 @@ DROP TABLE USER_T;
 -- 회원테이블
 CREATE TABLE USER_T (
   USER_NO          NUMBER NOT NULL,      -- 회원번호
-  EMAIL            VARCHAR2(100 BYTE),   -- 회원이메일
+  EMAIL            VARCHAR2(100 BYTE) UNIQUE,   -- 회원이메일
   PW               VARCHAR2(64 BYTE),    -- 비밀번호
-  NAME             VARCHAR2(50 BYTE),    -- 회원이름
+  NAME             VARCHAR2(50 BYTE) UNIQUE,    -- 회원이름
   MOBILE           VARCHAR2(15 BYTE),    -- 전화번호
   GENDER           NUMBER,               -- 성별 (0:남자, 1:여자, 2: 선택안함)
   AGREE            NUMBER,               -- 동의 (0:필수, 1: 이벤트)
@@ -67,9 +67,9 @@ CREATE TABLE USER_T (
 
 -- 접속 기록
 CREATE TABLE ACCESS_T (
-  USER_NO    NUMBER NOT NULL,
-  LOGIN_DATE NUMBER NULL,              -- 로그인일시
-  CONSTRAINT PK_ACCESS_T PRIMARY KEY(USER_NO)
+  EMAIL      VARCHAR2(100 BYTE) NOT NULL ,
+  LOGIN_DATE DATE    NULL,              -- 로그인일시
+  CONSTRAINT FK_USER_ACCESS FOREIGN KEY(EMAIL) REFERENCES USER_T(EMAIL) ON DELETE CASCADE
 );
 
 -- 휴면회원테이블
@@ -265,7 +265,7 @@ commit;
 
 --관리자 삽입
 INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1010', 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1111', 'User11', '010-1010-1010', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user11@naver.com', '1111', 'User11', '010-1111-1111', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
 commit;
 
 --휴면 회원 삽입
