@@ -5,6 +5,25 @@
 
 <mapper namespace="kr.co.bookvillage.dao.BookMapper">
 
+  <resultMap type="BookDto"       id="BookMap">
+    <id      column="ISBN"     property="isbn" />
+    <result  column="TITLE"       property="title" />
+    <result  column="COVER"    property="cover" />
+    <result  column="AUTHOR"         property="author" />
+    <result  column="PUBLISHER"          property="publisher" />
+    <result  column="PUBDATE"  property="pubDate" />
+    <result  column="DESCRIPTION" property="description" />
+    <result  column="STATUS" property="status" />
+    <result  column="CATEGORY_NAME" property="categoryName" />
+    <result  column="CATEGORY_ID" property="categoryId" />
+  </resultMap>
+
+  <select id="getBook" resultMap="BookMap">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+     WHERE TITLE LIKE '%바둑%' OR AUTHOR LIKE '%에곤%';
+  </select>
+
 
   
 </mapper>
