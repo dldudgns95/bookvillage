@@ -50,26 +50,26 @@ DROP TABLE USER_T;
 
 -- 회원테이블
 CREATE TABLE USER_T (
-  USER_NO          NUMBER NOT NULL,      -- 회원번호
-  EMAIL            VARCHAR2(100 BYTE),   -- 회원이메일
-  PW               VARCHAR2(64 BYTE),    -- 비밀번호
-  NAME             VARCHAR2(50 BYTE),    -- 회원이름
-  MOBILE           VARCHAR2(15 BYTE),    -- 전화번호
-  GENDER           NUMBER,               -- 성별 (0:남자, 1:여자, 2: 선택안함)
-  AGREE            NUMBER,               -- 동의 (0:필수, 1: 이벤트)
-  STATE            NUMBER,               -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
-  AUTH             NUMBER,               -- 등급 (0:일반, 1: 휴면, 9: 관리자)
-  PW_MODIFIED_DATE DATE,                 -- 비밀번호 수정일
-  JOINED_DATE      DATE,                 -- 회원가입일
-  STATUS           NUMBER,               -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
+  USER_NO          NUMBER NOT NULL,             -- 회원번호
+  EMAIL            VARCHAR2(100 BYTE) UNIQUE,   -- 회원이메일
+  PW               VARCHAR2(64 BYTE),           -- 비밀번호
+  NAME             VARCHAR2(50 BYTE) UNIQUE,    -- 회원이름
+  MOBILE           VARCHAR2(15 BYTE),           -- 전화번호
+  GENDER           NUMBER,                      -- 성별 (0:남자, 1:여자, 2: 선택안함)
+  AGREE            NUMBER,                      -- 동의 (0:필수, 1: 이벤트)
+  STATE            NUMBER,                      -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
+  AUTH             NUMBER,                      -- 등급 (0:일반, 1: 휴면, 9: 관리자)
+  PW_MODIFIED_DATE DATE,                        -- 비밀번호 수정일
+  JOINED_DATE      DATE,                        -- 회원가입일
+  STATUS           NUMBER,                      -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
   CONSTRAINT PK_USER_T PRIMARY KEY(USER_NO)
 );
 
 -- 접속 기록
 CREATE TABLE ACCESS_T (
-  USER_NO    NUMBER NOT NULL,
-  LOGIN_DATE NUMBER NULL,              -- 로그인일시
-  CONSTRAINT PK_ACCESS_T PRIMARY KEY(USER_NO)
+  EMAIL      VARCHAR2(100 BYTE) NOT NULL ,
+  LOGIN_DATE DATE    NULL,              -- 로그인일시
+  CONSTRAINT FK_USER_ACCESS FOREIGN KEY(EMAIL) REFERENCES USER_T(EMAIL) ON DELETE CASCADE
 );
 
 -- 휴면회원테이블
@@ -257,26 +257,26 @@ CREATE TABLE BOOK_CHECKOUT (
 
 
 --회원 삽입
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user1@naver.com', '1111', 'User1', '010-1111-1111', 0, 0, 0, 0, '2023-11-11', '2023-11-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user2@naver.com', '2222', 'User2', '010-2222-2222', 1, 1, 0, 0, '2023-10-11', '2023-10-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user3@naver.com', '3333', 'User3', '010-3333-3333', 2, 0, 0, 0, '2023-09-11', '2023-09-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user4@naver.com', '4444', 'User4', '010-4444-4444', 0, 0, 0, 0, '2023-08-11', '2023-08-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user5@naver.com', '5555', 'User5', '010-5555-5555', 1, 1, 0, 0, '2023-07-11', '2023-07-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user6@naver.com', '6666', 'User6', '010-6666-6666', 2, 0, 0, 0, '2023-06-11', '2023-06-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user7@naver.com', '7777', 'User7', '010-7777-7777', 0, 1, 0, 0, '2023-05-11', '2023-05-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user8@naver.com', '8888', 'User8', '010-8888-8888', 1, 0, 0, 0, '2023-04-11', '2023-04-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user9@naver.com', '9999', 'User9', '010-9999-9999', 2, 1, 0, 0, '2023-03-11', '2023-03-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user1@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User1', '010-1111-1111', 0, 0, 0, 0, '2023-11-11', '2023-11-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user2@naver.com', STANDARD_HASH('2222', 'SHA256'), 'User2', '010-2222-2222', 1, 1, 0, 0, '2023-10-11', '2023-10-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user3@naver.com', STANDARD_HASH('3333', 'SHA256'), 'User3', '010-3333-3333', 2, 0, 0, 0, '2023-09-11', '2023-09-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user4@naver.com', STANDARD_HASH('4444', 'SHA256'), 'User4', '010-4444-4444', 0, 0, 0, 0, '2023-08-11', '2023-08-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user5@naver.com', STANDARD_HASH('5555', 'SHA256'), 'User5', '010-4444-4444', 1, 1, 0, 0, '2023-07-11', '2023-07-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user6@naver.com', STANDARD_HASH('6666', 'SHA256'), 'User6', '010-4444-4444', 2, 0, 0, 0, '2023-06-11', '2023-06-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user7@naver.com', STANDARD_HASH('7777', 'SHA256'), 'User7', '010-4444-4444', 0, 1, 0, 0, '2023-05-11', '2023-05-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user8@naver.com', STANDARD_HASH('8888', 'SHA256'), 'User8', '010-4444-4444', 1, 0, 0, 0, '2023-04-11', '2023-04-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user9@naver.com', STANDARD_HASH('9999', 'SHA256'), 'User9', '010-4444-4444', 2, 1, 0, 0, '2023-03-11', '2023-03-10', 1);
 commit;
 
 --관리자 삽입
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1010', 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', '1111', 'User11', '010-1010-1010', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', STANDARD_HASH('1010', 'SHA256'), 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user11@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User11', '010-1111-1111', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
 commit;
 
 --휴면 회원 삽입
 
 INSERT INTO INACTIVE_USER (USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, INACTIVE_DATE)
-VALUES (USER_T_SEQ.NEXTVAL, 'user13@naver.com', '1313', 'User13', '010-1313-1313', 0, 0, 0, 1, '2021-01-01', '2020-12-12', '2022-05-01');
+VALUES (USER_T_SEQ.NEXTVAL, 'user13@naver.com', STANDARD_HASH('1313', 'SHA256'), 'User13', '010-1313-1313', 0, 0, 0, 1, '2021-01-01', '2020-12-12', '2022-05-01');
 commit;
 
 --도서 삽입

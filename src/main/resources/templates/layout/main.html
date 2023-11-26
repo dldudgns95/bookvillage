@@ -3,13 +3,41 @@
 
 <head th:replace="~{/layout/header::head('책빌리지')}"></head>
 
+<script th:src="@{/js/main.js}"></script>
+
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
     
-    <h1 class="title">홈페이지에 오신걸 환영합니다</h1>
+     
+    <!-- Slider main container -->
+    <div class="swiper">
+      <!-- Additional required wrapper -->
+
+      <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide">
+          <img th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
+        </div>
+        <div class="swiper-slide">
+          <img th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
+        </div>
+        <div class="swiper-slide">
+          <img th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
+        </div>
+      </div>
+      
+      <!-- If we need pagination -->
+      <div class="swiper-pagination"></div>
+    
+      <!-- If we need navigation buttons -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+
+    </div>
     
   </div>
   

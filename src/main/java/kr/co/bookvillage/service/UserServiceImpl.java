@@ -7,8 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.InactiveUserDto;
@@ -23,42 +25,74 @@ public class UserServiceImpl implements UserService {
   public final UserMapper userMapper;
   public final MySecurityUtils mySecurityUtils;
   
-  @Override
-  public void login(HttpServletRequest request, HttpServletResponse response , Model model) throws Exception {
-    String email = request.getParameter("userNo");
-    String pw = mySecurityUtils.getSHA256(request.getParameter("pw"));
+  
+public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
     
-    Map<String, Object> map = Map.of("email", email
-                                   , "pw", pw);
-    
-    HttpSession session = request.getSession();
-    
-    InactiveUserDto inacticeUser = userMapper.getInactiveUser(map);
-    if(inacticeUser != null) {
-      session.setAttribute("inacticeUser", inacticeUser);
-      response.sendRedirect(request.getContextPath() + "/user/actice.from");
-    }
-    // 정상 로그인
-    UserDto user = userMapper.getUser(map);
-    
-    if(user != null) {
-      request.getSession().setAttribute("user", user);
-      userMapper.insertAccess(email);
-      response.sendRedirect(request.getParameter("referer"));
-    } else {
-      response.setContentType("text/html; charset=UTF-8");
-      PrintWriter out = response.getWriter();
+  String email = request.getParameter("email");
+  String pw = mySecurityUtils.getSHA256(request.getParameter("pw"));
+  
+  Map<String, Object> map = Map.of("email", email
+                                 , "pw", pw);
 
-      out.println("<script>");
-      out.println("alert('일치하는 회원 정보가 없습니다.')");
-      out.println("location.href='" + request.getContextPath() + "/main.do'");
-      out.println("</script>");
-      out.flush();
-      out.close();
-    }
+  HttpSession session = request.getSession();
+  
+  // 휴면 계정인지 확인하기
+  InactiveUserDto inactiveUser = userMapper.getInactiveUser(map);
+  if(inactiveUser != null) {
+    session.setAttribute("inactiveUser", inactiveUser);
+    response.sendRedirect(request.getContextPath() + "/user/active.form");
+  }
+  
+  // 정상적인 로그인 처리하기
+  UserDto user = userMapper.getUser(map);
+  System.out.println(user);
+  System.out.println("Query: " + userMapper.getUser(map));
+  System.out.println("Parameters: " + map);
+
+  
+  if(user != null) {
+    request.getSession().setAttribute("user", user);
+    userMapper.insertAccess(email);
+    response.sendRedirect(request.getParameter("referer"));
+  } else {
+    response.setContentType("text/html; charset=UTF-8");
+    PrintWriter out = response.getWriter();
+    out.println("<script>");
+    out.println("alert('일치하는 회원 정보가 없습니다.')");
+    out.println("location.href='" + request.getContextPath() + "/main.do'");
+    out.println("</script>");
+    out.flush();
+    out.close();
+  }
     
   }
- 
   
+@Override
+public void logout(HttpServletRequest request, HttpServletResponse response) {
+  
+  HttpSession session = request.getSession();
+  
+  session.invalidate();
+  
+  try {
+    response.sendRedirect(request.getContextPath() + "/main.do");
+  } catch (Exception e) {
+    e.printStackTrace();
+  }
+  
+}
+
+@Transactional(readOnly = true)
+@Override
+public ResponseEntity<Map<String, Object>> checkEmail(String email) {
+
+  Map<String, Object> map = Map.of("email", email);
+  
+  boolean enableEmail = userMapper.getUser(map) == null
+                    && userMapper.getInactiveUser(map) == null;
+  
+  return new ResponseEntity<>(Map.of("enableEmail", enableEmail), HttpStatus.OK);
+}
+
 
 }
