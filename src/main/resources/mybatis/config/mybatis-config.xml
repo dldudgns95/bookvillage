@@ -17,7 +17,6 @@
     <typeAlias alias="NoticeDto"       		   type="kr.co.bookvillage.dto.NoticeDto"/>
     <typeAlias alias="AttachNtDto"             type="kr.co.bookvillage.dto.AttachNtDto"/>
     <typeAlias alias="BookDto"                 type="kr.co.bookvillage.dto.BookDto"/>
-
   </typeAliases>
 
 </configuration>

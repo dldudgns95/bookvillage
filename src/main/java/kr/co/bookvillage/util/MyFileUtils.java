@@ -22,8 +22,8 @@ public class MyFileUtils {
     return "/Users/seoga-eul/blog/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(date);
   }
   
-  // 업로드 게시판 작성시 첨부한 파일이 저장될 경로 반환하기
-  public String getUploadPath() {
+  // 공지사항 작성시 첨부한 파일이 저장될 경로 반환하기
+  public String getNoticePath() {
     LocalDate today = LocalDate.now();
     return "/Users/seoga-eul/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }

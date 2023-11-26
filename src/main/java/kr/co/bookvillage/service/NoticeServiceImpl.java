@@ -3,16 +3,23 @@ package kr.co.bookvillage.service;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.bookvillage.dao.NoticeMapper;
 import kr.co.bookvillage.dto.AttachNtDto;
 import kr.co.bookvillage.dto.NoticeDto;
+import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.util.MyFileUtils;
+import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 
@@ -23,35 +30,42 @@ public class NoticeServiceImpl implements NoticeService {
 	
 	private final NoticeMapper noticeMapper;
 	private final MyFileUtils myFileUtils;
+	private final MyPageUtils myPageUtils;
+
 	
 	@Override
 	public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
 		String ntTitle = multipartRequest.getParameter("ntTitle");
 	    String ntContent = multipartRequest.getParameter("ntContent");
+	    int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
+	    
 	    NoticeDto notice = NoticeDto.builder()
 	                        .ntTitle(ntTitle)
 	                        .ntContent(ntContent)
+	                        .userDto(UserDto.builder()
+	                                  .userNo(userNo)
+	                                  .build())
 	                        .build();
 	    
-	    int noticeCount = noticeMapper.insertNotice(notice);
+	    int uploadCount = noticeMapper.insertNotice(notice);
 	    
 	    List<MultipartFile> files = multipartRequest.getFiles("files");
 	    
 	    // 첨부 없을 때 : [MultipartFile[field="files", filename=, contentType=application/octet-stream, size=0]]
 	    // 첨부 1개     : [MultipartFile[field="files", filename="animal1.jpg", contentType=image/jpeg, size=123456]]
 	    
-	    int attachCount;
+	    int ntAttachCount;
 	    if(files.get(0).getSize() == 0) {
-	      attachCount = 1;
+	      ntAttachCount = 1;
 	    } else {
-	      attachCount = 0;
+	      ntAttachCount = 0;
 	    }
 	    
 	    for(MultipartFile multipartFile : files) {
 	      
 	      if(multipartFile != null && !multipartFile.isEmpty()) {
 	        
-	        String ntPath = myFileUtils.getUploadPath();
+	        String ntPath = myFileUtils.getNoticePath();
 	        File dir = new File(ntPath);
 	        if(!dir.exists()) {
 	          dir.mkdirs();
@@ -81,12 +95,35 @@ public class NoticeServiceImpl implements NoticeService {
 	                            .ntNo(notice.getNtNo())
 	                            .build();
 	        
-	        attachCount += noticeMapper.insertAttach(attach);
+	        ntAttachCount += noticeMapper.insertAttach(attach);
 	        
 	      }  // if
 	      
 	    }  // for
 	    
-	    return (noticeCount == 1) && (files.size() == attachCount);
+	    return (uploadCount == 1) && (files.size() == ntAttachCount);
 	}
+
+	@Transactional(readOnly=true)
+	@Override
+	public Map<String, Object> getNoticeList(HttpServletRequest request) {
+
+		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+	    int page = Integer.parseInt(opt.orElse("1"));
+	    int total = noticeMapper.getNoticeCount();
+	    int display = 9;
+	    
+	    myPageUtils.setPaging(page, total, display);
+	    
+	    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
+	                                   , "end", myPageUtils.getEnd());
+	    
+	    List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
+	    
+	    return Map.of("noticeList", noticeList
+	                , "totalPage", myPageUtils.getTotalPage());
+	    
+	}
+
+
 }
