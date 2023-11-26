@@ -1,15 +1,23 @@
 package kr.co.bookvillage.controller;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.co.bookvillage.service.UserService;
+import lombok.RequiredArgsConstructor;
+
 @RequestMapping(value="/user")
+@RequiredArgsConstructor
 @Controller
 public class UserController {
+  
+  public final UserService  userService;
   
   @GetMapping("/login.form")
   public String loginForm(HttpServletRequest request, Model model) throws Exception {
@@ -21,7 +29,25 @@ public class UserController {
     return "user/login";
   }
   
-
+  @PostMapping("/login.do")
+  public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    userService.login(request, response);
+  }
+  
+  @GetMapping("/agree.form")
+  public String agreeForm() {
+    return "user/agree";
+  }
+  
+  @GetMapping("/active.form")
+  public String activeForm() {
+    return "user/active";
+  }
+  
+  @GetMapping("/logout.do")
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+    userService.logout(request, response);
+  }
 
 }
   

@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AccessDto {
   
-  private int userNo;
+  private int email;
   private Date loginDate;
   
 
