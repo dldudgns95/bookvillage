@@ -6,17 +6,21 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.UserDto;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
@@ -100,6 +104,11 @@ public class AdminServiceImpl implements AdminService {
       }
     }
     return count;
+  }
+  
+  @Override
+  public List<UserDto> getUserList() {
+    return adminMapper.getUserList();
   }
   
 }

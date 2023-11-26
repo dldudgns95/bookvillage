@@ -18,8 +18,14 @@ public class AdminController {
   private final AdminService adminService;
   
   @GetMapping("/list.do")
-  public String adminList() {
-    return "admin/list";
+  public String mainList() {
+    return "admin/main";
+  }
+  
+  @GetMapping("/memberList.do")
+  public String memberList(Model model) {
+    model.addAttribute("userList", adminService.getUserList());
+    return "admin/memberList";
   }
   
   @GetMapping("/insertBooks.do")
