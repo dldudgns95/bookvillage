@@ -90,7 +90,7 @@
       </a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
     </div>
@@ -111,6 +111,12 @@
             <input class="form-check-input" type="radio" name="type" id="applyBookSearch">
             <label class="form-check-label" for="applyBookSearch">
               희망도서 검색
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="bookCheckoutSearch">
+            <label class="form-check-label" for="bookCheckoutSearch">
+              대출/반납 승인
             </label>
           </div>
         </div>
