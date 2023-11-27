@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.WishMapper">
+
+  <resultMap id="WishMap"            type="kr.co.bookvillage.dto.WishDto">
+    <id      column="ISBN"           property="isbn" />
+    <result  column="USER_NO"        property="userNo" />
+    <result  column="WISH_DATE"      property="wishDate" />
+  </resultMap>
+
+
+  <insert id="insertWish" parameterType="WishDto">
+    INSERT INTO WISH(
+      ISBN
+    , USER_NO
+    , WISH_DATE
+    ) VALUES(
+      #{isbn}
+    , #{userNo}
+    , #{wishDate}
+    )
+  </insert>
+  
+</mapper>

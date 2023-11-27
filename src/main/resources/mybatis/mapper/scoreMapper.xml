@@ -14,5 +14,33 @@
   </resultMap>
 
 
+  <insert id="insertScore" parameterType="ScoreDto">
+    INSERT INTO SCORE(
+      ISBN
+    , USER_NO
+    , REVIEW_DATE
+    , STAR
+    , REVIEW
+    ) VALUES(
+      #{isbn}
+    , #{userNo}
+    , #{reviewDate}
+    , #{star}
+    , #{review}
+    )
+  </insert>
+  
+  <select id="getScore" parameterType="String" resultMap="ScoreMap">
+    SELECT ISBN, USER_NO, REVIEW_DATE, STAR, REVIEW
+      FROM SCORE
+     WHERE ISBN = ${isbn}     
+  </select>
+  
+  
+  <delete id="deleteScore" parameterType="ScoreDto">
+    DELETE FROM SCORE 
+     WHERE ISBN=#{isbn}
+       AND USER_NO=#{userNo}
+  </delete>
   
 </mapper>

@@ -40,7 +40,9 @@
       FROM BOOK
      WHERE ISBN = ${isbn}     
   </select>
-
-
+  
+  <update id="updateStatus">
+    UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
+  </update>
   
 </mapper>
