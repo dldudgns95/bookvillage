@@ -23,16 +23,22 @@ public class AdminController {
     return "admin/main";
   }
   
-  @GetMapping("/memberList.do")
-  public String memberList(HttpServletRequest request, Model model) {
+  @GetMapping("/userList.do")
+  public String userList(HttpServletRequest request, Model model) {
     adminService.getUserList(request, model);
-    return "admin/memberList";
+    return "admin/userList";
+  }
+  
+  @GetMapping("/bookList.do")
+  public String bookList(HttpServletRequest request, Model model) {
+    adminService.getBookList(request, model);
+    return "admin/bookList"; 
   }
   
   @GetMapping("/insertBooks.do")
   public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
-    return "redirect:/admin/memberList.do";
+    return "redirect:/admin/userList.do";
   }
   
 }
