@@ -15,11 +15,7 @@
   <!-- 매일 새로운 로그 파일을 만드는 RollingFileAppender -->
   <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-<<<<<<< HEAD
       <fileNamePattern>/logs/bookvillage.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-=======
-      <fileNamePattern>/log/bookvillage.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
->>>>>>> main
       <maxFileSize>100MB</maxFileSize>  <!-- 한 파일의 최대 크기 -->
       <maxHistory>30</maxHistory>       <!-- 파일 최대 갯수 -->
       <totalSizeCap>3GB</totalSizeCap>  <!-- 모든 파일의 최대 크기 -->
