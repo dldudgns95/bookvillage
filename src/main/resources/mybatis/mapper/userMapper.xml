@@ -33,5 +33,50 @@
        <if test="pw != null">AND PW = #{pw}</if>
      </where>
    </select>
+   
+   
+   <insert id="insertUsesr" parameterType="UserDto">
+      INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , PW
+      , NAME
+      , MOBILE
+      , GENDER
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_DATE
+      , JOINED_DATE
+      , STATUS
+      ) VALUES (
+          USER_T_SEQ.NEXTVAL
+        , #{email}
+        , #{pw}
+        , #{name}
+        , #{mobile}
+        , #{gender}
+        , #{agree}
+        , 0
+        , 0
+      , SYSDATE
+      , SYSDATE
+      , 1
+     )
+   </insert>
+   
+   <update id="updatePw" parameterType="UserDto">
+      UPDATE USER_T
+         SET PW = #{pw}
+           , PW_MODIFIED_DATE = SYSDATE
+       WHERE USER_NO = {userNo}    
+   </update>
+   
+   <select id="findId" parameterType="Map" resultType="UserDto">
+      SELECT NVL(EMAIL, '0')
+        FROM USER_T
+       WHERE NAME  = #{name}
+           , MOBILE = #{mobile}    
+   </select>
   
 </mapper>
