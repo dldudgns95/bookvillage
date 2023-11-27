@@ -20,8 +20,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
   
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(requiredLoginInterceptor)
+      .addPathPatterns("/user/modifyPw.form");
     registry.addInterceptor(shouldNotLoginInterceptor)
-    .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
+      .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
   }
   
   @Override

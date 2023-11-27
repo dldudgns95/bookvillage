@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+  }
+  
+  .padding_top {
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 20px;
+    width: 700px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .list-group {
+    min-width: 115px;
+    --bs-list-group-item-padding-x: 0.5rem;
+  }
+  
+  .input-group {
+    margin: 0 auto;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
+  .table_isbn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 132px;
+    height: 41px;
+  }
+  .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 565px;
+    height: 41px;
+  }
+  
+  .table_author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+    height: 41px;
+  }
+  
+  .table_publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 105px;
+    height: 41px;
+  }
+  
+  .admin_spacebetween{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  #calendar {
+    width: 600px;
+  }
+  
+</style>
+
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin padding_top">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+    </div>
+    
+    <div class="admin_contents">
+      <form method="get" th:action="@{/admin/facAdd.do}">
+        <div class="mb-3 row">
+          <label for="facName" class="col-sm-2 col-form-label">시설명</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="facName" name="facName" placeholder="시설명을 입력해주세요.">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="textContent" class="form-label">시설 설명</label>
+          <textarea class="form-control" id="textContent" name="textContent" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="files" class="form-label">이미지 파일 선택</label>
+          <input class="form-control" type="file" id="files" name="files" multiple>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

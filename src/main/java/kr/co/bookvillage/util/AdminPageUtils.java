@@ -40,6 +40,7 @@ public class AdminPageUtils {
     
     // 전체 페이지 계산
     totalPage = (int)Math.ceil((double)total / display);
+    System.out.println("totalPage : " + totalPage);
     
     // 각 블록의 시작 페이지와 종료 페이지 계산
     beginPage = ((page - 1) / pagePerBlock) * pagePerBlock + 1;
@@ -99,8 +100,7 @@ public class AdminPageUtils {
     if(endPage == totalPage) {
       sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" aria-disabled=\"true\">다음</a></li>");
     } else {
-      sb.append("<li class=\\\"page-item\\\"><a class=\\\"page-link\\\" href=\\\""+url + "?page=" + (endPage + 1)+"\\\">다음</a></li>");
-      sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "\">다음</a>");
+      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+url + "?page=" + (endPage + 1)+"\">다음</a></li>");
     }
     
     sb.append("</ul></nav></div>");
@@ -142,8 +142,8 @@ public class AdminPageUtils {
     if(endPage == totalPage) {
       sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" aria-disabled=\"true\">다음</a></li>");
     } else {
-      sb.append("<li class=\\\"page-item\\\"><a class=\\\"page-link\\\" href=\\\""+url + "?page=" + (endPage + 1)+"&" + params +"\\\">다음</a></li>");
-      sb.append("<a href=\"" + url + "?page=" + (endPage + 1) + "&" + params +"\">다음</a>");
+      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+url + "?page=" + (endPage + 1)+"&" + params +"\">다음</a></li>");
+      
     }
     
     sb.append("</ul></nav></div>");

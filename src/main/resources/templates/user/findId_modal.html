@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('아이디조회')}"></head>
+
+<script th:src="@{/js/findId.js(ver=1.0)}"></script>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="wrap wrap_7">
+    
+    
+         <div id="modal" class="modal-overlay">
+                <div class="modal-window">
+                    <div class="title">
+                        <h2>아이디 조회 결과</h2>
+                    </div>
+                    <div class="close-area">X</div>
+                    <div class="content" id="id_value"></div>
+                </div>
+            </div>
+
+    </div>
+
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>

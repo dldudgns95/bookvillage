@@ -4,7 +4,7 @@
 <head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
 
 <style>
-  .flex_member {
+  .flex_admin {
     display: flex;
     padding-top: 10px;
   }
@@ -29,12 +29,12 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="flex_member">
+  <div class="flex_admin">
     <div class="list-group">
-      <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action active" aria-current="true">
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
@@ -117,34 +117,13 @@
           </tfoot>
         </table>
       </div>
-      <div>
-        <form th:action="@{/admin/insertBooks.do}" method="get">
-          <select name="QueryType">
-            <option value="ItemNewAll">신간 전체 리스트</option>
-            <option value="Bestseller">베스트셀러</option>
-          </select>
-          <select name="Start">
-            <option value="1">1~50</option>
-            <option value="2">51~100</option>
-            <option value="3">101~150</option>
-            <option value="4">151~200</option>
-          </select>
-          <button type="submit">도서업데이트</button>
-        </form>
-      </div>
     </div>
 
   </div>
   
-  <script th:inline="javascript">
-    const fnBookCount = () => {
-      let bookCount = /*[[${bookCount}]]*/ null;
-      if(bookCount !== null) {
-        alert(bookCount + '개의 책이 업데이트되었습니다.');
-      }
-    }  
-    
-    const fnBookSearch = () => {
+  <script>
+  
+    const fnUserSearch = () => {
       $('#frm_search').submit((ev) => {
         let query = $('.serach_text').val().trim();
         let checkUserNo = /^[0-9]{1,}$/;
@@ -180,7 +159,7 @@
     }
     
     fnBookCount();
-    fnBookSearch(); 
+    fnUserSearch(); 
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

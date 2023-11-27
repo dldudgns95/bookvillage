@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('FAQ')}"></head>
+
+<style>
+	div.child1{
+		width: 100px;
+		height: 300px;
+		float:left;
+		margin-top: 50px;
+		margin-right:20px;
+		background-color: lightsteelblue;
+		text-align: center;
+		
+		
+	}
+	div.child2{
+		width: 750px;
+		height: 200px;
+		float:left;
+		text-align: center;
+	}
+    .btn-spacing {
+		margin-top: 17px;
+        margin-right: 10px; /* 원하는 여백 크기로 조절하세요 */
+    }
+</style>
+
+<body>
+
+  <div th:replace="~{/layout/header::header}"></div>
+  <div class="parent">
+    <div class="wrap wrap_9">
+      <div class="child1">
+        <ul>
+          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
+		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+        </ul>
+      </div>
+      <div>
+		<h5 style="text-align: center;">FAQ</h5>
+        <!-- 관리자로 로그인 한 경우 -->
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
+          <a th:href="@{/support/faqwrite.form}">
+            <button type="button" class="btn btn-outline-primary">새 FAQ 작성하기</button>
+          </a>
+        </th:block>
+      </div>
+      <div class="child2">
+		<table border="2">
+	        <tr th:each="f : ${faqList}">
+			<div class="d-grid gap-2 col-4 mx-auto"><button class="btn btn-secondary btn-spacing" th:text="${f.faqTitle}"></button></div>
+			</tr>
+	    </table>
+    </div>
+    <script th:inline="javascript">
+
+      
+		</script>  
+      </div>
+   </div>  
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+

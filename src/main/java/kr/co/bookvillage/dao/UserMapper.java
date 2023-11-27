@@ -11,5 +11,9 @@ public interface UserMapper {
   public int insertAccess(String email);
   
   public InactiveUserDto getInactiveUser(Map<String, Object> map);
-
+  
+  public int insertUsesr(UserDto user);
+  
+  public String findId(String name, String mobile);
+  
 }

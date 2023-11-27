@@ -35,5 +35,4 @@ public interface QnaServiceImpl extends QnaService {
 	    
 	    Map<String, Object> map = Map.of("begin",my)
 	}
-}
-*/
+ */

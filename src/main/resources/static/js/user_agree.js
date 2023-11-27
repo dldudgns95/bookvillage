@@ -8,12 +8,14 @@ $(() => {
   fnJoinForm();
 })
 
+// 전체 선택을 클릭하면 개별 선택에 영향을 미친다.
 const fnChkAll = () => {
   $('#chk_all').click((ev) => {
     $('.chk_each').prop('checked', $(ev.target).prop('checked'));
   })
 }
 
+// 개별 선택을 클릭하면 전체 선택에 영향을 미친다.
 const fnChkEach = () => {
   $(document).on('click', '.chk_each', () => {
     var total = 0;
@@ -24,6 +26,7 @@ const fnChkEach = () => {
   })
 }
 
+// 필수 동의를 해야만 가입 페이지로 이동할 수 있다.
 const fnJoinForm = () => {
   $('#frm_agree').submit((ev) => {
     if(!$('#service').is(':checked')){

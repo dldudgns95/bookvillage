@@ -1,0 +1,137 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+/*common*/
+.search_inline {
+  display: inline-block;
+}
+.wrap_flex {
+  display: flex; /*2단 레이아웃 구성 위한 flex*/
+  position: relative;
+  text-align: center;
+}
+
+/*search*/
+/*검색*/
+.search_wrap {
+  position: relative;
+  text-align: center;
+}
+/*검색영역*/
+.search_area {
+  align-items: center;
+  position: relative;
+}
+/*검색영역 > 셀렉트 */
+.search_select {
+  display: inline-block;
+}
+/*검색영역 > 검색창 */
+.search_text {
+  display: inline-block;
+}
+.search_text input{
+  width: 300px;
+  padding: 5px;
+  margin-right: 5px;
+  border-radius: 5px;
+  border: 3px solid rgb(37, 94, 188);
+}
+/*검색영역 > 버튼*/
+.search_btn {
+  display: inline-block;
+}
+
+/*searchResult*/
+/*2단 레이아웃*/
+.column-2 {
+    flex: 2;
+    background-color: #f0f0f0;
+    margin-right: 20px;
+}
+.column-8 {
+    flex: 8;
+}
+
+/*검색 리스트*/
+.search_list {
+  display: flex;
+  margin-bottom: 20px;
+}
+.search_img {
+  display: flex;
+  flex: 1.5;
+  left: 20px;
+  margin-right: 20px;
+}
+.search_info {
+  display: flex;
+  flex-direction: column;
+  flex: 8.5;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.search_info span::after {
+  content: '|'; /* 각 span 요소 끝에 | 추가 */
+  margin: 10px;
+}
+.search_info span:last-child::after {
+  content: ''; /* 마지막 span 요소 뒤에는 |를 추가하지 않음 */
+}
+
+/*Detail*/
+.detail_book {
+  display: flex; /*자식들이 플렉스니까 플렉스 컨테이너로 지정*/
+}
+.detail_img {
+  display: flex;
+  flex: 3;
+  left: 20px;
+  margin-right: 20px;
+}
+.detail_info {
+  display: flex;
+  flex-direction: column;
+  flex: 7;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.book_table {
+  text-align: left;
+}
+
+/*별점*/
+.score fieldset {
+  display: inline-block;
+  direction: rtl;
+  border: 0px;
+}
+.score input[type=radio] {
+  display: none;
+}
+.score label {
+  font-size: 3em;
+  color: transparent;
+  text-shadow: 0 0 0 #f0f0f0;
+}
+.score label:hover {
+  text-shadow: 0 0 0 rgb(255, 222, 89);
+}
+.score label:hover ~ label {
+  text-shadow: 0 0 0 rgb(255, 222, 89);
+}
+.score input[type=radio]:checked ~ label {
+  text-shadow: 0 0 0 rgb(255, 222, 89);
+}
+.review {
+  width: 100%;
+  height: 150px;
+  padding: 10px;
+  box-sizing: border-box;
+  border: solid 1.5px #D3D3D3;
+  border-radius: 5px;
+  font-size: 16px;
+  resize: none;
+}
