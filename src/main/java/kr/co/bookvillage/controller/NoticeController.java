@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import kr.co.bookvillage.dto.NoticeDto;
+import kr.co.bookvillage.dto.FaqDto;
+import kr.co.bookvillage.service.FaqService;
 import kr.co.bookvillage.service.NoticeService;
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class NoticeController {
 	 
 	private final NoticeService noticeService;
+	private final FaqService faqService;
 	  
 	@GetMapping("/list.do")
 	public String list( ) {
@@ -47,11 +49,32 @@ public class NoticeController {
 	public Map<String, Object> getList(HttpServletRequest request){
 		return noticeService.getNoticeList(request);
 	}
+	
 
-    @GetMapping("/faq.do")
-	public String faqlist( ) {
-		return "support/faq";
+	
+	@GetMapping("/detail.do")
+	public String detail(HttpServletRequest request, Model model) {
+	    noticeService.loadNotice(request, model);
+	    return "support/detail";
 	}
 	
 
+    @GetMapping("/faqlist.do")
+    public String list(Model model) {
+    	List<FaqDto> faqList = faqService.getFaqList();
+    	model.addAttribute("faqList", faqList);
+    	return "support/faqlist";
+    }
+
+	@GetMapping("/faqwrite.form")
+	public String faqwrite() {
+		return "support/faqwrite";
+	}
+	
+	@PostMapping("/faqadd.do")
+	public String faqadd(FaqDto faqDto, RedirectAttributes redirectAttributes) {
+	    int addResult = faqService.addFaq(faqDto);
+	    redirectAttributes.addFlashAttribute("addResult", addResult);
+	    return "redirect:/support/faqlist.do";
+	}
 }

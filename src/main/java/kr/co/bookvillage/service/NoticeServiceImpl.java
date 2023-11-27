@@ -124,6 +124,23 @@ public class NoticeServiceImpl implements NoticeService {
 	                , "totalPage", myPageUtils.getTotalPage());
 	    
 	}
-
+	  @Transactional(readOnly=true)
+	  @Override
+	  public void loadNotice(HttpServletRequest request, Model model) {
+	    
+	    Optional<String> opt = Optional.ofNullable(request.getParameter("ntNo"));
+	    int ntNo = Integer.parseInt(opt.orElse("0"));
+	    
+	    model.addAttribute("notice", noticeMapper.getNotice(ntNo));
+	    model.addAttribute("attachList", noticeMapper.getAttachList(ntNo));
+	    
+	  }
+	  
+	  @Transactional(readOnly=true)
+	  @Override
+	  public NoticeDto getNotice(int ntNo) {
+	    return noticeMapper.getNotice(ntNo);
+	  }
+	  
 
 }

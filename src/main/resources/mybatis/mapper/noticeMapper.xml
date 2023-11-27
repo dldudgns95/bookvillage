@@ -28,7 +28,6 @@
   </resultMap>
 <!-- 공지사항 추가하기 -->
   <insert id="insertNotice" parameterType="NoticeDto">
-    <!-- INSERT 수행 이전에 파라미터 UploadDto의 uploadNo 필드에 UPLOAD_SEQ.NEXTVAL값을 저장한다. -->
     <selectKey order="BEFORE" resultType="int" keyProperty="ntNo">
       SELECT NOTICE_SEQ.NEXTVAL
         FROM DUAL
@@ -83,12 +82,23 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <select id="getUpload" parameterType="int" resultMap="NoticeMap">
-    SELECT N.NT_NO, N.NT_TITLE, N.NT_CONTENTS, N.NT_DATE,
+  <select id="getNotice" parameterType="int" resultMap="NoticeMap">
+    SELECT N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE
          , USR.USER_NO, USR.EMAIL, USR.NAME
       FROM USER_T USR RIGHT OUTER JOIN NOTICE N
         ON USR.USER_NO = N.USER_NO
      WHERE N.NT_NO = #{ntNo}
   </select>
-
+  
+  <select id="getAttachList" parameterType="int" resultType="AttachNtDto">
+    SELECT ATTACH_NT_NO, NT_PATH, NT_ORIGINAL_FILENAME, NT_FILESYSTEM_NAME, NT_DOWNLOAD_COUNT, NT_HAS_THUMBNAIL, NT_NO
+      FROM ATTACH_NT
+     WHERE NT_NO = #{ntNo}
+  </select>
+  
+  <select id="getAttach" parameterType="int" resultType="AttachNtDto">
+    SELECT ATTACH_NT_NO, NT_PATH, NT_ORIGINAL_FILENAME, NT_FILESYSTEM_NAME, NT_DOWNLOAD_COUNT, NT_HAS_THUMBNAIL, NT_NO
+      FROM ATTACH_NT
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </select>
 </mapper>

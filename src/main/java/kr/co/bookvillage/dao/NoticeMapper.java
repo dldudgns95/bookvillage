@@ -16,5 +16,6 @@ public interface NoticeMapper {
 	public int getNoticeCount();
 	public List<NoticeDto> getNoticeList(Map<String, Object> map);
 	public NoticeDto getNotice(int ntNo);
+	public List<AttachNtDto> getAttachList(int ntNo);
 
 }

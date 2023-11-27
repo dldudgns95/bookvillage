@@ -32,23 +32,23 @@
       <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-		  <li style="margin:20px"><a th:href="@{/support/faq.do}">FAQ</a></li>
+		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
       <h5 style="text-align: center;">공지사항</h5>
       <div>
+        <!-- 관리자로 로그인 한 경우 -->
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
    		  <a th:href="@{/support/write.form}">
             <button type="button" class="btn btn-outline-primary">새 공지 작성하기</button>
-          </a>  
-        <!-- 관리자로 로그인 한 경우 -->
-        <th:block th:if="${session.user != null and session.user.state == 9}">
-     
+          </a>       
         </th:block>
       </div>
       <div class="child2">
 
          <div id="notice_list" class="notice_list"></div>
+
    	  </div>
    	  
    <script th:inline="javascript">
@@ -73,10 +73,11 @@
               str += '<td>작성자:</td>';
               str += '<td>작성일:</td>';
               str += '</tr></thead>';
-              str += '<tbody><tr class="align-bottom"><td>' + notice.ntNo + '</td>';
+        	  str += '<tbody><tr><td class="notice" data-nt_no="' + notice.ntNo + '">' + notice.ntNo + '</td>';
               str += '<td>' + notice.ntTitle + '</td>';
               str += '<td>' + notice.userDto.name + '</td>'
-              str += '<td>' + notice.ntDate + '</td></tr></tbody>';
+              str += '<td>' + notice.ntDate + '</td>'
+              str += '</tr></tbody></table>';
               
               $('#notice_list').append(str);
             })
@@ -84,12 +85,11 @@
         })
       }
       
-      const fnNoticeDetail = () => {
-        $(document).on('click', '.notice', function(){
-          location.href = '/support/detail.do?ntNo=' + $(this).data('ntNo');
-        })
-      }
-    
+	const fnNoticeDetail = () => {
+	  $(document).on('click', '.notice', function(){
+	    location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');
+	  }); 
+	}
       const fnScroll = () => {
         
         var timerId;  // 최초 undefined 상태
