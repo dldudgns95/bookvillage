@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
+
+
+.login_box{
+  margin-bottom: 3px;
+  border-bottom: 2px solid #CCCCCC; 
+  
+}
+  .screen-out {
+    display: block;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }

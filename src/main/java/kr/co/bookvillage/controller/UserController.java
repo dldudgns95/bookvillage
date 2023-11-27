@@ -1,15 +1,28 @@
 package kr.co.bookvillage.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.co.bookvillage.service.UserService;
+import lombok.RequiredArgsConstructor;
 
 @RequestMapping(value="/user")
+@RequiredArgsConstructor
 @Controller
 public class UserController {
+  
+  public final UserService  userService;
   
   @GetMapping("/login.form")
   public String loginForm(HttpServletRequest request, Model model) throws Exception {
@@ -21,7 +34,52 @@ public class UserController {
     return "user/login";
   }
   
-
-
+  
+  // 로그인
+  @PostMapping("/login.do")
+  public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    userService.login(request, response);
+  }
+  
+  // 로그아웃 
+  @GetMapping("/logout.do")
+  public void logout(HttpServletRequest request, HttpServletResponse response) {
+    userService.logout(request, response);
+  }
+  
+  // 약관 동의 페이지로 이동
+  @GetMapping("/agree.form")
+  public String agreeForm() {
+    return "user/agree";
+  }
+  
+ 
+  
+  // 회원 가입 페이지로 이동
+  @GetMapping("join.form")
+  public String joinForm(@RequestParam(value = "service", required = false, defaultValue = "off") String service
+                        , @RequestParam(value = "event", required = false, defaultValue = "off") String event
+                        , Model model) {
+    String rtn = null;
+    if(service.equals("off")) {
+      rtn = "redirect:/main.do";
+    } else {
+      model.addAttribute("event", event);
+      rtn = "user/join";
+    }
+    return rtn;
+  }
+  
+  // 이메일 확인
+  @GetMapping(value = "checkEmail.do", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, Object>> checkEmail(@RequestParam String email) {
+      return userService.checkEmail(email);
+    }
+  
+  
+ 
+  
+  
+  
 }
   
