@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping(value="/support")
+@RequestMapping(value="/apply")
 @RequiredArgsConstructor
 @Controller
-public class SupportController {
+public class ApplyController {
 	
-	@GetMapping("/notice.do")
-	public String noticelist( ) {
-		return "support/notice";
+	@GetMapping("/faclist.do")
+	public String faclist( ) {
+		return "apply/faclist";
 	}
-
+	
 }

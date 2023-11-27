@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.MypageMapper">
+
+  <select id="getUser" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+      FROM USER_T
+    <where>
+      <if test="email != null">EMAIL = #{email}</if>
+      <if test="pw != null">AND PW = #{pw}</if>
+      <if test="userNo != null">AND USER_NO = #{userNo}</if>
+    </where>
+  </select>
+  
+  <update id="updateUser" parameterType="UserDto">
+    UPDATE USER_T
+       SET NAME = #{name}
+         , MOBILE = #{mobile}
+         , GENDER = #{gender}
+         , AGREE = #{agree}
+     WHERE USER_NO = #{userNo}    
+  </update>
+  
+  <update id="updateUserPw" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW = #{pw}
+         , PW_MODIFIED_DATE = SYSDATE
+     WHERE USER_NO = #{userNo}
+  </update>
+  
+
+</mapper>

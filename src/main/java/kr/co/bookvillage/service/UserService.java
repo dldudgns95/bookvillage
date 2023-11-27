@@ -7,12 +7,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
 
+import kr.co.bookvillage.dto.UserDto;
+
 public interface UserService {
   
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
   public void logout(HttpServletRequest request, HttpServletResponse response);
-
-  public ResponseEntity<Map<String, Object>> checkEmail(String email);
   
+  //public String getNaverLoginURL(HttpServletRequest request) throws Exception;
+  //public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
+  //public UserDto getNaverProfile(String accessToken) throws Exception;
+  public UserDto getUser(String email);
+  
+  
+  public ResponseEntity<Map<String, Object>> checkEmail(String email);
+  public ResponseEntity<Map<String, Object>> sendCode(String email);
+  
+  public void join(HttpServletRequest request, HttpServletResponse response);
+  
+  // 이메일 찾기(아이디)
+  public String findId(String name, String mobile);
   
 }

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+  }
+  
+  .padding_top {
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 20px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .list-group {
+    min-width: 115px;
+    --bs-list-group-item-padding-x: 0.5rem;
+  }
+  
+  .input-group {
+    margin: 0 auto;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
+  .table_isbn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 132px;
+    height: 41px;
+  }
+  .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 565px;
+    height: 41px;
+  }
+  
+  .table_author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+    height: 41px;
+  }
+  
+  .table_publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 105px;
+    height: 41px;
+  }
+  
+  .admin_spacebetween{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  #calendar {
+    width: 600px;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin padding_top">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div id='calendar'></div>
+      <div>
+        <button type="button" class="btn btn-primary" id="btn_write">시설 등록하기</button>
+      </div>
+    </div>
+
+  </div>
+  
+  <script th:inline="javascript">
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
+        headerToolbar : { // 헤더에 표시할 툴 바
+          start : 'prev next today',
+          center : 'title',
+          end : 'dayGridMonth,dayGridWeek,dayGridDay'
+        },
+        titleFormat : function(date) {
+          return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+        },
+        //initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
+        selectable : true, // 달력 일자 드래그 설정가능
+        droppable : true,
+        editable : true,
+        nowIndicator: true, // 현재 시간 마크
+        locale: 'ko', // 한국어 설정
+        
+        dateClick: function(info) {
+          alert('Clicked on: ' + info.dateStr);
+        }
+        
+      });
+      calendar.render();
+    });
+    
+   const fnFacWrite = () => {
+     $('#btn_write').click(() => {
+       location.href="/admin/facWrite.form";
+     })
+   }
+    
+   fnFacWrite();
+    
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
