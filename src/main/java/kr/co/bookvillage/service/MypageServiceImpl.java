@@ -33,7 +33,7 @@ public class MypageServiceImpl implements MypageService {
   @Override
   public ResponseEntity<Map<String, Object>> modify(HttpServletRequest request) {
     String name = mySecurityUtils.preventXSS(request.getParameter("name"));
-    int gender = Integer.parseInt(request.getParameter("gender"));
+    String gender = request.getParameter("gender");
     String mobile = request.getParameter("mobile");
     String event = request.getParameter("event");
     int agree = event.equals("on") ? 1 : 0;

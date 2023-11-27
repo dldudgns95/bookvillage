@@ -54,7 +54,7 @@ CREATE TABLE USER_T (
   PW               VARCHAR2(64 BYTE)  NOT NULL,           -- 비밀번호
   NAME             VARCHAR2(50 BYTE)  UNIQUE,    -- 회원이름
   MOBILE           VARCHAR2(15 BYTE),           -- 전화번호
-  GENDER           VARCHAR2(5 BYTE),            -- 성별 (0:남자, 1:여자, 2: 선택안함)
+  GENDER           VARCHAR2(5 BYTE),            -- 성별 (0:남자, 1:여자, 3:선택안함)
   AGREE            NUMBER,                      -- 동의 (0:필수, 1: 이벤트)
   STATE            NUMBER,                      -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
   AUTH             NUMBER,                      -- 등급 (0:일반, 1: 휴면, 9: 관리자)
