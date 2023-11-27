@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.BookMapper">
+
+  <resultMap id="BookMap"           type="kr.co.bookvillage.dto.BookDto">
+    <id      column="ISBN"          property="isbn" />
+    <result  column="TITLE"         property="title" />
+    <result  column="COVER"         property="cover" />
+    <result  column="AUTHOR"        property="author" />
+    <result  column="PUBLISHER"     property="publisher" />
+    <result  column="PUBDATE"       property="pubdate" />
+    <result  column="DESCRIPTION"   property="description" />
+    <result  column="STATUS"        property="status" />
+    <result  column="CATEGORY_NAME" property="categoryName" />
+    <result  column="CATEGORY_ID"   property="categoryId" />
+  </resultMap>
+
+  <select id="getBook" parameterType="BookSearchDto" resultMap="BookMap">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+     WHERE 
+      <choose>
+        <when test="ss == 'total'">
+          TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'title'">
+          TITLE LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'author'">
+          AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+      </choose>       
+  </select>
+  
+  <select id="getBookDetail" parameterType="String" resultMap="BookMap">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+     WHERE ISBN = ${isbn}     
+  </select>
+
+
+  
+</mapper>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
+
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+      <nav class="breadcrumb">
+        <ul class="b_menu">
+          <li class="home">
+            <span class="home_ico">
+              <em class="blind"><i class="fa-solid fa-house"></i></em>
+            </span>
+          </li>
+          <li class>
+            <a href="#none">자료검색</a>
+            <div class="dep_list" style="display: none;">
+              <ul>
+                <li class>
+                  <a href="/book/search.do">자료검색</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">나만의 도서관</a>
+                </li>
+                <li class>
+                  <a href="/support/notice.do">고객센터</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">시설안내</a>
+                </li>
+                <li class>
+                  <a href="/user/login.form">로그인</a>
+                </li>
+                <li class>
+                  <a href="/user/agree.form">회원가입</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <strong class="current"></strong>
+          </li>
+        </ul>
+      </nav>
+      
+    <div class="wrap wrap_flex">
+      <div class="column-2">
+        
+      </div>
+      
+      <div class="column-8">
+        <div class="search_menu">
+          <div class="search_ico">
+            <i class="fa-solid fa-list"></i>
+          </div>            
+        </div>
+        <hr>
+          <div th:if="${#lists.size(bookSearchList) > 0}">
+            <ul th:each="book : ${bookSearchList}" class="search_list" >
+              <li class="search_img search_inline">
+                <img th:src="${book.cover}" style="width: 100px;"></img>
+              </li>
+              <li class="search_info search_inline">
+                <div><h4 th:text="${book.title}"></h4></div>
+                <div>저자: <span th:text="${book.author}"></span></div>
+                <div>
+                  출판사: <span th:text="${book.publisher}"></span> 
+                  출간일: <span th:text="${book.pubdate}"></span> 
+                  ISBN: <span th:text="${book.isbn}"></span>
+                </div>
+                
+                <div>
+                  <table border="2">
+                    <thead>
+                      <tr>
+                        <th>대출상태</th>
+                        <th>반납예정일</th>
+                        <th>관심도서</th>
+                        <th>상세보기</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
+                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
+                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
+                        <td>
+                          <form id="searchDetail" name="searchDetail" action="detail" method="get">
+                            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+                            <input type="hidden" name="isbn" th:value="${book.isbn}" />
+                            <input type="submit" value="상세" title="상세" class="btn btn-outline-secondary">
+                          </form>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>               
+                
+              </li>
+            </ul>
+          </div>
+          
+          <div th:if="${#lists.size(bookSearchList) == 0}">
+              <p>검색 결과가 없습니다.</p>
+          </div>
+        </div>
+
+      </div>
+      
+
+        
+      </div>
+      
+      
+      
+    </div>
+
+    <script th:src="@{/js/bread.js}"></script>
+    <script th:src="@{/js/book.js}"></script>
+  
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
