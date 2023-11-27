@@ -12,6 +12,16 @@
   .admin_contents {
     margin-left: 200px;
   }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
   
 </style>
 
@@ -83,6 +93,28 @@
               </tr>
             </th:block>
           </tbody>
+          <tfoot class="tfoot_center">
+            <td colspan="6">
+              <div class="flex_tfoot">
+                <div th:utext="${paging}"></div>
+                <div>
+                  <form id="frm_search" method="post" th:action="@{/admin/userSearch.do}">
+                    <div class="input-group w-100 p-3">
+                      <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
+                        <option value="USER_NO" selected>회원번호</option>
+                        <option value="EMAIL">회원이메일</option>
+                        <option value="NAME">회원이름</option>
+                      </select>
+                      <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">
+                        <i class="fa-solid fa-magnifying-glass white"></i>
+                      </button>
+                    </div>
+                  </form>              
+                </div>
+              </div>
+            </td>
+          </tfoot>
         </table>
       </div>
       <div>
@@ -90,6 +122,12 @@
           <select name="QueryType">
             <option value="ItemNewAll">신간 전체 리스트</option>
             <option value="Bestseller">베스트셀러</option>
+          </select>
+          <select name="Start">
+            <option value="1">1~50</option>
+            <option value="2">51~100</option>
+            <option value="3">101~150</option>
+            <option value="4">151~200</option>
           </select>
           <button type="submit">도서업데이트</button>
         </form>
@@ -105,7 +143,44 @@
         alert(bookCount + '개의 책이 업데이트되었습니다.');
       }
     }  
-    fnBookCount();  
+    
+    const fnBookSearch = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        let checkUserNo = /^[0-9]{1,}$/;
+        let checkEmail = /^[a-zA-Z0-9@]{2,}$/;
+        let checkName = /^[a-zA-Z0-9가-힣]{2,}$/;
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('.search_select').val() === "USER_NO") {
+          if(!checkUserNo.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자로만 구성)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "EMAIL") {
+          if(!checkEmail.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,@로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "NAME") {
+          if(!checkName.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+      })
+    }
+    
+    fnBookCount();
+    fnBookSearch(); 
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

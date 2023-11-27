@@ -6,7 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,10 +15,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dto.BookDto;
-import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.AdminPageUtils;
+import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
 
 @Transactional
@@ -26,6 +29,8 @@ import lombok.RequiredArgsConstructor;
 public class AdminServiceImpl implements AdminService {
   
   private final AdminMapper adminMapper;
+  private final MyPageUtils myPageUtils;
+  private final AdminPageUtils adminPageUtils;
 
   @Override
   public int insertBook(HttpServletRequest request){
@@ -33,13 +38,14 @@ public class AdminServiceImpl implements AdminService {
     String apiURL = "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
     String ttbkey = "ttbalsltksxk2011001";
     String QueryType = request.getParameter("QueryType");
+    String Start = request.getParameter("Start");
     
     StringBuilder sb = new StringBuilder();
     sb.append(apiURL);
     sb.append("?ttbkey=" + ttbkey);
     sb.append("&QueryType=" + QueryType);
-    sb.append("&MaxResults=10");
-    sb.append("&start=1");
+    sb.append("&MaxResults=50");
+    sb.append("&Start=" + Start);
     sb.append("&SearchTarget=Book");
     sb.append("&output=JS");
     sb.append("&Cover=Big");
@@ -71,8 +77,6 @@ public class AdminServiceImpl implements AdminService {
       e.printStackTrace();
     }
     
-    // System.out.println(obj);
-    
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     
     JSONArray array = (JSONArray)obj.get("item");
@@ -103,12 +107,27 @@ public class AdminServiceImpl implements AdminService {
         count++;
       }
     }
+    
+    System.out.println(array.length());
+    
     return count;
   }
   
   @Override
-  public List<UserDto> getUserList() {
-    return adminMapper.getUserList();
+  public void getUserList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.userTotalCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("userList", adminMapper.getUserList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/memberList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    
   }
   
 }
