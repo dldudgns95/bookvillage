@@ -28,6 +28,10 @@
 <link rel="stylesheet" th:href="@{/css/ckeditor.css(ver=1.0)}" />
 <link rel="stylesheet" th:href="@{/css/bread.css(ver=1.0)}" />
 <link rel="stylesheet" th:href="@{/css/book.css(ver=1.0)}" />
+<link rel="stylesheet" th:href="@{/css/login.css(ver=1.0)}" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
 </head>
@@ -53,13 +57,15 @@
         <ul class="ico_user_group">
           <li><a th:href="@{/user/login.form}"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
           <li><a th:href="@{/user/agree.form}"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
-          <li><a th:href="@{/admin/list.do}"><i class="fa-solid fa-lock"></i> 관리자</a></li>
         </ul>
       </th:block>
       <th:block th:if="${session.user != null}">
         <ul class="ico_user_group">
           <li th:text="|${session.user.name}님 환영합니다|"></li>
           <li><a th:href="@{/user/logout.do}"><i class="fa-solid fa-arrow-left"></i> 로그아웃</a></li>
+          <th:block th:if="${session.user.auth == 9}">
+            <li><a th:href="@{/admin/list.do}"><i class="fa-solid fa-lock"></i> 관리자</a></li>  
+          </th>
         </ul>
       </th:block>
     </div>
@@ -67,7 +73,7 @@
       <ul class="gnb">
         <li><a th:href="@{/book/search.do}">자료검색</a></li>
         <li><a th:href="@{/mypage/list.do}">나만의 도서관</a></li>
-        <li><a th:href="@{/support/notice.do}">고객센터</a></li>
+        <li><a th:href="@{/support/list.do}">고객센터</a></li>
         <li><a th:href="@{/support/notice.do}">시설안내</a></li>
       </ul>
     </div>

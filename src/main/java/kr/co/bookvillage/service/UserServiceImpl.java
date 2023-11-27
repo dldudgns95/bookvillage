@@ -7,7 +7,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.InactiveUserDto;
@@ -22,10 +25,11 @@ public class UserServiceImpl implements UserService {
   public final UserMapper userMapper;
   public final MySecurityUtils mySecurityUtils;
   
+  
 public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
     
   String email = request.getParameter("email");
-  String pw = request.getParameter("pw");
+  String pw = mySecurityUtils.getSHA256(request.getParameter("pw"));
   
   Map<String, Object> map = Map.of("email", email
                                  , "pw", pw);
@@ -76,6 +80,18 @@ public void logout(HttpServletRequest request, HttpServletResponse response) {
     e.printStackTrace();
   }
   
+}
+
+@Transactional(readOnly = true)
+@Override
+public ResponseEntity<Map<String, Object>> checkEmail(String email) {
+
+  Map<String, Object> map = Map.of("email", email);
+  
+  boolean enableEmail = userMapper.getUser(map) == null
+                    && userMapper.getInactiveUser(map) == null;
+  
+  return new ResponseEntity<>(Map.of("enableEmail", enableEmail), HttpStatus.OK);
 }
 
 
