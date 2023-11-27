@@ -5,6 +5,7 @@
 
 <mapper namespace="kr.co.bookvillage.dao.AdminMapper">
 
+  <!-- 책 넣기 -->
   <insert id="insertBook" parameterType="bookDto">
     INSERT INTO BOOK(
       ISBN
@@ -30,5 +31,32 @@
     , #{categoryId}
     )
   </insert>
+  
+  <!-- 총 유저수 카운트-->
+  <select id="userTotalCount" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+  </select>
+  
+  <!-- 유저 목록 가져오기-->
+  <select id="getUserList" parameterType="Map" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
+      FROM USER_T
+     WHERE USER_NO BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 총 도서수 카운트-->
+  <select id="bookTotalCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK
+  </select>
+  
+  <!-- 도서 목록 가져오기-->
+  <select id="getBookList" parameterType="Map" resultType="BookDto">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+              FROM BOOK)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
   
 </mapper>

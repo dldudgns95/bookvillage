@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+  }
+  
+  .padding_top {
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 20px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .list-group {
+    min-width: 115px;
+    --bs-list-group-item-padding-x: 0.5rem;
+  }
+  
+  .input-group {
+    margin: 0 auto;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
+  .table_isbn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 132px;
+    height: 41px;
+  }
+  .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 565px;
+    height: 41px;
+  }
+  
+  .table_author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+    height: 41px;
+  }
+  
+  .table_publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 105px;
+    height: 41px;
+  }
+  
+  .admin_spacebetween{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin padding_top">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div class="admin_spacebetween">
+        <div>
+          <p>총 <span th:text="${totalCount}"></span>건의 도서가 검색되었습니다.</p>
+        </div>
+        <div class="flex_admin">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="bookSearch" checked>
+            <label class="form-check-label" for="bookSearch">
+              도서 검색
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="applyBookSearch">
+            <label class="form-check-label" for="applyBookSearch">
+              희망도서 검색
+            </label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" class="table_isbn">ISBN</th>
+              <th scope="col" class="table_title">책제목</th>
+              <th scope="col" class="table_author">저자</th>
+              <th scope="col" class="table_publisher">출판사</th>
+              <th scope="col">대출</th>
+            </tr>
+          </thead>
+          <tbody>
+            <th:block th:each="book,vs:${bookList}">
+              <tr>
+                <td scope="row" class="table_isbn" th:text="${book.isbn}"></td>
+                <td scope="row" class="table_title" th:text="${book.title}"></td>
+                <td scope="row" class="table_author" th:text="${book.author}"></td>
+                <td scope="row" class="table_publisher" th:text="${book.publisher}"></td>
+                <td scope="row">
+                  <th:block th:if="${book.status == 0}">
+                    불가능
+                  </th:block>
+                  <th:block th:if="${book.status == 1}">
+                    가능
+                  </th:block>
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+          <tfoot class="tfoot_center">
+            <td colspan="6">
+              <div class="flex_tfoot">
+                <div th:utext="${paging}"></div>
+                <div>
+                  <form id="frm_search" method="post" th:action="@{/admin/userSearch.do}">
+                    <div class="input-group w-50 p-3">
+                      <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
+                        <option value="ISBN" selected>ISBN</option>
+                        <option value="TITLE">책제목</option>
+                      </select>
+                      <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">
+                        <i class="fa-solid fa-magnifying-glass white"></i>
+                      </button>
+                    </div>
+                  </form>              
+                </div>
+              </div>
+            </td>
+          </tfoot>
+        </table>
+      </div>
+      <div>
+        <form th:action="@{/admin/insertBooks.do}" method="get">
+          <select name="QueryType">
+            <option value="ItemNewAll">신간 전체 리스트</option>
+            <option value="Bestseller">베스트셀러</option>
+          </select>
+          <select name="Start">
+            <option value="1">1~50</option>
+            <option value="2">51~100</option>
+            <option value="3">101~150</option>
+            <option value="4">151~200</option>
+          </select>
+          <button type="submit">도서업데이트</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  
+  <script th:inline="javascript">
+    const fnBookCount = () => {
+      let bookCount = /*[[${bookCount}]]*/ null;
+      if(bookCount !== null) {
+        alert(bookCount + '개의 책이 업데이트되었습니다.');
+      }
+    }  
+    
+    const fnBookSearch = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        let checkISBN = /^[0-9]{1,13}$/;
+        let checkTitle = /^[a-zA-Z0-9가-힣]{2,}$/;
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('.search_select').val() === "ISBN") {
+          if(!checkISBN.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자 1~13자)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "TITLE") {
+          if(!checkTitle.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+      })
+    }
+    
+    fnBookCount();
+    fnBookSearch(); 
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

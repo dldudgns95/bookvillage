@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 200px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action active" aria-current="true">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
+      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">회원번호</th>
+              <th scope="col">회원이메일</th>
+              <th scope="col">회원이름</th>
+              <th scope="col">회원상태</th>
+              <th scope="col">회원등급</th>
+              <th scope="col">대출가능여부</th>
+            </tr>
+          </thead>
+          <tbody>
+            <th:block th:each="user,vs:${userList}">
+              <tr>
+                <td scope="row" th:text="${user.userNo}"></td>
+                <td scope="row" th:text="${user.email}"></td>
+                <td scope="row" th:text="${user.name}"></td>
+                <td scope="row">
+                  <th:block th:if="${user.state == 0}">
+                    일반회원
+                  </th:block>
+                  <th:block th:if="${user.state == 1}">
+                    네이버간편로그인
+                  </th:block>
+                  <th:block th:if="${user.state == 2}">
+                    구글간편로그인
+                  </th:block>
+                </td>
+                <td scope="row">
+                  <th:block th:if="${user.auth == 0}">
+                    일반
+                  </th:block>
+                  <th:block th:if="${user.auth == 1}">
+                    휴면
+                  </th:block>
+                  <th:block th:if="${user.auth == 9}">
+                    관리자
+                  </th:block>
+                </td>
+                <td scope="row">
+                  <th:block th:if="${user.status == 0}">
+                    대출불가능
+                  </th:block>
+                  <th:block th:if="${user.status == 1}">
+                    가능
+                  </th:block>
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+          <tfoot class="tfoot_center">
+            <td colspan="6">
+              <div class="flex_tfoot">
+                <div th:utext="${paging}"></div>
+                <div>
+                  <form id="frm_search" method="post" th:action="@{/admin/userSearch.do}">
+                    <div class="input-group w-100 p-3">
+                      <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
+                        <option value="USER_NO" selected>회원번호</option>
+                        <option value="EMAIL">회원이메일</option>
+                        <option value="NAME">회원이름</option>
+                      </select>
+                      <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">
+                        <i class="fa-solid fa-magnifying-glass white"></i>
+                      </button>
+                    </div>
+                  </form>              
+                </div>
+              </div>
+            </td>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+  
+    const fnUserSearch = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        let checkUserNo = /^[0-9]{1,}$/;
+        let checkEmail = /^[a-zA-Z0-9@]{2,}$/;
+        let checkName = /^[a-zA-Z0-9가-힣]{2,}$/;
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('.search_select').val() === "USER_NO") {
+          if(!checkUserNo.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자로만 구성)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "EMAIL") {
+          if(!checkEmail.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,@로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "NAME") {
+          if(!checkName.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+      })
+    }
+    
+    fnBookCount();
+    fnUserSearch(); 
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
