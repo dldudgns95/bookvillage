@@ -6,6 +6,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,9 +17,12 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FacilityDto;
 import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
@@ -146,6 +150,22 @@ public class AdminServiceImpl implements AdminService {
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void addFacility(MultipartHttpServletRequest multiRequest) {
+    
+    String facName = multiRequest.getParameter("facName");
+    String facContent = multiRequest.getParameter("facContent");
+    
+    FacilityDto facility = FacilityDto.builder()
+                                      .facName(facName)
+                                      .facContent(facContent)
+                                      .build();
+    int addResult = adminMapper.addFacility(facility);
+    
+    List<MultipartFile> files = multiRequest.getFiles("files");
     
   }
   
