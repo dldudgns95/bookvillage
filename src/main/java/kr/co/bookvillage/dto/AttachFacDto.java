@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AttachFacDto {
 	private int facAttachNo;
-	private String facNo;
+	private FacilityDto facilityDto; // int facNo;
 	private String facPath;
 	private String facOriginalFilename;
 	private String facFilesystemName;

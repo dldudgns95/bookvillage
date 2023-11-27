@@ -5,9 +5,15 @@
 
 <mapper namespace="kr.co.bookvillage.dao.AdminMapper">
   
-  <resultMap id="AttachFacMap" type="AttachFacDto">
-    <id column="FAC_ATTACH_NO" property="facAttachNo" />
-    <result column="FAC_PATH" property="facPath" />
+    <resultMap id="AttachFacMap" type="AttachFacDto">
+    <id column="FAC_ATTACH_NO"             property="facAttachNo" />
+    <result column="FAC_PATH"              property="facPath" />
+    <result column="FAC_ORIGINAL_FILENAME" property="facOriginalFilename" />
+    <result column="FAC_FILESYSTEM_NAME"   property="facFilesystemName" />
+    <result column="FAC_HAS_THUMBNAIL"     property="facHasThumbnail" />
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO" property="facNo" />
+    </association>
   </resultMap>  
 
   <!-- 책 넣기 -->
@@ -74,6 +80,25 @@
       FACILITY_SEQ.NEXTVAL
     , #{facName}
     , #{facContent}
+    )
+  </insert>
+  
+  <!-- 시설 이미지 등록 -->
+  <insert id="addFacImage" parameterType="AttachFacDto">
+    INSERT INTO ATTACH_FAC(
+      FAC_ATTACH_NO
+    , FAC_NO
+    , FAC_PATH
+    , FAC_ORIGINAL_FILENAME
+    , FAC_FILESYSTEM_NAME
+    , FAC_HAS_THUMBNAIL
+    ) VALUES (
+      ATTACH_FAC_SEQ.NEXTVAL
+    , #{facNo}
+    , #{facPath}
+    , #{facOriginalFilename}
+    , #{facFileSystemName}
+    , #{facHasThumbnail}
     )
   </insert>
   
