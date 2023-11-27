@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
+
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+
+      <nav class="breadcrumb">
+        <ul class="b_menu">
+          <li class="home">
+            <span class="home_ico">
+              <em class="blind"><i class="fa-solid fa-house"></i></em>
+            </span>
+          </li>
+          <li class>
+            <a href="#none">자료검색</a>
+            <div class="dep_list" style="display: none;">
+              <ul>
+                <li class>
+                  <a href="/book/search.do">자료검색</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">나만의 도서관</a>
+                </li>
+                <li class>
+                  <a href="/support/notice.do">고객센터</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">시설안내</a>
+                </li>
+                <li class>
+                  <a href="/user/login.form">로그인</a>
+                </li>
+                <li class>
+                  <a href="/user/agree.form">회원가입</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <strong class="current"></strong>
+          </li>
+        </ul>
+      </nav>
+            
+    <div class="wrap wrap_flex">
+      <div class="column-2">
+        <br><br><br><br><br>
+      </div>
+      
+      <div class="column-8">
+        <div class="detail_menu">
+          <a href="javascript:void(0);" id="goBack"><i class="fa-solid fa-arrow-left"></i> 검색 결과로 돌아가기</a>
+        </div>
+        <hr>
+        <div class="detail_book" th:each="bookDetail : ${bookDetailList}">
+          <div class="detail_img search_inline">
+            <img th:src="${bookDetail.cover}"></img>
+          </div>
+          <div class="detail_info search_inline">
+            <div><h4 th:text="${bookDetail.title}"></h4></div>
+            <div><span th:text="${bookDetail.categoryName}"></span></div>
+            <table class="book_table">
+              <tr>
+                <th>저자</th>
+                <td><div><span th:text="${bookDetail.author}"></span></div></td>
+              </tr>
+              <tr>
+                <th>출판사</th>
+                <td><div><span th:text="${bookDetail.publisher}"></span></div></td>
+              </tr>
+              <tr>
+                <th>출간일</th>
+                <td><div><span th:text="${bookDetail.pubdate}"></span></div></td>
+              </tr>
+
+              
+            </table>
+            <div><span th:text="${bookDetail.description}"></span></div>
+          </div>          
+        </div>
+        <hr>
+        
+        <div class="detail_btn">
+          <ul>
+            <li>관심도서</li>
+            <li>대출신청</li>
+          </ul>
+        </div>
+        <hr>
+         
+        <div class="detail_score">
+          <form name="score" id="score" class="score" method="post">
+            <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}">
+            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+            <input type="hidden" name="reviewDate">
+            <fieldset>
+              <span>평가하기</span>
+              <input type="radio" name="star" class="star" value="5" id="rate1"><label for="rate1">★</label>
+              <input type="radio" name="star" class="star" value="4" id="rate2"><label for="rate2">★</label>
+              <input type="radio" name="star" class="star" value="3" id="rate3"><label for="rate3">★</label>
+              <input type="radio" name="star" class="star" value="2" id="rate4"><label for="rate4">★</label>
+              <input type="radio" name="star" class="star" value="1" id="rate5"><label for="rate5">★</label>
+            </fieldset>
+            <div>
+              <textarea type="text" id="review" class="review" placeholder="한줄평을 남겨주세요"></textarea>
+              <input type="submit" value="저장" title="저장" class="btn btn-outline-secondary" onclick="saveReview()">
+            </div>
+          </form>
+        </div>
+        
+      </div>
+      
+    </div>
+
+    <script th:src="@{/js/bread.js}"></script>
+    <script th:src="@{/js/book.js}"></script>
+  
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>

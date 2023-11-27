@@ -18,6 +18,7 @@
     <typeAlias alias="AttachNtDto"             type="kr.co.bookvillage.dto.AttachNtDto"/>
     <typeAlias alias="FaqDto"            	   type="kr.co.bookvillage.dto.FaqDto"/>
     <typeAlias alias="BookDto"                 type="kr.co.bookvillage.dto.BookDto"/>
+    <typeAlias alias="BookSearchDto"           type="kr.co.bookvillage.dto.BookSearchDto"/>
   </typeAliases>
 
 </configuration>
