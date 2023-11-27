@@ -53,6 +53,12 @@ public class MypageController {
     mypageService.modifyPw(request, response);
   }
   
+  // 도서대출 목록 페이지 이동
+  @GetMapping("/booklist.do")
+  public String booklist() {
+    return "mypage/booklist";
+  }
+  
   
   
   

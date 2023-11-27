@@ -61,6 +61,7 @@ public class MypageServiceImpl implements MypageService {
     return new ResponseEntity<>(Map.of("modifyResult", modifyResult), HttpStatus.OK);
   }
   
+  // 비밀번호 수정
   @Override
   public void modifyPw(HttpServletRequest request, HttpServletResponse response) {
     
