@@ -97,7 +97,7 @@
     , FACILITY_SEQ.CURRVAL
     , #{facPath}
     , #{facOriginalFilename}
-    , #{facFileSystemName}
+    , #{facFilesystemName}
     , #{facHasThumbnail}
     )
   </insert>

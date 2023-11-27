@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -176,24 +178,38 @@ public class AdminServiceImpl implements AdminService {
     
     int attachCount;
     if(files.get(0).getSize() == 0) {
-      attachCount = 0;
-    } else {
       attachCount = 1;
+    } else {
+      attachCount = 0;
     }
     
     for(MultipartFile multipartFile : files) {
-      String path = adminFileUtils.getFacPath();
-      File dir = new File(path);
-      if(!dir.exists()) {
-        dir.mkdirs();
-      }
-      String facOriginalFilename = multipartFile.getOriginalFilename();
-      String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
-      File file = new File(dir, facFilesystemName);
-      
-      multipartFile.transferTo(file);
-      
-      String contentType = Files.probeContentType(file.toPath()); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        String path = adminFileUtils.getFacPath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String facOriginalFilename = multipartFile.getOriginalFilename();
+        String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
+        
+        System.out.println("path : " + path);
+        System.out.println("facOriginalFilename : " +facOriginalFilename);
+        System.out.println("facFilesystemName : " +facFilesystemName);
+        
+        String url = path + "/" + facFilesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
+        File file = new File(dir, facFilesystemName);
+        
+        System.out.println("file : " + file);
+        
+          //multipartFile.transferTo(file); // 이거 안됨
+          multipartFile.transferTo(paths.toFile());
+        
+      String contentType = Files.probeContentType(paths); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
       int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
       
       // 썸네일이 있으면 원본파일 썸네일로 만들기
@@ -208,11 +224,12 @@ public class AdminServiceImpl implements AdminService {
                                  .facPath(path)
                                  .facOriginalFilename(facOriginalFilename)
                                  .facFilesystemName(facFilesystemName)
-                                 .facHasThumbnail(hasThumbnail)
+                                 .facHasThumbnail(0)
                                  .build();
+      System.out.println("attachFac : " + attachFac);
       attachCount += adminMapper.addFacImage(attachFac);
-                              
-      
+        
+      }
     }
     
     
