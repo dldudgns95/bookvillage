@@ -18,7 +18,9 @@
 		height: 200px;
 		float:left;
 	}
-	
+	div.cal{
+		width: 600px;
+	}
 </style>
 
 <body>
@@ -26,20 +28,17 @@
   <div th:replace="~{/layout/header::header}"></div>
   <div class="parent">
     <div class="wrap wrap_9">
-      <div class="child1">d
+      <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
 		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">희망도서신청</a></li>
         </ul>
       </div>
       <h5 style="text-align: center;">시설 이용 신청</h5>	
-      <div id='calendar'></div>
 		  
 	  </div>
 	   <div class="child2">
-	      <div th:text="|시설번호 ${fac.facNo}|"></div>
-	      <div th:text="|시설이름 ${fac.facName}|"></div>	      
-	      <div th:text="|시설성명 : ${fac.facContent}|"></div>	
+   		   <div class="cal" id='calendar'></div>
 	   </div>
    </div>
    <script th:inline="javascript">
