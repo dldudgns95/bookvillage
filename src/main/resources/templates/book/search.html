@@ -10,8 +10,6 @@
   
   <div class="main_wrap">
 
-    <div class="wrap wrap_9 search_wrap">
-    
       <nav class="breadcrumb">
         <ul class="b_menu">
           <li class="home">
@@ -24,22 +22,22 @@
             <div class="dep_list" style="display: none;">
               <ul>
                 <li class>
-                  <a th:href="@{/book/search.do}">자료검색</a>
+                  <a href="/book/search.do">자료검색</a>
                 </li>
                 <li class>
-                  <a href="#none">나만의 도서관</a>
+                  <a href="/mypage/list.do">나만의 도서관</a>
                 </li>
                 <li class>
-                  <a href="#none">고객센터</a>
+                  <a href="/support/notice.do">고객센터</a>
                 </li>
                 <li class>
-                  <a href="#none">시설안내</a>
+                  <a href="/mypage/list.do">시설안내</a>
                 </li>
                 <li class>
-                  <a href="#none">로그인</a>
+                  <a href="/user/login.form">로그인</a>
                 </li>
                 <li class>
-                  <a href="#none">회원가입</a>
+                  <a href="/user/agree.form">회원가입</a>
                 </li>
               </ul>
             </div>
@@ -50,14 +48,13 @@
         </ul>
       </nav>
       
+    <div class="wrap search_wrap">     
       
       <h3 class="title">소장자료 검색</h3>
-      <div>
-        <br><br><br><br><br><br>
-      </div>
     
       <div class="search_area">
-        <form id="search" name="search" action="/search/result" method="get">
+        <form id="search" name="search" action="search/result" method="get">
+          <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
           <input type="hidden" name="pageNum" value="1">
           <input type="hidden" name="pageSize" value="10">
           <div class="search_select">
@@ -77,10 +74,11 @@
       </div>
       
       
-    
+      
     </div>
 
     <script th:src="@{/js/bread.js}"></script>
+    <script th:src="@{/js/book.js}"></script>
   
   </div>
   

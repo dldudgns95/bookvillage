@@ -15,6 +15,7 @@
     <typeAlias alias="InactiveUserDto"         type="kr.co.bookvillage.dto.InactiveUserDto"/>
     <typeAlias alias="AccessDto"               type="kr.co.bookvillage.dto.AccessDto"/>
     <typeAlias alias="BookDto"                 type="kr.co.bookvillage.dto.BookDto"/>
+    <typeAlias alias="BookSearchDto"           type="kr.co.bookvillage.dto.BookSearchDto"/>
   </typeAliases>
 
 </configuration>
