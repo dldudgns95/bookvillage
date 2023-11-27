@@ -14,6 +14,6 @@ public interface AdminMapper {
   public int bookTotalCount();
   public List<UserDto> getUserList(Map<String, Object> map);
   public List<BookDto> getBookList(Map<String, Object> map);
-  public int addFac(FacilityDto facilityDto);
+  public int addFacility(FacilityDto facilityDto);
   public int addFacImage(AttachFacDto attachFacDto);
 }
