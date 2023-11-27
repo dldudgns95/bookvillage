@@ -18,7 +18,7 @@ public class UserDto {
   private String pw;
   private String name;
   private String mobile;
-  private int gender;
+  private String gender;
   private int agree;
   private int state;
   private int auth;

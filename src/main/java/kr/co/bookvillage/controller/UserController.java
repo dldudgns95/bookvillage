@@ -30,9 +30,11 @@ public class UserController {
     String referer = request.getHeader("referer");
     model.addAttribute("referer", referer == null ? request.getContextPath() + "/main.do" : referer);
     // 네이버로그인-1
-   // model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
+  //  model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
     return "user/login";
   }
+  
+  
   
   
   // 로그인
@@ -54,9 +56,8 @@ public class UserController {
   }
   
  
-  
   // 회원 가입 페이지로 이동
-  @GetMapping("join.form")
+  @GetMapping("/join.form")
   public String joinForm(@RequestParam(value = "service", required = false, defaultValue = "off") String service
                         , @RequestParam(value = "event", required = false, defaultValue = "off") String event
                         , Model model) {
@@ -71,14 +72,36 @@ public class UserController {
   }
   
   // 이메일 확인
-  @GetMapping(value = "checkEmail.do", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, Object>> checkEmail(@RequestParam String email) {
-      return userService.checkEmail(email);
-    }
+  @GetMapping(value="/checkEmail.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> checkEmail(@RequestParam String email) {
+    return userService.checkEmail(email);
+  }
+  
+  // 인증 메일 발송
+  @GetMapping(value = "/sendCode.do", produces =MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> sendCode(@RequestParam String email){
+    return userService.sendCode(email);
+  }
+  
+  // 일반 가입
+  @PostMapping("/join.do")
+  public void join(HttpServletRequest request, HttpServletResponse response) {
+    userService.join(request, response);
+  }
+  
+  // 아이디 찾기 이동
+  @GetMapping("/findId.form")
+  public String findIdForm() {
+    return "user/findId";
+  }
   
   
- 
-  
+  // 아이디 찾기 
+  @PostMapping("/findId.do")
+  public String findId(@RequestParam("name") String name, @RequestParam("mobile") String mobile) {
+    String findIdresult = userService.findId(name, mobile);
+    return findIdresult;
+  }
   
   
 }
