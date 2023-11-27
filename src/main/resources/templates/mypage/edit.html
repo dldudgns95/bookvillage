@@ -5,10 +5,11 @@
 
 <style>
   .side_bar {
-    width: 20%;
+    width: 200px;
     display: inline-block;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 30px; 
+    position: fixed;
   }
   
   #side_list li {
@@ -18,6 +19,8 @@
   
 </style>
 
+<script th:src="@{/js/user_modify.js(ver=1.0)}"></script>
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -25,7 +28,7 @@
   <div class="main_wrap">
     
     <div class="side_bar">
-      <h3 style="border-bottom: 1px solid gray;">마이페이지</h3>
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
         <li><a href="/mypage/edit.form">회원정보수정</a></li>
         <li>도서대출/반납내역</li>
@@ -36,27 +39,23 @@
       </ul>      
     </div>
     
-    <div class="mypage" style="width: 70%; display: inline-block;">
+    <div class="mypage" style="width: 70%; display: inline-block; margin-left: 320px;">
       
-      <h3>회원정보수정</h3>
+      <h3 style="padding: 30px; text-align: center;">회원정보수정</h3>
       
-      <hr>
       
       <div>
         <form id="frm_mypage" method="post">
           
-          <div th:if="${session.user.state == 0}" class="text-center">
-            <div class="mb-2">비밀번호 변경</div>
-            <button type="button" id="btn_modify_pw" class="btn btn-danger">비밀번호변경하기</button>
+          
+          
+          <div class="row mb-4">
+            <div class="col-sm-3">이메일 : </div>
+            <div class="col-sm-9" th:text="${session.user.email}"></div>
           </div>
           
           <div class="row mb-4">
-            <label for="email">이메일 : </label>
-            <input type="text" id="email" name="email" th:value="${session.user.email}" readonly>
-          </div>
-          
-          <div class="row mb-4">
-            <div class="col-sm-3">가입일</div>
+            <div class="col-sm-3">가입일 : </div>
             <div class="col-sm-9" th:text="${#dates.format(session.user.joinedDate, 'yyyy-MM-dd a hh:mm:ss')}"></div>
           </div>
           
@@ -76,18 +75,14 @@
           
           <div>
             <label>성별 : </label>
-            <div>
-              <input type="radio" name="gender" value="0" id="man" class="form-check-input">
-              <label class="form-check-input">남자</label>
-            </div>
-            <div>
-              <input type="radio" name="gender" value="1" id="woman" class="form-check-input">
-              <label class="form-check-input">여자</label>
-            </div>
-            <div>
-              <input type="radio" name="gender" value="2" id="none" class="form-check-input">
-              <label class="form-check-input">선택안함</label>
-            </div>
+              <input type="radio" name="gender" value="0" id="man">
+              <label for="man">남자</label>
+
+              <input type="radio" name="gender" value="1" id="woman">
+              <label for="woman">여자</label>
+
+              <input type="radio" name="gender" value="2" id="none">
+              <label for="none">선택안함</label>
           </div>
           <script th:inline="javascript">
             $(':radio[value=[[${session.user.gender}]]]').prop('checked', true);
@@ -99,12 +94,12 @@
           
           <div class="row mb-2">
             <div class="col-sm-3">
-              <input type="radio" name="event" value="on" id="event_on" class="form-check-input">
-              <label class="form-check-input" for="event_on">동의함</label>
+              <input type="radio" name="event" value="on" id="event_on">
+              <label for="event_on">동의함</label>
             </div>
             <div class="col-sm-3">
-              <input type="radio" name="event" value="off" id="event_off" class="form-check-input">
-              <label class="form-check-input" for="event_off">동의안함</label>
+              <input type="radio" name="event" value="off" id="event_off">
+              <label for="event_off">동의안함</label>
             </div>
           </div>
           <script th:inline="javascript">
@@ -117,8 +112,11 @@
           </script>
           
           <div class="text-center">
-            <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+            <input type="hidden" name="userNo" th:value="${session.user.userNo}"> 
+            <div th:if="${session.user.state == 0}">
+            <button type="button" id="btn_modify_pw" class="btn btn-danger">비밀번호변경하기</button>
             <button type="button" id="btn_modify" class="btn btn-success">수정완료</button>
+            </div>           
           </div>          
           
         </form>

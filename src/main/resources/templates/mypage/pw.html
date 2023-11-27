@@ -9,6 +9,7 @@
     display: inline-block;
     text-align: center;
     margin-top: 30px;
+    position: fixed;
   }
   
   #side_list li {
@@ -18,6 +19,8 @@
   
 </style>
 
+<script th:src="@{/js/user_modify_pw.js(ver=1.0)}"></script>
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -25,7 +28,7 @@
   <div class="main_wrap">
     
     <div class="side_bar">
-      <h3 style="border-bottom: 1px solid gray;">마이페이지</h3>
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
         <li><a href="/mypage/edit.form">회원정보수정</a></li>
         <li>도서대출/반납내역</li>
@@ -36,7 +39,7 @@
       </ul>      
     </div>
     
-    <div class="wrap wrap_7">
+    <div class="wrap wrap_7" style="width: 70%; display: inline-block; margin-left: 320px;">
       
       <h1 class="title">비밀번호 변경하기</h1>
       
