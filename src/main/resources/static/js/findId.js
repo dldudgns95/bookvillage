@@ -7,6 +7,8 @@
     var name=$('#name').val()
     var mobile=$('#mobile').val()
     
+    console.log(name, mobile)
+    
     $.ajax({
       type:'POST',
       url: './user/findID',
@@ -15,9 +17,13 @@
       dataType: 'json',
       success:function(resData){
         
-                    console.log("서버 응답 데이터:", resData);
+    console.log("전송 데이터:", {"name": name, "mobile": mobile});
+
 
         if(!resData){
+          
+                      console.log("서버 응답 데이터:", resData);
+
           alert('이름, 전화번호를 입력해주세요.')
         } else {
           $('#name').val('');

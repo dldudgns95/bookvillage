@@ -14,6 +14,7 @@ public interface UserMapper {
   
   public int insertUsesr(UserDto user);
   
-  public String findId(String name, String mobile);
   
+  public String findId(String name, String mobile);
+  public int insertNaverUser(UserDto user);
 }

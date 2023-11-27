@@ -14,9 +14,12 @@ public interface UserService {
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
   public void logout(HttpServletRequest request, HttpServletResponse response);
   
-  //public String getNaverLoginURL(HttpServletRequest request) throws Exception;
-  //public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
-  //public UserDto getNaverProfile(String accessToken) throws Exception;
+  public String getNaverLoginURL(HttpServletRequest request) throws Exception;
+  public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception;
+  public UserDto getNaverProfile(String accessToken) throws Exception;
+  public void naverJoin(HttpServletRequest request, HttpServletResponse response);
+  public void naverLogin(HttpServletRequest request, HttpServletResponse response, UserDto naverProfile) throws Exception;
+  
   public UserDto getUser(String email);
   
   

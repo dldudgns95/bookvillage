@@ -79,4 +79,28 @@
            , MOBILE = #{mobile}    
    </select>
   
+  <insert id="insertNaverUser" parameterType="UserDto">
+      INSERT INTO USER_T (
+          USER_NO
+        , EMAIL
+        , NAME
+        , MOBILE
+        , GENDER
+        , AGREE
+        , STATE
+        , PW_MODIFIED_DATE
+        , JOINED_DATE
+      ) VALUES (
+          USER_T_SEQ.NEXTVAL
+        , #{email}
+        , #{name}
+        , #{mobile}
+        , #{gender}
+        , #{agree}
+        , 1
+        , SYSDATE
+        , SYSDATE
+      )
+  </insert>
+  
 </mapper>

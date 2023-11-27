@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.UserService;
 import lombok.RequiredArgsConstructor;
 
@@ -30,11 +31,36 @@ public class UserController {
     String referer = request.getHeader("referer");
     model.addAttribute("referer", referer == null ? request.getContextPath() + "/main.do" : referer);
     // 네이버로그인-1
-  //  model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
+    model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
     return "user/login";
   }
   
+  @GetMapping("/naver/getAccessToken.do")
+  public String getAccessToken(HttpServletRequest resRequest) throws Exception {
+    String accessToken = userService.getNaverLoginAccessToken(resRequest);
+    return "redirect:/user/naver/getProfile.do?accessToken=" + accessToken;
+  }
+  @GetMapping("/naver/getProfile.do")
+  public  String getProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    // 네이버 로그인 -3
+    UserDto naverProfile = userService.getNaverProfile(request.getParameter("accessToken")); 
+    // 네이버로그인 후속 작업(처음 시도 : 간편가입, 이미 가입 : 로그인)
+    UserDto user = userService.getUser(naverProfile.getEmail());
+    // 처음시도 간편가입 - 프로필에 있는 정보를 간편가입 페이지에 입력되어있도록 처리할거임
+    if(user == null) {
+      model.addAttribute("naverProfile", naverProfile);
+      return "user/naver_join";
+    } else {
+      // naverProfile로 로그인 처리하기
+      userService.naverLogin(request, response, naverProfile);
+      return "redirect:/main.do";
+    }
+  }
   
+  @PostMapping("/naver/join.do")
+  public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
+    userService.naverJoin(request, response);
+  }
   
   
   // 로그인
