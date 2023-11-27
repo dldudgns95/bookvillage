@@ -66,21 +66,23 @@
           dataType: 'json',
           success: (resData) => {  // resData = {"noticeList": [], "totalPage": 10}
             totalPage = resData.totalPage;
+            let str = '';
+		      str += '<div class="notice table-responsive"><table class="table align-middle">';            
+              str += '<thead><tr><td>순번</td>';
+              str += '<td>제목</td>';        
+              str += '<td>작성자</td>';
+              str += '<td>작성일</td>';
+              str += '</tr></thead><tbody>';
             $.each(resData.noticeList, (i, notice) => {
-              let str = '<div class="notice table-responsive"><table class="table align-middle">';
-			  str += '<thead><tr><td>순번:</td>';
-              str += '<td>제목:</td>';        
-              str += '<td>작성자:</td>';
-              str += '<td>작성일:</td>';
-              str += '</tr></thead>';
-        	  str += '<tbody><tr><td class="notice" data-nt_no="' + notice.ntNo + '">' + notice.ntNo + '</td>';
+        	  str += '<tr><td class="notice" data-nt_no="' + notice.ntNo + '">' + notice.ntNo + '</td>';
               str += '<td>' + notice.ntTitle + '</td>';
               str += '<td>' + notice.userDto.name + '</td>'
               str += '<td>' + notice.ntDate + '</td>'
-              str += '</tr></tbody></table>';
+              str += '</tr>';
               
-              $('#notice_list').append(str);
             })
+            str += '</tbody></table>';
+            $('#notice_list').append(str);
           }
         })
       }
