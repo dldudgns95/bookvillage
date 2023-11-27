@@ -14,6 +14,7 @@
   
   .admin_contents {
     margin-left: 20px;
+    width: 700px;
   }
   .tfoot_center {
     text-align: center; 
@@ -81,6 +82,7 @@
   
 </style>
 
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -98,52 +100,29 @@
     </div>
     
     <div class="admin_contents">
-      <div id='calendar'></div>
-      <div>
-        <button type="button" class="btn btn-primary" id="btn_write">시설 등록하기</button>
-      </div>
+      <form method="post" th:action="@{/admin/facAdd.do}" enctype="multipart/form-data">
+        <div class="mb-3 row">
+          <label for="facName" class="col-sm-2 col-form-label">시설명</label>
+          <div class="col-sm-10">
+            <input type="text" class="form-control" id="facName" name="facName" placeholder="시설명을 입력해주세요.">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="facContent" class="form-label">시설 설명</label>
+          <textarea class="form-control" id="facContent" name="facContent" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="files" class="form-label">이미지 파일 선택</label>
+          <input class="form-control" type="file" id="files" name="files" multiple>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
+        </div>
+      </form>
     </div>
 
   </div>
   
-  <script th:inline="javascript">
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
-        headerToolbar : { // 헤더에 표시할 툴 바
-          start : 'prev next today',
-          center : 'title',
-          end : 'dayGridMonth,dayGridWeek,dayGridDay'
-        },
-        titleFormat : function(date) {
-          return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
-        },
-        //initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
-        selectable : true, // 달력 일자 드래그 설정가능
-        droppable : true,
-        editable : true,
-        nowIndicator: true, // 현재 시간 마크
-        locale: 'ko', // 한국어 설정
-        
-        dateClick: function(info) {
-          alert('Clicked on: ' + info.dateStr);
-        }
-        
-      });
-      calendar.render();
-    });
-    
-   const fnFacWrite = () => {
-     $('#btn_write').click(() => {
-       location.href="/admin/facWrite.form";
-     })
-   }
-    
-   fnFacWrite();
-    
-  </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
 

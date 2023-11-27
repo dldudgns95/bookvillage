@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.FaqMapper">
+	
+<!-- faq 추가하기 -->
+<insert id="insertFaq" parameterType="FaqDto">
+    INSERT INTO FAQ (
+        FAQ_NO,
+        FAQ_TITLE,
+        FAQ_CONTENT
+    ) VALUES (
+        FAQ_SEQ.NEXTVAL,
+        #{faqTitle},
+        #{faqContent}
+    )
+</insert>
+
+<!-- faq 리스트 가져오기 -->
+  <select id="getFaqCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FAQ
+  </select>
+ 
+  <select id="getFaqList" parameterType="Map">
+	SELECT FAQ_TITLE
+	  FROM FAQ
+  </select>
+  
+  <select id="getFaq" parameterType="int">
+	SELECT FAQ_NO, FAQ_TITLE, FAQ_CONTENT
+	  FROM FAQ
+	 WHERE FAQ_NO = {faqNo}	
+  </select>
+  
+</mapper>

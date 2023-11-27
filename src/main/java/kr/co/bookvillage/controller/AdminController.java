@@ -5,7 +5,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.service.AdminService;
@@ -18,7 +20,7 @@ public class AdminController {
   
   private final AdminService adminService;
   
-  @GetMapping("/list.do")
+  @GetMapping("/main.do")
   public String mainList() {
     return "admin/main";
   }
@@ -37,6 +39,18 @@ public class AdminController {
   
   @GetMapping("/facList.do")
   public String facList() {
+    return "admin/facList";
+  }
+  
+  @GetMapping("/facWrite.form")
+  public String facWriteForm() {
+    return "admin/facWrite";
+  }
+  
+  @PostMapping("/facAdd.do")
+  public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
+    System.out.println("facAdd.do::controller");
+    adminService.addFacility(multiRequest);
     return "admin/facList";
   }
   

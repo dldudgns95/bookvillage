@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('책빌리지')}"></head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px; 
+    position: fixed;
+  }
+  
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+</style>
+
+<script th:src="@{/js/user_modify.js(ver=1.0)}"></script>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="side_bar">
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
+      <ul id="side_list">
+        <li><a href="/mypage/edit.form">회원정보수정</a></li>
+        <li>도서대출/반납내역</li>
+        <li>도서반납신청</li>
+        <li>관심도서</li>
+        <li>도서후기</li>
+        <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
+      </ul>      
+    </div>
+    
+    <div class="mypage" style="width: 70%; display: inline-block; margin-left: 320px;">
+      
+      <h3 style="padding: 30px; text-align: center;">회원정보수정</h3>
+      
+      
+      <div>
+        <form id="frm_mypage" method="post">
+          
+          
+          
+          <div class="row mb-4">
+            <div class="col-sm-3">이메일 : </div>
+            <div class="col-sm-9" th:text="${session.user.email}"></div>
+          </div>
+          
+          <div class="row mb-4">
+            <div class="col-sm-3">가입일 : </div>
+            <div class="col-sm-9" th:text="${#dates.format(session.user.joinedDate, 'yyyy-MM-dd a hh:mm:ss')}"></div>
+          </div>
+          
+          <div class="row mb-4">
+            <label for="name" class="col-sm-3 col-form-label">이름 : </label>
+            <input type="text" id="name" name="name" th:value="${session.user.name}" class="form-control">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9 mb-3" id="msg_name"></div>
+          </div>
+          
+          <div class="row mb-4">
+            <label for="mobile" class="col-sm-3 col-form-label">휴대번호 : </label>
+            <input type="text" id="mobile" name="mobile" th:value="${session.user.mobile}" class="form-control">            
+            <div class="col-sm-3"></div>
+            <div class="col-sm-9 mb-3" id="msg_mobile"></div>         
+          </div>
+          
+          <div>
+            <label>성별 : </label>
+              <input type="radio" name="gender" value="0" id="man">
+              <label for="man">남자</label>
+
+              <input type="radio" name="gender" value="1" id="woman">
+              <label for="woman">여자</label>
+
+              <input type="radio" name="gender" value="3" id="none">
+              <label for="none">선택안함</label>
+          </div>
+          <script th:inline="javascript">
+            $(':radio[value=[[${session.user.gender}]]]').prop('checked', true);
+          </script>
+          
+          <div class="row mt-3">
+            <label class="col-sm-12 form-label">이벤트 알림 동의(선택)</label>                               
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-sm-3">
+              <input type="radio" name="event" value="on" id="event_on">
+              <label for="event_on">동의함</label>
+            </div>
+            <div class="col-sm-3">
+              <input type="radio" name="event" value="off" id="event_off">
+              <label for="event_off">동의안함</label>
+            </div>
+          </div>
+          <script th:inline="javascript">
+            let agree = /*[[${session.user.agree}]]*/ null;
+            if(agree === 0) {
+              $('#event_off').prop('checked', true);
+            } else if(agree === 1) {
+              $('#event_on').prop('checked', true);
+            }
+          </script>
+          
+          <div class="text-center">
+            <input type="hidden" name="userNo" th:value="${session.user.userNo}"> 
+            <div th:if="${session.user.state == 0}">
+            <button type="button" id="btn_modify_pw" class="btn btn-danger">비밀번호변경하기</button>
+            <button type="button" id="btn_modify" class="btn btn-success">수정완료</button>
+            </div>           
+          </div>          
+          
+        </form>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
