@@ -125,8 +125,27 @@ public class AdminServiceImpl implements AdminService {
     Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
     
     model.addAttribute("userList", adminMapper.getUserList(map));
-    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/memberList.do"));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/userList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookList(HttpServletRequest request, Model model) {
+
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookTotalCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("bookList", adminMapper.getBookList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
     
   }
   
