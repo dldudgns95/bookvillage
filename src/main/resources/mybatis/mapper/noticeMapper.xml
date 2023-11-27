@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.NoticeMapper">
+	
+  <resultMap type="NoticeDto"      id="NoticeMap">
+    <id      column="NT_NO"   	      property="ntNo"/>
+    <result  column="NT_TITLE"        property="ntTitle"/>
+    <result  column="NT_CONTENT"      property="ntContent"/>
+    <result  column="NT_DATE"  	  	  property="ntDate"/>
+    <result  column="NT_ATTACH_COUNT" property="ntAttachCount"/>
+      <association javaType="UserDto"      property="userDto">
+      <id        column="USER_NO"        property="userNo"/>
+      <result    column="EMAIL"          property="email" />
+      <result    column="PW"             property="pw" />
+      <result    column="NAME"           property="name" />
+      <result    column="MOBILE"         property="mobile" />
+      <result    column="GENDER"         property="gender" />
+      <result    column="AGREE"          property="agree" />
+      <result    column="STATE"          property="state" />
+      <result    column="AUTH"           property="auth" />
+      <result    column="PW_MODIFIED_AT" property="pwModifiedAt" />
+      <result    column="JOINED_AT"      property="joinedAt" />
+      <result    column="STATUE"         property="status" />
+    </association>
+  </resultMap>
+<!-- 공지사항 추가하기 -->
+  <insert id="insertNotice" parameterType="NoticeDto">
+    <selectKey order="BEFORE" resultType="int" keyProperty="ntNo">
+      SELECT NOTICE_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+    INSERT INTO NOTICE (
+        NT_NO
+      , NT_TITLE
+      , NT_CONTENT
+      , USER_NO
+      , NT_DATE
+    ) VALUES (
+        #{ntNo}
+      , #{ntTitle}
+      , #{ntContent}
+      , #{userDto.userNo}
+   	  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+    )
+  </insert>
+   <insert id="insertAttach" parameterType="AttachNtDto">
+    INSERT INTO ATTACH_NT (
+        ATTACH_NT_NO
+      , NT_PATH
+      , NT_ORIGINAL_FILENAME
+      , NT_FILESYSTEM_NAME
+      , NT_DOWNLOAD_COUNT
+      , NT_HAS_THUMBNAIL
+      , NT_NO
+    ) VALUES (
+        ATTACH_NT_SEQ.NEXTVAL
+      , #{ntPath}
+      , #{ntOriginalFilename}
+      , #{ntFilesystemName}
+      , 0
+      , #{ntHasThumbnail}
+      , #{ntNo}
+    )
+  </insert>
+<!-- 공지사항 리스트 가져오기 -->
+  <select id="getNoticeCount" resultType="int">
+    SELECT COUNT(*)
+      FROM NOTICE
+  </select>
+ 
+  <select id="getNoticeList" parameterType="Map" resultMap="NoticeMap">
+    SELECT A.NT_NO, A.NT_TITLE, A.NT_CONTENT, A.USER_NO, A.NT_DATE, A.NT_ATTACH_COUNT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY NT_NO DESC) AS RN,
+                    N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE,
+                   (SELECT COUNT(*) FROM ATTACH_NT ATC WHERE N.NT_NO = ATC.NT_NO) AS NT_ATTACH_COUNT,
+                   USR.USER_NO, USR.EMAIL, USR.NAME
+              FROM NOTICE N LEFT OUTER JOIN USER_T USR
+                ON N.USER_NO = USR.USER_NO) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <select id="getNotice" parameterType="int" resultMap="NoticeMap">
+    SELECT N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE
+         , USR.USER_NO, USR.EMAIL, USR.NAME
+      FROM USER_T USR RIGHT OUTER JOIN NOTICE N
+        ON USR.USER_NO = N.USER_NO
+     WHERE N.NT_NO = #{ntNo}
+  </select>
+  
+  <select id="getAttachList" parameterType="int" resultType="AttachNtDto">
+    SELECT ATTACH_NT_NO, NT_PATH, NT_ORIGINAL_FILENAME, NT_FILESYSTEM_NAME, NT_DOWNLOAD_COUNT, NT_HAS_THUMBNAIL, NT_NO
+      FROM ATTACH_NT
+     WHERE NT_NO = #{ntNo}
+  </select>
+  
+  <select id="getAttach" parameterType="int" resultType="AttachNtDto">
+    SELECT ATTACH_NT_NO, NT_PATH, NT_ORIGINAL_FILENAME, NT_FILESYSTEM_NAME, NT_DOWNLOAD_COUNT, NT_HAS_THUMBNAIL, NT_NO
+      FROM ATTACH_NT
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </select>
+</mapper>
