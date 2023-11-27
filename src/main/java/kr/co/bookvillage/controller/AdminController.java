@@ -18,7 +18,7 @@ public class AdminController {
   
   private final AdminService adminService;
   
-  @GetMapping("/list.do")
+  @GetMapping("/main.do")
   public String mainList() {
     return "admin/main";
   }
