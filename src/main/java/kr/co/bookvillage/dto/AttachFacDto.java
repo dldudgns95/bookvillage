@@ -15,7 +15,7 @@ public class AttachFacDto {
 	private String facPath;
 	private String facOriginalFilename;
 	private String facFilesystemName;
-	private String facHasThumbnail;
+	private int facHasThumbnail;
 	
 	
 }

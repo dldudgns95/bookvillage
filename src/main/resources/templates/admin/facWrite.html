@@ -100,7 +100,7 @@
     </div>
     
     <div class="admin_contents">
-      <form method="get" th:action="@{/admin/facAdd.do}">
+      <form method="post" th:action="@{/admin/facAdd.do}" enctype="multipart/form-data">
         <div class="mb-3 row">
           <label for="facName" class="col-sm-2 col-form-label">시설명</label>
           <div class="col-sm-10">
@@ -108,8 +108,8 @@
           </div>
         </div>
         <div class="mb-3">
-          <label for="textContent" class="form-label">시설 설명</label>
-          <textarea class="form-control" id="textContent" name="textContent" rows="3"></textarea>
+          <label for="facContent" class="form-label">시설 설명</label>
+          <textarea class="form-control" id="facContent" name="facContent" rows="3"></textarea>
         </div>
         <div class="mb-3">
           <label for="files" class="form-label">이미지 파일 선택</label>
