@@ -37,25 +37,33 @@
       <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
         <li><a th:href="@{/mypage/edit.form}">회원정보수정</a></li>
-        <li><a th:href="@{/mypage/booklist.do}">도서대출/반납내역</a></li>
+        <li><a th:href="@{/mypage/booklist.do}">대출조회및연기</a></li>
         <li>도서반납신청</li>
-        <li>관심도서</li>
-        <li>도서후기</li>
+        <li><a th:href="@{/mypage/wish.do}">관심도서</a></li>
+        <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
         <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
       </ul>      
     </div>
     
     <div class="mypage">
       
-      <h3>도서대출/반납내역</h3>
-      
+      <h3>대출조회및연기</h3>
+      <div>
+        <h4>이용자 대출상태</h4>
+        <ul>
+          <li th:text="|이용자 이름:${session.user.name}|"></li>
+          <li th:text="|회원상태:${session.user.status}|"></li>
+        </ul>
+      </div>
+      <input type="hidden" name="userNo" th:value="#{session.user.userNo}">
       <table border="1" class="table table-hover">
         <thead>
           <tr>
             <td>대출번호</td>
             <td>도서명</td>
             <td>대출일자</td>
-            <td>대출상태</td>
+            <td>반납예정일</td>
+            <td>반납연기</td>
           </tr>
         </thead>
         <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->

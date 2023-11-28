@@ -59,6 +59,11 @@ public class MypageController {
     return "mypage/booklist";
   }
   
+  // 한줄평 작성 목록 페이지 이동
+  @GetMapping("/review.do")
+  public String review() {
+    return "mypage/review";
+  }
   
   
   
