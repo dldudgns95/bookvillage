@@ -44,20 +44,45 @@
         <!-- 관리자로 로그인 한 경우 -->
         <th:block th:if="${session.user != null and session.user.auth == 9}">
           <a th:href="@{/support/faqwrite.form}">
-            <button type="button" class="btn btn-outline-primary">새 FAQ 작성하기</button>
+            <button type="button" class="btn btn-secondary">새 FAQ 작성하기</button>
           </a>
         </th:block>
       </div>
       <div class="child2">
 		<table border="2">
 	        <tr th:each="f : ${faqList}">
-			<div class="d-grid gap-2 col-4 mx-auto"><button class="btn btn-secondary btn-spacing" th:text="${f.faqTitle}"></button></div>
+			<div class="d-grid gap-2 d-md-block"><a th:href="@{/support/faqdetail.do(faqNo=${f.faqNo})}">
+				<div class="btn btn-outline-secondary btn-spacing" th:text="${f.faqTitle}" style="width: 800px;"></div>
+			</a></div>
 			</tr>
 	    </table>
     </div>
     <script th:inline="javascript">
-
-      
+	      const fnAddResult = () => {
+	        let addResult = /*[[${addResult}]]*/ null;
+	        if(addResult !== null){
+	          if(addResult === 1){
+	            alert('FAQ가 등록되었습니다.');
+	            $('#faq_list').empty();
+	          } else {
+	            alert('FAQ 등록이 실패했습니다.');
+	          }
+	        }
+	      }		 
+		 const fnRemoveResult = () => {
+		        let removeResult = /*[[${removeResult}]]*/ null;
+		        if(removeResult !== null){
+		          if(removeResult === 1){
+		            alert('FAQ가 삭제되었습니다.');
+		            $('#faq_list').empty();
+		          } else {
+		            alert('FAQ 삭제가 실패했습니다.');
+		          }
+		        }
+		      }
+      		
+	      fnAddResult();
+	      fnRemoveResult();
 		</script>  
       </div>
    </div>  
