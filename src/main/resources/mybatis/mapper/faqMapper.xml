@@ -25,7 +25,7 @@
   </select>
  
   <select id="getFaqList" parameterType="Map">
-	SELECT FAQ_NO,FAQ_TITLE
+	SELECT FAQ_NO,FAQ_TITLE, FAQ_CONTENT
 	  FROM FAQ
   </select>
   
