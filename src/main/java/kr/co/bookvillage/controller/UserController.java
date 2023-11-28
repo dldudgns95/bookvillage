@@ -11,8 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.UserService;
@@ -121,13 +124,18 @@ public class UserController {
     return "user/findId";
   }
   
-  
-  // 아이디 찾기 
-  @PostMapping("/findId.do")
-  public String findId(@RequestParam("name") String name, @RequestParam("mobile") String mobile) {
-    String findIdresult = userService.findId(name, mobile);
-    return findIdresult;
+  // 메일(아이디) 찾기
+  @ResponseBody
+  @PostMapping(value="/findId.do", produces="application/json")
+  public Map<String, Object> findId(@RequestParam(value = "name") String name
+                     , @RequestParam(value = "mobile",  required = true) String mobile) {
+    UserDto user = userService.findId(name, mobile);
+    return Map.of("email", user == null ? "" : user.getEmail());  // {"email": "aaaaa@naver.com"}
   }
+
+
+  
+
   
   
 }

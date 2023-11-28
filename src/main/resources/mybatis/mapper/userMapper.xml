@@ -72,11 +72,18 @@
        WHERE USER_NO = {userNo}    
    </update>
    
-   <select id="findId" parameterType="Map" resultType="UserDto">
-      SELECT NVL(EMAIL, '0')
+   <select id="findId"  resultType="UserDto">
+      SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
         FROM USER_T
        WHERE NAME  = #{name}
-           , MOBILE = #{mobile}    
+         AND MOBILE = #{mobile}    
+   </select>
+   
+   <select id="findIdInactiveUser"> 
+      SELECT EMAIL
+        FORM INACTIVE_USER
+       WHERE NAME = #{name}
+         AND MOBILE = #{mobile}
    </select>
   
   <insert id="insertNaverUser" parameterType="UserDto">

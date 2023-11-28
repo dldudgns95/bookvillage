@@ -29,6 +29,7 @@ public interface UserService {
   public void join(HttpServletRequest request, HttpServletResponse response);
   
   // 이메일 찾기(아이디)
-  public String findId(String name, String mobile);
+  public UserDto findId(String name, String mobile);
+  
   
 }

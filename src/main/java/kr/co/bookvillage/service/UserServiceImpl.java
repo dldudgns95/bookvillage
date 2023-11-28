@@ -59,9 +59,6 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
-    System.out.println(user);
-    System.out.println("Query: " + userMapper.getUser(map));
-    System.out.println("Parameters: " + map);
   
     
     if(user != null) {
@@ -278,8 +275,6 @@ public class UserServiceImpl implements UserService {
     boolean enableEmail = userMapper.getUser(map) == null
                        && userMapper.getInactiveUser(map) == null;
     
-    System.out.println("enableEmail" + enableEmail);
-    
     return new ResponseEntity<>(Map.of("enableEmail", enableEmail), HttpStatus.OK);
     
   }
@@ -347,20 +342,17 @@ public class UserServiceImpl implements UserService {
  
   // 아이디 찾기
   @Override
-  public String findId(String name, String mobile) {
+  public UserDto findId(String name, String mobile)  {
     
-    
-    String findIdresult = "";
+    UserDto emailResult = null;
         
         try {
+          emailResult = userMapper.findId(name, mobile);
           
-          findIdresult = userMapper.findId(name, mobile);
         } catch(Exception e) {
-          
           e.printStackTrace();
         }
-        
-        return findIdresult ;
+        return emailResult ;
       }
       
 
