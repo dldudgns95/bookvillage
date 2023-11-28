@@ -46,14 +46,12 @@ DROP TABLE INACTIVE_USER;
 DROP TABLE ACCESS_T;
 DROP TABLE USER_T;
 
-
--- 회원테이블
 CREATE TABLE USER_T (
   USER_NO          NUMBER             NOT NULL,             -- 회원번호
   EMAIL            VARCHAR2(100 BYTE) NOT NULL UNIQUE,   -- 회원이메일
   PW               VARCHAR2(64 BYTE)  NOT NULL,           -- 비밀번호
-  NAME             VARCHAR2(50 BYTE)  UNIQUE,    -- 회원이름
-  MOBILE           VARCHAR2(15 BYTE),           -- 전화번호
+  NAME             VARCHAR2(50 BYTE),    -- 회원이름
+  MOBILE           VARCHAR2(15 BYTE)  UNIQUE,           -- 전화번호
   GENDER           VARCHAR2(5 BYTE),            -- 성별 (0:남자, 1:여자, 3:선택안함)
   AGREE            NUMBER,                      -- 동의 (0:필수, 1: 이벤트)
   STATE            NUMBER,                      -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
@@ -61,9 +59,9 @@ CREATE TABLE USER_T (
   PW_MODIFIED_DATE DATE,                        -- 비밀번호 수정일
   JOINED_DATE      DATE,                        -- 회원가입일
   STATUS           NUMBER,                      -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
+  BOOKCOUNT        NUMBER DEFAULT 0 NOT NULL,
   CONSTRAINT PK_USER_T PRIMARY KEY(USER_NO)
 );
-
 -- 접속 기록
 CREATE TABLE ACCESS_T (
   EMAIL      VARCHAR2(100 BYTE) NOT NULL ,
@@ -78,7 +76,7 @@ CREATE TABLE INACTIVE_USER (
   PW                 VARCHAR2(64 BYTE)  NULL,      -- 회원비밀번호
   NAME               VARCHAR2(50 BYTE)  NULL,      -- 회원이름
   MOBILE             VARCHAR2(15 BYTE)  NULL,      -- 회원휴대전화
-  GENDER             NUMBER             NULL,      -- 회원성별(0:남자, 1:여자, 2:선택안함)
+  GENDER             VARCHAR2(5 BYTE)   NULL,      -- 회원성별(0:남자, 1:여자, 2:선택안함)
   AGREE              NUMBER             NULL,      -- 서비스동의여부(0:필수, 1:이벤트)
   STATE              NUMBER             NULL,      -- 가입형태(0:일반, 1:네이버간편로그인, 2:구글간편로그인)
   AUTH               NUMBER             NULL,      -- 회원등급(0:일반, 1:휴면, 9:관리자)
@@ -201,6 +199,7 @@ CREATE TABLE BOOK_APPLY (
    AUTHOR    VARCHAR2(100 BYTE)   NULL,      --저자
    PUBLISHER VARCHAR2(100 BYTE)   NULL,      --출판사
    WISH      VARCHAR2(4000 BYTE)  NULL,      --신청사유
+   STATUS    NUMBER               NOT NULL,
    CONSTRAINT PK_BOOK_APPLY PRIMARY KEY (APPLY_NO),
    CONSTRAINT FK_BOOK_APPLY FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL
 );
@@ -242,13 +241,14 @@ CREATE TABLE WISH (
 );
 -- 도서 대출 테이블
 CREATE TABLE BOOK_CHECKOUT (
-  CHECKOUT_NO NUMBER            NOT NULL,      -- 대출번호(시퀀스 사용)
-  USER_NO     NUMBER            NOT NULL,      -- 회원번호(USER 테이블 참조)
-  ISBN        VARCHAR2(13 BYTE) NOT NULL,      -- ISBN(BOOK 테이블 참조)
-  STATUS      NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체)
-  START_DATE  DATE              NOT NULL,      -- 대출시작날짜
-  DUE_DATE    DATE              NOT NULL,      -- 대출반납예정일
-  END_DATE    DATE              NULL,          -- 대출반납일
+  CHECKOUT_NO    NUMBER            NOT NULL,      -- 대출번호(시퀀스 사용)
+  USER_NO        NUMBER            NOT NULL,      -- 회원번호(USER 테이블 참조)
+  ISBN           VARCHAR2(13 BYTE) NOT NULL,      -- ISBN(BOOK 테이블 참조)
+  STATUS         NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체)
+  CHECKOUT_DATE  DATE              NOT NULL,
+  START_DATE     DATE              NULL,      -- 대출시작날짜
+  DUE_DATE       DATE              NULL,      -- 대출반납예정일
+  END_DATE       DATE              NULL,          -- 대출반납일
   CONSTRAINT PK_BOOK_CHECKOUT PRIMARY KEY(CHECKOUT_NO),
   CONSTRAINT FK1_BOOK_CHECKOUT FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO),
   CONSTRAINT FK2_BOOK_CHECKOUT FOREIGN KEY(ISBN) REFERENCES BOOK(ISBN)

@@ -47,7 +47,7 @@ public class NoticeServiceImpl implements NoticeService {
 	                                  .build())
 	                        .build();
 	    
-	    int uploadCount = noticeMapper.insertNotice(notice);
+	    int noticeCount = noticeMapper.insertNotice(notice);
 	    
 	    List<MultipartFile> files = multipartRequest.getFiles("files");
 	    
@@ -101,7 +101,7 @@ public class NoticeServiceImpl implements NoticeService {
 	      
 	    }  // for
 	    
-	    return (uploadCount == 1) && (files.size() == ntAttachCount);
+	    return (noticeCount == 1) && (files.size() == ntAttachCount);
 	}
 
 	@Transactional(readOnly=true)

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('새 공지사항 작성하기')}"></head>
+<head th:replace="~{/layout/header::head('FAQ')}"></head>
 
 <style>
 	div.child1{
@@ -16,7 +16,15 @@
 	div.child2{
 		width: 750px;
 		height: 200px;
+		margin-top:13px;
 		float:left;
+	}
+	div.child2-1{
+		border: 1px solid #ccc;
+		padding: 10px;
+		height:200px;
+		margin-top: 10px;
+		margin-bottom: 20px;		
 	}
 	
 </style>
@@ -33,22 +41,56 @@
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;" th:text="${f.faqTitle}"></h5>
+	  <h5 style="text-align: center;">FAQ</h5>
       <div class="child2">
-      <div th:text="|faq ${faq.faqNo}|"></div>
-      <div th:text="|제목 : ${faq.faqTitle}|"></div>
-      <div>내용</div>
-      <th:block th:if="${#strings.isEmpty(faq.faqContent)}">
-        <div>내용없음</div>
+      <h5 th:text="|${faq.faqTitle}|"></h5>
+      <div class="child2-1" th:text="${faq.faqContent}"></div>
       </th:block>
-      <th:block th:if="${not #strings.isEmpty(faq.faqContent)}">
-        <div th:text="${faq.faqContent}"></div>
-      </th:block>
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
+            <form id="frm_btn">
+              <input type="hidden" name="faqNo" th:value="${faq.faqNo}">
+              <button type="button" id="btn_edit" class="btn btn-secondary">수정</button>
+              <button type="button" id="btn_remove" class="btn btn-secondary">삭제</button>
+            </form>
+          </th:block>
       </div> 
+      </div>
    </div>
    </div>
    <script th:inline="javascript">
-
+    var frmBtn = $('#frm_btn');
+    
+      const fnEdit = () => {
+        $('#btn_edit').click(() => {
+          frmBtn.attr('action', '/support/editfaq.form');
+          frmBtn.attr('method', 'get');
+          frmBtn.submit();
+        })
+      }
+      
+      const fnRemove = () => {
+        $('#btn_remove').click(() => {
+          if(confirm('해당 FAQ를 삭제할까요?')){
+            frmBtn.attr('action', '/support/removeFaq.do');
+            frmBtn.attr('method', 'post');
+            frmBtn.submit();
+          }
+        })
+      }
+       const fnModifyResult = () => {
+        let modifyResult = /*[[${modifyResult}]]*/ null;
+        if(modifyResult !== null){
+          if(modifyResult === 1){
+            alert('FAQ 수정되었습니다.');
+          } else {
+            alert('FAQ 수정되지 않았습니다.');
+          }
+        }
+      }
+      
+        fnEdit();
+  		fnRemove();
+  		fnModifyResult();
    </script>
 </div>
 </body>

@@ -11,5 +11,7 @@ public interface FaqMapper {
 
 	public List<FaqDto> getFaqList();
 	public int insertFaq(FaqDto faqDto);
-
+	public FaqDto getFaq(int faqNo);
+	public int deleteFaq(int faqNo);
+	public int updateFaq(FaqDto faq);
 }
