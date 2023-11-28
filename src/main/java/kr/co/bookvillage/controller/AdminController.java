@@ -31,10 +31,34 @@ public class AdminController {
     return "admin/userList";
   }
   
+  @GetMapping("/userSearch.do")
+  public String userSearch(HttpServletRequest request, Model model) {
+    adminService.getSearchUserList(request, model);
+    return "admin/userList";
+  }
+  
+  @PostMapping("/userDetail.do")
+  public String userDetail(HttpServletRequest request, Model model) {
+    adminService.getUserDetail(request, model);
+    return "admin/userDetail";
+  }
+  
   @GetMapping("/bookList.do")
   public String bookList(HttpServletRequest request, Model model) {
-    adminService.getBookList(request, model);
+    adminService.getBookList(request, model); 
     return "admin/bookList"; 
+  }
+  
+  @GetMapping("/bookSearch.do")
+  public String bookSearch(HttpServletRequest request, Model model) {
+    adminService.getSearchBookList(request, model);
+    return "admin/bookList"; 
+  }
+  
+  @GetMapping("/bookDetail.do")
+  public String bookDetail(HttpServletRequest request, Model model) {
+    adminService.getBookDetail(request, model);
+    return "admin/bookDetail";
   }
   
   @GetMapping("/facList.do")
@@ -57,7 +81,7 @@ public class AdminController {
   @GetMapping("/insertBooks.do")
   public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
-    return "redirect:/admin/userList.do";
+    return "redirect:/admin/bookList.do";
   }
   
 }
