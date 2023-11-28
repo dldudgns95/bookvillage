@@ -75,6 +75,10 @@
     justify-content: space-between;
   }
   
+  .table_status {
+    width:65px;
+  }
+  
 
   
 </style>
@@ -90,7 +94,7 @@
       </a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
     </div>
@@ -113,6 +117,12 @@
               희망도서 검색
             </label>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="type" id="bookCheckoutSearch">
+            <label class="form-check-label" for="bookCheckoutSearch">
+              대출/반납 승인
+            </label>
+          </div>
         </div>
       </div>
       <div>
@@ -123,17 +133,20 @@
               <th scope="col" class="table_title">책제목</th>
               <th scope="col" class="table_author">저자</th>
               <th scope="col" class="table_publisher">출판사</th>
-              <th scope="col">대출</th>
+              <th scope="col" class="table_status">대출</th>
             </tr>
           </thead>
           <tbody>
+            <th:block th:if="${#lists.isEmpty(bookList)}">
+              <tr><td colspan="5">검색된 도서가 없습니다.</td></tr>
+            </th:block>
             <th:block th:each="book,vs:${bookList}">
               <tr>
                 <td scope="row" class="table_isbn" th:text="${book.isbn}"></td>
-                <td scope="row" class="table_title" th:text="${book.title}"></td>
+                <td scope="row" class="table_title"><a th:href="@{/admin/bookDetail.do(isbn=${book.isbn})}" th:text="${book.title}"></a></td>
                 <td scope="row" class="table_author" th:text="${book.author}"></td>
                 <td scope="row" class="table_publisher" th:text="${book.publisher}"></td>
-                <td scope="row">
+                <td scope="row" class="table_status">
                   <th:block th:if="${book.status == 0}">
                     불가능
                   </th:block>
@@ -149,7 +162,7 @@
               <div class="flex_tfoot">
                 <div th:utext="${paging}"></div>
                 <div>
-                  <form id="frm_search" method="post" th:action="@{/admin/userSearch.do}">
+                  <form id="frm_search" method="get" th:action="@{/admin/bookSearch.do}">
                     <div class="input-group w-50 p-3">
                       <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
                         <option value="ISBN" selected>ISBN</option>
@@ -198,7 +211,7 @@
       $('#frm_search').submit((ev) => {
         let query = $('.serach_text').val().trim();
         let checkISBN = /^[0-9]{1,13}$/;
-        let checkTitle = /^[a-zA-Z0-9가-힣]{2,}$/;
+        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
         if(query === '') {
           alert('검색어를 입력해주세요.');
           ev.preventDefault();

@@ -145,6 +145,37 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
+  public void getUserDetail(HttpServletRequest request, Model model) {
+    
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    model.addAttribute("user", adminMapper.getUserDetail(userNo));
+    
+  }
+  
+  @Override
+  public void getSearchUserList(HttpServletRequest request, Model model) {
+    
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.userSearchCount(Map.of("column", column, "query", query));
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd()
+                                   , "column", column
+                                   , "query", query);
+    
+    model.addAttribute("userList", adminMapper.getSearchUserList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/userSearch.do", "column=" + column + "&query=" + query));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
   public void getBookList(HttpServletRequest request, Model model) {
 
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
@@ -157,6 +188,35 @@ public class AdminServiceImpl implements AdminService {
     
     model.addAttribute("bookList", adminMapper.getBookList(map));
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookDetail(HttpServletRequest request, Model model) {
+    long isbn = Long.parseLong(request.getParameter("isbn")); // isbn은 int로는 값이 커서 불가능
+    model.addAttribute("book", adminMapper.getBookDetail(isbn));
+  }
+  
+  @Override
+  public void getSearchBookList(HttpServletRequest request, Model model) {
+    
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookSearchCount(Map.of("column", column, "query", query));
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd()
+                                   , "column", column
+                                   , "query", query);
+    
+    model.addAttribute("bookList", adminMapper.getSearchBookList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookSearch.do", "column=" + column + "&query=" + query));
     model.addAttribute("beginNo", total - (page - 1) * display);
     model.addAttribute("totalCount", total);
     

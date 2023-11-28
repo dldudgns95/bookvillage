@@ -14,7 +14,6 @@
   
   .admin_contents {
     margin-left: 20px;
-    width: 700px;
   }
   .tfoot_center {
     text-align: center; 
@@ -76,12 +75,24 @@
     justify-content: space-between;
   }
   
-  #calendar {
-    width: 600px;
+  .table_status {
+    width:65px;
   }
   
-</style>
+  .align_center {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  
+  .admin_span {
+    font-weight: bold;
+    display:inline-block;
+    width: 50px;
+  }
+  
 
+  
+</style>
 
 <body>
   
@@ -92,37 +103,43 @@
       <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
-      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
       <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
     </div>
     
     <div class="admin_contents">
-      <form method="post" th:action="@{/admin/facAdd.do}" enctype="multipart/form-data">
-        <div class="mb-3 row">
-          <label for="facName" class="col-sm-2 col-form-label">시설명</label>
-          <div class="col-sm-10">
-            <input type="text" class="form-control" id="facName" name="facName" placeholder="시설명을 입력해주세요.">
+      <div class="flex_admin">
+        <div>
+          <img th:src="${book.cover}">
+        </div>
+        <div class="admin_contents align_center">
+          <h4 th:text="${book.title}"></h4>
+          <h6 th:text="${book.categoryName}"></h6>
+          <h6><span class="admin_span">저자 </span><span th:text="${book.author}"></span></h6>
+          <h6><span class="admin_span">출판사 </span><span th:text="${book.publisher}"></span></h6>
+          <h6><span class="admin_span">출간일 </span><span th:text="${book.pubdate}"></span></h6>
+          <h6>
+            <span class="admin_span">대출 </span>
+            <span th:if="${book.status == 1}">대출가능</span>
+            <span th:if="${book.status == 0}">대출불가능</span>
+          </h6>
+          <h6 th:utext="${book.description}"></h6>
+          <div>
+            <button type="button" class="btn btn-primary">내용수정</button>
+            <button type="button" class="btn btn-primary">도서삭제</button>
           </div>
         </div>
-        <div class="mb-3">
-          <label for="facContent" class="form-label">시설 설명</label>
-          <textarea class="form-control" id="facContent" name="facContent" rows="3"></textarea>
-        </div>
-        <div class="mb-3">
-          <label for="files" class="form-label">이미지 파일 선택</label>
-          <input class="form-control" type="file" id="files" name="files" multiple>
-        </div>
-        <div>
-          <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
-        </div>
-      </form>
+      </div>
     </div>
 
   </div>
   
+  <script th:inline="javascript">
+   
+  </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
 

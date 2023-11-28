@@ -19,9 +19,11 @@
     <typeAlias alias="FaqDto"            	   type="kr.co.bookvillage.dto.FaqDto"/>
     <typeAlias alias="BookDto"                 type="kr.co.bookvillage.dto.BookDto"/>
     <typeAlias alias="BookSearchDto"           type="kr.co.bookvillage.dto.BookSearchDto"/>
+    <typeAlias alias="ScoreDto"                type="kr.co.bookvillage.dto.ScoreDto"/>
+    <typeAlias alias="WishDto"                 type="kr.co.bookvillage.dto.WishDto"/>
     <typeAlias alias="FacilityDto"           type="kr.co.bookvillage.dto.FacilityDto"/>
     <typeAlias alias="AttachFacDto"           type="kr.co.bookvillage.dto.AttachFacDto"/>
-    
+
   </typeAliases>
 
 </configuration>
