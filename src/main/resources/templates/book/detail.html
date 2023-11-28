@@ -55,7 +55,7 @@
       
       <div class="column-8">
         <div class="detail_menu">
-          <a href="javascript:void(0);" id="goBack"><i class="fa-solid fa-arrow-left"></i> 검색 결과로 돌아가기</a>
+          <a href="javascript:void(0);" id="BackToSearch"><i class="fa-solid fa-arrow-left"></i> 검색 결과로 돌아가기</a>
         </div>
         <hr>
         <div class="detail_book" th:each="bookDetail : ${bookDetailList}">
@@ -88,8 +88,21 @@
         
         <div class="detail_btn">
           <ul>
-            <li>관심도서</li>
-            <li>대출신청</li>
+            <li>
+              <form method="post" id="addWishForm">
+                <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
+                <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
+                <input type="hidden" id="wishDate" name="wishDate" />
+                <button type="button">관심도서</button>
+              </form>
+            </li>
+            <li>
+              <form th:action="@{/book/updateCheckout.do}" method="post" th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
+                <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
+                <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
+                <button type="button">대출신청</button>
+              </form>
+            </li>              
           </ul>
         </div>
         <hr>
@@ -108,12 +121,27 @@
               <input type="radio" name="star" class="star" value="1" id="rate5"><label for="rate5">★</label>
             </fieldset>
             <div>
-              <textarea type="text" id="review" class="review" placeholder="한줄평을 남겨주세요"></textarea>
-              <input type="submit" value="저장" title="저장" class="btn btn-outline-secondary" onclick="saveReview()">
+              <textarea type="text" id="review" class="review" maxlength="500" placeholder="한줄평을 남겨주세요(500자 이하)"></textarea>
+              <input type="button" value="등록" title="등록" class="btn btn-outline-secondary" onclick="saveReview()">
             </div>
           </form>
         </div>
+        <hr>
         
+        
+        <h4>한줄평</h4>
+        <div class="score_list" th:each="score : ${scoreList}">
+          <div>
+            <span th:if="${score.review}" th:text="${score.review}"></span>
+            <span th:unless="${score.review}">No review available</span>
+            
+            <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">    
+              <!-- 삭제 버튼 -->
+              <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'정말로 삭제하시겠습니까?\')'"><i class="fa-solid fa-xmark"></i></a>
+            </span>
+          </div>
+        </div>
+
       </div>
       
     </div>
@@ -124,6 +152,5 @@
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
-  
 </body>
 </html>

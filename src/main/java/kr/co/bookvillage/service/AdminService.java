@@ -13,5 +13,5 @@ public interface AdminService  {
   public int insertBook(HttpServletRequest request);
   public void getUserList(HttpServletRequest request, Model model);
   public void getBookList(HttpServletRequest request, Model model);
-  public void addFacility(MultipartHttpServletRequest multiRequest);
+  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception;
 }

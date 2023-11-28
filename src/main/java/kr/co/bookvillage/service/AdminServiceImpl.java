@@ -1,9 +1,13 @@
 package kr.co.bookvillage.service;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,11 +25,15 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.bookvillage.dao.AdminMapper;
+import kr.co.bookvillage.dto.AttachFacDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FacilityDto;
+import kr.co.bookvillage.util.AdminFileUtils;
 import kr.co.bookvillage.util.AdminPageUtils;
+import kr.co.bookvillage.util.MyFileUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 
 @Transactional
 @Service
@@ -35,6 +43,7 @@ public class AdminServiceImpl implements AdminService {
   private final AdminMapper adminMapper;
   private final MyPageUtils myPageUtils;
   private final AdminPageUtils adminPageUtils;
+  private final AdminFileUtils adminFileUtils;
 
   @Override
   public int insertBook(HttpServletRequest request){
@@ -154,7 +163,7 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
-  public void addFacility(MultipartHttpServletRequest multiRequest) {
+  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
@@ -166,6 +175,63 @@ public class AdminServiceImpl implements AdminService {
     int addResult = adminMapper.addFacility(facility);
     
     List<MultipartFile> files = multiRequest.getFiles("files");
+    
+    int attachCount;
+    if(files.get(0).getSize() == 0) {
+      attachCount = 1;
+    } else {
+      attachCount = 0;
+    }
+    
+    for(MultipartFile multipartFile : files) {
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        String path = adminFileUtils.getFacPath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String facOriginalFilename = multipartFile.getOriginalFilename();
+        String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
+        
+        System.out.println("path : " + path);
+        System.out.println("facOriginalFilename : " +facOriginalFilename);
+        System.out.println("facFilesystemName : " +facFilesystemName);
+        
+        String url = path + "/" + facFilesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
+        File file = new File(dir, facFilesystemName);
+        
+        System.out.println("file : " + file);
+        
+          //multipartFile.transferTo(file); // 이거 안됨
+          multipartFile.transferTo(paths.toFile());
+        
+      String contentType = Files.probeContentType(paths); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
+      int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
+      
+      // 썸네일이 있으면 원본파일 썸네일로 만들기
+      if(hasThumbnail == 1) {
+        File thumbnail = new File(dir, "s_" + facFilesystemName); // small 이미지를 의미하는 s_를 덧붙임
+        Thumbnails.of(file)
+                  .size(100, 100)       // 가로 100px, 세로 100px
+                  .toFile(thumbnail);
+      }
+      
+      AttachFacDto attachFac = AttachFacDto.builder()
+                                 .facPath(path)
+                                 .facOriginalFilename(facOriginalFilename)
+                                 .facFilesystemName(facFilesystemName)
+                                 .facHasThumbnail(0)
+                                 .build();
+      System.out.println("attachFac : " + attachFac);
+      attachCount += adminMapper.addFacImage(attachFac);
+        
+      }
+    }
+    
     
   }
   

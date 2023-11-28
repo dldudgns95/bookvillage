@@ -94,10 +94,10 @@
     , FAC_HAS_THUMBNAIL
     ) VALUES (
       ATTACH_FAC_SEQ.NEXTVAL
-    , #{facNo}
+    , FACILITY_SEQ.CURRVAL
     , #{facPath}
     , #{facOriginalFilename}
-    , #{facFileSystemName}
+    , #{facFilesystemName}
     , #{facHasThumbnail}
     )
   </insert>
