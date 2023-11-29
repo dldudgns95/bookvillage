@@ -81,7 +81,7 @@
    
    <select id="findIdInactiveUser"> 
       SELECT EMAIL
-        FORM INACTIVE_USER
+        FROM INACTIVE_USER
        WHERE NAME = #{name}
          AND MOBILE = #{mobile}
    </select>
@@ -109,5 +109,19 @@
         , SYSDATE
       )
   </insert>
+  
+  <update id="tmpPw" parameterType="Map">
+    UPDATE USER_T
+       SET PW = #{pw}
+     WHERE EMAIL = #{email}
+  </update>
+  
+  <update id="tmpPwMdDay" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW_MODIFIED_DATE = SYSDATE
+     WHERE EMAIL = #{eamil}   
+  </update>
+  
+  
   
 </mapper>

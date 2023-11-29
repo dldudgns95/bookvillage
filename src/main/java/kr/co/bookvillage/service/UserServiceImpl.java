@@ -354,13 +354,27 @@ public class UserServiceImpl implements UserService {
         }
         return emailResult ;
       }
+  
+  // 가입된 회원의 이메일인지 확인
+  
+  
       
+  // 임시 비밀번호 메일 발송
+  @Override
+  public ResponseEntity<Map<String, Object>> sendTmpPw(String email) {
+
+    String pwCode = mySecurityUtils.getRandomString(6, true, true);
+    
+    myJavaMailUtils.sendJavaMail(email
+                               , "책빌리지 임시 비밀번호입니다."
+                               , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
+    
+    return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
+    
+  }
 
 
 
-
-  
-  
   
 
 
