@@ -36,8 +36,8 @@ public class UserServiceImpl implements UserService {
   private final MyJavaMailUtils myJavaMailUtils;
   
       
-  private final String client_id = "s69mitzAnTVJZPIV_Hkc";
-  private final String client_secret = "G21YQxY5Ku";
+  private final String client_id = "akfMPV_DLx7u40rpRi7W";
+  private final String client_secret = "5J5oz6ohRI";
             
   
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -59,9 +59,6 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
-    System.out.println(user);
-    System.out.println("Query: " + userMapper.getUser(map));
-    System.out.println("Parameters: " + map);
   
     
     if(user != null) {
@@ -89,9 +86,172 @@ public class UserServiceImpl implements UserService {
     session.invalidate();
     
     try {
-      response.sendRedirect(request.getContextPath() + "/main.do");
+      response.sendRedirect( "/main.do");
     } catch (Exception e) {
       e.printStackTrace();
+    }
+    
+  }
+  
+  //네이버 로그인1
+  @Override
+    public String getNaverLoginURL(HttpServletRequest request) throws Exception {
+    String apiURL = "https://nid.naver.com/oauth2.0/authorize";
+    String response_type = "code";
+    String redirect_uri = URLEncoder.encode("http://localhost:8080" + "/user/naver/getAccessToken.do", "UTF-8");
+    String state = new BigInteger(130, new SecureRandom()).toString();
+
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?response_type=").append(response_type);
+    sb.append("&client_id=").append(client_id);
+    sb.append("&redirect_uri=").append(redirect_uri);
+    sb.append("&state=").append(state);
+    
+    return sb.toString();
+    }
+  
+  //네이버 로그인2
+  @Override
+  public String getNaverLoginAccessToken(HttpServletRequest request) throws Exception {
+
+    String code = request.getParameter("code");
+    String state = request.getParameter("state");
+    
+    String apiURL = "https://nid.naver.com/oauth2.0/token";
+    String grant_type = "authorization_code"; 
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?grant_type=").append(grant_type);
+    sb.append("&client_id=").append(client_id);
+    sb.append("&client_secret=").append(client_secret);
+    sb.append("&code=").append(code);
+    sb.append("&state=").append(state);
+    
+    // 요청
+    URL url = new URL(sb.toString());
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("GET");  // 반드시 대문자로 작성
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    JSONObject obj = new JSONObject(responseBody.toString());
+    return obj.getString("access_token");
+  }
+  
+  // 네이버 로그인 3
+  @Override
+  public UserDto getNaverProfile(String accessToken) throws Exception {
+  
+    String apiURL = "https://openapi.naver.com/v1/nid/me";
+    URL url = new URL(apiURL);
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("GET");
+    con.setRequestProperty("Authorization", "Bearer " + accessToken);
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    // 응답 결과(프로필을 JSON으로 응답) -> UserDto 객체
+    JSONObject obj = new JSONObject(responseBody.toString());
+    JSONObject response = obj.getJSONObject("response");
+    UserDto user = UserDto.builder()
+                    .email(response.getString("email"))
+                    .name(response.getString("name"))
+                    .gender(response.getString("gender"))
+                    .mobile(response.getString("mobile"))
+                    .build();
+    
+    return user;
+    
+  }
+  
+  @Override
+  public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
+    
+    String email = request.getParameter("email");
+    String name = request.getParameter("name");
+    String gender = request.getParameter("gender");
+    String mobile = request.getParameter("mobile");
+    String event = request.getParameter("event");
+    
+    UserDto user = UserDto.builder()
+                        .email(email)
+                        .name(name)
+                        .gender(gender)
+                        .mobile(mobile.replace("-", ""))
+                        .agree(event != null ? 1 : 0)
+                        .build();
+    
+    int naverJoinResult = userMapper.insertNaverUser(user);
+
+    try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(naverJoinResult == 1 ) {
+        request.getSession().setAttribute("usre", userMapper.getUser(Map.of("email", email)));
+        userMapper.insertAccess(email);
+        out.println("alert('네이버 간편 가입이 완료 되었습니다.')");
+      } else {
+        out.println("alert('네이버 간편 가입이 실패했습니다.')");
+      }
+      out.println("location.href='" + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+  
+  
+  @Override
+  public void naverLogin(HttpServletRequest request, HttpServletResponse response, UserDto naverProfile) throws Exception {
+    
+    String email = naverProfile.getEmail();
+    UserDto user = userMapper.getUser(Map.of("email", email));
+    
+    if(user != null) {
+      request.getSession().setAttribute("user", user);
+      userMapper.insertAccess(email);
+    } else {
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      out.println("alert('일치하는 회원 정보가 없습니다.')");
+      out.println("location.href='" + request.getContextPath() + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
     }
     
   }
@@ -104,6 +264,7 @@ public class UserServiceImpl implements UserService {
   
   
   
+  
   // 이메일 주소 등록되어있는지 확인
   @Transactional(readOnly = true)
   @Override
@@ -113,8 +274,6 @@ public class UserServiceImpl implements UserService {
     
     boolean enableEmail = userMapper.getUser(map) == null
                        && userMapper.getInactiveUser(map) == null;
-    
-    System.out.println("enableEmail" + enableEmail);
     
     return new ResponseEntity<>(Map.of("enableEmail", enableEmail), HttpStatus.OK);
     
@@ -180,29 +339,29 @@ public class UserServiceImpl implements UserService {
     
   }
 
-
+ 
+  // 아이디 찾기
   @Override
-  public String findId(String name, String mobile) {
+  public UserDto findId(String name, String mobile)  {
     
-    
-    String findIdresult = "";
+    UserDto emailResult = null;
         
         try {
+          emailResult = userMapper.findId(name, mobile);
           
-          findIdresult = userMapper.findId(name, mobile);
         } catch(Exception e) {
-          
           e.printStackTrace();
         }
-        
-        return findIdresult ;
+        return emailResult ;
       }
       
 
 
 
 
-
+  
+  
+  
 
 
 }

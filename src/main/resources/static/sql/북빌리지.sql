@@ -47,18 +47,18 @@ DROP TABLE ACCESS_T;
 DROP TABLE USER_T;
 
 CREATE TABLE USER_T (
-  USER_NO          NUMBER             NOT NULL,             -- 회원번호
-  EMAIL            VARCHAR2(100 BYTE) NOT NULL UNIQUE,   -- 회원이메일
-  PW               VARCHAR2(64 BYTE)  NOT NULL,           -- 비밀번호
-  NAME             VARCHAR2(50 BYTE),    -- 회원이름
-  MOBILE           VARCHAR2(15 BYTE)  UNIQUE,           -- 전화번호
-  GENDER           VARCHAR2(5 BYTE),            -- 성별 (0:남자, 1:여자, 3:선택안함)
-  AGREE            NUMBER,                      -- 동의 (0:필수, 1: 이벤트)
-  STATE            NUMBER,                      -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
-  AUTH             NUMBER,                      -- 등급 (0:일반, 1: 휴면, 9: 관리자)
-  PW_MODIFIED_DATE DATE,                        -- 비밀번호 수정일
-  JOINED_DATE      DATE,                        -- 회원가입일
-  STATUS           NUMBER,                      -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
+  USER_NO          NUMBER             NOT NULL,           -- 회원번호
+  EMAIL            VARCHAR2(100 BYTE) NOT NULL UNIQUE,    -- 회원이메일
+  PW               VARCHAR2(64 BYTE),                     -- 비밀번호
+  NAME             VARCHAR2(50 BYTE),                     -- 회원이름
+  MOBILE           VARCHAR2(15 BYTE)  UNIQUE,             -- 전화번호
+  GENDER           VARCHAR2(5 BYTE),                      -- 성별 (0:남자, 1:여자, 3:선택안함)
+  AGREE            NUMBER,                                -- 동의 (0:필수, 1: 이벤트)
+  STATE            NUMBER,                                -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
+  AUTH             NUMBER,                                -- 등급 (0:일반, 1: 휴면, 9: 관리자)
+  PW_MODIFIED_DATE DATE,                                  -- 비밀번호 수정일
+  JOINED_DATE      DATE,                                  -- 회원가입일
+  STATUS           NUMBER,                                -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
   BOOKCOUNT        NUMBER DEFAULT 0 NOT NULL,
   CONSTRAINT PK_USER_T PRIMARY KEY(USER_NO)
 );
@@ -71,7 +71,7 @@ CREATE TABLE ACCESS_T (
 
 -- 휴면회원테이블
 CREATE TABLE INACTIVE_USER (
-  USER_NO            NUMBER            NOT NULL,  -- 회원번호
+  USER_NO            NUMBER            NOT NULL,   -- 회원번호
   EMAIL              VARCHAR2(100 BYTE) NULL,      -- 회원이메일
   PW                 VARCHAR2(64 BYTE)  NULL,      -- 회원비밀번호
   NAME               VARCHAR2(50 BYTE)  NULL,      -- 회원이름
@@ -444,4 +444,3 @@ VALUES (1, '첫 번째 공지사항', '첫 번째 공지사항 내용입니다.'
 
 
 COMMIT;
-
