@@ -19,4 +19,5 @@ public class NoticeDto {
     private String ntDate;
     private int ntAttachCount;
     private UserDto userDto;
+
 }

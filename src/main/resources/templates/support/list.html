@@ -46,31 +46,48 @@
         </th:block>
       </div>
       <div class="child2">
-			<table class="table align-middle">
-                <thead>
-                <tr>
-                    <td>순번</td>
-                    <td>제목</td>
-                    <td>작성일</td>
-                </tr>
-                </thead>
-                <tbody>
-                <th:block th:each="n : ${noticeList}">
-                    <tr>
-                        <td th:text="${n.ntNo}"></td>
-                        <td><a th:href="@{/support/detail.do(ntNo=${n.ntNo})}" th:text="${n.ntTitle}"></a></td>
-                        <td th:text="${n.ntDate}"></td>
-                    </tr>
-                </th:block>
-                </tbody>
-            </table>
+		   <div id="notice_list" class="notice_list"></div>
    	  </div>	  
    <script th:inline="javascript">
 	// 전역 변수
+    
+      // 전역 변수
       var page = 1;
       var totalPage = 0;
     
-
+      const fnGetNoticeList = () => {
+        $.ajax({
+          // 요청
+          type: 'get',
+          url: '/support/getList.do',
+          data: 'page=' + page,
+          // 응답
+          dataType: 'json',
+          success: (resData) => { 
+            totalPage = resData.totalPage;
+            $.each(resData.noticeList, (i, notice) => {
+              let str = '<div class="notice" data-nt_no="' + notice.ntNo + '">';
+              str += '<div>제목: ' + notice.ntTitle + '</div>';
+              if(notice.userDto === null){
+                str += '<div>작성: 정보없음</div>';
+              } else {            
+                str += '<div>작성: ' + notice.userDto.name + '</div>';
+              }
+              str += '<div>생성: ' + notice.ntDate + '</div>';
+              str += '<div>첨부: ' + notice.ntAttachCount + '개</div>';
+              str += '</div>';
+              $('#notice_list').append(str);
+            })
+          }
+        })
+      }
+      
+      const fnNoticeDetail = () => {
+        $(document).on('click', '.notice', function(){
+          location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');
+        })
+      }
+    
       const fnScroll = () => {
         
         var timerId;  // 최초 undefined 상태
@@ -105,10 +122,10 @@
         let addResult = /*[[${addResult}]]*/ null;
         if(addResult !== null){
           if(addResult === true){
-            alert('공지사항이 등록 되었습니다.');
+            alert('공지사항이 업로드 되었습니다.');
             $('#notice_list').empty();
           } else {
-            alert('공지사항 등록이 실패하였습니다.');
+            alert('공지사항 업로드가 실패하였습니다.');
           }
         }
       }
@@ -120,7 +137,7 @@
             alert('공지사항이 삭제되었습니다.');
             $('#notice_list').empty();
           } else {
-            alert('공지사항이 삭제가 실패했습니다.');
+            alert('공지사항 삭제가 실패했습니다.');
           }
         }
       }
@@ -130,7 +147,6 @@
       fnScroll();
       fnAddResult();
       fnRemoveResult();
-    
    </script>
 </div>
 </body>

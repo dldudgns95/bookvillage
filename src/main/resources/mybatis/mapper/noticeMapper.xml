@@ -72,7 +72,7 @@
   </select>
  
   <select id="getNoticeList" parameterType="Map" resultMap="NoticeMap">
-    SELECT A.NT_NO, A.NT_TITLE, A.NT_CONTENT, A.USER_NO, A.NT_DATE, A.NT_ATTACH_COUNT
+    SELECT A.NT_NO, A.NT_TITLE, A.NT_CONTENT, A.NT_DATE, A.NT_ATTACH_COUNT, A.USER_NO
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY NT_NO DESC) AS RN,
                     N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE,
                    (SELECT COUNT(*) FROM ATTACH_NT ATC WHERE N.NT_NO = ATC.NT_NO) AS NT_ATTACH_COUNT,
@@ -101,4 +101,30 @@
       FROM ATTACH_NT
      WHERE ATTACH_NT_NO = #{attachNtNo}
   </select>
+    
+  <update id="updateDownloadCount" parameterType="int">
+    UPDATE ATTACH_NT
+       SET NT_DOWNLOAD_COUNT = NT_DOWNLOAD_COUNT + 1
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </update>
+  
+  <update id="updateNotice" parameterType="NoticeDto">
+    UPDATE NOTICE
+       SET NT_TITLE = #{ntTitle}
+         , NT_CONTENT = #{ntContent}
+         , NT_DATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
+     WHERE NT_NO = #{ntNo}
+  </update>
+  
+  <delete id="deleteAttach" parameterType="int">
+    DELETE
+      FROM ATTACH_NT
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </delete>
+  
+  <delete id="deleteNotice" parameterType="int">
+    DELETE
+      FROM NOTICE
+     WHERE NT_NO = #{ntNo}
+  </delete>
 </mapper>
