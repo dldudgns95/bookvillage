@@ -213,11 +213,28 @@
        AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
   </select>
   
+  <!-- 희망도서 수 카운트-->
+  <select id="bookApplyCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_APPLY
+     WHERE STATUS = 0
+  </select>
+  
+  <!-- 희망도서 목록 조회 -->
   <select id="getBookApplyList" resultMap="BookApplyMap">
+    SELECT APPLY_NO, USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY APPLY_NO ASC) AS RN, APPLY_NO, U.USER_NO, U.NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
+              FROM BOOK_APPLY BA INNER JOIN USER_T U
+                ON BA.USER_NO = U.USER_NO
+             WHERE BA.STATUS = 0)
+     WHERE RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <select id="getBookApplyDetail" parameterType="int" resultMap="BookApplyMap">
     SELECT APPLY_NO, U.USER_NO, U.NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
       FROM BOOK_APPLY BA INNER JOIN USER_T U
         ON BA.USER_NO = U.USER_NO
-     WHERE BA.STATUS = 0
+     WHERE APPLY_NO = #{applyNo}
   </select>
   
   

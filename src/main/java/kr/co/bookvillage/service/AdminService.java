@@ -19,6 +19,7 @@ public interface AdminService  {
   public Map<String, Object> getFacTotalList(HttpServletRequest request);
   public int addFacApply(HttpServletRequest request);
   public boolean checkFacApply(HttpServletRequest request);
-  public void getBookApplyList(Model model);
+  public void getBookApplyList(HttpServletRequest request, Model model);
+  public void getBookApplyDetail(HttpServletRequest request, Model model);
   
 }

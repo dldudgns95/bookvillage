@@ -27,5 +27,7 @@ public interface AdminMapper {
   public List<AttachFacDto> unavailableFacList(String facStart);
   public int addFacApply(Map<String, Object> map);
   public boolean checkFacApply(Map<String, Object> map);
-  public List<BookApplyDto> getBookApplyList();
+  public int bookApplyCount();
+  public List<BookApplyDto> getBookApplyList(Map<String, Object> map);
+  public BookApplyDto getBookApplyDetail(int applyNo);
 }

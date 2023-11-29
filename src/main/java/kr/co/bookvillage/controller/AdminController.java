@@ -106,9 +106,14 @@ public class AdminController {
   }
   
   @GetMapping("/bookApplyList.do")
-  public String bookApplyList(Model model) {
-    adminService.getBookApplyList(model);
+  public String bookApplyList(HttpServletRequest request, Model model) {
+    adminService.getBookApplyList(request, model);
     return "admin/bookApplyList";
+  }
+  @GetMapping("/bookApplyDetail.do")
+  public String bookApplyDetail(HttpServletRequest request, Model model) {
+    adminService.getBookApplyDetail(request, model);
+    return "admin/bookApplyDetail";
   }
   
   
