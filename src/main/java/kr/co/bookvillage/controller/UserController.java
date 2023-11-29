@@ -141,10 +141,19 @@ public class UserController {
   }
   
   // 임시 비밀번호 발송
+//  @GetMapping(value = "/sendTmpPw.do", produces = MediaType.APPLICATION_JSON_VALUE)
+//  public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestParam String email){
+//    return userService.sendTmpPw(email);
+//  }
+  
+   //임시 비밀번호 발송
   @GetMapping(value = "/sendTmpPw.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestParam String email){
     return userService.sendTmpPw(email);
   }
+    
+
+  
   
   
   // 임시 비밀번호 자동 업데이트

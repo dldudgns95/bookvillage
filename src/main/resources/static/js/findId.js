@@ -95,7 +95,7 @@ $(document).ready(() => {
               $('#pwCode').prop('disabled', false);
               $('#btn_verify_pwCode').prop('disabled', false);
               $('#btn_verify_pwCode').click(() => {
-                emailPassed = $('#pwCode').val() === resData.email;
+                emailPassed = $('#pwCode').val() === resData.pwCode;
                 if (emailPassed) {
                   // 여기 수정 ///////////////////////////////////
                   alert('임시비밀번호 설정이 완료되었습니다.');
@@ -106,14 +106,14 @@ $(document).ready(() => {
             },
             error: function (error) {
               // Ajax 요청이 실패할 경우 수행할 동작
-              console.error('Ajax 요청 실패', error);
+              //console.error('Ajax 요청 실패', error);
             }
           });
         
     
     }).catch((state) => {
       // Promise reject 시의 처리
-      console.error('Promise rejected with code:', state);
+     // console.error('Promise rejected with code:', state);
       emailPassed = false;
       switch(state){
       case 1: $('#msg_emailTmpPW').text('이메일 형식이 올바르지 않습니다.'); break;

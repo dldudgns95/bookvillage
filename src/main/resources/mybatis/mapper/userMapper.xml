@@ -112,7 +112,7 @@
   
   <update id="tmpPw" parameterType="Map">
     UPDATE USER_T
-       SET PW = #{pw}
+       SET PW = #{pwCode}
      WHERE EMAIL = #{email}
   </update>
   
