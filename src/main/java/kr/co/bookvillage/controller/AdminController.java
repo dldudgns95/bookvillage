@@ -105,6 +105,12 @@ public class AdminController {
     return Map.of("checkResult", adminService.checkFacApply(request));
   }
   
+  @GetMapping("/bookApplyList.do")
+  public String bookApplyList(Model model) {
+    adminService.getBookApplyList(model);
+    return "admin/bookApplyList";
+  }
+  
   
   
 }

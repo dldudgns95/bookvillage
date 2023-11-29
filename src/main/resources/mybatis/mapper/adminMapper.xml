@@ -5,19 +5,33 @@
 
 <mapper namespace="kr.co.bookvillage.dao.AdminMapper">
   
-    <resultMap type="AttachFacDto" id="AttachFacMap">
+  <!-- 시설 Map -->
+  <resultMap type="AttachFacDto" id="AttachFacMap">
     <id column="FAC_ATTACH_NO"             property="facAttachNo" />
     <result column="FAC_PATH"              property="facPath" />
     <result column="FAC_ORIGINAL_FILENAME" property="facOriginalFilename" />
     <result column="FAC_FILESYSTEM_NAME"   property="facFilesystemName" />
     <result column="FAC_HAS_THUMBNAIL"     property="facHasThumbnail" />
     <association javaType="FacilityDto" property="facilityDto">
-      <id column="FAC_NO" property="facNo" />
-      <result column="FAC_NAME"     property="facName" />
-      <result column="FAC_CONTENT"     property="facContent" />
+      <id column="FAC_NO"          property="facNo" />
+      <result column="FAC_NAME"    property="facName" />
+      <result column="FAC_CONTENT" property="facContent" />
     </association>
-  </resultMap>  
-
+  </resultMap> 
+  
+  <resultMap type="BookApplyDto" id="BookApplyMap">
+    <id     column="APPLY_NO"  property="applyNo" />
+    <result column="BOOK_NAME" property="bookName" />
+    <result column="AUTHOR"    property="author" />
+    <result column="PUBLISHER" property="publisher" />
+    <result column="WISH"      property="wish" />
+    <result column="STATUS"    property="status" />
+    <association javaType="UserDto" property="userDto">
+      <id     column="USER_NO" property="userNo" />
+      <result column="NAME"    property="name" />
+    </association>
+  </resultMap>
+  
   <!-- 책 넣기 -->
   <insert id="insertBook" parameterType="bookDto">
     INSERT INTO BOOK(
@@ -191,11 +205,22 @@
     , 0
     )
   </insert>
-  
+  <!-- 해당유저 해당날짜에 이용신청 여부 확인 -->
   <select id="checkFacApply" parameterType="Map" resultType="boolean">
     SELECT COUNT(*)
       FROM FAC_APPLY
      WHERE USER_NO = #{userNo}
        AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
   </select>
+  
+  <select id="getBookApplyList" resultMap="BookApplyMap">
+    SELECT APPLY_NO, U.USER_NO, U.NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
+      FROM BOOK_APPLY BA INNER JOIN USER_T U
+        ON BA.USER_NO = U.USER_NO
+     WHERE BA.STATUS = 0
+  </select>
+  
+  
+  
+  
 </mapper>

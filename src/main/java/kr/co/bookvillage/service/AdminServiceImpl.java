@@ -325,5 +325,10 @@ public class AdminServiceImpl implements AdminService {
     return check;
   }
   
+  @Override
+  public void getBookApplyList(Model model) {
+    model.addAttribute("bookApplyList", adminMapper.getBookApplyList());
+  }
+  
   
 }

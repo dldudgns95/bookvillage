@@ -145,18 +145,8 @@
         editable : true,
         nowIndicator: true, // 현재 시간 마크
         locale: 'ko', // 한국어 설정
-        events: [
-            
-            {
-                start: '2000-01-01',
-                end: '2023-11-29',
-                overlap: false,
-                display: 'background',
-                backgroundColor: "#D3D3D3"
-            }
-        ],
         
-        dateClick: function(info) {
+        dateClick: function(info) {  // 날짜 클릭이벤트 진행
           let user = /*[[${session.user}]]*/ null;
           if(user === null) {   // 로그인 여부 체크
             if(confirm('로그인이 필요한 기능입니다. 로그인 하시겠습니까?')){
