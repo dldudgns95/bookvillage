@@ -54,8 +54,14 @@ $(document).ready(() => {
 
 $(document).ready(() => {
   // 비밀번호 찾기
-  $('#email').keyup(() => {
+  $('#btn_getTempPw').click(() => {
     let email = $('#email').val();
+
+    // 유효성 검사
+    if (email.trim() === "") {
+      alert("이메일을 입력하세요");
+      return;
+    }
 
     new Promise((resolve, reject) => {
       // 1. 정규식 검사
@@ -75,50 +81,37 @@ $(document).ready(() => {
           if (!resData.enableEmail) {          // 회원인 경우
             $('#msg_emailTmpPW').text('');
             resolve();
-          } else {                            // 회원이 아닌경우 
+          } else {                            // 회원이 아닌 경우 
             reject(2);
           }
         }
       });
     }).then(() => {
       // 3. 임시 비번 인증 메일 발송
-     
-          $.ajax({
-            url: '/user/sendTmpPw.do',
-            method: 'GET',
-            data: 'email=' + email,
-            success: (resData) => {
-              // Ajax 요청이 성공할 경우 수행할 동작
-              console.log('Ajax 요청 성공', resData);
-
-              alert(email + "로 임시 비밀번호를 전송했습니다.");
-              $('#pwCode').prop('disabled', false);
-              $('#btn_verify_pwCode').prop('disabled', false);
-              $('#btn_verify_pwCode').click(() => {
-                emailPassed = $('#pwCode').val() === resData.pwCode;
-                if (emailPassed) {
-                  // 여기 수정 ///////////////////////////////////
-                  alert('임시비밀번호 설정이 완료되었습니다.');
-                } else {
-                  alert('임시비밀번호 설정이 실패하였습니다.');
-                }
-              });
-            },
-            error: function (error) {
-              // Ajax 요청이 실패할 경우 수행할 동작
-              //console.error('Ajax 요청 실패', error);
-            }
-          });
-        
-    
+      $.ajax({
+        type: 'post', 
+        url: '/user/sendTmpPw.do',
+        contentType: 'application/json', 
+        data: JSON.stringify({ email: email }), 
+        success: (resData) => {
+          // Ajax 요청이 성공할 경우 수행할 동작
+          console.log('Ajax 요청 성공', resData);
+          alert(email + "로 임시 비밀번호를 전송했습니다.");
+        },
+      });
     }).catch((state) => {
       // Promise reject 시의 처리
-     // console.error('Promise rejected with code:', state);
+      // console.error('Promise rejected with code:', state);
       emailPassed = false;
-      switch(state){
-      case 1: $('#msg_emailTmpPW').text('이메일 형식이 올바르지 않습니다.'); break;
-      case 2: $('#msg_emailTmpPW').text('회원이 아닙니다.'); break;
+      switch (state) {
+        case 1:
+          $('#msg_emailTmpPW').text('이메일 형식이 올바르지 않습니다.');
+          break;
+        case 2:
+          $('#msg_emailTmpPW').text('회원이 아닙니다.');
+          break;
       }
     });
   });
 });
+

@@ -110,9 +110,10 @@
       )
   </insert>
   
-  <update id="tmpPw" parameterType="Map">
+  <update id="updatetmpPw" parameterType="Map">
     UPDATE USER_T
        SET PW = #{pwCode}
+         , PW_MODIFIED_DATE = SYSDATE
      WHERE EMAIL = #{email}
   </update>
   

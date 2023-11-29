@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.InactiveUserDto;
 import kr.co.bookvillage.dto.UserDto;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
   
   private final UserMapper userMapper;
+  private final MypageMapper mypageMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
   
@@ -364,15 +366,16 @@ public class UserServiceImpl implements UserService {
 
     String pwCode = mySecurityUtils.getRandomString(10, true, true);
 
- // 이메일에 전송되는 비밀번호는 해시 처리 전의 원본 비밀번호를 사용
- myJavaMailUtils.sendJavaMail(email
-     , "책빌리지 임시 비밀번호입니다."
-     , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
-
- String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
- userMapper.tmpPw(Map.of("email", email, "pwCode", hashedPwCode));
-
- return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
+   myJavaMailUtils.sendJavaMail(email
+       , "책빌리지 임시 비밀번호입니다."
+       , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
+  
+   String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
+   userMapper.updatetmpPw(Map.of("email", email, "pwCode", hashedPwCode));
+   
+   
+  
+   return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
 
     
   }

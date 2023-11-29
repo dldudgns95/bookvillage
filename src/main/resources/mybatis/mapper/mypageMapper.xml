@@ -24,7 +24,7 @@
      WHERE USER_NO = #{userNo}    
   </update>
   
-  <update id="updateUserPw" parameterType="UserDto">
+  <update id="updateUserPw" parameterType="Map">
     UPDATE USER_T
        SET PW = #{pw}
          , PW_MODIFIED_DATE = SYSDATE
