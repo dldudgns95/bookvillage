@@ -1,7 +1,10 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,9 +13,12 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
 import lombok.RequiredArgsConstructor;
 
@@ -22,11 +28,12 @@ public class MypageServiceImpl implements MypageService {
   
   private final MypageMapper mypageMapper;
   private final MySecurityUtils mySecurityUtils;
+  private final AdminPageUtils adminPageUtils;
   
   // 회원정보 가져오기
   @Override
-  public UserDto getUser(String email) {
-    return mypageMapper.getUser(Map.of("email", email));
+  public UserDto getMypageUser(String email) {
+    return mypageMapper.getMypageUser(Map.of("email", email));
   }
   
   // 회원정보 수정
@@ -98,6 +105,27 @@ public class MypageServiceImpl implements MypageService {
       e.printStackTrace();
     }
     
+  }
+  
+  @Override
+  public void loadBookCheckoutList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getBookCheckoutCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd());
+    
+    List<BookCheckoutDto> bookList = mypageMapper.getBookCheckoutList(map);
+    
+    model.addAttribute("bookList", bookList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/booklist.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+
   }
 
 }

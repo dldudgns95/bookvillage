@@ -55,7 +55,7 @@
           <li th:text="|회원상태:${session.user.status}|"></li>
         </ul>
       </div>
-      <input type="hidden" name="userNo" th:value="#{session.user.userNo}">
+      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
       <table border="1" class="table table-hover">
         <thead>
           <tr>
@@ -67,12 +67,28 @@
           </tr>
         </thead>
         <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->
-        <tbody>
-          
+       <tbody>
+          <th:block th:if="${not #lists.isEmpty(bookList)}">
+            <th:block th:each="book : ${bookList}">
+              <tr th:if="${session.user.userNo eq book.userDto.userNo}">
+                <td th:text="${book.checkoutNo}"></td>
+                <td th:text="${book.bookDto.title}"></td>
+                <td th:text="${book.checkoutDate}"></td>
+                <td th:text="${book.dueDate}"></td>
+                <td><button type="button">연기신청</button></td>
+              </tr>
+            </th:block>
+            <th:block th:if="${#lists.isEmpty(bookList)}">
+              <tr>
+                <td colspan="5">도서대출내역이 없습니다.</td>
+              </tr>
+            </th:block>
         </tbody>
         <!--/* 페이징 */-->
-        <tfoot>
-          
+        <tfoot th:if="${not #lists.isEmpty(bookList)}">
+          <tr>
+            <td  colspan="5" th:utext="${paging}"></td>
+          </tr>
         </tfoot>
       </table>
     </div>

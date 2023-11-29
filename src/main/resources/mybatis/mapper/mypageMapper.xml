@@ -4,9 +4,32 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.bookvillage.dao.MypageMapper">
+  
+  <resultMap type="BookCheckoutDto" id="BookCheckoutMap">
+    <id      column="CHECKOUT_NO"   property="checkoutNo" /> 
+    <result  column="STATUS"        property="status" />
+    <result  column="CHECKOUT_DATE" property="checkoutDate" />
+    <result  column="START_DATE"    property="startDate" />
+    <result  column="DUE_DATE"      property="dueDate" />
+    <result  column="END_DATE"      property="endDate" />
+    <association javaType="UserDto" property="userDto">
+    <id column="USER_NO" property="userNo" />     
+    </association>
+    <association javaType="BookDto" property="bookDto">
+      <id        column="ISBN"           property="isbn"/>
+      <result    column="TITLE"          property="title" />
+      <result    column="COVER"          property="cover" />
+      <result     column="AUTHOR"        property="author" />
+      <result     column="PUBLISHER"     property="publisher" />
+      <result     column="PUBDATE"       property="pubdate" />
+      <result     column="DESCRIPTION"   property="description" />
+      <result     column="CATEGORY_NAME" property="categoryName" />
+      <result     column="CATEGORY_ID"   property="categoryId" />
+    </association>
+  </resultMap>
 
 
-  <select id="getUser" parameterType="Map" resultType="UserDto">
+  <select id="getMypageUser" parameterType="Map" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
     <where>
@@ -31,6 +54,20 @@
          , PW_MODIFIED_DATE = SYSDATE
      WHERE USER_NO = #{userNo}
   </update>
+  
+  <select id="getBookCheckoutCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+  </select>
+  
+  <select id="getBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
+    SELECT A.CHECKOUT_NO, A.USER_NO, A.ISBN, A.STATUS, A.CHECKOUT_DATE, A.START_DATE, A.DUE_DATE, A.END_DATE , A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, BC.CHECKOUT_NO, BC.USER_NO, BC.ISBN, BC.STATUS, BC.CHECKOUT_DATE, BC.START_DATE, BC.DUE_DATE, BC.END_DATE, B.TITLE
+              FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
+                ON B.ISBN = BC.ISBN) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+
 
 
 </mapper>

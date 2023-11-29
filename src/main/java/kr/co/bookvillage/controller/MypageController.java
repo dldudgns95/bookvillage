@@ -4,14 +4,17 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 
@@ -55,10 +58,11 @@ public class MypageController {
   
   // 도서대출 목록 페이지 이동
   @GetMapping("/booklist.do")
-  public String booklist() {
+  public String booklist(HttpServletRequest request, Model model) {    
+    mypageService.loadBookCheckoutList(request, model);
     return "mypage/booklist";
   }
-  
+
   // 한줄평 작성 목록 페이지 이동
   @GetMapping("/review.do")
   public String review() {
