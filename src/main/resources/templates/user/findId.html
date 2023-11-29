@@ -3,7 +3,7 @@
 
 <head th:replace="~{/layout/header::head('아이디찾기')}"></head>
 
-<script th:src="@{/js/findId.js(ver=1.0)}"></script>
+  <script th:src="@{/js/findId.js(ver=1.0)}"></script>
 
 <body>
   
@@ -14,26 +14,31 @@
     <div class="wrap wrap_7">
     
       <h1 class="title">아이디 찾기</h1>
+      
+       <div id="result_id">
+       </div>
+
+
     
-      <form id="frm_find_id" class="mt-5" method="post" th:action="@{/user/findID.do}">
+      <form id="frm_find_id" class="mt-5" method="post" th:action="@{/user/findId.do}">
           
         <div class="row mb-2">
           <label for="name" class="col-sm-3 col-form-label">이름</label>
-          <div class="col-sm-9"><input type="name" name="name" id="name" class="form-control"></div>
+          <div class="col-sm-9"><input type="text" name="name" id="name" class="form-control"></div>
           <div class="col-sm-3"></div>
-          <div class="col-sm-9 mb-3" id="msg_pw"></div>
+
         </div>
         
         <div class="row mb-2">
           <label for="mobile" class="col-sm-3 col-form-label">전화번호</label>
-          <div class="col-sm-9"><input type="mobile" id="mobile" class="form-control"></div>
+          <div class="col-sm-9"><input type="text" name="mobile" id="mobile" class="form-control"></div>
           <div class="col-sm-3"></div>
-          <div class="col-sm-9 mb-3" id="msg_pw2"></div>
+
         </div>
         
         <div class="text-center mt-3">
-          <button type="submit" id="find_id" onclick="findId_click()" class="btn btn-primary" style="margin-right: 20px;">아이디 찾기</button>
-          <button type="button" onclick="history.go(-1);" class="btn btn-primary">취소</button>
+          <button type="button" id="find_id" class="btn btn-primary" style="margin-right: 20px;">이메일 찾기</button>
+          <button type="button" onclick="history.go(-1);" class="btn btn-primary" >취소</button>
         </div>
         
       </form>
@@ -42,16 +47,8 @@
 
   </div>
   
-  <div id="modal" class="modal-overlay">
-                <div class="modal-window">
-                    <div class="title">
-                        <h2>아이디 조회 결과</h2>
-                    </div>
-                    <div class="close-area">X</div>
-                    <div class="content" id="id_value"></div>
-                </div>
-            </div>
-  
+
+
   <div th:replace="~{/layout/footer::footer}"></div>
   
 </body>

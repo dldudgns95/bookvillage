@@ -42,20 +42,30 @@
       
       <ul class="sub_menu">
         <li><a th:href="@{/user/agree.form}">회원가입</a>
-        <li><a th:href="@{/user/findId.form}">아이디/비밀번호 찾기</a>
+        <li><a id="btn_findId" th:href="@{/user/findId.form}">아이디/비밀번호 찾기</a>
       </ul> 
       
       <hr class="my-4">
       
       <div class="text-center">
         <a th:href="${naverLoginURL}">
-          <img th:src="@{/image/btnG_완성형.png}" width="200px">
+          <img th:src="@{/image/btnG_완성형.png}" width="200px0">
         </a>
       </div>
       
     </div>
 
   </div>
+  
+  <script>
+$(document).ready(function() {
+    $("#btn_findId").on("click", () => {
+      location.href = '/user/findId.form';
+    });
+});
+
+    
+  </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
   
