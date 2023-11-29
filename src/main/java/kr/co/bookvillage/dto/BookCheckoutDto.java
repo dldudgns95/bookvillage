@@ -2,6 +2,15 @@ package kr.co.bookvillage.dto;
 
 import java.sql.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Builder
 public class BookCheckoutDto {
   private int checkoutNo;   // 대출 번호
   private UserDto userDto;  // 회원 번호 (int userNo)
