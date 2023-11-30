@@ -106,9 +106,45 @@ public class AdminController {
   }
   
   @GetMapping("/bookApplyList.do")
-  public String bookApplyList(Model model) {
-    adminService.getBookApplyList(model);
+  public String bookApplyList(HttpServletRequest request, Model model) {
+    adminService.getBookApplyList(request, model);
     return "admin/bookApplyList";
+  }
+  
+  @GetMapping("/bookApplyDetail.do")
+  public String bookApplyDetail(HttpServletRequest request, Model model) {
+    adminService.getBookApplyDetail(request, model);
+    return "admin/bookApplyDetail";
+  }
+  
+  @GetMapping("/bookCheckoutList.do")
+  public String bookCheckoutList(HttpServletRequest request, Model model) {
+    adminService.getBookCheckoutList(request, model);
+    return "admin/bookCheckoutList";
+  }
+  
+  @GetMapping("/bookCheckoutSearch.do")
+  public String bookCheckoutSearch(HttpServletRequest request, Model model) {
+    adminService.getBookCheckoutSearchList(request, model);
+    return "admin/bookCheckoutList";
+  }
+  
+  @GetMapping("/bookCheckoutReturnList.do")
+  public String bookCheckoutReturnList(HttpServletRequest request, Model model) {
+    adminService.getBookCheckoutReturnList(request, model);
+    return "admin/bookCheckoutReturnList";
+  }
+  
+  @PostMapping("/approvalBookCheckout.do")
+  public String approvalBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckout(request));
+    return "redirect:/admin/bookCheckoutList.do";
+  }
+  
+  @PostMapping("/approvalBookCheckoutReturn.do")
+  public String approvalBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckoutReturn(request));
+    return "redirect:/admin/bookCheckoutReturnList.do";
   }
   
   

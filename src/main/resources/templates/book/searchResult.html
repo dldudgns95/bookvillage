@@ -87,7 +87,14 @@
                       <tr>
                         <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
                         <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
-                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
+                        <td>
+                          <form method="post" id="WishForm">
+                            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
+                            <input type="hidden" name="isbn" th:value="${book.isbn}" />
+                            <input type="hidden" id="wishDate" name="wishDate" />
+                            <button type="button" id="toggleWishBtn" class="btn"></button>
+                          </form>
+                        </td>
                         <td>
                           <form id="searchDetail" name="searchDetail" action="detail" method="get">
                             <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
@@ -105,7 +112,10 @@
           </div>
           
           <div th:if="${#lists.size(bookSearchList) == 0}">
-              <p>검색 결과가 없습니다.</p>
+              <h3>검색 결과가 없습니다.</h3>
+              <img th:src="@{'/image/big_logo.png'}" alt="Book village">
+              <p>희망도서 신청하러 가기 할 예정</p>
+              <p>이전 화면으로 돌아가기 할 예정</p>
           </div>
         </div>
 

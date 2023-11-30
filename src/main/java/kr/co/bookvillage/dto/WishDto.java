@@ -15,4 +15,7 @@ public class WishDto {
   private String isbn;
   private int userNo;
   private Timestamp wishDate;
+  
+  // 추가
+  private int status; //--나중에
 }
