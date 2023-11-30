@@ -124,15 +124,19 @@
               <td scope="row" th:text="${facApply.facilityDto.facName}"></td>
               <td scope="row" th:text="${facApply.facRegDate}"></td>
               <td scope="row" th:text="${facApply.facStart}"></td>
-              <td scope="row">
-                <form th:action="@{/admin/approveFacApply.do}" method="post">
-                  <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
-                  <button type="submit" class="btn btn-primary">승인</button>
-                </form>
-                <form th:action="@{/admin/refuseFacApply.do}" method="post">
-                  <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
-                  <button type="submit" class="btn btn-primary">거절</button>
-                </form>
+              <td scope="row" class="flex_admin">
+                <div>
+                  <form th:action="@{/admin/approveFacApply.do}" method="post">
+                    <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
+                    <button type="submit" class="btn btn-primary">승인</button>
+                  </form>
+                </div>
+                <div>
+                  <form th:action="@{/admin/refuseFacApply.do}" method="post">
+                    <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
+                    <button type="submit" class="btn btn-primary">거절</button>
+                  </form>
+                </div>
               </td>
             </tr>
           </th:block>

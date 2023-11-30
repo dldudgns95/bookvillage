@@ -31,6 +31,14 @@
     margin: 0 auto;
   }
   
+  .book_checkout_return {
+    width: 1000px;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
   .table_title {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -58,7 +66,7 @@
     </div>
     
     <div class="admin_contents">
-      <div>
+      <div class="book_checkout_return">
         <table class="table">
           <thead>
             <tr>
@@ -66,7 +74,7 @@
               <th scope="col">대출회원번호</th>
               <th scope="col">대출회원이름</th>
               <th scope="col">대출도서ISBN</th>
-              <th scope="col">대출도서명</th>
+              <th scope="col" class="table_title">대출도서명</th>
               <th scope="col">대출현황</th>
               <th scope="col"></th>
             </tr>
