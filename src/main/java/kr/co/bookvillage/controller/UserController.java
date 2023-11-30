@@ -78,6 +78,14 @@ public class UserController {
     userService.logout(request, response);
   }
   
+
+  // 약관 동의 페이지로 이동
+  @GetMapping("/joinChose.form")
+  public String joinChoseForm() {
+    return "user/join-chose";
+  }
+  
+  
   // 약관 동의 페이지로 이동
   @GetMapping("/agree.form")
   public String agreeForm() {
@@ -124,7 +132,7 @@ public class UserController {
     return "user/findId";
   }
   
-  // 메일(아이디) 찾기
+  // 아이디(메일) 찾기
   @ResponseBody
   @PostMapping(value="/findId.do", produces="application/json")
   public Map<String, Object> findId(@RequestParam(value = "name") String name
@@ -132,8 +140,29 @@ public class UserController {
     UserDto user = userService.findId(name, mobile);
     return Map.of("email", user == null ? "" : user.getEmail());  // {"email": "aaaaa@naver.com"}
   }
+  
+  // 회원 이메일 확인
+  @GetMapping(value="/checkPwEmail.do", produces=MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> checkPwEmail(@RequestParam String email) {
+    return userService.checkEmail(email);
+  }
+  
+  
+  // 임시 비번 발송 및 업데이트
+  @PostMapping(value = "/sendTmpCodes.do", produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestBody Map<String, String> requestBody) {
+      String email = requestBody.get("email");
+      return userService.sendTmpCode(email);
+  }
 
 
+  //
+  @PostMapping("/sendTmpPw.do")
+  public String sendTmpPw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", userService.updateTmpPw(request.getParameter("email")));
+    
+    return "redirect:/main.do";
+  }
   
 
   

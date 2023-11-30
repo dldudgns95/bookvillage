@@ -60,12 +60,29 @@ public class UserServiceImpl implements UserService {
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
   
-    
-    if(user != null) {
+    if (user != null) {
+      // 로그인 성공 처리
       request.getSession().setAttribute("user", user);
       userMapper.insertAccess(email);
+
+      // 비밀번호 변경 90일 지나면 알림      
+      boolean userPW90 = userMapper.changePw90(email) == null;
+
+        if (!userPW90 ) {
+        response.setContentType("text/html; charset=UTF-8");
+          PrintWriter outt = response.getWriter();
+          outt.println("<script>");
+          outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
+          outt.println("location.href='" + request.getContextPath() + "/mypage/modifyPw.form'");
+          outt.println("</script>");
+          outt.flush();
+          outt.close();
+      } else {
+          // 90일 이전인 경우에 실행할거 있으면 적기
+      }
       response.sendRedirect(request.getParameter("referer"));
-    } else {
+  } else {
+      // 로그인 실패 처리
       response.setContentType("text/html; charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<script>");
@@ -74,9 +91,9 @@ public class UserServiceImpl implements UserService {
       out.println("</script>");
       out.flush();
       out.close();
-    }
-      
-    }
+  }
+}
+
     
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response) {
@@ -354,12 +371,47 @@ public class UserServiceImpl implements UserService {
         }
         return emailResult ;
       }
-      
-
-
-
-
   
+  
+      
+  // 임시 비밀번호 메일 발송
+  @Override
+  public ResponseEntity<Map<String, Object>> sendTmpCode(String email) {
+
+    String pwCode = mySecurityUtils.getRandomString(6, true, true);
+
+   myJavaMailUtils.sendJavaMail(email
+       , "책빌리지 인증코드입니다."
+       , "<div>인증코는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
+  
+  
+   return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
+
+    
+  }
+
+  @Override
+  public int updateTmpPw(String email) {
+    
+    String pwCode = mySecurityUtils.getRandomString(10, true, true);
+
+    myJavaMailUtils.sendJavaMail(email
+        , "책빌리지 임시비밀번호입니다."
+        , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
+   
+     String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
+    
+     
+   
+    return userMapper.updatetmpPw(Map.of("email", email, "pwCode", hashedPwCode));
+
+  }
+  
+  
+  
+  
+  
+
   
   
 

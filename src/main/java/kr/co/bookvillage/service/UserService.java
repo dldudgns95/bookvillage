@@ -30,6 +30,15 @@ public interface UserService {
   
   // 이메일 찾기(아이디)
   public UserDto findId(String name, String mobile);
+ 
+  // 임시 비밀번호 메일 보내기
+  public ResponseEntity<Map<String, Object>> sendTmpCode(String email);
+  public int updateTmpPw(String email);
+
+
+  
+  
+  
   
   
 }
