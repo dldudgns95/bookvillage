@@ -157,9 +157,7 @@
        AND (AUTH = 1 OR AUTH = 0)
   </select>
   
-  <insert id="insertInactiveUser">
-    
-  </insert>
+
   
   
   

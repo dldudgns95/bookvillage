@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
           PrintWriter outt = response.getWriter();
           outt.println("<script>");
           outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
-          outt.println("location.href='" + request.getContextPath() + "/mypage/edit.form'");
+          outt.println("location.href='" + request.getContextPath() + "/mypage/modifyPw.form'");
           outt.println("</script>");
           outt.flush();
           outt.close();
@@ -384,10 +384,6 @@ public class UserServiceImpl implements UserService {
        , "책빌리지 인증코드입니다."
        , "<div>인증코는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
   
-   // String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
-   
-   // userMapper.updatetmpPw(Map.of("email", email, "pwCode", hashedPwCode));
-   
   
    return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
 
