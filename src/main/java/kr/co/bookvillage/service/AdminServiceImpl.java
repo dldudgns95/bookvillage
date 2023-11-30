@@ -440,11 +440,13 @@ public class AdminServiceImpl implements AdminService {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int status = Integer.parseInt(request.getParameter("status"));
+    long isbn = Long.parseLong(request.getParameter("isbn"));
     int updateResult = adminMapper.approvalBookCheckoutReturn(checkoutNo);
     if(updateResult == 1) {
       if(status == 3) {
         adminMapper.activeUser(userNo);
       }
+      adminMapper.activeBook(isbn);
       adminMapper.minusBookCount(userNo);
     }
     

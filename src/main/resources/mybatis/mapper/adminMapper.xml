@@ -352,6 +352,13 @@
      WHERE CHECKOUT_NO = #{checkoutNo}
   </update>
   
+  <!-- 반납 완료 시 해당 도서 상태 업데이트 -->
+  <update id="activeBook" parameterType="long">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN = #{isbn}
+  </update>
+  
   <!-- 반납 완료 시 유저의 대출권수 줄이기 업데이트 -->
   <update id="minusBookCount" parameterType="int">
     UPDATE USER_T
