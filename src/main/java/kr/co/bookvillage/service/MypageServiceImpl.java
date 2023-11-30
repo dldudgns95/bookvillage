@@ -1,7 +1,6 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -141,18 +140,23 @@ public class MypageServiceImpl implements MypageService {
     return mypageMapper.updateDueDate(checkoutNo);
   }
   
+  @Transactional(readOnly=true)
   @Override
   public void loadReviewList(HttpServletRequest request, Model model) {
     
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
-    int total = mypageMapper.getReviewCount();
+    int total = mypageMapper.getReviewCount(userNo);
     int display = 10;
     
     adminPageUtils.setPaging(page, total, display);
     
     Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
-                                    , "end", adminPageUtils.getEnd());
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
     
     List<ScoreDto> reviewList = mypageMapper.getReviewList(map);
     

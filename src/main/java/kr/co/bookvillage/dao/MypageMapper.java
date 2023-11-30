@@ -17,6 +17,6 @@ public interface MypageMapper {
   public int getUserBookCheckoutCount(int userNo);                               // 대출내역 갯수
   public List<BookCheckoutDto> getUserBookCheckoutList(Map<String, Object> map); // 도서대출내역 가져오기
   public int updateDueDate(int checkoutNo);                                      // 대출연기신청(반납예정일 + 7)
-  public int getReviewCount();                                                   // 한줄평갯수
+  public int getReviewCount(int userNo);                                         // 한줄평갯수
   public List<ScoreDto> getReviewList(Map<String, Object> map);                  // 한줄평리스트
 }
