@@ -36,11 +36,7 @@
       <div class="child2">
       <div>
 		  
-      <form id="frm_notice_add" method="post" th:action="@{/support/add.do}" enctype="multipart/form-data">
-        <div class="mt-3">
-          <label for="email" class="form-label">작성자</label>
-          <input type="text" id="email" class="form-control-plaintext" th:value="${session.user.email}" readonly>
-        </div>     
+      <form class="frm_notice_add" method="post" th:action="@{/support/add.do}" enctype="multipart/form-data">
         <div class="mt-3">
           <label for="ntTitle" class="form-label">제목</label>
           <input type="text" name="ntTitle" id="ntTitle" class="form-control">
@@ -65,45 +61,23 @@
    </div>
    </div>
    <script th:inline="javascript">
-	 const fnFileCheck = () => {
-	        $('#files').change((ev) => {
-	          $('#attached_list').empty();
-	          let maxSize = 1024 * 1024 * 100;
-	          let maxSizePerFile = 1024 * 1024 * 10;
-	          let totalSize = 0;
-	          let files = ev.target.files;
-	          for(let i = 0; i < files.length; i++){
-	            totalSize += files[i].size;
-	            if(files[i].size > maxSizePerFile){
-	              alert('각 첨부파일의 최대 크기는 10MB입니다.');
-	              $(ev.target).val('');
-	              $('#attached_list').empty();
-	              return;
-	            }
-	            $('#attached_list').append('<div>' + files[i].name + '</div>');
-	          }
-	          if(totalSize > maxSize){
-	            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
-	            $(ev.target).val('');
-	            $('#attached_list').empty();
-	            return;
-	          }
-	        })
-	      }
-      
-      const fnSubmit = () => {
-    	  $('#frm_notice_add').submit((ev) => {
-    		  if($('#ntTitle').val() === ''){
-    			  alert('제목은 반드시 입력해야 합니다.');
-    			  $('#ntTitle').focus();
-    			  ev.preventDefault();
-    			  return;
-    		  }
-    	  })
-      }
-      
-      fnFileCheck();
-      fnSubmit();
+      $('.frm_notice_add').submit((ev) => {
+
+        if($('#ntTitle').val() === '') {
+          alert('공지사항 제목을 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('#ntContent').val() === ''){
+          alert('공지사항 내용을 적어주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if(!confirm('공지사항을 등록하시겠습니까?')) {
+          ev.preventDefault();
+          return;
+        }
+      })	 
       
    </script>
 </div>

@@ -42,7 +42,7 @@
   <update id="updateFaq" parameterType="FaqDto">
     UPDATE FAQ
 	    SET FAQ_TITLE = #{faqTitle}
-	        , FAQ_CONTENT = #{faqContent}
+	      , FAQ_CONTENT = #{faqContent}
 	    WHERE FAQ_NO = #{faqNo}
   </update>
 </mapper>

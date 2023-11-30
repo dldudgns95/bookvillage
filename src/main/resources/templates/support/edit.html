@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head(|${faq.faqNo}번 게시글|)}"></head>
+<head th:replace="~{/layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
 
 <style>
 	div.child1{
@@ -39,42 +39,208 @@
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;">FAQ 수정하기</h5>
+      <h5 style="text-align: center;">공지사항 수정하기</h5>
       <div class="child2">
-		<form id="frm_faq_add" method="post" th:action="@{/support/modifyfaq.do}">
-	
-		<div class="mb-3">
-          <label for="faqTitle" class="form-label">제목</label>
-          <input type="text" name="faqTitle" th:value="${faq.faqTitle}" id="faqTitle" class="form-control">
+      <form id="frm_notice_edit" method="post" th:action="@{/support/modify.do}">
+      
+        <div class="mb-3 row">
+          <label for="email" class="col-sm-2 col-form-label">작성자</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="email" th:value="${notice.userDto.name}">
+          </div>
+        </div>
+        
+        <div class="mb-3 row">
+          <label for="ntDate" class="col-sm-2 col-form-label">작성일</label>
+          <div class="col-sm-10">
+            <input type="text" readonly class="form-control-plaintext" id="ntDate" th:value="${notice.ntDate}">
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="ntTitle" class="form-label">제목</label>
+          <input type="text" name="ntTitle" th:value="${notice.ntTitle}" id="ntTitle" class="form-control">
         </div>
         
         <div class="mb-3">
-          <label for="faqContent" class="form-label">내용</label>
-          <textarea name="faqContent" id="faqContent" class="form-control" rows="3" th:text="${faq.faqContent}"></textarea>
+          <label for="ntContent" class="form-label">내용</label>
+          <textarea name="ntContent" id="ntContent" class="form-control" rows="3" th:text="${notice.ntContent}"></textarea>
         </div>
-       		<div class="text-center my-3">
-              <a th:href="@{/support/faqdetail.do(faqNo=${faq.faqNo})}">
+        
+        <!-- 첨부 추가 -->
+        <th:block th:if="${session.user != null}">
+          <th:block th:if="${session.user.userNo == notice.userDto.userNo}">
+            <h5>신규 첨부</h5>
+            <div class="input-group">
+              <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+              <input type="file" name="files" id="files"  class="form-control" multiple>
+              <button class="btn btn-outline-secondary" type="button" id="btn_add_attach">첨부추가하기</button>
+            </div>
+            <div class="attached_list mt-3" id="attached_list"></div>
+          </th:block>
+        </th:block>
+        
+        <hr class="my-3">
+    
+        <!-- 첨부 목록에서 삭제 -->
+        <h5>기존 첨부 목록</h5>
+        <div id="attach_list"></div>
+
+        <th:block th:if="${session.user != null}">
+          <th:block th:if="${session.user.userNo == notice.userDto.userNo}">    
+            <div class="text-center my-3">
+              <a th:href="@{/notice/detail.do(ntNo=${notice.ntNo})}">
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
-              <input type="hidden" name="faqNo" th:value="${faq.faqNo}">
+              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
               <button type="submit" id="btn_modify" class="btn btn-success">수정하기</button>
             </div>
-	    </form>
+          </th:block>
+        </th:block>
+      </form>
+      
+		
     </div>
     <script th:inline="javascript">
-		
-      const fnSubmit = () => {
-    	  $('#frm_faq_add').submit((ev) => {
-    		  if($('#faqTitle').val() === ''){
-    			  alert('제목은 반드시 입력해야 합니다.');
-    			  $('#faqTitle').focus();
-    			  ev.preventDefault();
-    			  return;
-    		  }
-    	  })
+	const fnFileCheck = () => {
+        $('#files').change((ev) => {
+          $('#attached_list').empty();
+          let maxSize = 1024 * 1024 * 100;
+          let maxSizePerFile = 1024 * 1024 * 10;
+          let totalSize = 0;
+          let files = ev.target.files;
+          for(let i = 0; i < files.length; i++){
+            totalSize += files[i].size;
+            if(files[i].size > maxSizePerFile){
+              alert('각 첨부파일의 최대 크기는 10MB입니다.');
+              $(ev.target).val('');
+              $('#attached_list').empty();
+              return;
+            }
+            $('#attached_list').append('<div>' + files[i].name + '</div>');
+          }
+          if(totalSize > maxSize){
+            alert('전체 첨부파일의 최대 크기는 100MB입니다.');
+            $(ev.target).val('');
+            $('#attached_list').empty();
+            return;
+          }
+        })
       }
       
-      fnSubmit();
+      const fnAddAttach = () => {
+        $('#btn_add_attach').click(() => {
+          // 폼을 FormData 객체로 생성한다.
+          let formData = new FormData();
+          // 첨부된 파일들을 FormData에 추가한다.
+          let files = $('#files').prop('files');
+          $.each(files, (i, file) => {
+            formData.append('files', file);  // 폼에 포함된 파라미터명은 files이다. files는 여러 개의 파일을 가지고 있다.
+          })
+          // 현재 게시글 번호(uploadNo)를 FormData에 추가한다.
+          formData.append('ntNo', '[[${notice.ntNo}]]');
+          // FormData 객체를 보내서 저장한다.
+          $.ajax({
+            // 요청
+            type: 'post',
+            url: '/support/addAttach.do',
+            data: formData,
+            contentType: false,
+            processData: false,
+            // 응답
+            dataType: 'json',
+            success: (resData) => {  // resData = {"attachResult": true}
+              if(resData.attachResult){
+                alert('첨부 파일이 추가되었습니다.');
+                fnAttachList();
+                $('#attached_list').empty();
+              } else {
+                alert('첨부 파일이 추가되지 않았습니다.');
+              }
+              $('#files').val('');
+            }
+          })
+        })
+      }
+    
+      const fnAttachList = () => {
+        $.ajax({
+          // 요청
+          type: 'get',
+          url: '/notice/getAttachList.do',
+          data: 'ntNo=[[${notice.ntNo}]]',
+          // 응답
+          dataType: 'json',
+          success: (resData) => {  // resData = {"attachList": []}
+            $('#attach_list').empty();
+            $.each(resData.attachList, (i, attach) => {
+              let str = '<div class="attach">';
+              if(attach.hasThumbnail === 0){
+            	  str += '<img src="/image/attach1.png" width="50">';
+              } else {        	  
+                str += '<img src="' + attach.path + '/s_' + attach.filesystemName + '"  width="50">';
+              }
+              str += '<span style="margin: 0 10px;">' + attach.originalFilename + '</span>';
+              <!-- 로그인 유저가 업로더이면 삭제 버튼 보여주기 -->
+              let user = /*[[${session.user}]]*/ null;
+              if(user !== null){
+                if(user.userNo == '[[${notice.userDto.userNo}]]'){            
+                  str += '<a data-attach_no="' + attach.attachNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
+                }
+              }
+              str += '</div>';
+              $('#attach_list').append(str);
+            })
+          }
+        })
+      }
+      
+      const fnRemoveAttach = () => {
+        $(document).on('click', '.ico_remove_attach', (ev) => {
+          if(!confirm('해당 첨부 파일을 삭제할까요?')){
+            return;
+          }
+          $.ajax({
+            // 요청
+            type: 'post',
+            url: '/support/removeAttach.do',
+            data: 'attachNo=' + $(ev.target).parent().data('attach_no'),
+            // 응답
+            dataType: 'json',
+            success: (resData) => {  // resData = {"removeResult": 1}
+              if(resData.removeResult === 1){
+                alert('해당 첨부 파일이 삭제되었습니다.');
+                fnAttachList();
+              } else {
+                alert('해당 첨부 파일이 삭제되지 않았습니다.');
+              }
+            }
+          })
+        })
+      }
+      
+      const fnModifyAttach = () => {
+    	  $('#frm_notice_edit').submit((ev) => {
+          if($('#ntTitle').val() === ''){
+            alert('제목은 반드시 입력해야 합니다.');
+            $('#ntTitle').focus();
+            ev.preventDefault();
+            return;
+          } else if($('#files').val() !== ''){
+        	  alert('새로운 첨부가 있는 경우 첨부추가하기 버튼을 먼저 클릭해 주세요.');
+        	  $('#btn_add_attach').focus();
+        	  ev.preventDefault();
+            return;
+          }
+    	  })
+      }
+    
+      fnFileCheck();
+      fnAddAttach();
+      fnAttachList();
+      fnRemoveAttach();
+      fnModifyAttach();
+      
 		</script>  
       </div>
    </div>  

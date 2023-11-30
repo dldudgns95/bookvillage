@@ -42,10 +42,9 @@ public class NoticeController {
 	}
 	
 	@PostMapping("/add.do")
-	 public String add(MultipartHttpServletRequest multipartRequest
-             , RedirectAttributes redirectAttributes) throws Exception {
-		boolean addResult = noticeService.addNotice(multipartRequest);
-		redirectAttributes.addFlashAttribute("addResult", addResult);
+	 public String add(MultipartHttpServletRequest multipartRequest) throws Exception {
+		System.out.println("noticeAdd.do::controller");
+		noticeService.addNotice(multipartRequest);
 		return "redirect:/support/list.do";
 	}
 	
@@ -113,8 +112,7 @@ public class NoticeController {
 	    redirectAttributes.addFlashAttribute("removeResult", removeResult);
 	    return "redirect:/support/list.do";
 	  }
-	  
-	
+
     @GetMapping("/faqlist.do")
     public String list(Model model) {
     	List<FaqDto> faqList = faqService.getFaqList();
@@ -146,7 +144,8 @@ public class NoticeController {
 	    redirectAttributes.addFlashAttribute("removeResult", removeResult);
 	    return "redirect:/support/faqlist.do";
 	  }
-	 @GetMapping("/editfaq.form")
+	
+	@GetMapping("/editfaq.form")
 	  public String editfaq(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo
 	                   , Model model) {
 	    model.addAttribute("faq", faqService.getFaq(faqNo));

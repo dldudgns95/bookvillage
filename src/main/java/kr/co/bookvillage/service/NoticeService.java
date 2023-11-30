@@ -12,7 +12,7 @@ import kr.co.bookvillage.dto.NoticeDto;
 
 public interface NoticeService {
 
-	public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception;
+	public void addNotice(MultipartHttpServletRequest multipartRequest) throws Exception;
 	public Map<String, Object> getNoticeList(HttpServletRequest request);
 	public void loadNotice(HttpServletRequest request, Model model);
 	public ResponseEntity<org.springframework.core.io.Resource> download(HttpServletRequest request);

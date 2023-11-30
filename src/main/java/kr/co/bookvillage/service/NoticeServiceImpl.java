@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.net.URLEncoder;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,10 +47,11 @@ public class NoticeServiceImpl implements NoticeService {
   private final MyPageUtils myPageUtils;
   
   @Override
-  public boolean addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
+  public void addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
     
     String ntTitle = multipartRequest.getParameter("ntTitle");
     String ntContent = multipartRequest.getParameter("ntContent");
+    
     int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
     
     NoticeDto notice = NoticeDto.builder()
@@ -59,7 +62,7 @@ public class NoticeServiceImpl implements NoticeService {
                                   .build())
                         .build();
     
-    int noticeCount = noticeMapper.insertNotice(notice);
+    int addResult = noticeMapper.insertNotice(notice);
     
     List<MultipartFile> files = multipartRequest.getFiles("files");
     
@@ -77,19 +80,30 @@ public class NoticeServiceImpl implements NoticeService {
       
       if(multipartFile != null && !multipartFile.isEmpty()) {
         
-        String ntPath = myFileUtils.getNoticePath();
-        File dir = new File(ntPath);
+        String path = myFileUtils.getNoticePath();
+        File dir = new File(path);
         if(!dir.exists()) {
           dir.mkdirs();
         }
         
         String ntOriginalFilename = multipartFile.getOriginalFilename();
         String ntFilesystemName = myFileUtils.getFilesystemName(ntOriginalFilename);
+        
+        System.out.println("path:" + path);
+        System.out.println("ntOriginalFilename:" + ntOriginalFilename);
+        System.out.println("ntFilesystemName:" + ntFilesystemName);
+       
+        String url = path + "/" + ntFilesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
         File file = new File(dir, ntFilesystemName);
         
-        multipartFile.transferTo(file);
+        System.out.println("file :" + file);
+        	multipartFile.transferTo(paths.toFile());
         
-        String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
+        
+        String contentType = Files.probeContentType(paths);  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
         int ntHasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
         
         if(ntHasThumbnail == 1) {
@@ -99,22 +113,20 @@ public class NoticeServiceImpl implements NoticeService {
                     .toFile(thumbnail);
         }
         
-        AttachNtDto attach = AttachNtDto.builder()
-                            .ntPath(ntPath)
+        AttachNtDto attachNt = AttachNtDto.builder()
+                            .ntPath(path)
                             .ntOriginalFilename(ntOriginalFilename)
                             .ntFilesystemName(ntFilesystemName)
                             .ntHasThumbnail(ntHasThumbnail)
                             .ntNo(notice.getNtNo())
                             .build();
-        
-        attachCount += noticeMapper.insertAttach(attach);
+        System.out.println("attachNt: " + attachNt);
+        attachCount += noticeMapper.insertAttach(attachNt);
         
       }  // if
       
     }  // for
-    
-    return (noticeCount == 1) && (files.size() == attachCount);
-    
+        
   }
   
   @Transactional(readOnly=true)

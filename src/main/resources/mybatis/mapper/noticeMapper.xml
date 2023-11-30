@@ -28,21 +28,15 @@
   </resultMap>
 <!-- 공지사항 추가하기 -->
   <insert id="insertNotice" parameterType="NoticeDto">
-    <selectKey order="BEFORE" resultType="int" keyProperty="ntNo">
-      SELECT NOTICE_SEQ.NEXTVAL
-        FROM DUAL
-    </selectKey>
     INSERT INTO NOTICE (
         NT_NO
       , NT_TITLE
       , NT_CONTENT
-      , USER_NO
       , NT_DATE
     ) VALUES (
         #{ntNo}
       , #{ntTitle}
       , #{ntContent}
-      , #{userDto.userNo}
    	  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
     )
   </insert>
@@ -112,7 +106,6 @@
     UPDATE NOTICE
        SET NT_TITLE = #{ntTitle}
          , NT_CONTENT = #{ntContent}
-         , NT_DATE = TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
      WHERE NT_NO = #{ntNo}
   </update>
   

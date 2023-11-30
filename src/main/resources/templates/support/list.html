@@ -55,6 +55,7 @@
       var page = 1;
       var totalPage = 0;
     
+     
       const fnGetNoticeList = () => {
         $.ajax({
           // 요청
@@ -63,17 +64,12 @@
           data: 'page=' + page,
           // 응답
           dataType: 'json',
-          success: (resData) => { 
+          success: (resData) => {  // resData = {"uploadList": [], "totalPage": 10}
             totalPage = resData.totalPage;
             $.each(resData.noticeList, (i, notice) => {
               let str = '<div class="notice" data-nt_no="' + notice.ntNo + '">';
               str += '<div>제목: ' + notice.ntTitle + '</div>';
-              if(notice.userDto === null){
-                str += '<div>작성: 정보없음</div>';
-              } else {            
-                str += '<div>작성: ' + notice.userDto.name + '</div>';
-              }
-              str += '<div>생성: ' + notice.ntDate + '</div>';
+              str += '<div>작성일: ' + notice.ntDate + '</div>';
               str += '<div>첨부: ' + notice.ntAttachCount + '개</div>';
               str += '</div>';
               $('#notice_list').append(str);
@@ -81,7 +77,6 @@
           }
         })
       }
-      
       const fnNoticeDetail = () => {
         $(document).on('click', '.notice', function(){
           location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');
