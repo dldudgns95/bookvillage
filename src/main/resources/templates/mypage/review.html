@@ -61,9 +61,12 @@
           <th:block th:if="${not #lists.isEmpty(reviewList)}">
             <th:block th:each="review : ${reviewList}">
               <tr th:if="${session.user.userNo eq review.userNo}">
-                <td th:text="${review.bookDto.title}"></td>
+                <td><a th:href="@{/book/search/detail(isbn=${review.isbn})}" th:text="${review.bookDto.title}"></a></td>
                 <td th:text="${review.review}"></td>
                 <td th:text="${review.reviewDate}"></td>
+              </tr>
+              <tr th:if="${session.user.userNo ne review.userNo}">
+                <td colspan="3">작성내역이없습니다.</td>
               </tr>
             </th:block>
           </th:block>

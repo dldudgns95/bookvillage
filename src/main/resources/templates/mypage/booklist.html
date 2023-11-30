@@ -74,15 +74,10 @@
                 <td th:text="${book.bookDto.title}"></td>
                 <td th:text="${book.checkoutDate}"></td>
                 <td th:text="${book.dueDate}"></td>
-                <td><button type="button" id="btn_delay">연기신청</button></td>
+                <td><button type="button" id="btn_delay" class="btn btn-success">연기신청</button></td>
               </tr>
-            </th:block>
-            </th:block>
-            <th:block th:if="${#lists.isEmpty(bookList)}">
-              <tr>
-                <td colspan="5">도서대출내역이 없습니다.</td>
-              </tr>
-            </th:block>
+             </th:block>
+          </th:block>
         </tbody>
         <!--/* 페이징 */-->
         <tfoot th:if="${not #lists.isEmpty(bookList)}">

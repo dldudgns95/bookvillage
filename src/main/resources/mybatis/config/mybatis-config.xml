@@ -25,14 +25,6 @@
     <typeAlias alias="AttachFacDto"           type="kr.co.bookvillage.dto.AttachFacDto"/>
     <typeAlias alias="BookApplyDto"           type="kr.co.bookvillage.dto.BookApplyDto"/>
     <typeAlias alias="BookCheckoutDto"           type="kr.co.bookvillage.dto.BookCheckoutDto"/>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> main
->>>>>>> main
-=======
->>>>>>> main
   </typeAliases>
 
 </configuration>

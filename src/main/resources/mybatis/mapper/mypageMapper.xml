@@ -28,16 +28,18 @@
     </association>
   </resultMap>
   
-  <resultMap id="ScoreMap" type="ScoreDto">
-    <result column="ISBN" property="isbn"/>
-    <result column="USER_NO" property="userNo"/>
-    <result column="REVIEW_DATE" property="reviewDate"/>
-    <result column="STAR" property="star"/>
-    <result column="REVIEW" property="review"/>
-    <association javaType="BookDto" property="bookDto">
-      <id column="ISBN" property="isbn" />
-      <result column="TITLE" property="title" />
-    </association>
+  <resultMap id="ScoreMap"           type="kr.co.bookvillage.dto.ScoreDto">
+    <id      column="ISBN"           property="isbn" />
+    <result  column="USER_NO"        property="userNo" />
+    <result  column="REVIEW_DATE"    property="reviewDate" />
+    <result  column="STAR"           property="star" />
+    <result  column="REVIEW"         property="review" />
+    <association javaType="BookDto"  property="bookDto">
+      <id     column="ISBN"          property="isbn" />
+      <result column="TITLE"         property="title" />
+      <result column="AUTHOR"        property="author"/>
+      <result column="STATUS"        property="status"/>
+    </association>    
   </resultMap>
 
 
@@ -67,7 +69,7 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <select id="getUserBookCheckoutCount" resultType="int">
+  <select id="getUserBookCheckoutCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT
   </select>

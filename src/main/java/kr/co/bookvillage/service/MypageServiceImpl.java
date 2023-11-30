@@ -1,6 +1,7 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
@@ -22,6 +24,7 @@ import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class MypageServiceImpl implements MypageService {
@@ -107,18 +110,19 @@ public class MypageServiceImpl implements MypageService {
     
   }
   
+  @Transactional(readOnly=true)
   @Override
-  public void loadBookCheckoutList(HttpServletRequest request, Model model) {
+  public void loadBookCheckoutList(HttpServletRequest request, Model model) {    
     
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
-    int total = mypageMapper.getUserBookCheckoutCount();
+    int total = mypageMapper.getUserBookCheckoutCount();    
     int display = 10;
     
     adminPageUtils.setPaging(page, total, display);
     
     Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
-                                    , "end", adminPageUtils.getEnd());
+                                    ,"end", adminPageUtils.getEnd());
     
     List<BookCheckoutDto> bookList = mypageMapper.getUserBookCheckoutList(map);
     
