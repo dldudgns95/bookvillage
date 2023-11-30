@@ -75,7 +75,7 @@
       BOOK_CHECKOUT_SEQ.NEXTVAL
     , #{isbn}
     , #{userNo}
-    , 1
+    , 0
     , SYSDATE  
     )
   </insert>

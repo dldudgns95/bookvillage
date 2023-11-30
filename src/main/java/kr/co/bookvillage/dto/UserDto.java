@@ -25,6 +25,7 @@ public class UserDto {
   private Date pwModifiedDate;
   private Date joinedDate;
   private int status;
+  private int bookcount;
   
 
 }
