@@ -22,3 +22,6 @@
 - API
   - KAKAO API
   - Aladin API
+
+## 🖥️ 기획
+- 🛠 [기능 명세서](https://www.notion.so/97e576e02536418eae57bfc1be4a39bf)
