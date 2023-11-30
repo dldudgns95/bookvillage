@@ -65,7 +65,7 @@
       <th:block th:if="${session.user == null}">
         <ul class="ico_user_group">
           <li><a th:href="@{/user/login.form}"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
-          <li><a th:href="@{/user/agree.form}"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
+          <li><a th:href="@{/user/joinChose.form}"><i class="fa-solid fa-user-plus"></i> 회원가입</a></li>
         </ul>
       </th:block>
       <th:block th:if="${session.user != null}">
