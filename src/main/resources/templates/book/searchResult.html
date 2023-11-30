@@ -60,6 +60,7 @@
         </div>
         <hr>
           <div th:if="${#lists.size(bookSearchList) > 0}">
+            <div th:utext="${paging}"></div>
             <ul th:each="book : ${bookSearchList}" class="search_list" >
               <li class="search_img search_inline">
                 <img th:src="${book.cover}" style="width: 100px;"></img>

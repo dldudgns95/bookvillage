@@ -19,7 +19,7 @@ public class ScoreDto {
   private int star;
   private String review;
   
-  //bookDto
+  //bookDto (마이페이지 표시 위해서 조인)
   private BookDto bookDto;
   private String title;
   private String author;
