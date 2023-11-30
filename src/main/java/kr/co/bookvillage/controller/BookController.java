@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
@@ -94,7 +95,13 @@ public class BookController {
   }
   
   /*대출*/
-  //대출처리
+  //대출처리(book)
+  @PostMapping("/updateBook.do")
+  public String updateBook(@RequestBody BookDto bookDto) {
+    bookService.updateBook(bookDto);
+    return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
+  }
+  //대출처리(checkout)
   @PostMapping("/updateCheckout.do")
   public String updateCheckout(@RequestBody BookDto bookDto) {
     bookService.updateCheckout(bookDto);

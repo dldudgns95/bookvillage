@@ -91,6 +91,17 @@
   left: 20px;
   margin-right: 20px;
 }
+.detail_guide{
+  display: flex;
+  text-align: left;
+  justify-content: space-evenly;
+}
+.detail_guide dl:first-child {
+  margin-left: 20px;
+}
+.detail_guide dl:last-child {
+  margin-right: 20px;
+}
 .detail_info {
   display: flex;
   flex-direction: column;
