@@ -257,6 +257,16 @@
      WHERE APPLY_NO = #{applyNo}
   </select>
   
+  <!-- 해당 유저의 대출 목록 조회(반납완료는 제외) -->
+  <select id="getUserBookCheckoutList" parameterType="int" resultMap="BookCheckoutMap">
+    SELECT CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
+      FROM BOOK_CHECKOUT BC INNER JOIN USER_T U
+        ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
+        ON BC.ISBN = B.ISBN
+     WHERE BC.USER_NO = #{userNo}
+       AND BC.STATUS NOT IN (2)
+  </select>
+  
   <!-- 대출 신청한 도서 수 카운트 -->
   <select id="bookCheckoutCount" resultType="int">
     SELECT COUNT(*)

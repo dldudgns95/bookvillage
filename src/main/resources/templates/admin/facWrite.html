@@ -136,27 +136,32 @@
     
     <script>
       
-      $('.frm_fac_write').submit((ev) => {
-        if(!confirm('시설을 등록하시겠습니까?')) {
-          ev.preventDefault();
-          return;
-        }
-        if($('#facName').val() === '') {
-          alert('시설명을 입력해주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('#facContent').val() === ''){
-          alert('시설 설명을 적어주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('#files').val() === '') {
-          alert('파일 이미지를 선택해주세요.');
-          ev.preventDefault();
-          return;
-        }
-      })
+      const fnCheckFac = () => {
+        $('.frm_fac_write').submit((ev) => {
+         
+          if($('#facName').val() === '') {
+            alert('시설명을 입력해주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if($('#facContent').val() === ''){
+            alert('시설 설명을 적어주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if($('#files').val() === '') {
+            alert('파일 이미지를 선택해주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if(!confirm('시설을 등록하시겠습니까?')) {
+            ev.preventDefault();
+            return;
+          }
+        })
+      }
+      
+      fnCheckFac();
       
     </script>
 

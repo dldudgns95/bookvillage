@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -40,7 +41,7 @@ public class AdminController {
     return "admin/userList";
   }
   
-  @PostMapping("/userDetail.do")
+  @RequestMapping(value="/userDetail.do", method={RequestMethod.GET, RequestMethod.POST})
   public String userDetail(HttpServletRequest request, Model model) {
     adminService.getUserDetail(request, model);
     return "admin/userDetail";
@@ -141,10 +142,24 @@ public class AdminController {
     return "redirect:/admin/bookCheckoutList.do";
   }
   
+  @PostMapping("/approvalUserBookCheckout.do")
+  public String approvalUserBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateCheckoutResult", adminService.approvalBookCheckout(request));
+    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do";
+  }
+  
   @PostMapping("/approvalBookCheckoutReturn.do")
   public String approvalBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckoutReturn(request));
     return "redirect:/admin/bookCheckoutReturnList.do";
+  }
+  
+  @PostMapping("/approvalUserBookCheckoutReturn.do")
+  public String approvalUserBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateReturnResult", adminService.approvalBookCheckoutReturn(request));
+    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do";
   }
   
   

@@ -149,6 +149,7 @@ public class AdminServiceImpl implements AdminService {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
     
   }
   
