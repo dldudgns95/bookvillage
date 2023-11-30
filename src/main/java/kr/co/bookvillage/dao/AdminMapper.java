@@ -7,6 +7,7 @@ import kr.co.bookvillage.dto.AttachFacDto;
 import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FacApplyDto;
 import kr.co.bookvillage.dto.FacilityDto;
 import kr.co.bookvillage.dto.UserDto;
 
@@ -45,4 +46,5 @@ public interface AdminMapper {
   public int activeBook(long isbn);
   public int minusBookCount(int userNo);
   public int activeUser(int userNo);
+  public List<FacApplyDto> getFacApplyList();
 }

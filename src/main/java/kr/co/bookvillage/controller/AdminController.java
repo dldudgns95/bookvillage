@@ -65,8 +65,9 @@ public class AdminController {
     return "admin/bookDetail";
   }
   
-  @GetMapping("/facList.do")
-  public String facList() {
+  @GetMapping("/facApplyList.do")
+  public String facApplyList(HttpServletRequest request, Model model) {
+    adminService.getFacApplyList(request, model);
     return "admin/facList";
   }
   
@@ -86,6 +87,12 @@ public class AdminController {
   public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
     return "redirect:/admin/bookList.do";
+  }
+  
+  @GetMapping("/facList.do")
+  public String facList(HttpServletRequest request, Model model) {
+    model.addAttribute("facList", adminService.getFacTotalList(request));
+    return "admin/facList";
   }
   
   @ResponseBody
@@ -161,7 +168,6 @@ public class AdminController {
     redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
     return "redirect:/admin/userDetail.do";
   }
-  
   
   
 }

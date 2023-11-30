@@ -454,5 +454,10 @@ public class AdminServiceImpl implements AdminService {
     return updateResult;
   }
   
+  @Override
+  public void getFacApplyList(HttpServletRequest request, Model model) {
+    model.addAttribute("facApplyList", adminMapper.getFacApplyList());
+  }
+  
   
 }

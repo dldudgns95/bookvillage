@@ -51,6 +51,22 @@
     </association>
   </resultMap>
   
+  <!-- 시설이용신청 Map -->
+  <resultMap type="facApplyDto" id="FacApplyMap">
+    <id column="FAC_APPLY_NO"     property="facApplyNo" />
+    <result column="FAC_REG_DATE" property="facRegDate" />
+    <result column="FAC_START"    property="facStart" />
+    <result column="FAC_STATUS"   property="facStatus" />
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo" />
+      <result column="NAME" property="name" />
+    </association>
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO" property="facNo" />
+      <result column="FAC_NAME" property="facName" />
+    </association>
+  </resultMap>
+  
   <!-- 책 넣기 -->
   <insert id="insertBook" parameterType="bookDto">
     INSERT INTO BOOK(
@@ -384,6 +400,14 @@
          , END_DATE = SYSDATE
      WHERE CHECKOUT_NO = #{checkoutNo}
   </update>
+  
+  <select id="getFacApplyList" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+      FROM FAC_APPLY FA INNER JOIN USER_T U
+        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+        ON FA.FAC_NO = F.FAC_NO
+     WHERE FAC_STATUS = 0
+  </select>
   
   
   
