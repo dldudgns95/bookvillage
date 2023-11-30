@@ -23,6 +23,10 @@
     --bs-btn-hover-bg: #e9ecef;
   }
   
+  .table td {
+    text-align: center;
+  }
+  
 </style>
 
 <body>
@@ -34,11 +38,11 @@
       <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action active" aria-current="true">
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
     </div>
     
     <div class="admin_contents">
@@ -52,9 +56,13 @@
               <th scope="col">회원상태</th>
               <th scope="col">회원등급</th>
               <th scope="col">대출가능여부</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
+            <th:block th:if="${#lists.isEmpty(userList)}">
+              <tr><td colspan="6">검색된 회원이 없습니다.</td></tr>
+            </th:block>
             <th:block th:each="user,vs:${userList}">
               <tr>
                 <td scope="row" th:text="${user.userNo}"></td>
@@ -90,6 +98,12 @@
                     가능
                   </th:block>
                 </td>
+                <td scope="row">
+                  <form th:action="@{/admin/userDetail.do}" method="post">
+                    <input type="hidden" name="userNo" th:value="${user.userNo}">
+                    <button type="submit" class="btn btn-primary">상세</button>
+                  </form>
+                </td>
               </tr>
             </th:block>
           </tbody>
@@ -98,7 +112,7 @@
               <div class="flex_tfoot">
                 <div th:utext="${paging}"></div>
                 <div>
-                  <form id="frm_search" method="post" th:action="@{/admin/userSearch.do}">
+                  <form id="frm_search" method="get" th:action="@{/admin/userSearch.do}">
                     <div class="input-group w-100 p-3">
                       <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
                         <option value="USER_NO" selected>회원번호</option>
@@ -158,7 +172,6 @@
       })
     }
     
-    fnBookCount();
     fnUserSearch(); 
   </script>
   

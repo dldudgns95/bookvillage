@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 200px;
+    width:500px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .table td {
+    text-align: center;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action active" aria-current="true">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <h1><span th:text="${user.name}"></span>님의 정보 상세조회</h1> 
+      </div>
+      <hr>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">유저번호</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="userNo" th:value="${user.userNo}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">이메일</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="email" th:value="${user.email}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">이름</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="name" th:value="${user.name}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">전화번호</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="mobile" th:value="${user.mobile}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">가입형태</label>
+        <div class="col-sm-9">
+          <input type="hidden" readonly class="form-control-plaintext" id="staticEmail" th:value="${user.mobile}">
+          <span class="form-control-plaintext" th:if="${user.state == 0}">일반회원</span>
+          <span class="form-control-plaintext" th:if="${user.state == 1}">네이버간편로그인</span>
+          <span class="form-control-plaintext" th:if="${user.state == 2}">구글간편로그인</span>
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">회원등급</label>
+        <div class="col-sm-9">
+          <input type="hidden" readonly class="form-control-plaintext" id="auth" th:value="${user.auth}">
+          <span class="form-control-plaintext" th:if="${user.auth == 0}">일반회원</span>
+          <span class="form-control-plaintext" th:if="${user.auth == 1}">휴면회원</span>
+          <span class="form-control-plaintext" th:if="${user.auth == 9}">관리자</span>
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">비밀번호수정일</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="pwModifiedDate" th:value="${#dates.format(user.pwModifiedDate, 'yyyy-MM-dd')}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">회원가입일</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="joinedDate" th:value="${#dates.format(user.joinedDate, 'yyyy-MM-dd')}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="staticEmail" class="col-sm-3 col-form-label">대출가능여부</label>
+        <div class="col-sm-9">
+          <input type="hidden" readonly class="form-control-plaintext" id="status" th:value="${user.status}">
+          <span class="form-control-plaintext" th:if="${user.status == 0}">불가능</span>
+          <span class="form-control-plaintext" th:if="${user.status == 1}">가능</span>
+        </div>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary">회원수정</button>
+        <button type="button" class="btn btn-primary">회원탈퇴</button>
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+  
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

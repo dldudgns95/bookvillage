@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 200px;
+    width:500px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .table td {
+    text-align: center;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <h1><span th:text="${bookApply.applyNo}"></span>번 도서신청 상세 조회</h1> 
+      </div>
+      <hr>
+      <div class="mb-1 row">
+        <label for="name" class="col-sm-3 col-form-label">유저이름</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="name" th:value="${bookApply.userDto.name}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="bookName" class="col-sm-3 col-form-label">신청도서</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="bookName" th:value="${bookApply.bookName}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="author" class="col-sm-3 col-form-label">저자</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="author" th:value="${bookApply.author}">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="publisher" class="col-sm-3 col-form-label">출판사</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="publisher" th:value="${bookApply.publisher}">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">신청사유</label>
+        <textarea class="form-control" readonly id="exampleFormControlTextarea1" rows="3" th:text="${bookApply.wish}"></textarea>
+      </div>
+      <div>
+        <button type="button" class="btn btn-primary">희망도서 추가완료</button>
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+  
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

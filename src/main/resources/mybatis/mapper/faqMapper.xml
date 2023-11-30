@@ -25,14 +25,24 @@
   </select>
  
   <select id="getFaqList" parameterType="Map">
-	SELECT FAQ_TITLE
+	SELECT FAQ_NO,FAQ_TITLE
 	  FROM FAQ
   </select>
   
   <select id="getFaq" parameterType="int">
 	SELECT FAQ_NO, FAQ_TITLE, FAQ_CONTENT
 	  FROM FAQ
-	 WHERE FAQ_NO = {faqNo}	
+	 WHERE FAQ_NO = #{faqNo}	
   </select>
-  
+  <delete id="deleteFaq" parameterType="int">
+    DELETE FROM FAQ
+    WHERE FAQ_NO = #{faqNo}	
+  </delete>
+
+  <update id="updateFaq" parameterType="FaqDto">
+    UPDATE FAQ
+	    SET FAQ_TITLE = #{faqTitle}
+	        , FAQ_CONTENT = #{faqContent}
+	    WHERE FAQ_NO = #{faqNo}
+  </update>
 </mapper>

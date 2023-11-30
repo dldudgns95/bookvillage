@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -77,4 +78,30 @@ public class NoticeController {
 	    redirectAttributes.addFlashAttribute("addResult", addResult);
 	    return "redirect:/support/faqlist.do";
 	}
+	
+	@GetMapping("/faqdetail.do")
+	public String faqdetail(HttpServletRequest request, Model model) {
+		faqService.loadFaq(request, model);
+		return "support/faqdetail";
+	}
+	@PostMapping("/removeFaq.do")
+	public String removeFaq(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo
+	                           , RedirectAttributes redirectAttributes) {
+	    int removeResult = faqService.removeFaq(faqNo);
+	    redirectAttributes.addFlashAttribute("removeResult", removeResult);
+	    return "redirect:/support/faqlist.do";
+	  }
+	 @GetMapping("/editfaq.form")
+	  public String edit(@RequestParam(value="faqNo", required=false, defaultValue="0") int faqNo
+	                   , Model model) {
+	    model.addAttribute("faq", faqService.getFaq(faqNo));
+	    return "support/faqedit";
+	  }
+	  
+	  @PostMapping("/modifyfaq.do")
+	  public String modify(FaqDto faq, RedirectAttributes redirectAttributes) {
+	    int modifyResult = faqService.modifyFaq(faq);
+	    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+	    return "redirect:/support/faqdetail.do?faqNo=" + faq.getFaqNo();
+	  }
 }

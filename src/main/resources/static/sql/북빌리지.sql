@@ -46,24 +46,22 @@ DROP TABLE INACTIVE_USER;
 DROP TABLE ACCESS_T;
 DROP TABLE USER_T;
 
-
--- 회원테이블
 CREATE TABLE USER_T (
-  USER_NO          NUMBER             NOT NULL,             -- 회원번호
-  EMAIL            VARCHAR2(100 BYTE) NOT NULL UNIQUE,   -- 회원이메일
-  PW               VARCHAR2(64 BYTE)  NOT NULL,           -- 비밀번호
-  NAME             VARCHAR2(50 BYTE)  UNIQUE,    -- 회원이름
-  MOBILE           VARCHAR2(15 BYTE),           -- 전화번호
-  GENDER           VARCHAR2(5 BYTE),            -- 성별 (0:남자, 1:여자, 3:선택안함)
-  AGREE            NUMBER,                      -- 동의 (0:필수, 1: 이벤트)
-  STATE            NUMBER,                      -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
-  AUTH             NUMBER,                      -- 등급 (0:일반, 1: 휴면, 9: 관리자)
-  PW_MODIFIED_DATE DATE,                        -- 비밀번호 수정일
-  JOINED_DATE      DATE,                        -- 회원가입일
-  STATUS           NUMBER,                      -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
+  USER_NO          NUMBER             NOT NULL,           -- 회원번호
+  EMAIL            VARCHAR2(100 BYTE) NOT NULL UNIQUE,    -- 회원이메일
+  PW               VARCHAR2(64 BYTE),                     -- 비밀번호
+  NAME             VARCHAR2(50 BYTE),                     -- 회원이름
+  MOBILE           VARCHAR2(15 BYTE)  UNIQUE,             -- 전화번호
+  GENDER           VARCHAR2(5 BYTE),                      -- 성별 (0:남자, 1:여자, 3:선택안함)
+  AGREE            NUMBER,                                -- 동의 (0:필수, 1: 이벤트)
+  STATE            NUMBER,                                -- 상태 (가입형태, 0:일반회원, 1:네이버간편로그인, 2:구글간편로그인)
+  AUTH             NUMBER,                                -- 등급 (0:일반, 1: 휴면, 9: 관리자)
+  PW_MODIFIED_DATE DATE,                                  -- 비밀번호 수정일
+  JOINED_DATE      DATE,                                  -- 회원가입일
+  STATUS           NUMBER,                                -- 대출가능여부 (도서상태, 0:대출불가, 1:대출가능)
+  BOOKCOUNT        NUMBER DEFAULT 0 NOT NULL,
   CONSTRAINT PK_USER_T PRIMARY KEY(USER_NO)
 );
-
 -- 접속 기록
 CREATE TABLE ACCESS_T (
   EMAIL      VARCHAR2(100 BYTE) NOT NULL ,
@@ -73,12 +71,12 @@ CREATE TABLE ACCESS_T (
 
 -- 휴면회원테이블
 CREATE TABLE INACTIVE_USER (
-  USER_NO            NUMBER            NOT NULL,  -- 회원번호
+  USER_NO            NUMBER            NOT NULL,   -- 회원번호
   EMAIL              VARCHAR2(100 BYTE) NULL,      -- 회원이메일
   PW                 VARCHAR2(64 BYTE)  NULL,      -- 회원비밀번호
   NAME               VARCHAR2(50 BYTE)  NULL,      -- 회원이름
   MOBILE             VARCHAR2(15 BYTE)  NULL,      -- 회원휴대전화
-  GENDER             NUMBER             NULL,      -- 회원성별(0:남자, 1:여자, 2:선택안함)
+  GENDER             VARCHAR2(5 BYTE)   NULL,      -- 회원성별(0:남자, 1:여자, 2:선택안함)
   AGREE              NUMBER             NULL,      -- 서비스동의여부(0:필수, 1:이벤트)
   STATE              NUMBER             NULL,      -- 가입형태(0:일반, 1:네이버간편로그인, 2:구글간편로그인)
   AUTH               NUMBER             NULL,      -- 회원등급(0:일반, 1:휴면, 9:관리자)
@@ -201,6 +199,7 @@ CREATE TABLE BOOK_APPLY (
    AUTHOR    VARCHAR2(100 BYTE)   NULL,      --저자
    PUBLISHER VARCHAR2(100 BYTE)   NULL,      --출판사
    WISH      VARCHAR2(4000 BYTE)  NULL,      --신청사유
+   STATUS    NUMBER               NOT NULL,
    CONSTRAINT PK_BOOK_APPLY PRIMARY KEY (APPLY_NO),
    CONSTRAINT FK_BOOK_APPLY FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL
 );
@@ -242,13 +241,14 @@ CREATE TABLE WISH (
 );
 -- 도서 대출 테이블
 CREATE TABLE BOOK_CHECKOUT (
-  CHECKOUT_NO NUMBER            NOT NULL,      -- 대출번호(시퀀스 사용)
-  USER_NO     NUMBER            NOT NULL,      -- 회원번호(USER 테이블 참조)
-  ISBN        VARCHAR2(13 BYTE) NOT NULL,      -- ISBN(BOOK 테이블 참조)
-  STATUS      NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체)
-  START_DATE  DATE              NOT NULL,      -- 대출시작날짜
-  DUE_DATE    DATE              NOT NULL,      -- 대출반납예정일
-  END_DATE    DATE              NULL,          -- 대출반납일
+  CHECKOUT_NO    NUMBER            NOT NULL,      -- 대출번호(시퀀스 사용)
+  USER_NO        NUMBER            NOT NULL,      -- 회원번호(USER 테이블 참조)
+  ISBN           VARCHAR2(13 BYTE) NOT NULL,      -- ISBN(BOOK 테이블 참조)
+  STATUS         NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체)
+  CHECKOUT_DATE  DATE              NOT NULL,
+  START_DATE     DATE              NULL,      -- 대출시작날짜
+  DUE_DATE       DATE              NULL,      -- 대출반납예정일
+  END_DATE       DATE              NULL,          -- 대출반납일
   CONSTRAINT PK_BOOK_CHECKOUT PRIMARY KEY(CHECKOUT_NO),
   CONSTRAINT FK1_BOOK_CHECKOUT FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO),
   CONSTRAINT FK2_BOOK_CHECKOUT FOREIGN KEY(ISBN) REFERENCES BOOK(ISBN)
@@ -256,20 +256,20 @@ CREATE TABLE BOOK_CHECKOUT (
 
 
 --회원 삽입
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user1@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User1', '010-1111-1111', 0, 0, 0, 0, '2023-11-11', '2023-11-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user2@naver.com', STANDARD_HASH('2222', 'SHA256'), 'User2', '010-2222-2222', 1, 1, 0, 0, '2023-10-11', '2023-10-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user3@naver.com', STANDARD_HASH('3333', 'SHA256'), 'User3', '010-3333-3333', 2, 0, 0, 0, '2023-09-11', '2023-09-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user4@naver.com', STANDARD_HASH('4444', 'SHA256'), 'User4', '010-4444-4444', 0, 0, 0, 0, '2023-08-11', '2023-08-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user5@naver.com', STANDARD_HASH('5555', 'SHA256'), 'User5', '010-4444-4444', 1, 1, 0, 0, '2023-07-11', '2023-07-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user6@naver.com', STANDARD_HASH('6666', 'SHA256'), 'User6', '010-4444-4444', 2, 0, 0, 0, '2023-06-11', '2023-06-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user7@naver.com', STANDARD_HASH('7777', 'SHA256'), 'User7', '010-4444-4444', 0, 1, 0, 0, '2023-05-11', '2023-05-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user8@naver.com', STANDARD_HASH('8888', 'SHA256'), 'User8', '010-4444-4444', 1, 0, 0, 0, '2023-04-11', '2023-04-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user9@naver.com', STANDARD_HASH('9999', 'SHA256'), 'User9', '010-4444-4444', 2, 1, 0, 0, '2023-03-11', '2023-03-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user1@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User1', '010-1111-1111', 0, 0, 0, 0, '2023-11-11', '2023-11-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user2@naver.com', STANDARD_HASH('2222', 'SHA256'), 'User2', '010-2222-2222', 1, 1, 0, 0, '2023-10-11', '2023-10-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user3@naver.com', STANDARD_HASH('3333', 'SHA256'), 'User3', '010-3333-3333', 2, 0, 0, 0, '2023-09-11', '2023-09-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user4@naver.com', STANDARD_HASH('4444', 'SHA256'), 'User4', '010-4444-4444', 0, 0, 0, 0, '2023-08-11', '2023-08-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user5@naver.com', STANDARD_HASH('5555', 'SHA256'), 'User5', '010-5555-5555', 1, 1, 0, 0, '2023-07-11', '2023-07-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user6@naver.com', STANDARD_HASH('6666', 'SHA256'), 'User6', '010-6666-6666', 2, 0, 0, 0, '2023-06-11', '2023-06-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user7@naver.com', STANDARD_HASH('7777', 'SHA256'), 'User7', '010-7777-7777', 0, 1, 0, 0, '2023-05-11', '2023-05-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user8@naver.com', STANDARD_HASH('8888', 'SHA256'), 'User8', '010-8888-8888', 1, 0, 0, 0, '2023-04-11', '2023-04-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user9@naver.com', STANDARD_HASH('9999', 'SHA256'), 'User9', '010-9999-9999', 2, 1, 0, 0, '2023-03-11', '2023-03-10', 1, 0);
 commit;
 
 --관리자 삽입
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', STANDARD_HASH('1010', 'SHA256'), 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1);
-INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user11@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User11', '010-1111-1111', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user10@naver.com', STANDARD_HASH('1010', 'SHA256'), 'User10', '010-1010-1010', 0, 0, 0, 9, '2023-02-11', '2023-02-10', 1, 0);
+INSERT INTO USER_T VALUES(USER_T_SEQ.NEXTVAL, 'user11@naver.com', STANDARD_HASH('1111', 'SHA256'), 'User11', '010-1100-1100', 0, 0, 0, 9, '2023-01-11', '2023-01-10', 1, 0);
 commit;
 
 --휴면 회원 삽입
@@ -408,6 +408,39 @@ INSERT INTO BOOK VALUES (
     '국내도서>유아>놀이책>유아 놀이책 기타',
     49525
 );
+
+-- 대출 신청
+INSERT INTO BOOK_CHECKOUT(CHECKOUT_NO, USER_NO, ISBN, STATUS, CHECKOUT_DATE) 
+    VALUES(BOOK_CHECKOUT_SEQ.NEXTVAL, 1, 8809904205564, 0, SYSDATE);
+UPDATE BOOK SET STATUS = 0 WHERE ISBN = 8809904205564;
+INSERT INTO BOOK_CHECKOUT(CHECKOUT_NO, USER_NO, ISBN, STATUS, CHECKOUT_DATE) 
+    VALUES(BOOK_CHECKOUT_SEQ.NEXTVAL, 2, 9791170950868, 0, SYSDATE);
+UPDATE BOOK SET STATUS = 0 WHERE ISBN = 9791170950868;
+INSERT INTO BOOK_CHECKOUT(CHECKOUT_NO, USER_NO, ISBN, STATUS, CHECKOUT_DATE) 
+    VALUES(BOOK_CHECKOUT_SEQ.NEXTVAL, 3, 9788959408290, 0, SYSDATE);
+UPDATE BOOK SET STATUS = 0 WHERE ISBN = 9788959408290;
+INSERT INTO BOOK_CHECKOUT(CHECKOUT_NO, USER_NO, ISBN, STATUS, CHECKOUT_DATE) 
+    VALUES(BOOK_CHECKOUT_SEQ.NEXTVAL, 4, 9791197678653, 0, SYSDATE);
+UPDATE BOOK SET STATUS = 0 WHERE ISBN = 9791197678653;
+INSERT INTO BOOK_CHECKOUT(CHECKOUT_NO, USER_NO, ISBN, STATUS, CHECKOUT_DATE) 
+    VALUES(BOOK_CHECKOUT_SEQ.NEXTVAL, 5, 9791171249305, 0, SYSDATE);
+UPDATE BOOK SET STATUS = 0 WHERE ISBN = 9791171249305;
+COMMIT;
+
+-- 희망도서신청
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 1, '용의자 X의 헌신', '히가시노 게이고', '재인', '이 책이 읽고싶어요.', 0);
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 3, '그리고 아무도 없었다', '애거사 크리스티', '해문출판사', '이 책을 좋아하는데 없는게 아쉬워서 희망도서로 신청합니다.', 0);
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 5, '나미야 잡화점의 기적', '히가시노 게이고', '현대문학', '이 책을 꼭 읽어보고싶어요.', 0);
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 2, '해리포터와 아즈카반의 죄수', 'J.K. 롤링', '문학수첩', '해리포터 시리즈가 재밌어서 신청합니다.', 0);
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 4, '총 균 쇠', '재레드 다이아몬드', '김영사', '베스트셀러라해서 한번 읽어보고싶어요.', 0);
+INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
+      VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
+COMMIT;
 
 
 commit;
