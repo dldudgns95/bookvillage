@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dto.BookCheckoutDto;
+import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
@@ -111,7 +112,7 @@ public class MypageServiceImpl implements MypageService {
     
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
-    int total = mypageMapper.getBookCheckoutCount();
+    int total = mypageMapper.getUserBookCheckoutCount();
     int display = 10;
     
     adminPageUtils.setPaging(page, total, display);
@@ -119,7 +120,7 @@ public class MypageServiceImpl implements MypageService {
     Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
                                     , "end", adminPageUtils.getEnd());
     
-    List<BookCheckoutDto> bookList = mypageMapper.getBookCheckoutList(map);
+    List<BookCheckoutDto> bookList = mypageMapper.getUserBookCheckoutList(map);
     
     model.addAttribute("bookList", bookList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/booklist.do"));
@@ -130,6 +131,27 @@ public class MypageServiceImpl implements MypageService {
   @Override
   public int delayBookCheckout(int checkoutNo) {
     return mypageMapper.updateDueDate(checkoutNo);
+  }
+  
+  @Override
+  public void loadReviewList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getReviewCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd());
+    
+    List<ScoreDto> reviewList = mypageMapper.getReviewList(map);
+    
+    model.addAttribute("reviewList", reviewList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+    
   }
 
 }

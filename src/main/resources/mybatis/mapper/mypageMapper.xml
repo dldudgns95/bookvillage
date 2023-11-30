@@ -27,6 +27,18 @@
       <result     column="CATEGORY_ID"   property="categoryId" />
     </association>
   </resultMap>
+  
+  <resultMap id="ScoreMap" type="ScoreDto">
+    <result column="ISBN" property="isbn"/>
+    <result column="USER_NO" property="userNo"/>
+    <result column="REVIEW_DATE" property="reviewDate"/>
+    <result column="STAR" property="star"/>
+    <result column="REVIEW" property="review"/>
+    <association javaType="BookDto" property="bookDto">
+      <id column="ISBN" property="isbn" />
+      <result column="TITLE" property="title" />
+    </association>
+  </resultMap>
 
 
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
@@ -55,12 +67,12 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <select id="getBookCheckoutCount" resultType="int">
+  <select id="getUserBookCheckoutCount" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT
   </select>
   
-  <select id="getBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
+  <select id="getUserBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
     SELECT A.CHECKOUT_NO, A.USER_NO, A.ISBN, A.STATUS, A.CHECKOUT_DATE, A.START_DATE, A.DUE_DATE, A.END_DATE , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, BC.CHECKOUT_NO, BC.USER_NO, BC.ISBN, BC.STATUS, BC.CHECKOUT_DATE, BC.START_DATE, BC.DUE_DATE, BC.END_DATE, B.TITLE
               FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
@@ -74,6 +86,18 @@
      WHERE STATUS = 1 AND CHECKOUT_NO = #{checkoutNo}
   </update>
   
+  <select id="getReviewCount" resultType="int">
+    SELECT COUNT(*)
+      FROM SCORE
+  </select>
+  
+  <select id="getReviewList" parameterType="Map" resultMap="ScoreMap">
+    SELECT A.ISBN, A.USER_NO, A.REVIEW_DATE, A.STAR, A.REVIEW , A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_DATE) AS RN, S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE
+              FROM SCORE S INNER JOIN BOOK B
+                ON S.ISBN = B.ISBN) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
   
 
 

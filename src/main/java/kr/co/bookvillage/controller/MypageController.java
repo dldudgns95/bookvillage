@@ -62,9 +62,10 @@ public class MypageController {
     return "mypage/booklist";
   }
 
-  // 한줄평 작성 목록 페이지 이동
+  // 작성한 한줄평목록 페이지 이동
   @GetMapping("/review.do")
-  public String review() {
+  public String reviewList(HttpServletRequest request, Model model) {
+    mypageService.loadReviewList(request, model);
     return "mypage/review";
   }
   
