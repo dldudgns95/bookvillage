@@ -99,7 +99,7 @@
               </form>
             </li>
             <li>
-              <form  th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
+              <form th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
                 <input type="hidden" name="checkoutDate" id="checkoutDate" />
