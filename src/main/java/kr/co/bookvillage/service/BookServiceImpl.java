@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import kr.co.bookvillage.dao.BookMapper;
 import kr.co.bookvillage.dao.ScoreMapper;
 import kr.co.bookvillage.dao.WishMapper;
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
@@ -117,7 +118,11 @@ public class BookServiceImpl implements BookService {
   // 대출 처리
   @Override
   public void updateCheckout(BookDto bookDto) {
-    bookMapper.updateStatus(bookDto);
+    bookMapper.insertCheckoutStatus(bookDto);    
+  }
+  @Override
+  public void updateBook(BookDto bookDto) {
+    bookMapper.updateBookStatus(bookDto);
   }
   
   
