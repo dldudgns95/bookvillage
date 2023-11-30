@@ -22,10 +22,12 @@
   .search_select {
     max-width: 150px;
   }
+  
   .btn-outline-secondary {
     --bs-btn-hover-bg: #e9ecef;
   }
   
+  /* 관리자 페이지 카테고리 */
   .list-group {
     min-width: 115px;
     --bs-list-group-item-padding-x: 0.5rem;
@@ -35,6 +37,7 @@
     margin: 0 auto;
   }
   
+  /* 도서에서 쓰일 테이블 */
   .table {
     table-layout: fixed;
   }
@@ -75,12 +78,18 @@
     justify-content: space-between;
   }
   
+  /* 캘린더 크기 조절 */
   #calendar {
     width: 900px;
   }
-  
+  /* 모달 크기 조절 */  
   .modal_img {
     width: 300px;
+  }
+  
+  /* 캘린더 좌측 우측 아이콘 색상 */
+  .fc-icon-chevron-right, .fc-icon-chevron-left {
+    color: #ffffff;
   }
   
 </style>
@@ -94,11 +103,11 @@
       <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
-      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
       <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설관리</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-bullhorn"></i> 공지사항</a>
-      <a href="#" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 1:1문의</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
     </div>
     
     <div class="admin_contents">

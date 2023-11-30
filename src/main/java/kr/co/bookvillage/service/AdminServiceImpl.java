@@ -326,8 +326,131 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
-  public void getBookApplyList(Model model) {
-    model.addAttribute("bookApplyList", adminMapper.getBookApplyList());
+  public void getBookApplyList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookApplyCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("bookApplyList", adminMapper.getBookApplyList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookApplyList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookApplyDetail(HttpServletRequest request, Model model) {
+    
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    model.addAttribute("bookApply", adminMapper.getBookApplyDetail(applyNo));
+  }
+  
+  @Override
+  public void getBookCheckoutList(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookCheckoutCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("bookCheckoutList", adminMapper.getBookCheckoutList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookCheckoutList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookCheckoutSearchList(HttpServletRequest request, Model model) {
+    
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookCheckoutSearchCount(Map.of("column", column, "query", query));
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd()
+                                   , "column", column, "query", query);
+    
+    model.addAttribute("bookCheckoutList", adminMapper.getBookCheckoutSearchList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookCheckoutSearchList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookCheckoutReturnList(HttpServletRequest request, Model model) {
+
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookCheckoutReturnCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("bookCheckoutList", adminMapper.getBookCheckoutReturnList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookCheckoutReturnList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public void getBookCheckoutReturnSearchList(HttpServletRequest request, Model model) {
+
+    String column = request.getParameter("column");
+    String query = request.getParameter("query");
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.bookCheckoutReturnSearchCount(Map.of("column", column, "query", query));
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd()
+                                   , "column", column, "query", query);
+    
+    model.addAttribute("bookCheckoutList", adminMapper.getBookCheckoutReturnSearchList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/bookCheckoutReturnSearchList.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
+    model.addAttribute("totalCount", total);
+    
+  }
+  
+  @Override
+  public int approvalBookCheckout(HttpServletRequest request) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    int updateResult = adminMapper.approvalBookCheckout(checkoutNo);
+    return updateResult;
+  }
+  
+  @Override
+  public int approvalBookCheckoutReturn(HttpServletRequest request) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int status = Integer.parseInt(request.getParameter("status"));
+    long isbn = Long.parseLong(request.getParameter("isbn"));
+    int updateResult = adminMapper.approvalBookCheckoutReturn(checkoutNo);
+    if(updateResult == 1) {
+      if(status == 3) {
+        adminMapper.activeUser(userNo);
+      }
+      adminMapper.activeBook(isbn);
+      adminMapper.minusBookCount(userNo);
+    }
+    
+    return updateResult;
   }
   
   

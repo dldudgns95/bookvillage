@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
@@ -25,21 +26,19 @@ public class BookController {
   
   private final BookService bookService;
 
-  // 자료검색 카테고리 클릭
+  /*페이지 이동*/
+  // 자료검색 카테고리 클릭 후 '검색 페이지'로 이동
   @GetMapping("/search.do")
   public String search() {
-    //bookService.list(request, model);
     return "book/search";
   }
-  
-  // 검색 버튼 클릭 후 검색 리스트로 이동
+  // 검색 버튼 클릭 후 '검색 리스트 페이지'로 이동
   @GetMapping("/search/result")
-  public String searchResult(BookSearchDto bookSearchDto,Model model) {
-    bookService.searchBook(bookSearchDto, model);
+  public String searchResult(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
+    bookService.searchBook(bookSearchDto, request, model);
     return "book/searchResult";
   }
-  
-  //검색 리스트에서 도서 상세로 이동 (하고있음)
+  // 상세 버튼 클릭 후 '도서 상세 페이지'로 이동
   @GetMapping("/search/detail")
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, Model model) {
     bookService.getBookDetail(isbn, model);
@@ -47,13 +46,13 @@ public class BookController {
     return "book/detail";
   }
   
+  /*평가, 한줄평*/
   //평가 저장
   @PostMapping("/addScore.do")
   public String addScore(@RequestBody ScoreDto scoreDto) {
     bookService.insertScore(scoreDto);
     return "redirect:/book/search/detail?isbn=" + scoreDto.getIsbn();
   }
-  
   // 한줄평 삭제
   @GetMapping("/deleteScore.do")
   public String deleteScore(@RequestParam("isbn") String isbn,
@@ -63,17 +62,51 @@ public class BookController {
     bookService.deleteScore(scoreDto);
     return "redirect:/book/search/detail?isbn=" + scoreDto.getIsbn();
   }
+  // 한줄평 좋아요
+  @GetMapping("/likeScore.do")
+  public String likeScore(@RequestParam("isbn") String isbn,
+                          @RequestParam("userNo") int userNo,
+                          ScoreDto scoreDto, 
+                          Model model) {
+    bookService.likeScore(scoreDto, model);
+    return "redirect:/book/search/detail?isbn=" + scoreDto.getIsbn();
+  }
   
-  //위시리스트 추가
+  /*관심도서*/
+  //관심도서 확인
+  @PostMapping("/checkWish.do")
+  @ResponseBody
+  public String checkWish(@RequestBody WishDto wishDto) {
+    int checkWish = bookService.wishExists(wishDto);
+    return "{\"checkWish\":" + checkWish + "}";
+  }
+  
+  //관심도서 추가
   @PostMapping("/addWish.do")
   public String addWish(@RequestBody WishDto wishDto) {
     bookService.insertWish(wishDto);
     return "redirect:/book/search/detail?isbn=" + wishDto.getIsbn();
   }
+  //관심도서 삭제
+  @PostMapping("/deleteWish.do")
+  public String deleteWish(@RequestBody WishDto wishDto) {
+    bookService.deleteWish(wishDto);
+    return "redirect:/book/search/detail?isbn=" + wishDto.getIsbn();
+  }
   
+  /*대출*/
+  //대출처리(book)
+  @PostMapping("/updateBook.do")
+  public String updateBook(@RequestBody BookDto bookDto) {
+    bookService.updateBook(bookDto);
+    return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
+  }
+  //대출처리(checkout)
   @PostMapping("/updateCheckout.do")
   public String updateCheckout(@RequestBody BookDto bookDto) {
     bookService.updateCheckout(bookDto);
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }
+  
+
 }

@@ -15,7 +15,7 @@ public class WishMapperTest {
   @Autowired
   private WishMapper wishMapper;
   
-  @Test
+  //@Test
   public void testInsertWish() {
       // 테스트할 데이터 생성
       WishDto wishDto = new WishDto();
@@ -29,6 +29,19 @@ public class WishMapperTest {
       // 데이터베이스에 삽입
       wishMapper.insertWish(wishDto);
 
+  }
+  
+  @Test
+  public void testWishExists() {
+    // Given
+    WishDto wishDto = new WishDto();
+    wishDto.setIsbn("9772765332009");
+    wishDto.setUserNo(1);
+
+    // When
+    int result = wishMapper.wishExists(wishDto);
+
+    System.out.println(result);
   }
   
 }

@@ -91,6 +91,17 @@
   left: 20px;
   margin-right: 20px;
 }
+.detail_guide{
+  display: flex;
+  text-align: left;
+  justify-content: space-evenly;
+}
+.detail_guide dl:first-child {
+  margin-left: 20px;
+}
+.detail_guide dl:last-child {
+  margin-right: 20px;
+}
 .detail_info {
   display: flex;
   flex-direction: column;
@@ -100,6 +111,14 @@
 }
 .book_table {
   text-align: left;
+}
+.detail_menu {
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+}
+.detail_menu li{
+  margin-right: 20px;
 }
 
 /*별점*/
@@ -127,11 +146,28 @@
 }
 .review {
   width: 100%;
-  height: 150px;
   padding: 10px;
+  margin-right: 20px;
   box-sizing: border-box;
   border: solid 1.5px #D3D3D3;
   border-radius: 5px;
   font-size: 16px;
   resize: none;
+}
+.detail_review {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+}
+
+
+/*관심도서*/
+#toggleWishBtn {
+  cursor: pointer;
+}
+.notAdded::after {
+    content: '♡';
+}
+.wishAdded::after {
+    content: '♥';
 }

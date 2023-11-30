@@ -11,6 +11,12 @@
     <result  column="REVIEW_DATE"    property="reviewDate" />
     <result  column="STAR"           property="star" />
     <result  column="REVIEW"         property="review" />
+    <association javaType="BookDto"  property="bookDto">
+      <id     column="ISBN"          property="isbn" />
+      <result column="TITLE"         property="title" />
+      <result column="AUTHOR"        property="author"/>
+      <result column="STATUS"        property="status"/>
+    </association>    
   </resultMap>
 
 
@@ -33,7 +39,15 @@
   <select id="getScore" parameterType="String" resultMap="ScoreMap">
     SELECT ISBN, USER_NO, REVIEW_DATE, STAR, REVIEW
       FROM SCORE
-     WHERE ISBN = ${isbn}     
+     WHERE ISBN = #{isbn}     
+  </select>
+  
+  <!-- 마이페이지 정보 조회 시 필요 -->
+  <select id="getScoreDetail" parameterType="String" resultMap="ScoreMap">
+    SELECT S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE, B.AUTHOR, B.STATUS
+      FROM SCORE S LEFT OUTER JOIN BOOK B
+        ON S.ISBN = B.ISBN
+     WHERE S.USER_NO = #{userNo}     
   </select>
   
   

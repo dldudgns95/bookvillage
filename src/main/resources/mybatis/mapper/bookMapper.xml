@@ -35,14 +35,49 @@
       </choose>       
   </select>
   
+  <!--페이징 처리에 필요한 전체 갯수-->
+  <select id="getBookCount" parameterType="BookSearchDto" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK
+     WHERE 
+      <choose>
+        <when test="ss == 'total'">
+          TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'title'">
+          TITLE LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'author'">
+          AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+      </choose>       
+  </select>
+  
   <select id="getBookDetail" parameterType="String" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK
      WHERE ISBN = ${isbn}     
   </select>
   
-  <update id="updateStatus">
+  <!--대출하기-->
+  <update id="updateBookStatus">
     UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
   </update>
+  
+  <insert id="insertCheckoutStatus" parameterType="BookDto">
+    INSERT INTO BOOK_CHECKOUT(
+      CHECKOUT_NO
+    , ISBN
+    , USER_NO
+    , STATUS
+    , CHECKOUT_DATE
+    ) VALUES(
+      BOOK_CHECKOUT_SEQ.NEXTVAL
+    , #{isbn}
+    , #{userNo}
+    , 0
+    , SYSDATE  
+    )
+  </insert>
   
 </mapper>

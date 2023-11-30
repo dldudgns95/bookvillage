@@ -10,6 +10,7 @@ import kr.co.bookvillage.dto.ScoreDto;
 public interface ScoreMapper {
   public int insertScore(ScoreDto scoreDto);
   public List<ScoreDto> getScore(String isbn);
+  public List<ScoreDto> getScoreDetail(String userNo);
   public void deleteScore(ScoreDto scoreDto);
 
 }

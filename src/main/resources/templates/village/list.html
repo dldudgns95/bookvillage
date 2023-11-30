@@ -31,7 +31,7 @@
                   <a href="/support/notice.do">고객센터</a>
                 </li>
                 <li class>
-                  <a href="/apply/faclist.do">시설안내</a>
+                  <a href="/mypage/list.do">시설안내</a>
                 </li>
                 <li class>
                   <a href="/user/login.form">로그인</a>
@@ -48,43 +48,11 @@
         </ul>
       </nav>
       
-    <div class="wrap search_wrap">     
+    <div class="wrap village_wrap">     
       
-      <h3 class="title">소장자료 검색</h3>
+      <h3 class="title">빌리지 입주</h3>
     
-      <div class="search_area">
-        <form id="search" name="search" action="search/result" method="get">
-          <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
-          <input type="hidden" name="pageNum" value="1">
-          <input type="hidden" name="pageSize" value="10">
-          <div class="search_select">
-            <select name="ss" id="ss" class="btn btn-outline-secondary">
-              <option value="total" selected>전체</option>
-              <option value="title">제목</option>
-              <option value="author">저자</option>
-            </select>
-          </div>
-          <div class="search_text">
-            <input type="text" id="st" name="st" placeholder="검색어를 입력하세요."> 
-          </div>
-          <div class="search_btn">
-            <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
-          </div>
-        </form>
-      </div>
-      
-      <div class="list_area">
-        <h5>이 달의 추천 도서</h5>
-        <div class="recommendContents">
-          <ul>
-            <li></li>
-          </ul>
-        </div>
-        <h5>베스트 셀러</h5>
-        <div class="bestContents">
-          
-        </div>
-      </div>
+
       
     </div>
 
