@@ -27,6 +27,8 @@ public interface UserMapper {
   // 임시 비밀번호 받으면 업데이트
   public int updatetmpPw(Map<String, Object> map);
   public int tmpPwMdDay(UserDto user);
+  
+  public UserDto changePw90(String email);
 
   
 }

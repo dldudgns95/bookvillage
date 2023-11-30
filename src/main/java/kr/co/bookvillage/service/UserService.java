@@ -31,13 +31,11 @@ public interface UserService {
   // 이메일 찾기(아이디)
   public UserDto findId(String name, String mobile);
  
-  
-  // 회원인지 확인하기 
   // 임시 비밀번호 메일 보내기
   public ResponseEntity<Map<String, Object>> sendTmpPw(String email);
-  //public void sendTmpPw(String email);
   
-   // 임시 비번 메일 보내기 + 발송
+  // 90일 비번...
+  public UserDto changePw90(String email);
   
   
   

@@ -4,6 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.bookvillage.dao.UserMapper">
+  
+  <resultMap type="UserDto" id="UserMap">
+    <id      column="USER_NO"           property="userNo" />
+    <result  column="EMAIL"             property="email"/>
+    <result  column="PW"                property="pw"/>
+    <result  column="NAME"              property="name"/>
+    <result  column="MOBILE"            property="mobile"/>
+    <result  column="GENDER"            property="gender"/>
+    <result  column="AGREE"             property="agree"/>
+    <result  column="STATE"             property="state"/>
+    <result  column="AUTH"              property="auth"/>
+    <result  column="PW_MODIFIED_DATE"  property="pwModifiedDate"/>
+    <result  column="JOINED_DATE"       property="joinedDate"/>
+    <result  column="STATUS"            property="status"/>
+    <result  column="BOOKCOUNT"         property="bookcount"/>
+    <association  javaType="AccessDto" property="accessDto" >
+      <result     column="EMAIL"       property="email" />
+      <result     column="LOGIN_DATE"  property="loginDate" />
+    </association>
+  </resultMap>
+    
 
   <select id="getUser" parameterType="Map" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
@@ -117,11 +138,22 @@
      WHERE EMAIL = #{email}
   </update>
   
-  <update id="tmpPwMdDay" parameterType="UserDto">
-    UPDATE USER_T
-       SET PW_MODIFIED_DATE = SYSDATE
-     WHERE EMAIL = #{eamil}   
-  </update>
+    
+  <select id="nononon" resultMap="UserMap">
+      SELECT U.USER_NO, U.EMAIL, U.NAME, U.MOBILE, U.GENDER, U.AGREE, U.STATE, U.AUTH,
+         U.PW_MODIFIED_DATE, U.JOINED_DATE, U.STATUS, U.BOOKCOUNT, A.LOGIN_DATE
+    FROM USER_T U INNER JOIN ACCESS_T A 
+      ON U.EMAIL = A.EMAIL
+    WHERE A.LOGIN_DATE <![CDATA[ <= ]]>  TRUNC(SYSDATE) - 90;
+  </select>
+  
+  
+  <select id="changePw90" parameterType="String" resultType="UserDto">
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+      FROM USER_T
+     WHERE SYSDATE - PW_MODIFIED_DATE >= 90
+       AND EMAIL = #{email}
+  </select>
   
   
   

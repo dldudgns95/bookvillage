@@ -7,7 +7,26 @@
 /* 전역변수 선언 */
 var emailPassed = false;
 
-// findId.js 파일 내용
+
+
+$(document).ready(()=> {
+    toggleForm('id'); // 초기 상태를 '아이디 찾기'로 설정
+});
+
+function toggleForm(formType) {
+    if (formType === 'id') {
+        $('#frm_find_id').show();
+        $('.password-form').hide();
+        $('#idTitle').css('color', 'rgb(37, 94, 188)');
+        $('#passwordTitle').css('color', '');
+    } else if (formType === 'password') {
+        $('#frm_find_id').hide();
+        $('.password-form').show();
+        $('#idTitle').css('color', '');
+        $('#passwordTitle').css('color', 'rgb(37, 94, 188)');
+    }
+}
+
 
 
 // 아이디 찾기
@@ -94,7 +113,6 @@ $(document).ready(() => {
         contentType: 'application/json', 
         data: JSON.stringify({ email: email }), 
         success: (resData) => {
-          // Ajax 요청이 성공할 경우 수행할 동작
           console.log('Ajax 요청 성공', resData);
           alert(email + "로 임시 비밀번호를 전송했습니다.");
         },

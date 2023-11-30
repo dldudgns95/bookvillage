@@ -8,7 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.InactiveUserDto;
 import kr.co.bookvillage.dto.UserDto;
@@ -33,7 +34,6 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
   
   private final UserMapper userMapper;
-  private final MypageMapper mypageMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
   
@@ -61,13 +61,32 @@ public class UserServiceImpl implements UserService {
     
     // 정상적인 로그인 처리하기
     UserDto user = userMapper.getUser(map);
-  
     
-    if(user != null) {
+
+  
+    if (user != null) {
+      // 로그인 성공 처리
       request.getSession().setAttribute("user", user);
       userMapper.insertAccess(email);
+
+      // 비밀번호 변경 알림 처리
+      long daysSinceLastChange = calculateDaysSinceLastChange(user.getPwModifiedDate());
+      if (daysSinceLastChange >= 90) {
+          response.setContentType("text/html; charset=UTF-8");
+          PrintWriter outt = response.getWriter();
+          outt.println("<script>");
+          outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
+          outt.println("location.href='" + request.getContextPath() + "/mypage/edit.form'");
+          outt.println("</script>");
+          outt.flush();
+          outt.close();
+      } else {
+          // 90일 이전인 경우에 실행되는 로직
+          // 여기에 필요한 로직을 추가하세요.
+      }
       response.sendRedirect(request.getParameter("referer"));
-    } else {
+  } else {
+      // 로그인 실패 처리
       response.setContentType("text/html; charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<script>");
@@ -76,9 +95,15 @@ public class UserServiceImpl implements UserService {
       out.println("</script>");
       out.flush();
       out.close();
-    }
-      
-    }
+  }
+}
+
+  private long calculateDaysSinceLastChange(Date lastChangeDate) {
+    // 현재 날짜와 비밀번호 변경일 사이의 날짜 차이 계산 로직
+    Date currentDate = new Date();
+    long differenceInMillis = currentDate.getTime() - lastChangeDate.getTime();
+    return TimeUnit.DAYS.convert(differenceInMillis, TimeUnit.MILLISECONDS);
+  }
     
   @Override
   public void logout(HttpServletRequest request, HttpServletResponse response) {
@@ -380,25 +405,19 @@ public class UserServiceImpl implements UserService {
     
   }
 
+  // 90일 비번 변경 요청
+  @Override
+  public UserDto changePw90(String email) {
+    return userMapper.changePw90(email);
+  }
   
   
   
-//  @Override
-//  public void sendTmpPw(String email) {
-//    
-//    String pwCode = mySecurityUtils.getRandomString(10, true, true);
-//    
-//    myJavaMailUtils.sendJavaMail(email
-//                    , "책빌리지 임시 비밀번호입니다."
-//                    , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
-//
-//    pwCode = mySecurityUtils.getSHA256(pwCode); 
-//    userMapper.tmpPw(Map.of("email", email, "pwCode", pwCode));
-//        
-//        
-//  }
+  
+  
+  
+  
 
-  // 임시 비밀번호 업데이트 
   
   
 

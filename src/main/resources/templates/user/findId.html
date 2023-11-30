@@ -95,23 +95,6 @@
   
 <script>
 
-$(document).ready(function() {
-    toggleForm('id'); // 초기 상태를 '아이디 찾기'로 설정
-});
-
-function toggleForm(formType) {
-    if (formType === 'id') {
-        $('#frm_find_id').show();
-        $('.password-form').hide();
-        $('#idTitle').css('color', 'rgb(37, 94, 188)');
-        $('#passwordTitle').css('color', '');
-    } else if (formType === 'password') {
-        $('#frm_find_id').hide();
-        $('.password-form').show();
-        $('#idTitle').css('color', '');
-        $('#passwordTitle').css('color', 'rgb(37, 94, 188)');
-    }
-}
 
 
 

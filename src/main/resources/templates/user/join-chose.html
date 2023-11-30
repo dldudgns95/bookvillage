@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('회원가입')}"></head>
+
+<script th:src="@{/js/user_join.js(ver=1.0)}"></script>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+
+    <div class="wrap wrap_7">
+      
+      <form id="frm_join_chose" th:action="@{/user/joinChose.form}">
+
+      
+          <a th:href="@{/user/agree.form}"><button type="button" id="find_id" class="btn btn-primary" style="margin-right: 20px;">일반 회원가입</button></a>
+        
+        
+          <div class="text-center">
+          <div class="text-center">
+            <a th:href="${naverLoginURL}">
+              <img th:src="@{/image/btnG_완성형.png}" width="200px0">
+            </a>
+          </div>
+          </div>
+        
+       </form>
+
+    </div>
+   
+   </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>

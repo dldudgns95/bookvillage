@@ -78,6 +78,14 @@ public class UserController {
     userService.logout(request, response);
   }
   
+
+  // 약관 동의 페이지로 이동
+  @GetMapping("/joinChose.form")
+  public String joinChoseForm() {
+    return "user/join-chose";
+  }
+  
+  
   // 약관 동의 페이지로 이동
   @GetMapping("/agree.form")
   public String agreeForm() {
