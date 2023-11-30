@@ -11,7 +11,13 @@
     <result  column="WISH_DATE"      property="wishDate" />
   </resultMap>
 
-
+  <select id="wishExists" parameterType="wishDto" resultType="int">
+    SELECT COUNT(*)
+      FROM WISH
+     WHERE ISBN = #{isbn}
+       AND USER_NO = #{userNo}  
+  </select>
+  
   <insert id="insertWish" parameterType="WishDto">
     INSERT INTO WISH(
       ISBN
@@ -23,5 +29,11 @@
     , #{wishDate}
     )
   </insert>
+
+  <delete id="deleteWish" parameterType="WishDto">
+    DELETE FROM WISH 
+     WHERE ISBN=#{isbn}
+       AND USER_NO=#{userNo}
+  </delete>
   
 </mapper>

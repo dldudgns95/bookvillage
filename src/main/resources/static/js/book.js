@@ -27,7 +27,6 @@ function saveReview() {
       return;
    }
    
-
    const starValue = selectedStar.value;
    const isbn = document.querySelector('.score input[name="isbn"]').value;
    const userNo = document.querySelector('.score input[name="userNo"]').value;
@@ -37,22 +36,19 @@ function saveReview() {
       event.preventDefault();
       return;
    }
-   // 사용자가 작성한 리뷰
    const reviewText = document.getElementById('review').value;
    
-   // 현재 시간 생성
    const currentDate = new Date();
 
-   // AJAX를 사용하여 서버에 데이터 전송
    $.ajax({
       type: 'POST',
-      url: '/book/addScore.do', // 실제 엔드포인트에 따라 수정
-      contentType: 'application/json',  // JSON 형식으로 데이터 전송
+      url: '/book/addScore.do',
+      contentType: 'application/json',
       data: JSON.stringify({isbn: isbn, userNo: userNo,  star: starValue, review: reviewText, reviewDate: currentDate.toISOString()}),  // JSON 데이터로 변환하여 전송
       success: function(response) {
          // 서버에서 받은 응답 처리
          alert("한줄평이 등록되었습니다.");
-         window.location.href = '/book/search/detail?isbn='+isbn; // 실제 이동할 페이지 경로로 수정
+         window.location.href = '/book/search/detail?isbn='+isbn; 
       },
       error: function(error) {
          console.error('AJAX 요청 에러:', error);
@@ -60,55 +56,114 @@ function saveReview() {
    });
 }
 
-//관심도서
+//관심도선
+//관심도서 토글
 $(document).ready(function() {
-  $("#addWishForm button").click(function() {
+  $("#WishForm button").click(function() {
+    const toggleWishBtn = document.getElementById('toggleWishBtn');
+    
     var currentDate = new Date();
     var timestamp = currentDate.getTime();
     document.getElementById('wishDate').value = timestamp;
     
-    // 폼 데이터 수집
     var formData = {
       userNo: $("input[name='userNo']").val(),
       isbn: $("input[name='isbn']").val(),
       wishDate: $("#wishDate").val()
-    };
-
-    // 서버로 POST 요청 보내기
-    $.ajax({
-      type: "POST",
-      url: "/book/addWish.do",  // 실제 엔드포인트에 맞게 수정
-      contentType: "application/json",
-      data: JSON.stringify(formData),
-      success: function(response) {
-        alert("관심도서에 추가되었습니다.");
-        console.log('Wish added successfully.');
-      },
-      error: function(error) {
-        console.log("Error:", error);
+  };
+  
+// checkWish 수행 후 0이면 add, 1이면 delete
+  $.ajax({
+    type: "POST",
+    url: "/book/checkWish.do",
+    contentType: "application/json",
+    data: JSON.stringify(formData),
+    success: function(response) {
+      const responseData = JSON.parse(response); // {"checkWish":0} 의 json 데이터로 값을 불러왔으므로 parse 해줘야 0만 저장됨 
+      console.log(responseData.checkWish);
+      console.log(response);
+//관심도서 추가
+      if (responseData.checkWish === 0) {
+        $.ajax({
+          type: "POST",
+          url: "/book/addWish.do",
+          contentType: "application/json",
+          data: JSON.stringify(formData),
+          success: function(response) {
+            alert("관심도서에 추가되었습니다.");
+            console.log('Wish added successfully.');
+            toggleWishBtn.classList.add("wishAdded");
+            localStorage.setItem('wishStatus', 'wishAdded');
+            toggleWishBtn.classList.remove("notAdded");
+          },
+          error: function(error) {
+            console.log("addWish Error:", error);
+          }
+        });
+//관심도서 삭제  
+      } else if (responseData.checkWish === 1) {
+         $.ajax({
+          type: "POST",
+          url: "/book/deleteWish.do",
+          contentType: "application/json",
+          data: JSON.stringify(formData),
+          success: function(response) {
+            alert("관심도서에서 삭제되었습니다.");
+            console.log('Wish deleted successfully.');
+            toggleWishBtn.classList.remove("wishAdded");
+            toggleWishBtn.classList.add("notAdded");
+            sessionStorage.setItem('wishStatus', 'notAdded');
+          },
+          error: function(error) {
+            console.log("deleteWish Error:", error);
+          }
+        });
       }
-    });
+    },
+    error: function(error) {
+      console.log("checkWish Error:", error);
+    }
   });
+ });
 });
+// 페이지 로드 시 세션 스토리지에서 상태 확인 및 클래스 적용 (페이지 나가도 관심도서 상태 유지)
+$(document).ready(function() {
+    const toggleWishBtn = document.getElementById('toggleWishBtn');
+    const wishStatus = sessionStorage.getItem('wishStatus');
+
+    if (wishStatus === 'wishAdded') {
+        toggleWishBtn.classList.add("wishAdded");
+    } else {
+        toggleWishBtn.classList.add("notAdded");
+    }
+});
+
+
+
 
 //대출
 $(document).ready(function() {
   $("#updateCheckoutForm button").click(function() {
+    var currentDate = new Date();
+    var timestamp = currentDate.getTime();
+    document.getElementById('checkoutDate').value = timestamp;
+   
 
     // 폼 데이터 수집
     var formData = {
       userNo: $("input[name='userNo']").val(),
       isbn: $("input[name='isbn']").val(),
+      checkoutDate: currentDate.toISOString()
     };
 
     // 서버로 POST 요청 보내기
     $.ajax({
       type: "POST",
-      url: "/book/updateCheckout.do",  // 실제 엔드포인트에 맞게 수정
+      url: "/book/updateCheckout.do",
       contentType: "application/json",
       data: JSON.stringify(formData),
       success: function(response) {
-        alert("대출 확인되었습니다. 대출 기간은 7일입니다.");
+        alert("대출 확인되었습니다. 반납 기한은 7일입니다.");
         console.log('Checkout update successfully.');
       },
       error: function(error) {

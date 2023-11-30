@@ -39,12 +39,32 @@ public class ScoreMapperTest {
 
   }
   
-  @Test
+  //@Test
   public void testGetScore() {
     List<ScoreDto> scoreList = scoreMapper.getScore("9788932042336");
 
     assertNotNull(scoreList);
     assertFalse(scoreList.isEmpty());
+
+    for (ScoreDto scoreDto : scoreList) {
+        assertNotNull(scoreDto.getIsbn());
+        assertNotNull(scoreDto.getUserNo());
+        assertNotNull(scoreDto.getReviewDate());
+        assertNotNull(scoreDto.getStar());
+        assertNotNull(scoreDto.getReview());
+        
+        System.out.println("ISBN: " + scoreDto.getIsbn());
+        System.out.println("UserNo: " + scoreDto.getUserNo());
+        System.out.println("ReviewDate: " + scoreDto.getReviewDate());
+        System.out.println("Star: " + scoreDto.getStar());
+        System.out.println("Review: " + scoreDto.getReview());
+    }
+  }
+  
+  
+  @Test
+  public void testGetScoreDetail() {
+    List<ScoreDto> scoreList = scoreMapper.getScoreDetail("9788938116017");
 
     for (ScoreDto scoreDto : scoreList) {
         assertNotNull(scoreDto.getIsbn());

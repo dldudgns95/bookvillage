@@ -35,12 +35,31 @@
       </choose>       
   </select>
   
+  <!--페이징 처리에 필요한 전체 갯수-->
+  <select id="getBookCount" parameterType="BookSearchDto" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK
+     WHERE 
+      <choose>
+        <when test="ss == 'total'">
+          TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'title'">
+          TITLE LIKE '%' || #{st} || '%'
+        </when>
+        <when test="ss == 'author'">
+          AUTHOR LIKE '%' || #{st} || '%'
+        </when>
+      </choose>       
+  </select>
+  
   <select id="getBookDetail" parameterType="String" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK
      WHERE ISBN = ${isbn}     
   </select>
   
+  <!--대출하기-->
   <update id="updateStatus">
     UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
   </update>
