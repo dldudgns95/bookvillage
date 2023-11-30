@@ -21,5 +21,10 @@ public interface AdminService  {
   public boolean checkFacApply(HttpServletRequest request);
   public void getBookApplyList(HttpServletRequest request, Model model);
   public void getBookApplyDetail(HttpServletRequest request, Model model);
-  
+  public void getBookCheckoutList(HttpServletRequest request, Model model);
+  public void getBookCheckoutSearchList(HttpServletRequest request, Model model);
+  public void getBookCheckoutReturnList(HttpServletRequest request, Model model);
+  public void getBookCheckoutReturnSearchList(HttpServletRequest request, Model model);
+  public int approvalBookCheckout(HttpServletRequest request);
+  public int approvalBookCheckoutReturn(HttpServletRequest request);
 }

@@ -48,8 +48,8 @@
   
   <div class="flex_main">
     <a th:href="@{/admin/bookList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서관리</h2></div></a>
-    <a th:href="@{#}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서대출</h2></div></a>
-    <a th:href="@{#}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서반납</h2></div></a>
+    <a th:href="@{/admin/bookCheckoutList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서대출</h2></div></a>
+    <a th:href="@{/admin/bookCheckoutReturnList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서반납</h2></div></a>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
