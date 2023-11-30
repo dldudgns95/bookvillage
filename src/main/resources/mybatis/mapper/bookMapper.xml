@@ -60,8 +60,24 @@
   </select>
   
   <!--대출하기-->
-  <update id="updateStatus">
+  <update id="updateBookStatus">
     UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
   </update>
+  
+  <insert id="insertCheckoutStatus" parameterType="BookDto">
+    INSERT INTO BOOK_CHECKOUT(
+      CHECKOUT_NO
+    , ISBN
+    , USER_NO
+    , STATUS
+    , CHECKOUT_DATE
+    ) VALUES(
+      BOOK_CHECKOUT_SEQ.NEXTVAL
+    , #{isbn}
+    , #{userNo}
+    , 0
+    , SYSDATE  
+    )
+  </insert>
   
 </mapper>

@@ -32,5 +32,6 @@ public interface BookService {
   
   // 대출
   public void updateCheckout(BookDto bookDto);
+  public void updateBook(BookDto bookDto);
 
 }

@@ -42,11 +42,12 @@
      WHERE ISBN = #{isbn}     
   </select>
   
+  <!-- 마이페이지 정보 조회 시 필요 -->
   <select id="getScoreDetail" parameterType="String" resultMap="ScoreMap">
     SELECT S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE, B.AUTHOR, B.STATUS
       FROM SCORE S LEFT OUTER JOIN BOOK B
         ON S.ISBN = B.ISBN
-     WHERE S.ISBN = #{isbn}     
+     WHERE S.USER_NO = #{userNo}     
   </select>
   
   

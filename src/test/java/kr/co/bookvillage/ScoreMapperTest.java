@@ -64,7 +64,7 @@ public class ScoreMapperTest {
   
   @Test
   public void testGetScoreDetail() {
-    List<ScoreDto> scoreList = scoreMapper.getScoreDetail("9788938116017");
+    List<ScoreDto> scoreList = scoreMapper.getScoreDetail("1");
 
     for (ScoreDto scoreDto : scoreList) {
         assertNotNull(scoreDto.getIsbn());

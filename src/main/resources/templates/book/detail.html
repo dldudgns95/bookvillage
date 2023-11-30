@@ -99,14 +99,17 @@
               </form>
             </li>
             <li>
-              <form th:action="@{/book/updateCheckout.do}" method="post" th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
+              <form th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
                 <input type="hidden" name="checkoutDate" id="checkoutDate" />
                 <button type="button" class="btn btn-outline-secondary">대출신청</button>
               </form>
               <button th:if="${bookDetailList[0].status == 0}" type="button" disabled='disabled' class="btn btn-outline-secondary">대출중</button>
-            </li>              
+            </li>      
+            <li>
+              <button type="button" class="btn btn-outline-secondary">이용안내</button>
+            </li>        
           </ul>
         </div>
         <hr>
@@ -121,6 +124,15 @@
               - 대출 내역은 '나만의 도서관'에서 확인할 수 있습니다.
             </dd>
           </dl>
+          <dl>
+            <dt>책빌리지 이용 안내</dt>
+            <dd>
+              - 인신공격, 명예훼손, 혐오/차별/비하/모욕적인 표현 금지<br>
+              - 저작권 분쟁의 소지가 있는 글 금지<br>
+              - 해당 상품의 내용과 무관한 저자, 출판사 등에 관한 글 금지<br>
+              - 독서 후기와 무관한 각종 문의와 요청사항은 고객센터를 이용해주세요.
+            </dd>
+          </dl>          
         </div>
         <hr>
          

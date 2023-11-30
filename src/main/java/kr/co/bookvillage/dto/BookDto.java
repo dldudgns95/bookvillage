@@ -23,4 +23,7 @@ public class BookDto {
   private String categoryName;
   private int categoryId;
   
+  //insertBookCheckoutDto를 위한 것
+  private int UserNo;
+  
 }
