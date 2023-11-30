@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 200px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .table td {
+    text-align: center;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">신청번호</th>
+              <th scope="col">회원이름</th>
+              <th scope="col">신청도서명</th>
+              <th scope="col">저자</th>
+              <th scope="col">출판사</th>
+              <th scope="col">신청현황</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <th:block th:if="${#lists.isEmpty(bookApplyList)}">
+              <tr><td colspan="7">검색된 회원이 없습니다.</td></tr>
+            </th:block>
+            <th:block th:each="book,vs:${bookApplyList}">
+              <tr>
+                <td scope="row" th:text="${book.applyNo}"></td>
+                <td scope="row" th:text="${book.userDto.name}"></td>
+                <td scope="row" th:text="${book.bookName}"></td>
+                <td scope="row" th:text="${book.author}"></td>
+                <td scope="row" th:text="${book.publisher}"></td>
+                <td scope="row">
+                  <th:block th:if="${book.status == 0}">
+                    신청중
+                  </th:block>
+                  <th:block th:if="${book.status == 1}">
+                    신청완료
+                  </th:block>
+                </td>
+                <td scope="row">
+                  <form th:action="@{/admin/bookApplyDetail.do}" method="get">
+                    <input type="hidden" name="applyNo" th:value="${book.applyNo}">
+                    <button type="submit" class="btn btn-primary">상세</button>
+                  </form>
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+          <tfoot class="tfoot_center">
+            <td colspan="7">
+              <div th:utext="${paging}"></div>
+            </td>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+   
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
