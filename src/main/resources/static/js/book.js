@@ -145,26 +145,38 @@ $(document).ready(function() {
 $(document).ready(function() {
   $("#updateCheckoutForm button").click(function() {
     var currentDate = new Date();
-    var timestamp = currentDate.getTime();
-    document.getElementById('checkoutDate').value = timestamp;
+    document.getElementById('checkoutDate').value = currentDate;
    
 
     // 폼 데이터 수집
     var formData = {
       userNo: $("input[name='userNo']").val(),
       isbn: $("input[name='isbn']").val(),
-      checkoutDate: currentDate.toISOString()
+      checkoutDate: $("#checkoutDate").val()
     };
 
     // 서버로 POST 요청 보내기
+    $.ajax({
+      type: "POST",
+      url: "/book/updateBook.do",
+      contentType: "application/json",
+      data: JSON.stringify(formData),
+      success: function(response) {
+        alert("대출 확인되었습니다. 반납 기한은 7일입니다.");
+        console.log('Book Status update successfully.');
+      },
+      error: function(error) {
+        console.log("Error:", error);
+      }
+    });
+    
     $.ajax({
       type: "POST",
       url: "/book/updateCheckout.do",
       contentType: "application/json",
       data: JSON.stringify(formData),
       success: function(response) {
-        alert("대출 확인되었습니다. 반납 기한은 7일입니다.");
-        console.log('Checkout update successfully.');
+        console.log('Checkout Status insert successfully.');
       },
       error: function(error) {
         console.log("Error:", error);
