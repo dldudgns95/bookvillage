@@ -12,6 +12,7 @@ import kr.co.bookvillage.dto.ScoreDto;
 @Mapper
 public interface BookMapper {
   public List<BookDto> getBook(BookSearchDto bookSearchDto);
+  public int getBookCount(BookSearchDto bookSearchDto);
   public List<BookDto> getBookDetail(String isbn);
   public void updateStatus(BookDto bookDto);
 }

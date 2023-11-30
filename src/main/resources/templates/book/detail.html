@@ -2,6 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.10.1/chart.min.js"></script>
 
 
 <body>
@@ -50,11 +51,11 @@
             
     <div class="wrap wrap_flex">
       <div class="column-2">
-        <br><br><br><br><br>
+
       </div>
       
       <div class="column-8">
-        <div class="detail_menu">
+        <div class="detail_bar">
           <a href="javascript:void(0);" id="BackToSearch"><i class="fa-solid fa-arrow-left"></i> 검색 결과로 돌아가기</a>
         </div>
         <hr>
@@ -82,30 +83,75 @@
               
             </table>
             <div><span th:text="${bookDetail.description}"></span></div>
+
           </div>          
         </div>
         <hr>
         
-        <div class="detail_btn">
-          <ul>
+        <div>
+          <ul class="detail_menu">
             <li>
-              <form method="post" id="addWishForm">
+              <form method="post" id="WishForm">
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
                 <input type="hidden" id="wishDate" name="wishDate" />
-                <button type="button">관심도서</button>
+                <button type="button" id="toggleWishBtn" class="btn btn-outline-secondary" th:classappend="${listWish?.status == 1 ? 'wishAdded' : 'notAdded'}">관심 </button>
               </form>
             </li>
             <li>
               <form th:action="@{/book/updateCheckout.do}" method="post" th:if="${bookDetailList[0].status == 1}" id="updateCheckoutForm">
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
-                <button type="button">대출신청</button>
+                <input type="hidden" name="checkoutDate" id="checkoutDate" />
+                <button type="button" class="btn btn-outline-secondary">대출신청</button>
               </form>
+              <button th:if="${bookDetailList[0].status == 0}" type="button" disabled='disabled' class="btn btn-outline-secondary">대출중</button>
             </li>              
           </ul>
         </div>
         <hr>
+        
+        <div class="detail_guide">
+          <dl>
+            <dt>책빌리지 대출 안내</dt>
+            <dd>
+              - 도서는 7일동안 대출 가능합니다.<br>
+              - 연체되었을 경우 ?일동안 대출 불가합니다.<br>
+              - 5권까지 대출 가능합니다.<br>
+              - 대출 내역은 '나만의 도서관'에서 확인할 수 있습니다.
+            </dd>
+          </dl>
+        </div>
+        <hr>
+         
+        <h4 class="detail_title">평점 분포</h4>
+        <h5>평균 ★: </h5>
+        <hr>
+         
+        <h4 class="detail_title">한줄평</h4>
+        <span th:if="${scoreList.isEmpty()}">등록된 한줄평이 없습니다.</span>
+        <div class="score_list" th:each="score : ${scoreList}">
+          <div>
+            <span th:if="${score.review}">
+                <span th:text="${score.review}"></span>
+                <span th:text="${score.reviewDate}"></span>
+                <span th:if="${score.star == 5}" >★★★★★</span>
+                <span th:if="${score.star == 4}" >★★★★☆</span>
+                <span th:if="${score.star == 3}" >★★★☆☆</span>
+                <span th:if="${score.star == 2}" >★★☆☆☆</span>
+                <span th:if="${score.star == 1}" >★☆☆☆☆</span>
+            </span>
+                        
+            <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">    
+              <!-- 삭제 버튼 -->
+              <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'정말로 삭제하시겠습니까?\')'"><i class="fa-solid fa-xmark"></i></a>
+            </span>
+            <span class="my_score" th:unless="${score.userNo != null and score.userNo == session?.user?.userNo}">    
+              <!-- 추천 버튼 -->
+              <a th:href="@{/book/likeScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'추천하시겠습니까?\')'"><i class="fa-regular fa-thumbs-up"></i></a>
+            </span>
+          </div>
+        </div>        
          
         <div class="detail_score">
           <form name="score" id="score" class="score" method="post">
@@ -120,8 +166,9 @@
               <input type="radio" name="star" class="star" value="2" id="rate4"><label for="rate4">★</label>
               <input type="radio" name="star" class="star" value="1" id="rate5"><label for="rate5">★</label>
             </fieldset>
-            <div>
-              <textarea type="text" id="review" class="review" maxlength="500" placeholder="한줄평을 남겨주세요(500자 이하)"></textarea>
+            <div class="detail_review">
+              <textarea th:if="${session.user?.userNo == null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" disabled="disabled" placeholder="로그인 후 입력가능합니다."></textarea>
+              <textarea th:if="${session.user?.userNo != null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" placeholder="한줄평을 남겨주세요(100자 이하)"></textarea>
               <input type="button" value="등록" title="등록" class="btn btn-outline-secondary" onclick="saveReview()">
             </div>
           </form>
@@ -129,18 +176,9 @@
         <hr>
         
         
-        <h4>한줄평</h4>
-        <div class="score_list" th:each="score : ${scoreList}">
-          <div>
-            <span th:if="${score.review}" th:text="${score.review}"></span>
-            <span th:unless="${score.review}">No review available</span>
-            
-            <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">    
-              <!-- 삭제 버튼 -->
-              <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'정말로 삭제하시겠습니까?\')'"><i class="fa-solid fa-xmark"></i></a>
-            </span>
-          </div>
-        </div>
+
+        
+        <canvas id="line-chart" width="400" height="200"></canvas>
 
       </div>
       

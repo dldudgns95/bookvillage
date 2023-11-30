@@ -22,4 +22,5 @@ public class BookDto {
   private int status;
   private String categoryName;
   private int categoryId;
+  
 }
