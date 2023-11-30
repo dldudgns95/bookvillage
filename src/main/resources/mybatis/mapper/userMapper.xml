@@ -153,7 +153,13 @@
       FROM USER_T
      WHERE SYSDATE - PW_MODIFIED_DATE >= 90
        AND EMAIL = #{email}
+       AND STATE = 0
+       AND (AUTH = 1 OR AUTH = 0)
   </select>
+  
+  <insert id="insertInactiveUser">
+    
+  </insert>
   
   
   

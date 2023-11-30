@@ -109,12 +109,23 @@ $(document).ready(() => {
       // 3. 임시 비번 인증 메일 발송
       $.ajax({
         type: 'post', 
-        url: '/user/sendTmpPw.do',
+        url: '/user/sendTmpCodes.do',
         contentType: 'application/json', 
         data: JSON.stringify({ email: email }), 
         success: (resData) => {
           console.log('Ajax 요청 성공', resData);
-          alert(email + "로 임시 비밀번호를 전송했습니다.");
+          alert(email + "로 인증코드를 전송했습니다.");
+          $('#pwCode').prop('disabled', false);
+                    $('#btn_verify_code').prop('disabled', false);
+                    $('#btn_verify_code').click(() => {
+                        emailPassed = $('#pwCode').val() === resData.pwCode;
+                        if (emailPassed) {
+                            alert('이메일이 인증되었습니다. 메일함에 임시비밀번호를 확인하세요');
+                            $('#frm_find_password').submit();
+                        } else {
+                            alert('이메일 인증이 실패했습니다.');
+                        }
+                    })
         },
       });
     }).catch((state) => {

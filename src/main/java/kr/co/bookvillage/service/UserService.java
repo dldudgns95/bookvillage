@@ -32,10 +32,10 @@ public interface UserService {
   public UserDto findId(String name, String mobile);
  
   // 임시 비밀번호 메일 보내기
-  public ResponseEntity<Map<String, Object>> sendTmpPw(String email);
-  
-  // 90일 비번...
-  public UserDto changePw90(String email);
+  public ResponseEntity<Map<String, Object>> sendTmpCode(String email);
+  public int updateTmpPw(String email);
+
+
   
   
   

@@ -149,14 +149,20 @@ public class UserController {
   
   
   // 임시 비번 발송 및 업데이트
-  @PostMapping(value = "/sendTmpPw.do", produces = MediaType.APPLICATION_JSON_VALUE)
+  @PostMapping(value = "/sendTmpCodes.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestBody Map<String, String> requestBody) {
       String email = requestBody.get("email");
-      return userService.sendTmpPw(email);
+      return userService.sendTmpCode(email);
   }
 
 
-
+  //
+  @PostMapping("/sendTmpPw.do")
+  public String sendTmpPw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", userService.updateTmpPw(request.getParameter("email")));
+    
+    return "redirect:/main.do";
+  }
   
 
   

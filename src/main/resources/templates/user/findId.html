@@ -65,7 +65,7 @@
       
       <!-- 비밀번호 찾기 폼 -->
       <div class="password-form">
-        <form id="frm_find_password" class="mt-5" method="post" th:action="@{/user/findPassword.do}">
+        <form id="frm_find_password" class="mt-5" method="post" th:action="@{/user/sendTmpPw.do}">
 
 
         <div class="row mb-2">
@@ -75,6 +75,11 @@
           <div class="col-sm-3"></div>
           <div class="col-sm-9" id="msg_emailTmpPW"></div>
         </div>
+
+        <div class="row mb-2">
+          <div class="col-sm-8"><input type="text" id="pwCode" class="form-control" placeholder="인증코드입력" disabled></div>
+          <div class="col-sm-4 d-grid gap-2"><button type="button" class="btn btn-dark" id="btn_verify_code" disabled>인증하기</button></div>
+        </div>       
         
         <hr>
        
