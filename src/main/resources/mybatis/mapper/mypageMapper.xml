@@ -69,16 +69,18 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <select id="getUserBookCheckoutCount" parameterType="Map" resultType="int">
+  <select id="getUserBookCheckoutCount" parameterType="int" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
   </select>
   
   <select id="getUserBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
     SELECT A.CHECKOUT_NO, A.USER_NO, A.ISBN, A.STATUS, A.CHECKOUT_DATE, A.START_DATE, A.DUE_DATE, A.END_DATE , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, BC.CHECKOUT_NO, BC.USER_NO, BC.ISBN, BC.STATUS, BC.CHECKOUT_DATE, BC.START_DATE, BC.DUE_DATE, BC.END_DATE, B.TITLE
               FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
-                ON B.ISBN = BC.ISBN) A
+                ON B.ISBN = BC.ISBN
+             WHERE BC.USER_NO = #{userNo}) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   

@@ -18,7 +18,7 @@
   }
   
   .mypage {
-    width: 700px;
+    width: 800px;
     height: 500px;
     display: inline-block;
     text-align: center; 
@@ -54,7 +54,6 @@
           <li th:text="|회원상태:${session.user.status}|"></li>
         </ul>
       </div>
-      <input type="hidden" name="userNo" th:value="${session.user.userNo}">
       <table border="1" class="table table-hover">
         <thead>
           <tr>
@@ -62,11 +61,15 @@
             <td>도서명</td>
             <td>대출일자</td>
             <td>반납예정일</td>
+            <td>대출상태</td>
             <td>반납연기</td>
           </tr>
         </thead>
         <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->
        <tbody>
+         <tr th:if="${#lists.isEmpty(bookList)}">
+           <td colspan="5">대출내역이없습니다.</td>
+          </tr>
           <th:block th:if="${not #lists.isEmpty(bookList)}">
             <th:block th:each="book : ${bookList}">
               <tr th:if="${session.user.userNo eq book.userDto.userNo}">
@@ -74,8 +77,24 @@
                 <td th:text="${book.bookDto.title}"></td>
                 <td th:text="${book.checkoutDate}"></td>
                 <td th:text="${book.dueDate}"></td>
-                <td><button type="button" id="btn_delay" class="btn btn-success">연기신청</button></td>
+                <td>
+                  <th:block th:if="${book.status == 1}">
+                    대출중
+                  </th:block>
+                  <th:block th:if="${book.status == 2}">
+                    반납완료
+                  </th:block>
+                </td>
+                <!--/* <form method="get" th:action="/mypage/delayBookCheckout.do"> */-->
+                <td th:if="${book.status == 1}">
+                  <form method="get" th:action="@{/mypage/delayBookCheckout.do}">
+                  <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
+                  <button type="submit" id="btn_delay" class="btn btn-success">연기신청</button>
+                  </form>
+                </td>
+              
               </tr>
+              
              </th:block>
           </th:block>
         </tbody>
@@ -95,14 +114,14 @@
   <script th:inline="javascript">
     
     const fnDelayCheckout = () => {
-      $('#btn_delay').click(() => {
         let delayResult = /*[[${delayResult}]]*/ null;
         if(delayResult !== null) {
-          alert('연기신청을 완료했습니다.');
-        } else {
+          if(delayResult === 1) {
+          alert('연기신청을 완료했습니다.');           
+          } else {
           alert('연기신청이 불가능합니다.');
-        }
-      })
+          }
+        } 
     }
     
     fnDelayCheckout();

@@ -114,15 +114,19 @@ public class MypageServiceImpl implements MypageService {
   @Override
   public void loadBookCheckoutList(HttpServletRequest request, Model model) {    
     
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
-    int total = mypageMapper.getUserBookCheckoutCount();    
+    int total = mypageMapper.getUserBookCheckoutCount(userNo);    
     int display = 10;
     
     adminPageUtils.setPaging(page, total, display);
     
     Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
-                                    ,"end", adminPageUtils.getEnd());
+                                   , "end", adminPageUtils.getEnd()
+                                   , "userNo", userNo);
     
     List<BookCheckoutDto> bookList = mypageMapper.getUserBookCheckoutList(map);
     

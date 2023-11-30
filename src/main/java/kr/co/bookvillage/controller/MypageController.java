@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -71,13 +72,12 @@ public class MypageController {
   
   // 도서대출연기신청(대출상태가 대출중인경우에만가능) - 수정해야함
   @GetMapping("/delayBookCheckout.do")
-  public String delayBookCheckout(@RequestParam(value="checkoutNo", required=false, defaultValue="0") int checkoutNo) {
+  public String delayBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    System.out.println("checkoutNo : " + checkoutNo);
     int delayResult = mypageService.delayBookCheckout(checkoutNo);
-    if(delayResult == 1) {
-      return "redirect:/mypage/booklist";
-    } else {
-      return "redirect:/mypage/list";
-    }
+    redirectAttributes.addFlashAttribute("delayResult", delayResult);
+    return "redirect:/mypage/booklist.do";
   }
   
   
