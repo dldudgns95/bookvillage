@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 
@@ -69,7 +68,16 @@ public class MypageController {
     return "mypage/review";
   }
   
-  
+  // 도서대출연기신청(대출상태가 대출중인경우에만가능) - 수정해야함
+  @GetMapping("/delayBookCheckout.do")
+  public String delayBookCheckout(@RequestParam(value="checkoutNo", required=false, defaultValue="0") int checkoutNo) {
+    int delayResult = mypageService.delayBookCheckout(checkoutNo);
+    if(delayResult == 1) {
+      return "redirect:/mypage/booklist";
+    } else {
+      return "redirect:/mypage/list";
+    }
+  }
   
   
   

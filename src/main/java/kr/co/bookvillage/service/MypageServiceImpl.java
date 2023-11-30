@@ -1,7 +1,6 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -126,6 +125,11 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/booklist.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
 
+  }
+  
+  @Override
+  public int delayBookCheckout(int checkoutNo) {
+    return mypageMapper.updateDueDate(checkoutNo);
   }
 
 }

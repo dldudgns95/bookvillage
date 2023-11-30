@@ -15,4 +15,5 @@ public interface MypageService {
   public ResponseEntity<Map<String, Object>> modify(HttpServletRequest request);
   public void modifyPw(HttpServletRequest request, HttpServletResponse response);
   public void loadBookCheckoutList(HttpServletRequest requests, Model model);
+  public int delayBookCheckout(int checkoutNo);
 }
