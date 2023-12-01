@@ -9,8 +9,13 @@ import kr.co.bookvillage.dto.ScoreDto;
 @Mapper
 public interface ScoreMapper {
   public int insertScore(ScoreDto scoreDto);
+<<<<<<< HEAD
   public List<ScoreDto> getScore(String isbn);
   public List<ScoreDto> getScoreDetail(String userNo);
+=======
+  public List<ScoreDto> getScoreList(String isbn);
+  public List<ScoreDto> getMyScoreList(String userNo);
+>>>>>>> munju
   public void deleteScore(ScoreDto scoreDto);
 
 }

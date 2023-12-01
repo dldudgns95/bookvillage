@@ -143,16 +143,16 @@ $(document).ready(function() {
 
 //대출
 $(document).ready(function() {
+    function refresh(){
+    location.reload(); //페이지 새로고침 없이 리로드
+  }
+  
   $("#updateCheckoutForm button").click(function() {
-    var currentDate = new Date();
-    document.getElementById('checkoutDate').value = currentDate;
-   
 
     // 폼 데이터 수집
     var formData = {
       userNo: $("input[name='userNo']").val(),
       isbn: $("input[name='isbn']").val(),
-      checkoutDate: $("#checkoutDate").val()
     };
 
     // 서버로 POST 요청 보내기
@@ -177,6 +177,7 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       success: function(response) {
         console.log('Checkout Status insert successfully.');
+        refresh();
       },
       error: function(error) {
         console.log("Error:", error);
