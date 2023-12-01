@@ -411,6 +411,52 @@ public class UserServiceImpl implements UserService {
 
   }
   
+  // 카카오 가입
+  @Override
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    String mobile = request.getParameter("mobile");
+    String email = request.getParameter("email");
+  //  String pw = request.getParameter("pw");
+    String name = request.getParameter("name");
+    String gender = request.getParameter("gender");
+    
+    UserDto user = UserDto.builder()    
+                          .mobile(mobile)
+                          .email(email)
+  //                       .pw(pw)
+                          .name(name)
+                          .gender(gender)
+                          .build();
+    
+    int kakaoJoinResult = userMapper.kakaoJoin(user);
+    
+  try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(kakaoJoinResult == 1) {
+        request.getSession().setAttribute("user", userMapper.getUser(Map.of("email", email)));
+        userMapper.insertAccess(email);
+        out.println("alert('카카오 간편가입이 완료되었습니다.')");
+      } else {
+        out.println("alert('카카오 간편가입이 실패했습니다.')");
+      }
+      out.println("location.href='" + request.getContextPath() + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
+  
+    
+  
+  
+  
   // 카카오 로그인1.. 
   @Override
   public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
@@ -432,28 +478,24 @@ public class UserServiceImpl implements UserService {
   // 카카오 로그인2..
   @Override
   public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception {
-
-//https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=account_email,gender
-    
-    
-    String grant_type = "authorization_code";
-    String redirect_uri = URLEncoder.encode("http://localhost:8080/" + "user/kakao/getAccessToken.do", "UTF-8");
     
     String apiURL ="https://kauth.kakao.com/oauth/token";
+    String grant_type = "authorization_code";
+    
     String code =request.getParameter("code");
+    String state =request.getParameter("state");
     
     StringBuilder sb = new StringBuilder();
     sb.append(apiURL);
-    sb.append("?grant_type").append(grant_type);
-    sb.append("&client_id").append(ka_Client_id);
-    sb.append("&redirect_uri").append(redirect_uri);
-    sb.append("&code").append(code);
-    
+    sb.append("?grant_type=").append(grant_type);
+    sb.append("&client_id=").append(ka_Client_id);
+    sb.append("&code=").append(code);
+    sb.append("&state=").append(state);
     
     // 요청
     URL url = new URL(sb.toString());
     HttpURLConnection con = (HttpURLConnection)url.openConnection();
-    con.setRequestMethod("POST"); 
+    con.setRequestMethod("GET"); 
     
     // 응답
     BufferedReader reader = null;
@@ -474,9 +516,72 @@ public class UserServiceImpl implements UserService {
     return obj.getString("access_token");
   }
   
+  // 카카오 3..
+  //https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
+ @Override
+ public UserDto getKakaoProfile(String accessToken) throws Exception {
+ 
+   String apiURL = "https://kapi.kakao.com/v2/user/me";
+   URL url = new URL(apiURL);
+   HttpURLConnection con = (HttpURLConnection)url.openConnection();
+   con.setRequestMethod("GET");
+   con.setRequestProperty("Authorization", "Bearer " + accessToken);
+   
+   // 응답
+   BufferedReader reader = null;
+   int responseCode = con.getResponseCode();
+   if(responseCode == 200) {
+     reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+   } else {
+     reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+   }
+   String line = null;
+   StringBuilder responseBody = new StringBuilder();
+   while ((line = reader.readLine()) != null) {
+     responseBody.append(line);
+   }
+   
+   JSONObject obj = new JSONObject(responseBody.toString());
+   
 
+   JSONObject kakaoAccount = obj.getJSONObject("kakao_account");
+
+   
+   
+   UserDto user = UserDto.builder()    
+       .email(kakaoAccount.getString("email"))
+       .name(kakaoAccount.getString("name"))
+       .gender(kakaoAccount.getString("gender"))
+       .mobile(kakaoAccount.getString("phone_number"))
+                         .build();
+   
   
+   
+   return user;
+   
+ }
   
+  @Override
+  public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
+      throws Exception {
+    String email = kakaoProfile.getEmail();
+    UserDto user = userMapper.getUser(Map.of("email", email));
+    
+    if(user != null) {
+      request.getSession() .setAttribute("user", user);
+      userMapper.insertAccess(email);
+      } else {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>");
+        out.println("alert('일치하는 회원 정보가 없습니다.')");
+        out.println("location.href='" + request.getContextPath() + "/main.do'");
+        out.println("</script>");
+        out.flush();
+        out.close();
+        
+      }
+  }
 
 
 }

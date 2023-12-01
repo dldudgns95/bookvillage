@@ -22,8 +22,9 @@
 </style>
 
 <body>
-
   <div th:replace="~{/layout/header::header}"></div>
+
+  <div class="main_wrap">
   <div class="parent">
     <div class="wrap wrap_9">
       <div class="child1">
@@ -66,6 +67,8 @@
 	        </th:block>
 	      </div> 
    </div>
+   </div>
+   
    </div>
    <script th:inline="javascript">
  var frmBtn = $('#frm_btn');
@@ -114,5 +117,8 @@
       	 
    </script>
 </div>
+
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
 </body>
 </html>

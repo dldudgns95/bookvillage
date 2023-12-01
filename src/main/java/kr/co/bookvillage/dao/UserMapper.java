@@ -31,6 +31,10 @@ public interface UserMapper {
   public int tmpPwMdDay(UserDto user);
   
   public UserDto changePw90(String email);
+  
+  public int updatePw90(UserDto user);
+  
+  public int kakaoJoin(UserDto user);
 
   
 }

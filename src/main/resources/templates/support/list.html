@@ -4,6 +4,24 @@
 <head th:replace="~{/layout/header::head('공지사항')}"></head>
 
 <style>
+  
+    .parent {
+    display: flex;
+    align-items: stretch; /* 자식 요소들의 높이를 부모에 맞춤 */
+  }
+
+  .child1 {
+    width: 100px;
+    margin-top: 50px;
+    margin-right: 20px;
+    background-color: lightsteelblue;
+    text-align: center;
+  }
+
+  .child2 {
+    flex: 1; /* 남은 공간을 모두 차지 */
+    text-align: center;
+  }
 	div.child1{
 		width: 100px;
 		height: 300px;
@@ -27,6 +45,9 @@
 <body>
 
   <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+  
   <div class="parent">
     <div class="wrap wrap_9">
       <div class="child1">
@@ -49,6 +70,8 @@
 
       <div id="notice_list" class="notice_list"></div>
 
+   	  </div>
+   	  
    	  </div>
    	  
    <script th:inline="javascript">
@@ -152,6 +175,9 @@
       fnRemoveResult();
     
    </script>
-</div>
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
 </body>
 </html>

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.UserService;
@@ -46,6 +44,8 @@ public class UserController {
     model.addAttribute("referer", referer);
     // 네이버로그인-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
+    model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request) );
+
     return "user/login";
   }
   
@@ -58,11 +58,25 @@ public class UserController {
   }
   
   @GetMapping("/kakao/getAccessToken.do")
-  public String geKakaotAccessToken(HttpServletRequest request) throws Exception {
-    String kakaoAccessToken = userService.getKakaoLoginAccessToken(request);
-    return "redirect:/user/kakao/getProfile.do?accessToken=" + kakaoAccessToken;
+  public String KakaotAccessToken( HttpServletRequest request ) throws Exception {
+      String accessToken = userService.getKakaoLoginAccessToken(request);
+      return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
   }
-  
+
+
+  @GetMapping("/kakao/getProfile.do")
+  public  String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken")); 
+    UserDto user = userService.getUser(kakaoProfile.getEmail());
+
+    if(user == null) {
+      model.addAttribute("kakaoProfile", kakaoProfile);
+      return "user/kakao_join";
+    } else {
+      userService.kakaoLogin(request, response, kakaoProfile);
+      return "redirect:/main.do";
+    }
+  }
   
   
   @GetMapping("/naver/getProfile.do")
@@ -84,6 +98,11 @@ public class UserController {
   
   @PostMapping("/naver/join.do")
   public void naverJoin(HttpServletRequest request, HttpServletResponse response) {
+    userService.naverJoin(request, response);
+  }
+  
+  @PostMapping("/kakao/join.do")
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) {
     userService.naverJoin(request, response);
   }
   

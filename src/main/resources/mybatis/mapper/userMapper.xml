@@ -151,14 +151,48 @@
   <select id="changePw90" parameterType="String" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
-     WHERE SYSDATE - PW_MODIFIED_DATE >= 90
+     WHERE SYSDATE - PW_MODIFIED_DATE  >= 90
        AND EMAIL = #{email}
        AND STATE = 0
        AND (AUTH = 1 OR AUTH = 0)
   </select>
   
-
+  <update id="updatePw90" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW_MODIFIED_DATE = SYSDATE
+     WHERE EMAIL = #{email}
+       AND AUTH = 0
+       AND TO_DATE(SYSDATE) - TO_DATE(NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90;
+  </update>
   
+  <insert id="kakaoJoin" parameterType="UserDto" >
+     INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , NAME
+      , MOBILE
+      , GENDER
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_DATE
+      , JOINED_DATE
+      , STATUS
+      ) VALUES (
+          USER_T_SEQ.NEXTVAL
+        , #{email}
+        , #{name}
+        , #{mobile}
+        , #{gender}
+        , #{agree}
+        , 2
+        , 0
+      , SYSDATE
+      , SYSDATE
+      , 1
+     )
+    
+  </insert>
   
   
 </mapper>
