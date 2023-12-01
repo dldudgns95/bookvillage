@@ -44,7 +44,7 @@
   display: inline-block;
 }
 
-/*searchResult*/
+/*result*/
 /*2단 레이아웃*/
 .column-2 {
     flex: 2;
@@ -54,7 +54,6 @@
 .column-8 {
     flex: 8;
 }
-
 /*검색 리스트*/
 .search_list {
   display: flex;

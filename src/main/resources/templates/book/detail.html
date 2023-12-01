@@ -105,7 +105,7 @@
                 <input type="hidden" name="checkoutDate" id="checkoutDate" />
                 <button type="button" class="btn btn-outline-secondary">대출신청</button>
               </form>
-              <button th:if="${bookDetailList[0].status == 0}" type="button" disabled='disabled' class="btn btn-outline-secondary">대출중</button>
+              <button th:if="${bookDetailList[0].status == 0}" type="button" disabled='disabled' class="btn btn-outline-secondary" id="checkout_btn">대출중</button>
             </li>      
             <li>
               <button type="button" class="btn btn-outline-secondary">이용안내</button>

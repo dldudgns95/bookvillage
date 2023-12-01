@@ -14,13 +14,12 @@ import org.springframework.ui.Model;
 import kr.co.bookvillage.dao.BookMapper;
 import kr.co.bookvillage.dao.ScoreMapper;
 import kr.co.bookvillage.dao.WishMapper;
-import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.WishDto;
-import kr.co.bookvillage.util.AdminFileUtils;
 import kr.co.bookvillage.util.AdminPageUtils;
+import kr.co.bookvillage.util.BookPageUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,28 +35,33 @@ public class BookServiceImpl implements BookService {
   private final ScoreMapper scoreMapper;
   private final WishMapper wishMapper;
   private final MyPageUtils myPageUtils;
-  private final AdminPageUtils adminPageUtils;
-  private final AdminFileUtils adminFileUtils;
+  private final BookPageUtils bookPageUtils;
   
   
   // 책 검색
   @Override
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
-    List<BookDto> bookSearchList = bookMapper.getBook(bookSearchDto);
-    model.addAttribute("bookSearchList", bookSearchList);
     
     //페이징
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-    int page = Integer.parseInt(opt.orElse("1"));
-    int total = bookMapper.getBookCount(bookSearchDto);
+    int page = Integer.parseInt(opt.orElse("1")); //page 값이 전달되지 않으면 1로 본다.
     int display = 10;
+    int total = bookMapper.getBookCount(bookSearchDto);
     
-    adminPageUtils.setPaging(page, total, display);
-    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    bookPageUtils.setPaging(page, total, display);
     
-    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result"));
-    model.addAttribute("beginNo", total - (page - 1) * display);
+    int pageIndex = bookSearchDto.getSt().indexOf("?page");
+    if (pageIndex != -1) {
+      bookSearchDto.setSt(bookSearchDto.getSt().substring(0, pageIndex));
+    }
+    Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt());
+    
+    List<BookDto> bookSearchList = bookMapper.getBook(map);
+    model.addAttribute("bookSearchList", bookSearchList);
+    
+    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result"));
     model.addAttribute("totalCount", total);
+    
     
   }
   
@@ -88,7 +92,7 @@ public class BookServiceImpl implements BookService {
     scoreMapper.deleteScore(scoreDto);        
   }
   
-  // 한줄평 좋아요 (남의 것만 가능) --구현안됨.. 그냥 1올라가고 끝임 두번 눌러도 다른 사람이 눌러도 올라가지 않는다. 디비써야하나
+  // 한줄평 좋아요 (남의 것만 가능) --구현안됨
   @Override
   public void likeScore(ScoreDto scoreDto, Model model) {
     scoreDto.setRecommend(scoreDto.getRecommend()+1);
