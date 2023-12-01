@@ -39,6 +39,14 @@
     height: 41px;
   }
   
+  .book_checkout {
+    width: 1000px;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
 </style>
 
 <body>
@@ -52,13 +60,15 @@
       </a>
       <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
       <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서등록</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서대출</a>
       <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
     </div>
     
     <div class="admin_contents">
-      <div>
+      <div class="book_checkout">
         <table class="table">
           <thead>
             <tr>
@@ -66,7 +76,7 @@
               <th scope="col">대출회원번호</th>
               <th scope="col">대출회원이름</th>
               <th scope="col">대출도서ISBN</th>
-              <th scope="col">대출도서명</th>
+              <th scope="col" class="table_title">대출도서명</th>
               <th scope="col">대출현황</th>
               <th scope="col"></th>
             </tr>
@@ -98,6 +108,7 @@
                 </td>
                 <td scope="row">
                   <form class="frm_book_checkout" th:action="@{/admin/approvalBookCheckout.do}" method="post">
+                    <input type="hidden" name="userNo" th:value="${book.userDto.userNo}">
                     <input type="hidden" name="checkoutNo" th:value="${book.checkoutNo}">
                     <button type="submit" class="btn btn-primary">대출승인</button>
                   </form>

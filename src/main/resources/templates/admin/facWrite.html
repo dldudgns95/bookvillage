@@ -106,7 +106,9 @@
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
       <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서등록</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
       <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
@@ -129,6 +131,8 @@
           <input class="form-control" type="file" id="files" name="files">
         </div>
         <div>
+          <input type="hidden" id="checkStatus" name="checkStatus" value="0">
+          <button type="submit" class="btn btn-primary" id="btn_write_mac">(맥)시설 등록완료</button>
           <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
         </div>
       </form>
@@ -136,27 +140,35 @@
     
     <script>
       
-      $('.frm_fac_write').submit((ev) => {
-        if(!confirm('시설을 등록하시겠습니까?')) {
-          ev.preventDefault();
-          return;
-        }
-        if($('#facName').val() === '') {
-          alert('시설명을 입력해주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('#facContent').val() === ''){
-          alert('시설 설명을 적어주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('#files').val() === '') {
-          alert('파일 이미지를 선택해주세요.');
-          ev.preventDefault();
-          return;
-        }
-      })
+      const fnCheckFac = () => {
+        $('#btn_write_mac').click((ev) => {
+          $(ev.target).prev().val(1);
+        })
+        $('.frm_fac_write').submit((ev) => {
+         
+          if($('#facName').val() === '') {
+            alert('시설명을 입력해주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if($('#facContent').val() === ''){
+            alert('시설 설명을 적어주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if($('#files').val() === '') {
+            alert('파일 이미지를 선택해주세요.');
+            ev.preventDefault();
+            return;
+          }
+          if(!confirm('시설을 등록하시겠습니까?')) {
+            ev.preventDefault();
+            return;
+          }
+        })
+      }
+      
+      fnCheckFac();
       
     </script>
 

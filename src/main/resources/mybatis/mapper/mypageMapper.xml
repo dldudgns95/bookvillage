@@ -4,8 +4,58 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="kr.co.bookvillage.dao.MypageMapper">
+  
+  <resultMap type="BookCheckoutDto" id="BookCheckoutMap">
+    <id      column="CHECKOUT_NO"   property="checkoutNo" /> 
+    <result  column="STATUS"        property="status" />
+    <result  column="CHECKOUT_DATE" property="checkoutDate" />
+    <result  column="START_DATE"    property="startDate" />
+    <result  column="DUE_DATE"      property="dueDate" />
+    <result  column="END_DATE"      property="endDate" />
+    <association javaType="UserDto" property="userDto">
+    <id column="USER_NO" property="userNo" />     
+    </association>
+    <association javaType="BookDto" property="bookDto">
+      <id        column="ISBN"           property="isbn"/>
+      <result    column="TITLE"          property="title" />
+      <result    column="COVER"          property="cover" />
+      <result     column="AUTHOR"        property="author" />
+      <result     column="PUBLISHER"     property="publisher" />
+      <result     column="PUBDATE"       property="pubdate" />
+      <result     column="DESCRIPTION"   property="description" />
+      <result     column="CATEGORY_NAME" property="categoryName" />
+      <result     column="CATEGORY_ID"   property="categoryId" />
+    </association>
+  </resultMap>
+  
+  <resultMap id="ScoreMap"           type="kr.co.bookvillage.dto.ScoreDto">
+    <id      column="ISBN"           property="isbn" />
+    <result  column="USER_NO"        property="userNo" />
+    <result  column="REVIEW_DATE"    property="reviewDate" />
+    <result  column="STAR"           property="star" />
+    <result  column="REVIEW"         property="review" />
+    <association javaType="BookDto"  property="bookDto">
+      <id     column="ISBN"          property="isbn" />
+      <result column="TITLE"         property="title" />
+      <result column="AUTHOR"        property="author"/>
+      <result column="STATUS"        property="status"/>
+    </association>    
+  </resultMap>
+  
+  <resultMap id="WishMap" type="kr.co.bookvillage.dto.WishDto">
+    <id     column="ISBN"      property="isbn" />
+    <result column="USER_NO"   property="userNo" />
+    <result column="WISH_DATE" property="wishDate" />
+    <association javaType="BookDto"     property="bookDto">
+      <id        column="ISBN"          property="isbn" />
+      <result    column="TITLE"         property="title" />
+      <result    column="AUTHOR"        property="author"/>
+      <result    column="STATUS"        property="status"/>
+    </association>
+  </resultMap>
 
-  <select id="getUser" parameterType="Map" resultType="UserDto">
+
+  <select id="getMypageUser" parameterType="Map" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
     <where>
@@ -31,5 +81,57 @@
      WHERE USER_NO = #{userNo}
   </update>
   
+  <select id="getUserBookCheckoutCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <select id="getUserBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
+    SELECT A.CHECKOUT_NO, A.USER_NO, A.ISBN, A.STATUS, A.CHECKOUT_DATE, A.START_DATE, A.DUE_DATE, A.END_DATE , A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, BC.CHECKOUT_NO, BC.USER_NO, BC.ISBN, BC.STATUS, BC.CHECKOUT_DATE, BC.START_DATE, BC.DUE_DATE, BC.END_DATE, B.TITLE
+              FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
+                ON B.ISBN = BC.ISBN
+             WHERE BC.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <update id="updateDueDate" parameterType="int">
+    UPDATE BOOK_CHECKOUT
+       SET DUE_DATE = DUE_DATE + 7
+     WHERE STATUS = 1 AND CHECKOUT_NO = #{checkoutNo}
+  </update>
+  
+  <select id="getReviewCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM SCORE
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <select id="getReviewList" parameterType="Map" resultMap="ScoreMap">
+    SELECT A.ISBN, A.USER_NO, A.REVIEW_DATE, A.STAR, A.REVIEW , A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_DATE) AS RN, S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE
+              FROM SCORE S INNER JOIN BOOK B
+                ON S.ISBN = B.ISBN
+             WHERE USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <select id="getWishCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM WISH
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <select id="getWishBookList" parameterType="Map" resultMap="WishMap">
+    SELECT A.ISBN, A.USER_NO, A.WISH_DATE, A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY WISH_DATE DESC) AS RN, W.ISBN, W.USER_NO, W.WISH_DATE, B.TITLE
+              FROM WISH W INNER JOIN BOOK B
+                ON W.ISBN = B.ISBN
+             WHERE W.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+
+
 
 </mapper>

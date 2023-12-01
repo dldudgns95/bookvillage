@@ -1,7 +1,9 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,23 +12,31 @@ import javax.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
+import kr.co.bookvillage.dto.BookCheckoutDto;
+import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.dto.WishDto;
+import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
 import lombok.RequiredArgsConstructor;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class MypageServiceImpl implements MypageService {
   
   private final MypageMapper mypageMapper;
   private final MySecurityUtils mySecurityUtils;
+  private final AdminPageUtils adminPageUtils;
   
   // 회원정보 가져오기
   @Override
-  public UserDto getUser(String email) {
-    return mypageMapper.getUser(Map.of("email", email));
+  public UserDto getMypageUser(String email) {
+    return mypageMapper.getMypageUser(Map.of("email", email));
   }
   
   // 회원정보 수정
@@ -61,6 +71,7 @@ public class MypageServiceImpl implements MypageService {
     return new ResponseEntity<>(Map.of("modifyResult", modifyResult), HttpStatus.OK);
   }
   
+  // 비밀번호 수정
   @Override
   public void modifyPw(HttpServletRequest request, HttpServletResponse response) {
     
@@ -96,6 +107,90 @@ public class MypageServiceImpl implements MypageService {
     } catch (Exception e) {
       e.printStackTrace();
     }
+    
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public void loadBookCheckoutList(HttpServletRequest request, Model model) {    
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getUserBookCheckoutCount(userNo);    
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd()
+                                   , "userNo", userNo);
+    
+    List<BookCheckoutDto> bookList = mypageMapper.getUserBookCheckoutList(map);
+    
+    model.addAttribute("bookList", bookList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/booklist.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+
+  }
+  
+  @Override
+  public int delayBookCheckout(int checkoutNo) {
+    return mypageMapper.updateDueDate(checkoutNo);
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public void loadReviewList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getReviewCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<ScoreDto> reviewList = mypageMapper.getReviewList(map);
+    
+    model.addAttribute("reviewList", reviewList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+    
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public void loadWishBookList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getWishCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<WishDto> wishList = mypageMapper.getWishBookList(map);
+    
+    model.addAttribute("wishList", wishList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+    
     
   }
 

@@ -10,8 +10,8 @@
   }
   
   .admin_contents {
-    margin-left: 200px;
-    width:500px;
+    margin-left: 70px;
+    width:1000px;
   }
   .tfoot_center {
     text-align: center; 
@@ -41,6 +41,8 @@
       </a>
       <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
       <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서등록</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
       <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
@@ -117,12 +119,114 @@
         <button type="button" class="btn btn-primary">회원수정</button>
         <button type="button" class="btn btn-primary">회원탈퇴</button>
       </div>
+      <hr>
+      <div>
+        <h1><span th:text="${user.name}"></span>님의 도서 대출정보</h1> 
+      </div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">대출번호</th>
+              <th scope="col">대출회원번호</th>
+              <th scope="col">대출회원이름</th>
+              <th scope="col">대출도서ISBN</th>
+              <th scope="col">대출도서명</th>
+              <th scope="col">대출현황</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <th:block th:if="${#lists.isEmpty(bookCheckoutList)}">
+              <tr><td colspan="7">대출중인 도서가 없습니다.</td></tr>
+            </th:block>
+            <th:block th:each="book,vs:${bookCheckoutList}">
+              <tr>
+                <td scope="row" th:text="${book.checkoutNo}"></td>
+                <td scope="row" th:text="${book.userDto.userNo}"></td>
+                <td scope="row" th:text="${book.userDto.name}"></td>
+                <td scope="row" th:text="${book.bookDto.isbn}"></td>
+                <td scope="row" class="table_title" th:text="${book.bookDto.title}"></td>
+                <td scope="row">
+                  <th:block th:if="${book.status == 0}">
+                    대출신청
+                  </th:block>
+                  <th:block th:if="${book.status == 1}">
+                    대출중
+                  </th:block>
+                  <th:block th:if="${book.status == 3}">
+                    연체
+                  </th:block>
+                </td>
+                <td scope="row">
+                  <th:block th:if="${book.status == 0}">
+                    <form class="frm_book_checkout" th:action="@{/admin/approvalUserBookCheckout.do}" method="post">
+                      <input type="hidden" name="userNo" th:value="${book.userDto.userNo}">
+                      <input type="hidden" name="checkoutNo" th:value="${book.checkoutNo}">
+                      <button type="submit" class="btn btn-primary">대출승인</button>
+                    </form>
+                  </th:block>
+                  <th:block th:if="${book.status == 1 || book.status == 3}">
+                    <form class="frm_book_checkout_return" th:action="@{/admin/approvalUserBookCheckoutReturn.do}" method="post">
+                      <input type="hidden" name="checkoutNo" th:value="${book.checkoutNo}">
+                      <input type="hidden" name="userNo" th:value="${book.userDto.userNo}">
+                      <input type="hidden" name="status" th:value="${book.status}">
+                      <input type="hidden" name="isbn" th:value="${book.bookDto.isbn}">
+                      <button type="submit" class="btn btn-primary">반납확인</button>
+                    </form>
+                   </th:block>
+                </td>
+              </tr>
+            </th:block>
+          </tbody>
+        </table>
     </div>
-
   </div>
   
-  <script>
-  
+  <script th:inline="javascript">
+    const fnCheckBookCheckout = () => {
+      $('.frm_book_checkout').submit((ev) => {
+        if(!confirm('해당 도서의 대출을 승인하시겠습니까?')){
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
+    
+    const fnCheckBookCheckoutReturn = () => {
+      $('.frm_book_checkout_return').submit((ev) => {
+        if(!confirm('해당 도서의 반납을 확인하셨습니까?')){
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
+    
+    const fnUpdateCheckoutResult = () => {
+      let updateCheckoutResult = /*[[${updateCheckoutResult}]]*/ null;
+      if(updateCheckoutResult !== null) {
+        if(updateCheckoutResult === 1) {
+          alert('도서 대출이 정삭적으로 승인되었습니다.');
+        } else {
+          alert('도서 대출 승인이 실패되었습니다.');
+        }
+      }
+    }
+    
+    const fnUpdateReturnResult = () => {
+      let updateReturnResult = /*[[${updateReturnResult}]]*/ null;
+      if(updateReturnResult !== null) {
+        if(updateReturnResult === 1) {
+          alert('도서 반납이 정상적으로 확인되었습니다.');
+        } else {
+          alert('도서 반납을 실패했습니다.');
+        }
+      }
+    }
+    
+    fnCheckBookCheckout();  
+    fnCheckBookCheckoutReturn();
+    fnUpdateCheckoutResult();
+    fnUpdateReturnResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

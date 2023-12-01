@@ -44,11 +44,39 @@
         <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
         <li><a th:href="@{/mypage/facApply.do}">시설이용신청내역</a></li>    
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
-      </ul>      
+      </ul>        
     </div>
-    <th:block th:if="${session.user != null}">
-    <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
-    </th:block>
+
+    <div class="mypage">
+      <h3>관심도서</h3>
+      <table border="1" class="table table-hover" style="font-size: 15px;">
+        <thead>
+          <tr>
+            <td>도서명</td>
+            <td>관심도서등록일</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(wishList)}">
+            <td colspan="2">등록된관심도서가없습니다.</td>
+          </tr>
+          <th:block th:if="${not #lists.isEmpty(wishList)}">
+            <th:block th:each="wish : ${wishList}">
+              <tr th:if="${session.user.userNo eq wish.userNo}">
+                <td><a th:href="@{/book/search/detail(isbn=${wish.isbn})}" th:text="${wish.bookDto.title}"></a></td>
+                <td th:text="${wish.wishDate}"></td>
+              </tr>
+            </th:block>
+          </th:block>
+        </tbody>
+        <tfoot th:if="${not #lists.isEmpty(wishList)}">
+          <tr>
+            <td colspan="2" th:utext="${paging}"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>

@@ -9,7 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -149,6 +151,7 @@ public class AdminServiceImpl implements AdminService {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
     
   }
   
@@ -227,7 +230,8 @@ public class AdminServiceImpl implements AdminService {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
-    
+    int checkStatus = Integer.parseInt(multiRequest.getParameter("checkStatus"));
+    System.out.println("checkStatus : " + checkStatus);
     FacilityDto facility = FacilityDto.builder()
                                       .facName(facName)
                                       .facContent(facContent)
@@ -245,7 +249,12 @@ public class AdminServiceImpl implements AdminService {
     
     for(MultipartFile multipartFile : files) {
       if(multipartFile != null && !multipartFile.isEmpty()) {
-        String path = adminFileUtils.getFacPath();
+        String path = "";
+        if(checkStatus == 0) {
+          path = adminFileUtils.getFacPath();
+        } else if(checkStatus == 1) {
+          path = adminFileUtils.getFacMacImagePath();
+        }
         File dir = new File(path);
         if(!dir.exists()) {
           dir.mkdirs();
@@ -431,7 +440,11 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public int approvalBookCheckout(HttpServletRequest request) {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
     int updateResult = adminMapper.approvalBookCheckout(checkoutNo);
+    if(updateResult == 1) {
+      updateResult = adminMapper.addUserBookCount(userNo);
+    }
     return updateResult;
   }
   
@@ -451,6 +464,137 @@ public class AdminServiceImpl implements AdminService {
     }
     
     return updateResult;
+  }
+  
+  @Override
+  public void getFacApplyList(HttpServletRequest request, Model model) {
+    model.addAttribute("facApplyList", adminMapper.getFacApplyList());
+  }
+  
+  @Override
+  public Map<String, Object> getAddBookSearch(HttpServletRequest request) {
+
+    String apiURL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+    String ttbkey = "ttbalsltksxk2011001";
+    String QueryType = request.getParameter("QueryType");
+    String Query = request.getParameter("Query");
+    String Start = request.getParameter("Start");
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?ttbkey=" + ttbkey);
+    sb.append("&Query=" + Query);
+    sb.append("&QueryType=" + QueryType);
+    sb.append("&MaxResults=10");
+    sb.append("&Start=" + Start);
+    sb.append("&SearchTarget=Book");
+    sb.append("&output=JS");
+    sb.append("&Cover=Big");
+    sb.append("&Version=20131101");
+    
+    List<BookDto> bookList = new ArrayList<BookDto>();
+    
+    JSONObject obj = null;
+    try {
+      // 요청
+      URL url = new URL(sb.toString());
+      HttpURLConnection con = (HttpURLConnection)url.openConnection();
+      con.setRequestMethod("GET");  // 반드시 대문자로 작성
+      
+      // 응답
+      BufferedReader reader = null;
+      int responseCode = con.getResponseCode();
+      if(responseCode == 200) {
+        reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+      } else {
+        reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+      }
+      String line = null;
+      StringBuilder responseBody = new StringBuilder();
+      while ((line = reader.readLine()) != null) {
+        responseBody.append(line);
+      }
+      obj = new JSONObject(responseBody.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    
+    JSONArray array = (JSONArray)obj.get("item");
+    
+    // for문으로 값 하나씩 insert하기
+    for(Object lists : array) {
+      try {
+        JSONObject list = (JSONObject)lists;
+        String pubdate = list.getString("pubDate");
+        Date date = java.sql.Date.valueOf(pubdate);
+        BookDto bookDto = BookDto.builder()
+            .isbn(list.getString("isbn13"))
+            .title(list.getString("title"))
+            .cover(list.getString("cover"))
+            .author(list.getString("author"))
+            .publisher(list.getString("publisher"))
+            .pubdate(date)
+            .description(list.getString("description"))
+            .categoryName(list.getString("categoryName"))
+            .categoryId(list.getInt("categoryId"))
+            .build();
+        bookList.add(bookDto);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+    }
+    
+    System.out.println(bookList);
+    
+    return Map.of("bookList", bookList);
+  }
+  
+  @Override
+  public Map<String, Object> addBook(HttpServletRequest request) {
+    
+    String isbn = request.getParameter("isbn");
+    String title = request.getParameter("title");
+    String cover = request.getParameter("cover");
+    String author = request.getParameter("author");
+    String publisher = request.getParameter("publisher");
+    long timestamp = Long.parseLong(request.getParameter("pubdate"));
+    Date pubdate = new Date(timestamp);
+    String description = request.getParameter("description");
+    String categoryName = request.getParameter("categoryName");
+    int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+    
+    // 이미 등록된 책인지 체크
+    boolean checkResult = adminMapper.checkAddBook(isbn);
+    System.out.println("checkResult : " + checkResult);
+    if(checkResult == true) {
+      return Map.of("addResult", 2);
+    } else {
+      
+      BookDto book = BookDto.builder()
+          .isbn(isbn)
+          .title(title)
+          .cover(cover)
+          .author(author)
+          .publisher(publisher)
+          .pubdate(pubdate)
+          .description(description)
+          .categoryName(categoryName)
+          .categoryId(categoryId)
+          .build();
+      
+      int addResult = adminMapper.insertBook(book);
+      return Map.of("addResult", addResult);
+      
+    }
+    
+  }
+  
+  @Override
+  public int updateBookApply(HttpServletRequest request) {
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    return adminMapper.updateBookApply(applyNo);
   }
   
   
