@@ -131,6 +131,8 @@
           <input class="form-control" type="file" id="files" name="files">
         </div>
         <div>
+          <input type="hidden" id="checkStatus" name="checkStatus" value="0">
+          <button type="submit" class="btn btn-primary" id="btn_write_mac">(맥)시설 등록완료</button>
           <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
         </div>
       </form>
@@ -139,6 +141,9 @@
     <script>
       
       const fnCheckFac = () => {
+        $('#btn_write_mac').click((ev) => {
+          $(ev.target).prev().val(1);
+        })
         $('.frm_fac_write').submit((ev) => {
          
           if($('#facName').val() === '') {
