@@ -48,4 +48,5 @@ public interface AdminMapper {
   public int activeUser(int userNo);
   public List<FacApplyDto> getFacApplyList();
   public boolean checkAddBook(String isbn);
+  public int addUserBookCount(int userNo);
 }

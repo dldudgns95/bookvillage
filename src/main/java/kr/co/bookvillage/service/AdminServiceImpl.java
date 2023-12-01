@@ -434,7 +434,11 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public int approvalBookCheckout(HttpServletRequest request) {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
     int updateResult = adminMapper.approvalBookCheckout(checkoutNo);
+    if(updateResult == 1) {
+      updateResult = adminMapper.addUserBookCount(userNo);
+    }
     return updateResult;
   }
   

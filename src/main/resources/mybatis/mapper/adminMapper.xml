@@ -423,6 +423,7 @@
        SET STATUS = 1
          , START_DATE = SYSDATE
          , DUE_DATE = SYSDATE + 7
+         , DELAY = 0
      WHERE CHECKOUT_NO = #{checkoutNo}
   </update>
   
@@ -457,6 +458,7 @@
      WHERE CHECKOUT_NO = #{checkoutNo}
   </update>
   
+  <!-- 시설이용신청 리스트 조회 -->
   <select id="getFacApplyList" resultMap="FacApplyMap">
     SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
       FROM FAC_APPLY FA INNER JOIN USER_T U
@@ -465,12 +467,19 @@
      WHERE FAC_STATUS = 0
   </select>
   
+  <!-- 등록된 책인지 확인 -->
   <select id="checkAddBook" parameterType="String" resultType="boolean">
     SELECT COUNT(*)
       FROM BOOK
      WHERE ISBN = #{isbn}
   </select>
   
+  <!-- 대출중일때 대출권수 늘어나게 -->
+  <update id="addUserBookCount" parameterType="int">
+    UPDATE USER_T
+       SET BOOKCOUNT = BOOKCOUNT + 1
+     WHERE USER_NO = #{userNo}
+  </update>
   
   
 </mapper>
