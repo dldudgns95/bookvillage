@@ -10,6 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -457,6 +458,86 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public void getFacApplyList(HttpServletRequest request, Model model) {
     model.addAttribute("facApplyList", adminMapper.getFacApplyList());
+  }
+  
+  @Override
+  public Map<String, Object> getAddBookSearch(HttpServletRequest request) {
+
+    String apiURL = "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx";
+    String ttbkey = "ttbalsltksxk2011001";
+    String QueryType = request.getParameter("QueryType");
+    String Query = request.getParameter("Query");
+    String Start = request.getParameter("Start");
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?ttbkey=" + ttbkey);
+    sb.append("&Query=" + Query);
+    sb.append("&QueryType=" + QueryType);
+    sb.append("&MaxResults=10");
+    sb.append("&Start=" + Start);
+    sb.append("&SearchTarget=Book");
+    sb.append("&output=JS");
+    sb.append("&Cover=Big");
+    sb.append("&Version=20131101");
+    
+    List<BookDto> bookList = new ArrayList<BookDto>();
+    
+    JSONObject obj = null;
+    try {
+      // 요청
+      URL url = new URL(sb.toString());
+      HttpURLConnection con = (HttpURLConnection)url.openConnection();
+      con.setRequestMethod("GET");  // 반드시 대문자로 작성
+      
+      // 응답
+      BufferedReader reader = null;
+      int responseCode = con.getResponseCode();
+      if(responseCode == 200) {
+        reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+      } else {
+        reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+      }
+      String line = null;
+      StringBuilder responseBody = new StringBuilder();
+      while ((line = reader.readLine()) != null) {
+        responseBody.append(line);
+      }
+      obj = new JSONObject(responseBody.toString());
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    
+    JSONArray array = (JSONArray)obj.get("item");
+    
+    // for문으로 값 하나씩 insert하기
+    for(Object lists : array) {
+      try {
+        JSONObject list = (JSONObject)lists;
+        String pubdate = list.getString("pubDate");
+        Date date = java.sql.Date.valueOf(pubdate);
+        BookDto bookDto = BookDto.builder()
+            .isbn(list.getString("isbn13"))
+            .title(list.getString("title"))
+            .cover(list.getString("cover"))
+            .author(list.getString("author"))
+            .publisher(list.getString("publisher"))
+            .pubdate(date)
+            .description(list.getString("description"))
+            .categoryName(list.getString("categoryName"))
+            .categoryId(list.getInt("categoryId"))
+            .build();
+        bookList.add(bookDto);
+      } catch (Exception e) {
+          e.printStackTrace();
+      }
+    }
+    
+    System.out.println(array.length());
+    
+    return Map.of("bookList", bookList);
   }
   
   

@@ -28,4 +28,5 @@ public interface AdminService  {
   public int approvalBookCheckout(HttpServletRequest request);
   public int approvalBookCheckoutReturn(HttpServletRequest request);
   public void getFacApplyList(HttpServletRequest request, Model model);
+  public Map<String, Object> getAddBookSearch(HttpServletRequest request);
 }
