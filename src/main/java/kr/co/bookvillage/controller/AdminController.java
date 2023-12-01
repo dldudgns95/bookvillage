@@ -143,6 +143,12 @@ public class AdminController {
     return "admin/bookCheckoutReturnList";
   }
   
+  @GetMapping("/bookCheckoutReturnSearch.do")
+  public String bookCheckoutReturnSearch(HttpServletRequest request, Model model) {
+    adminService.getBookCheckoutReturnSearchList(request, model);
+    return "admin/bookCheckoutReturnList";
+  }
+  
   @PostMapping("/approvalBookCheckout.do")
   public String approvalBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckout(request));
@@ -169,5 +175,10 @@ public class AdminController {
     return "redirect:/admin/userDetail.do";
   }
   
+  // 임시
+  @GetMapping("/temp.do")
+  public String temp() {
+    return "admin/facApplyList2";
+  }
   
 }

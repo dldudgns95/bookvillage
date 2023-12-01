@@ -305,9 +305,23 @@
   <select id="bookCheckoutSearchCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
-        ON BC.ISBN = B.ISBN
+        ON BC.ISBN = B.ISBN INNER JOIN USER_T U
+        ON BC.USER_NO = U.USER_NO
      WHERE BC.STATUS = 0
-       AND ${column} LIKE '%' || #{query} || '%'
+       <choose>
+         <when test="column == 'USER_NO'">
+           AND BC.USER_NO LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'NAME'">
+           AND NAME LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'ISBN'">
+           AND BC.ISBN LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'TITLE'">
+           AND TITLE LIKE '%' || #{query} || '%'
+         </when>
+       </choose>
   </select>
   
   <!-- 대출 신청한 검색 도서 목록 조회 -->
@@ -318,7 +332,21 @@
                 ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
                 ON BC.ISBN = B.ISBN
              WHERE BC.STATUS = 0
-               AND ${column} LIKE '%' || #{query} || '%')
+             <choose>
+               <when test="column == 'USER_NO'">
+                 AND BC.USER_NO LIKE '%' || #{query} || '%'
+               </when>
+               <when test="column == 'NAME'">
+                 AND NAME LIKE '%' || #{query} || '%'
+               </when>
+               <when test="column == 'ISBN'">
+                 AND BC.ISBN LIKE '%' || #{query} || '%'
+               </when>
+               <when test="column == 'TITLE'">
+                 AND TITLE LIKE '%' || #{query} || '%'
+               </when>
+             </choose>
+                )
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
@@ -344,9 +372,23 @@
   <select id="bookCheckoutReturnSearchCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT BC INNER JOIN BOOK B
-        ON BC.ISBN = B.ISBN
+        ON BC.ISBN = B.ISBN INNER JOIN USER_T U
+        ON BC.USER_NO = U.USER_NO
      WHERE BC.STATUS IN (1, 3)
-       AND ${column} LIKE '%' || #{query} || '%'
+       <choose>
+         <when test="column == 'USER_NO'">
+           AND BC.USER_NO LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'NAME'">
+           AND NAME LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'ISBN'">
+           AND BC.ISBN LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'TITLE'">
+           AND TITLE LIKE '%' || #{query} || '%'
+         </when>
+       </choose>
   </select>
   
   <!-- 대출 신청한 검색 도서 목록 조회 -->
@@ -357,7 +399,21 @@
                 ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
                 ON BC.ISBN = B.ISBN
              WHERE BC.STATUS IN (1, 3)
-               AND ${column} LIKE '%' || #{query} || '%')
+               <choose>
+         <when test="column == 'USER_NO'">
+           AND BC.USER_NO LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'NAME'">
+           AND NAME LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'ISBN'">
+           AND BC.ISBN LIKE '%' || #{query} || '%'
+         </when>
+         <when test="column == 'TITLE'">
+           AND TITLE LIKE '%' || #{query} || '%'
+         </when>
+       </choose>
+       )
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
