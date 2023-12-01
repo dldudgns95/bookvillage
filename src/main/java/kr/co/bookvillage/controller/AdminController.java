@@ -175,6 +175,17 @@ public class AdminController {
     return "redirect:/admin/userDetail.do";
   }
   
+  @GetMapping("/addBookList.do")
+  public String addBookList() {
+    return "admin/addBookList";
+  }
+  
+  @ResponseBody
+  @GetMapping(value="/addBookSearch.do", produces="application/json")
+  public Map<String, Object> addBookSearch(HttpServletRequest request) {
+    return adminService.getAddBookSearch(request);
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {

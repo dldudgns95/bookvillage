@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+  }
+  
+  .padding_top {
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 20px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .list-group {
+    min-width: 115px;
+    --bs-list-group-item-padding-x: 0.5rem;
+  }
+  
+  .input-group {
+    margin: 0 auto;
+  }
+  
+  .table {
+    table-layout: fixed;
+  }
+  
+  .table_isbn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 132px;
+    height: 41px;
+  }
+  .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 565px;
+    height: 41px;
+  }
+  
+  .table_author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+    height: 41px;
+  }
+  
+  .table_publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 105px;
+    height: 41px;
+  }
+  
+  .admin_spacebetween{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .table_status {
+    width:65px;
+  }
+  
+  .table_cover {
+    width: 50px;
+  }
+
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin padding_top">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서등록</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    <div class="admin_contents">
+      <div>
+        <form id="frm_search" method="get" th:action="@{/admin/addBookSearch.do}">
+          <div class="input-group w-50 p-3">
+            <select class="form-select search_select" id="inputGroupSelect01" name="QueryType" aria-label="Example select with button addon">
+              <option value="Title">책제목</option>
+              <option value="Author">저자</option>
+            </select>
+            <input type="text" class="form-control search_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            <input type="hidden" name="Query" id="hidden_query">
+            <button class="btn btn-outline-secondary" type="button" id="btn_search">
+              <i class="fa-solid fa-magnifying-glass white"></i>
+            </button>
+          </div>
+        </form>              
+      </div>
+      <div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" class="table_cover">커버</th>
+              <th scope="col" class="table_isbn">ISBN</th>
+              <th scope="col" class="table_title">책제목</th>
+              <th scope="col" class="table_author">저자</th>
+              <th scope="col" class="table_publisher">출판사</th>
+              <th scope="col" class="table_status"></th>
+            </tr>
+          </thead>
+          <tbody class="search_body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  
+  <script th:inline="javascript">
+    const fnBookSearch = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        let checkISBN = /^[0-9]{1,13}$/;
+        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('.search_select').val() === "ISBN") {
+          if(!checkISBN.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자 1~13자)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "TITLE") {
+          if(!checkTitle.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+      })
+    }
+    
+    const fnAddBookSearch = () => {
+      $('#btn_search').click(() => {
+        let query = $('.search_text').val().trim();
+        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+        if(!checkTitle.test(query)) {
+          alert('검색어를 정확히 입력해주세요(영어,숫자,한글)');
+          return;
+        }
+        $('#hidden_query').val(query);
+        $.ajax({
+          method: 'get',
+          url: '/admin/addBookSearch.do',
+          data: $('#frm_search').serialize(),
+          dataType: 'json',
+          success: (resData) => {
+            console.log(resData);
+            let str = '';
+            $('.search_body').html(str);
+            $.each(resData.bookList, (i, book) => {
+              str += '<tr>';
+              str += '  <td><img class="table_cover" src="'+book.cover+'"></td>';
+              str += '  <td>'+book.isbn+'</td>';
+              str += '  <td>'+book.title+'</td>';
+              str += '  <td>'+book.author+'</td>';
+              str += '  <td>'+book.publisher+'</td>';
+              str += '</tr>';
+            });
+            $('.search_body').html(str);
+          }
+        })
+      })
+    }
+    
+    fnAddBookSearch();
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>
