@@ -19,6 +19,7 @@ import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.dto.WishDto;
 import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
 import lombok.RequiredArgsConstructor;
@@ -163,6 +164,33 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("reviewList", reviewList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
+    
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public void loadWishBookList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getWishCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<WishDto> wishList = mypageMapper.getWishBookList(map);
+    
+    model.addAttribute("wishList", wishList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+    
     
   }
 
