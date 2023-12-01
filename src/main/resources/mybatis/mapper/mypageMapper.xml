@@ -98,8 +98,8 @@
   
   <update id="updateDueDate" parameterType="int">
     UPDATE BOOK_CHECKOUT
-       SET DUE_DATE = DUE_DATE + 7
-     WHERE STATUS = 1 AND CHECKOUT_NO = #{checkoutNo}
+       SET DUE_DATE = DUE_DATE + 7, DELAY = 1
+     WHERE STATUS = 1 AND DELAY = 0 AND CHECKOUT_NO = #{checkoutNo}
   </update>
   
   <select id="getReviewCount" parameterType="int" resultType="int">
