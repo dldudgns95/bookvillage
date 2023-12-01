@@ -82,7 +82,7 @@ public class AdminController {
   @PostMapping("/facAdd.do")
   public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
     adminService.addFacility(multiRequest);
-    return "redirect:/admin/facList.do";
+    return "redirect:/admin/facApplyList.do";
   }
   
   @GetMapping("/insertBooks.do")
