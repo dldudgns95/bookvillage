@@ -33,8 +33,13 @@ public interface UserService {
  
   // 임시 비밀번호 메일 보내기
   public ResponseEntity<Map<String, Object>> sendTmpCode(String email);
-  public int updateTmpPw(String email);
+  //public int updateTmpPw(String email);
+  public ResponseEntity<Map<String, Object>> updateTmpPw(String email);
+  
+  
 
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception ;
 
   
   

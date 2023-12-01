@@ -58,8 +58,8 @@ $(document).ready(() => {
                     alert("조회 결과가 없습니다.");
                 } else {
                     // 성공 시 화면에 결과를 출력
-                    $("#result_id").html("<span>아이디는 " + resData.email + "입니다.</span>");
-                
+                    let maskedEmail = maskEmail(resData.email);
+                    $("#result_id").html("<span>아이디는 " + maskedEmail + "입니다.</span>");
                 }
             },
             error: (xhr) => {
@@ -70,6 +70,19 @@ $(document).ready(() => {
     });
 });
 
+
+// '@' 기준으로 앞의 3글자를 '***'로 처리하는 함수
+function maskEmail(email) {
+    let atIndex = email.indexOf('@');
+
+    if (atIndex > 0) {
+        let username = email.substring(0, Math.max(atIndex - 3, 0)) + '***';
+        let domain = email.substring(atIndex);
+        return username + domain;
+    } else {
+        return email;  
+    }
+}
 
 $(document).ready(() => {
   // 비밀번호 찾기
@@ -120,8 +133,23 @@ $(document).ready(() => {
                     $('#btn_verify_code').click(() => {
                         emailPassed = $('#pwCode').val() === resData.pwCode;
                         if (emailPassed) {
+                      console.log('Ajax 요청 성공', resData);
+
                             alert('이메일이 인증되었습니다. 메일함에 임시비밀번호를 확인하세요');
-                            $('#frm_find_password').submit();
+                              // 
+                              $.ajax({
+                                type:'post',
+                                url: '/user/sendTmpPw.do',
+                                 contentType: 'application/json', 
+                                 data: JSON.stringify({ email: email }), 
+                                 success: (resData2) => {
+                                   console.log('Ajax 요청 성공', resData2);
+                                   alert(email +"로 임시 비밀번호를 전송했습니다.");
+                                   $('#btn_verify_code').prop('disabled', true);
+
+                                 }
+                              })
+
                         } else {
                             alert('이메일 인증이 실패했습니다.');
                         }

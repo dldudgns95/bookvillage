@@ -38,6 +38,8 @@ public class UserServiceImpl implements UserService {
       
   private final String client_id = "akfMPV_DLx7u40rpRi7W";
   private final String client_secret = "5J5oz6ohRI";
+  
+  private final String ka_Client_id = "9ffad004d68c4c286ec206cd6660ae00";
             
   
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -374,7 +376,7 @@ public class UserServiceImpl implements UserService {
   
   
       
-  // 임시 비밀번호 메일 발송
+  // 인증코드 메일 발송
   @Override
   public ResponseEntity<Map<String, Object>> sendTmpCode(String email) {
 
@@ -387,11 +389,11 @@ public class UserServiceImpl implements UserService {
   
    return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
 
-    
+   
   }
 
   @Override
-  public int updateTmpPw(String email) {
+  public ResponseEntity<Map<String, Object>> updateTmpPw(String email) {
     
     String pwCode = mySecurityUtils.getRandomString(10, true, true);
 
@@ -400,16 +402,77 @@ public class UserServiceImpl implements UserService {
         , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
    
      String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
-    
      
-   
-    return userMapper.updatetmpPw(Map.of("email", email, "pwCode", hashedPwCode));
+     userMapper.updatetmpPw(Map.of("email", email,"pwCode", hashedPwCode));
+    
+   return new ResponseEntity<>(Map.of("email", email, "pwCode", hashedPwCode), HttpStatus.OK);
+  
+    //return userMapper.updatetmpPw(Map.of("email", email, "pwTmpCode", hashedPwCode));
 
   }
   
-  
-  
-  
+  // 카카오 로그인1.. 
+  @Override
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
+      String apiURL = "https://kauth.kakao.com/oauth/authorize";
+      String response_type = "code";
+      String redirect_uri = URLEncoder.encode("http://localhost:8080/" + "user/kakao/getAccessToken.do", "UTF-8");
+      String state = new BigInteger(130, new SecureRandom()).toString();
+
+      StringBuilder sb = new StringBuilder();
+      sb.append(apiURL);
+      sb.append("?response_type=").append(response_type);
+      sb.append("&client_id=").append(ka_Client_id);
+      sb.append("&redirect_uri=").append(redirect_uri);
+      sb.append("&state=").append(state);
+
+      return sb.toString();
+  }
+
+  // 카카오 로그인2..
+  @Override
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception {
+
+//https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=account_email,gender
+    
+    
+    String grant_type = "authorization_code";
+    String redirect_uri = URLEncoder.encode("http://localhost:8080/" + "user/kakao/getAccessToken.do", "UTF-8");
+    
+    String apiURL ="https://kauth.kakao.com/oauth/token";
+    String code =request.getParameter("code");
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?grant_type").append(grant_type);
+    sb.append("&client_id").append(ka_Client_id);
+    sb.append("&redirect_uri").append(redirect_uri);
+    sb.append("&code").append(code);
+    
+    
+    // 요청
+    URL url = new URL(sb.toString());
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("POST"); 
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    JSONObject obj = new JSONObject(responseBody.toString());
+    return obj.getString("access_token");
+  }
   
 
   
