@@ -19,12 +19,6 @@ import lombok.RequiredArgsConstructor;
 public class FacServiceImpl implements FacService {
 	private final FacMapper facMapper;
 	
-	@Transactional(readOnly=true)
-	@Override
-	public List<FacilityDto> getFacList() {
-		return facMapper.getFacList();
-	}
-	
 	@Override
 	public Map<String, Object> getFacTotalList(HttpServletRequest request) {
 	    String facStart = request.getParameter("facStart");

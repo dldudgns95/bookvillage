@@ -42,8 +42,11 @@
       <h5 style="text-align: center;">시설 이용 신청</h5>	
 		  
 	  </div>
-		<div class="child2">
+		<div class="child2">		
 		   <div class="cal" id='calendar'></div>
+	       <th:block th:if="${session.user != null and session.user.auth == 9}">
+			<a th:href="@{/admin/facWrite.form}"><button>시설등록</button></a> 
+			</th:block>			   
 		   <div class="nt">이용할 날짜를 선택해주세요</div>
 		</div>
    </div>
