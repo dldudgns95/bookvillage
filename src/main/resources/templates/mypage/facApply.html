@@ -46,42 +46,9 @@
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
       </ul>       
     </div>
-
-    <div class="mypage">
-
-      <h3>도서후기</h3>
-      <span style="font-size: 20px;">작성한 한줄평</span>
-      <table border="1" class="table table-hover" style="font-size: 15px;">
-        <thead>
-          <tr>
-            <td>도서명</td>
-            <td>한줄평</td>
-            <td>작성일</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:if="${#lists.isEmpty(reviewList)}">
-            <td colspan="3">작성내역이없습니다.</td>
-          </tr>
-          <th:block th:if="${not #lists.isEmpty(reviewList)}">
-            <th:block th:each="review : ${reviewList}">
-              <tr th:if="${session.user.userNo eq review.userNo}">
-                <td><a th:href="@{/book/search/detail(isbn=${review.isbn})}" th:text="${review.bookDto.title}"></a></td>
-                <td th:text="${review.review}"></td>
-                <td th:text="${review.reviewDate}"></td>
-              </tr>          
-            </th:block>
-          </th:block>
-        </tbody>
-        <tfoot th:if="${not #lists.isEmpty(reviewList)}">
-          <tr>
-            <td colspan="3" th:utext="${paging}"></td>
-          </tr>
-        </tfoot>
-      </table>   
-
-    </div>
-
+    <th:block th:if="${session.user != null}">
+    <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
+    </th:block>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>

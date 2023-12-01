@@ -79,6 +79,23 @@ public class MypageController {
     return "redirect:/mypage/booklist.do";
   }
   
+  // 관심도서목록 페이지로 이동
+  @GetMapping("/wish.do")
+  public String wishList(HttpServletRequest request, Model model) {
+    mypageService.loadWishBookList(request, model);
+    return "mypage/wish";
+  }
+  
+  // 시설이용신청목록 페이지로 이동
+  @GetMapping("/facApply.do")
+  public String facApplyList() {
+    return "mypage/facApply";
+  }
+  
+  @GetMapping("/applyBook.do")
+  public String applyBook() {
+    return "mypage/applyBook";
+  }
   
   
 }

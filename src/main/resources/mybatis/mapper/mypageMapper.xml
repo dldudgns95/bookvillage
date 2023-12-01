@@ -41,6 +41,18 @@
       <result column="STATUS"        property="status"/>
     </association>    
   </resultMap>
+  
+  <resultMap id="WishMap" type="kr.co.bookvillage.dto.WishDto">
+    <id     column="ISBN"      property="isbn" />
+    <result column="USER_NO"   property="userNo" />
+    <result column="WISH_DATE" property="wishDate" />
+    <association javaType="BookDto"     property="bookDto">
+      <id        column="ISBN"          property="isbn" />
+      <result    column="TITLE"         property="title" />
+      <result    column="AUTHOR"        property="author"/>
+      <result    column="STATUS"        property="status"/>
+    </association>
+  </resultMap>
 
 
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
@@ -105,6 +117,20 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <select id="getWishCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM WISH
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <select id="getWishBookList" parameterType="Map" resultMap="WishMap">
+    SELECT A.ISBN, A.USER_NO, A.WISH_DATE, A.TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY WISH_DATE DESC) AS RN, W.ISBN, W.USER_NO, W.WISH_DATE, B.TITLE
+              FROM WISH W INNER JOIN BOOK B
+                ON W.ISBN = B.ISBN
+             WHERE W.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
 
 
 
