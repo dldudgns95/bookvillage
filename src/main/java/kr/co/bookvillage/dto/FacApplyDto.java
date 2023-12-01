@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FacApplyDto {
 	private int FacApplyNo;
-	private int userNo;
-	private int facNo;
+	private UserDto userDto;  // int userNo
+	private FacilityDto facilityDto; // int facNo
 	private Date facRegDate;
 	private Date facStart;
 	private int facStatus;
