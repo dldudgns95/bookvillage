@@ -40,16 +40,17 @@
         <li><a th:href="@{/mypage/edit.form}">회원정보수정</a></li>
         <li><a th:href="@{/mypage/wish.do}">관심도서</a></li>
         <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
-        <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
+        <li>시설이용신청내역</li>    
+        <li>희망도서신청내역</li>     
       </ul>      
     </div>
-    
+
     <div class="mypage">
-      
       <h3>대출조회및연기</h3>
       <div>
         <h4>이용자 대출상태</h4>
         <ul>
+          
           <li th:text="|이용자 이름:${session.user.name}|"></li>
           <th:block th:if="${session.user.status == 0}">
             <li th:text="|회원상태:대출불가|"></li>
@@ -57,8 +58,10 @@
           <th:block th:if="${session.user.status == 1}">
             <li th:text="|회원상태:대출가능|"></li>
           </th:block>
+          
         </ul>
-      </div>
+     
+      
       <table border="1" class="table table-hover">
         <thead>
           <tr>
@@ -72,6 +75,7 @@
         </thead>
         <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->
        <tbody>
+
          <tr th:if="${#lists.isEmpty(bookList)}">
            <td colspan="6">대출내역이없습니다.</td>
           </tr>
@@ -96,12 +100,11 @@
                   <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
                   <button type="submit" id="btn_delay" class="btn btn-success">연기신청</button>
                   </form>
-                </td>
-              
-              </tr>
-              
+                </td>             
+              </tr>            
              </th:block>
           </th:block>
+
         </tbody>
         <!--/* 페이징 */-->
         <tfoot th:if="${not #lists.isEmpty(bookList)}">
@@ -111,9 +114,11 @@
         </tfoot>
       </table>
     </div>
+
     
   </div>
-  
+
+ </div>
   <div th:replace="~{/layout/footer::footer}"></div>
   
   <script th:inline="javascript">

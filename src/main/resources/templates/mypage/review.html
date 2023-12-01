@@ -42,11 +42,13 @@
         <li><a th:href="@{/mypage/edit.form}">회원정보수정</a></li>
         <li><a th:href="@{/mypage/wish.do}">관심도서</a></li>
         <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
-        <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
+        <li>시설이용신청내역</li>    
+        <li>희망도서신청내역</li>
       </ul>      
     </div>
-    
+
     <div class="mypage">
+
       <h3>도서후기</h3>
       <span style="font-size: 20px;">작성한 한줄평</span>
       <table border="1" class="table table-hover" style="font-size: 15px;">
@@ -76,10 +78,10 @@
             <td colspan="3" th:utext="${paging}"></td>
           </tr>
         </tfoot>
-      </table>
-      
+      </table>   
+
     </div>
-    
+
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>

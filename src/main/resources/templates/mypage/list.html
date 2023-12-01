@@ -45,9 +45,9 @@
         <li>시설이용/신청내역</li>     <!--/* 시설신청,희망도서신청내역 */-->
       </ul>      
     </div>
-    
+    <th:block th:if="${session.user != null}">
     <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
-    
+    </th:block>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
