@@ -82,7 +82,10 @@
         <textarea class="form-control" readonly id="exampleFormControlTextarea1" rows="3" th:text="${bookApply.wish}"></textarea>
       </div>
       <div>
-        <button type="button" class="btn btn-primary">희망도서 추가완료</button>
+        <form class="frm_book_apply" method="get" th:action="@{/admin/updateBookApply.do}">
+          <input type="hidden" name="applyNo" th:value="${bookApply.applyNo}">
+          <button type="submit" class="btn btn-primary">희망도서 추가완료</button>
+        </form>
       </div>
     </div>
 
@@ -90,6 +93,16 @@
   
   <script>
   
+  const fnFormCheck = () => {
+    $('.frm_book_apply').submit((ev) => {
+      if(!confirm('희망도서 추가를 완료하셨습니까?')) {
+        ev.preventDefault();
+        return;
+      }
+    })
+  }
+  
+  fnFormCheck();  
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

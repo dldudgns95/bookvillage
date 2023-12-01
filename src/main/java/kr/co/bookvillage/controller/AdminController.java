@@ -194,6 +194,12 @@ public class AdminController {
     return adminService.addBook(request);
   }
   
+  @GetMapping("/updateBookApply.do")
+  public String updateBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", adminService.updateBookApply(request));
+    return "redirect:/admin/bookApplyList.do";
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
