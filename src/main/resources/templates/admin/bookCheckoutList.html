@@ -108,6 +108,7 @@
                 </td>
                 <td scope="row">
                   <form class="frm_book_checkout" th:action="@{/admin/approvalBookCheckout.do}" method="post">
+                    <input type="hidden" name="userNo" th:value="${book.userDto.userNo}">
                     <input type="hidden" name="checkoutNo" th:value="${book.checkoutNo}">
                     <button type="submit" class="btn btn-primary">대출승인</button>
                   </form>
