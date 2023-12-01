@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -40,7 +41,7 @@ public class AdminController {
     return "admin/userList";
   }
   
-  @PostMapping("/userDetail.do")
+  @RequestMapping(value="/userDetail.do", method={RequestMethod.GET, RequestMethod.POST})
   public String userDetail(HttpServletRequest request, Model model) {
     adminService.getUserDetail(request, model);
     return "admin/userDetail";
@@ -64,8 +65,9 @@ public class AdminController {
     return "admin/bookDetail";
   }
   
-  @GetMapping("/facList.do")
-  public String facList() {
+  @GetMapping("/facApplyList.do")
+  public String facApplyList(HttpServletRequest request, Model model) {
+    adminService.getFacApplyList(request, model);
     return "admin/facList";
   }
   
@@ -85,6 +87,12 @@ public class AdminController {
   public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
     return "redirect:/admin/bookList.do";
+  }
+  
+  @GetMapping("/facList.do")
+  public String facList(HttpServletRequest request, Model model) {
+    model.addAttribute("facList", adminService.getFacTotalList(request));
+    return "admin/facList";
   }
   
   @ResponseBody
@@ -135,10 +143,23 @@ public class AdminController {
     return "admin/bookCheckoutReturnList";
   }
   
+  @GetMapping("/bookCheckoutReturnSearch.do")
+  public String bookCheckoutReturnSearch(HttpServletRequest request, Model model) {
+    adminService.getBookCheckoutReturnSearchList(request, model);
+    return "admin/bookCheckoutReturnList";
+  }
+  
   @PostMapping("/approvalBookCheckout.do")
   public String approvalBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckout(request));
     return "redirect:/admin/bookCheckoutList.do";
+  }
+  
+  @PostMapping("/approvalUserBookCheckout.do")
+  public String approvalUserBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateCheckoutResult", adminService.approvalBookCheckout(request));
+    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do";
   }
   
   @PostMapping("/approvalBookCheckoutReturn.do")
@@ -147,6 +168,17 @@ public class AdminController {
     return "redirect:/admin/bookCheckoutReturnList.do";
   }
   
+  @PostMapping("/approvalUserBookCheckoutReturn.do")
+  public String approvalUserBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateReturnResult", adminService.approvalBookCheckoutReturn(request));
+    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do";
+  }
   
+  // 임시
+  @GetMapping("/temp.do")
+  public String temp() {
+    return "admin/facApplyList2";
+  }
   
 }
