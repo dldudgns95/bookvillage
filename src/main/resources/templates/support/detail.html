@@ -15,10 +15,12 @@
 	}
 	div.child2{
 		width: 750px;
-		height: 200px;
+		height: 500px;
 		float:left;
 		margin-top: 15px;
 
+	}
+	div.child3{
 	}
 	
 </style>
@@ -36,8 +38,15 @@
         </ul>
       </div>
       <h5 style="text-align: center;"th:text="|${notice.ntNo}번 공지사항|"></h5>	
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
+            <form id="frm_btn">
+              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
+              <button type="button" id="btn_edit" class="btn btn-secondary">편집</button>
+              <button type="button" id="btn_remove" class="btn btn-secondary">삭제</button>
+            </form>
+          </th:block>
       <div class="child2">  
-		  <div th:text="|작성자 : ${notice.userDto.email}|"></div>
+	
 	      <div th:text="|작성일 : ${notice.ntDate}|"></div>
 	      <div th:text="|제목 : ${notice.ntTitle}|"></div>
 	      <div>내용</div>
@@ -54,7 +63,7 @@
 	        </th:block>
 	        <th:block th:if="${not #lists.isEmpty(attachList)}">
 	          <th:block th:each="atc:${attachList}">
-	            <div class="attach" th:data-attach_no="${atc.attachNo}">
+	            <div class="attach" th:data-attach_nt_no="${atc.attachNtNo}">
 	              <th:block th:if="${atc.ntHasThumbnail == 1}">
 	                <img th:src="@{|${atc.ntPath}/s_${atc.ntFilesystemName}|}" alt="썸네일" width="50">
 	              </th:block>
@@ -68,15 +77,7 @@
 	        </th:block>
 	      </div> 	      
    </div>
-    <div class="mb-5">
-        <th:block th:if="${session.user != null and session.user.auth == 9}">
-            <form id="frm_btn">
-              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-              <button type="button" id="btn_edit" class="btn btn-warning btn-sm">편집</button>
-              <button type="button" id="btn_remove" class="btn btn-danger btn-sm">삭제</button>
-            </form>
-          </th:block>
-      </div>	
+
    </div>
    <script th:inline="javascript">
  var frmBtn = $('#frm_btn');
@@ -102,7 +103,7 @@
       const fnDownload = () => {
         $('.attach').click(function(){
           if(confirm('다운로드 할까요?')){
-            location.href = '/support/download.do?attachNo=' + $(this).data('attach_no');
+            location.href = '/support/download.do?attachNtNo=' + $(this).data('attachNtNo');
           }
         })
       }

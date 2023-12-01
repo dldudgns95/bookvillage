@@ -8,9 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
@@ -53,9 +55,47 @@ public class MypageController {
     mypageService.modifyPw(request, response);
   }
   
+  // 도서대출 목록 페이지 이동
+  @GetMapping("/booklist.do")
+  public String booklist(HttpServletRequest request, Model model) {    
+    mypageService.loadBookCheckoutList(request, model);
+    return "mypage/booklist";
+  }
+
+  // 작성한 한줄평목록 페이지 이동
+  @GetMapping("/review.do")
+  public String reviewList(HttpServletRequest request, Model model) {
+    mypageService.loadReviewList(request, model);
+    return "mypage/review";
+  }
   
+  // 도서대출연기신청(대출상태가 대출중인경우에만가능) - 수정해야함
+  @GetMapping("/delayBookCheckout.do")
+  public String delayBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    System.out.println("checkoutNo : " + checkoutNo);
+    int delayResult = mypageService.delayBookCheckout(checkoutNo);
+    redirectAttributes.addFlashAttribute("delayResult", delayResult);
+    return "redirect:/mypage/booklist.do";
+  }
   
+  // 관심도서목록 페이지로 이동
+  @GetMapping("/wish.do")
+  public String wishList(HttpServletRequest request, Model model) {
+    mypageService.loadWishBookList(request, model);
+    return "mypage/wish";
+  }
   
+  // 시설이용신청목록 페이지로 이동
+  @GetMapping("/facApply.do")
+  public String facApplyList() {
+    return "mypage/facApply";
+  }
+  
+  @GetMapping("/applyBook.do")
+  public String applyBook() {
+    return "mypage/applyBook";
+  }
   
   
 }

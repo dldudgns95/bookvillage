@@ -44,7 +44,7 @@
         <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
         <li><a th:href="@{/mypage/facApply.do}">시설이용신청내역</a></li>    
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
-      </ul>      
+      </ul>    
     </div>
     <th:block th:if="${session.user != null}">
     <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>

@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
-
 <style>
 	div.child1{
 		width: 100px;
@@ -43,12 +42,7 @@
       <div class="child2">
       <form id="frm_notice_edit" method="post" th:action="@{/support/modify.do}">
       
-        <div class="mb-3 row">
-          <label for="email" class="col-sm-2 col-form-label">작성자</label>
-          <div class="col-sm-10">
-            <input type="text" readonly class="form-control-plaintext" id="email" th:value="${notice.userDto.name}">
-          </div>
-        </div>
+      
         
         <div class="mb-3 row">
           <label for="ntDate" class="col-sm-2 col-form-label">작성일</label>
@@ -68,16 +62,13 @@
         </div>
         
         <!-- 첨부 추가 -->
-        <th:block th:if="${session.user != null}">
-          <th:block th:if="${session.user.userNo == notice.userDto.userNo}">
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
             <h5>신규 첨부</h5>
             <div class="input-group">
-              <input type="hidden" name="userNo" th:value="${session.user.userNo}">
               <input type="file" name="files" id="files"  class="form-control" multiple>
               <button class="btn btn-outline-secondary" type="button" id="btn_add_attach">첨부추가하기</button>
             </div>
             <div class="attached_list mt-3" id="attached_list"></div>
-          </th:block>
         </th:block>
         
         <hr class="my-3">
@@ -86,17 +77,16 @@
         <h5>기존 첨부 목록</h5>
         <div id="attach_list"></div>
 
-        <th:block th:if="${session.user != null}">
-          <th:block th:if="${session.user.userNo == notice.userDto.userNo}">    
+        <th:block th:if="${session.user != null and session.user.auth == 9}">
             <div class="text-center my-3">
-              <a th:href="@{/notice/detail.do(ntNo=${notice.ntNo})}">
+              <a th:href="@{/support/detail.do(ntNo=${notice.ntNo})}">
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
               <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
               <button type="submit" id="btn_modify" class="btn btn-success">수정하기</button>
             </div>
           </th:block>
-        </th:block>
+
       </form>
       
 		
@@ -137,7 +127,7 @@
           $.each(files, (i, file) => {
             formData.append('files', file);  // 폼에 포함된 파라미터명은 files이다. files는 여러 개의 파일을 가지고 있다.
           })
-          // 현재 게시글 번호(uploadNo)를 FormData에 추가한다.
+          // 현재 게시글 번호(ntNo)를 FormData에 추가한다.
           formData.append('ntNo', '[[${notice.ntNo}]]');
           // FormData 객체를 보내서 저장한다.
           $.ajax({
@@ -167,7 +157,7 @@
         $.ajax({
           // 요청
           type: 'get',
-          url: '/notice/getAttachList.do',
+          url: '/support/getAttachList.do',
           data: 'ntNo=[[${notice.ntNo}]]',
           // 응답
           dataType: 'json',
@@ -178,14 +168,13 @@
               if(attach.hasThumbnail === 0){
             	  str += '<img src="/image/attach1.png" width="50">';
               } else {        	  
-                str += '<img src="' + attach.path + '/s_' + attach.filesystemName + '"  width="50">';
+                str += '<img src="' + attach.ntPath + '/s_' + attach.ntFilesystemName + '"  width="50">';
               }
-              str += '<span style="margin: 0 10px;">' + attach.originalFilename + '</span>';
-              <!-- 로그인 유저가 업로더이면 삭제 버튼 보여주기 -->
+              str += '<span style="margin: 0 10px;">' + attach.ntOriginalFilename + '</span>';
               let user = /*[[${session.user}]]*/ null;
               if(user !== null){
-                if(user.userNo == '[[${notice.userDto.userNo}]]'){            
-                  str += '<a data-attach_no="' + attach.attachNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
+                if(session.user.auth == 9){            
+                  str += '<a data-attach_nt_no="' + attach.attachNtNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
                 }
               }
               str += '</div>';
@@ -204,7 +193,7 @@
             // 요청
             type: 'post',
             url: '/support/removeAttach.do',
-            data: 'attachNo=' + $(ev.target).parent().data('attach_no'),
+            data: 'attachNtNo=' + $(ev.target).parent().data('attach_nt_no'),
             // 응답
             dataType: 'json',
             success: (resData) => {  // resData = {"removeResult": 1}
@@ -246,14 +235,3 @@
    </div>  
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

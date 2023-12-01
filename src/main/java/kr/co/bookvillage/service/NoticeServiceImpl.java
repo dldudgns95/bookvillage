@@ -118,7 +118,6 @@ public class NoticeServiceImpl implements NoticeService {
                             .ntOriginalFilename(ntOriginalFilename)
                             .ntFilesystemName(ntFilesystemName)
                             .ntHasThumbnail(ntHasThumbnail)
-                            .ntNo(notice.getNtNo())
                             .build();
         System.out.println("attachNt: " + attachNt);
         attachCount += noticeMapper.insertAttach(attachNt);
@@ -166,8 +165,8 @@ public class NoticeServiceImpl implements NoticeService {
   public ResponseEntity<Resource> download(HttpServletRequest request) {
     
     // 첨부 파일의 정보 가져오기
-    int attachNo = Integer.parseInt(request.getParameter("attachNo"));
-    AttachNtDto attach = noticeMapper.getAttach(attachNo);
+    int attachNtNo = Integer.parseInt(request.getParameter("attachNtNo"));
+    AttachNtDto attach = noticeMapper.getAttach(attachNtNo);
     
     // 첨부 파일 File 객체 -> Resource 객체
     File file = new File(attach.getNtPath(), attach.getNtFilesystemName());
@@ -179,7 +178,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
     
     // 다운로드 횟수 증가하기
-    noticeMapper.updateDownloadCount(attachNo);
+    noticeMapper.updateDownloadCount(attachNtNo);
     
     // 사용자가 다운로드 받을 파일의 이름 결정 (User-Agent값에 따른 인코딩 처리)
     String ntOriginalFilename = attach.getNtOriginalFilename();
@@ -359,7 +358,6 @@ public class NoticeServiceImpl implements NoticeService {
     for(MultipartFile multipartFile : files) {
       
       if(multipartFile != null && !multipartFile.isEmpty()) {
-        
         String path = myFileUtils.getNoticePath();
         File dir = new File(path);
         if(!dir.exists()) {
@@ -368,9 +366,14 @@ public class NoticeServiceImpl implements NoticeService {
         
         String ntOriginalFilename = multipartFile.getOriginalFilename();
         String ntFilesystemName = myFileUtils.getFilesystemName(ntOriginalFilename);
+
+        String url = path + "/" + ntFilesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
         File file = new File(dir, ntFilesystemName);
         
-        multipartFile.transferTo(file);
+        multipartFile.transferTo(paths.toFile());
         
         String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
         int ntHasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
@@ -387,7 +390,6 @@ public class NoticeServiceImpl implements NoticeService {
                             .ntOriginalFilename(ntOriginalFilename)
                             .ntFilesystemName(ntFilesystemName)
                             .ntHasThumbnail(ntHasThumbnail)
-                            .ntNo(Integer.parseInt(multipartRequest.getParameter("ntNo")))
                             .build();
         
         attachCount += noticeMapper.insertAttach(attach);

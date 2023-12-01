@@ -20,4 +20,5 @@ public class BookCheckoutDto {
   private Date startDate;    // 대출시작날짜
   private Date dueDate;      // 대출반납예정일
   private Date endDate;      // 대출반납일
+  private int delay;         // 대출연기신청횟수 (승인시 0, 1회는 1 최대1회가능)
 }

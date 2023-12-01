@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('책빌리지')}"></head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .mypage {
+    width: 900px;
+    height: 500px;
+    display: inline-block;
+    text-align: center; 
+    margin-left: 320px;
+  }
+  
+    .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+    height: 41px;
+  }
+  
+  .table {
+    table-layout: fixed;
+    width: 800px;
+  }
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="side_bar">
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
+      <ul id="side_list">
+        <li><a th:href="@{/mypage/booklist.do}">대출조회및연기</a></li>
+        <li><a th:href="@{/mypage/edit.form}">회원정보수정</a></li>
+        <li><a th:href="@{/mypage/wish.do}">관심도서</a></li>
+        <li><a th:href="@{/mypage/review.do}">도서후기</a></li>
+        <li><a th:href="@{/mypage/facApply.do}">시설이용신청내역</a></li>    
+        <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
+      </ul>       
+    </div>
+    <th:block th:if="${session.user != null}">
+    <div class="mypage">
+      <h3>대출조회및연기</h3>
+      <div>
+        <h4>이용자 대출상태</h4>
+        <ul style="text-align: center;">         
+          <li th:text="|이용자 이름:${session.user.name}|"></li>
+          <th:block th:if="${session.user.status == 0}">
+            <li th:text="|회원상태:대출불가|"></li>
+          </th:block>
+          <th:block th:if="${session.user.status == 1}">
+            <li th:text="|회원상태:대출가능 ${session.user.bookcount}권 대출중|"></li>
+          </th:block>        
+        </ul>
+     
+      <table border="1" class="table table-hover">
+        <thead>
+          <tr>
+            <td>대출번호</td>
+            <td>도서명</td>
+            <td>대출일자</td>
+            <td>반납예정일</td>
+            <td>대출상태</td>
+            <td>반납연기</td>
+          </tr>
+        </thead>
+        <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->
+       <tbody>
+         <tr th:if="${#lists.isEmpty(bookList)}">
+           <td colspan="6">대출내역이없습니다.</td>
+          </tr>
+          <th:block th:if="${not #lists.isEmpty(bookList)}">
+            <th:block th:each="book : ${bookList}">
+              <tr th:if="${session.user.userNo eq book.userDto.userNo}">
+                <td th:text="${book.checkoutNo}"></td>
+                <td class="table_title" th:text="${book.bookDto.title}"></td>
+                <td th:text="${book.checkoutDate}"></td>
+                <td th:text="${book.dueDate}"></td>
+                <td>
+                  <th:block th:if="${book.status == 1}">
+                    대출중
+                  </th:block>
+                  <th:block th:if="${book.status == 2}">
+                    반납완료
+                  </th:block>
+                </td>
+                <td th:if="${book.status == 1}">
+                  <form method="get" th:action="@{/mypage/delayBookCheckout.do}">
+                  <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
+                  <button type="submit" id="btn_delay" class="btn btn-success">연기신청</button>
+                  </form>
+                </td>  
+                <td th:if="${book.status != 1}">
+                  
+                </td>           
+              </tr>            
+             </th:block>
+          </th:block>
+        </tbody>
+        <!--/* 페이징 */-->
+        <tfoot th:if="${not #lists.isEmpty(bookList)}">
+          <tr>
+            <td  colspan="6" th:utext="${paging}"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>   
+  </div>
+  </th:block>
+  <th:block th:if="${session.user == null}">
+    <div class="mypage"></div>
+  </th:block>
+
+ </div>
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    const fnDelayCheckout = () => {
+        let delayResult = /*[[${delayResult}]]*/ null;
+        if(delayResult !== null) {
+          if(delayResult === 1) {
+          alert('연기신청을 완료했습니다.');           
+          } else {
+          alert('연기신청이 불가능합니다.');
+          }
+        } 
+    }
+    
+    fnDelayCheckout();
+  </script>
+  
+</body>
+</html>

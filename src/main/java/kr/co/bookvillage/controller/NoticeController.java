@@ -76,7 +76,7 @@ public class NoticeController {
 	  @GetMapping("/edit.form")
 	  public String edit(@RequestParam(value="ntNo", required=false, defaultValue="0") int ntNo
 	                   , Model model) {
-	    model.addAttribute("ntNo", noticeService.getNotice(ntNo));
+	    model.addAttribute("notice", noticeService.getNotice(ntNo));
 	    return "support/edit";
 	  }
 	  
