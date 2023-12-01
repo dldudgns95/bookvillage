@@ -465,6 +465,11 @@
      WHERE FAC_STATUS = 0
   </select>
   
+  <select id="checkAddBook" parameterType="String" resultType="boolean">
+    SELECT COUNT(*)
+      FROM BOOK
+     WHERE ISBN = #{isbn}
+  </select>
   
   
   

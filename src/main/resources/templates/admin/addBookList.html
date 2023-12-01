@@ -50,7 +50,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 565px;
+    width: 400px;
     height: 41px;
   }
   
@@ -105,14 +105,13 @@
     </div>
     <div class="admin_contents">
       <div>
-        <form id="frm_search" method="get" th:action="@{/admin/addBookSearch.do}">
+        <form id="frm_search">
           <div class="input-group w-50 p-3">
             <select class="form-select search_select" id="inputGroupSelect01" name="QueryType" aria-label="Example select with button addon">
               <option value="Title">책제목</option>
               <option value="Author">저자</option>
             </select>
-            <input type="text" class="form-control search_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
-            <input type="hidden" name="Query" id="hidden_query">
+            <input type="text" class="form-control search_text" name="Query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
             <button class="btn btn-outline-secondary" type="button" id="btn_search">
               <i class="fa-solid fa-magnifying-glass white"></i>
             </button>
@@ -140,42 +139,25 @@
   </div>
   
   <script th:inline="javascript">
-    const fnBookSearch = () => {
-      $('#frm_search').submit((ev) => {
-        let query = $('.serach_text').val().trim();
-        let checkISBN = /^[0-9]{1,13}$/;
-        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
-        if(query === '') {
-          alert('검색어를 입력해주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('.search_select').val() === "ISBN") {
-          if(!checkISBN.test(query)) {
-            alert('검색어를 정확히 입력해주세요(숫자 1~13자)');
-            ev.preventDefault();
-            return;
-          }
-        }
-        if($('.search_select').val() === "TITLE") {
-          if(!checkTitle.test(query)) {
-            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
-            ev.preventDefault();
-            return;
-          }
-        }
-      })
-    }
     
     const fnAddBookSearch = () => {
       $('#btn_search').click(() => {
-        let query = $('.search_text').val().trim();
+        fnBookSearch();
+      })
+      $('#frm_search').submit((ev) => {
+        ev.preventDefault();
+        fnBookSearch();
+      })
+    }
+    
+    const fnBookSearch = () => {
+      let query = $('.search_text').val().trim();
         let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
         if(!checkTitle.test(query)) {
           alert('검색어를 정확히 입력해주세요(영어,숫자,한글)');
           return;
         }
-        $('#hidden_query').val(query);
+        // $('#hidden_query').val(query);
         $.ajax({
           method: 'get',
           url: '/admin/addBookSearch.do',
@@ -184,7 +166,6 @@
           success: (resData) => {
             console.log(resData);
             let str = '';
-            $('.search_body').html(str);
             $.each(resData.bookList, (i, book) => {
               str += '<tr>';
               str += '  <td><img class="table_cover" src="'+book.cover+'"></td>';
@@ -192,15 +173,52 @@
               str += '  <td>'+book.title+'</td>';
               str += '  <td>'+book.author+'</td>';
               str += '  <td>'+book.publisher+'</td>';
+              str += '  <td>';
+              str += '    <form class="frm_add_book">';
+              str += '      <input type="hidden" name="isbn" value="'+book.isbn+'">';
+              str += '      <input type="hidden" name="title" value="'+book.title+'">';
+              str += '      <input type="hidden" name="cover" value="'+book.cover+'">';
+              str += '      <input type="hidden" name="author" value="'+book.author+'">';
+              str += '      <input type="hidden" name="publisher" value="'+book.publisher+'">';
+              str += '      <input type="hidden" name="pubdate" value="'+book.pubdate+'">';
+              str += '      <input type="hidden" name="description" value="'+book.description+'">';
+              str += '      <input type="hidden" name="categoryName" value="'+book.categoryName+'">';
+              str += '      <input type="hidden" name="categoryId" value="'+book.categoryId+'">';
+              str += '      <button type="button" class="btn_add_book btn btn-primary">도서추가</button>';
+              str += '    </form>';
+              str += '  </td>';
               str += '</tr>';
             });
             $('.search_body').html(str);
+          }
+        })
+    }
+    
+    const fnAddBook = () => {
+      $(document).on('click', '.btn_add_book', (ev) => {
+        if(!confirm('해당 도서를 추가하시겠습니까?')){
+          return;
+        }
+        $.ajax({
+          method: 'get',
+          url: '/admin/addBook.do',
+          data: $(ev.target).closest('.frm_add_book').serialize(),
+          dataType: 'json',
+          success: (resData) => {
+            if(resData.addResult === 1) {
+              alert('추가성공!');
+            } else if(resData.addResult === 0) {
+              alert('추가실패!');
+            } else if(resData.addResult === 2) {
+              alert('이미 등록된 책입니다.');
+            }
           }
         })
       })
     }
     
     fnAddBookSearch();
+    fnAddBook();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

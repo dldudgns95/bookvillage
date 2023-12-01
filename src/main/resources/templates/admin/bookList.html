@@ -167,8 +167,8 @@
                   <form id="frm_search" method="get" th:action="@{/admin/bookSearch.do}">
                     <div class="input-group w-50 p-3">
                       <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
-                        <option value="ISBN" selected>ISBN</option>
-                        <option value="TITLE">책제목</option>
+                        <option value="TITLE" selected>책제목</option>
+                        <option value="ISBN">ISBN</option>
                       </select>
                       <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
                       <button class="btn btn-outline-secondary" type="submit" id="btn_search">

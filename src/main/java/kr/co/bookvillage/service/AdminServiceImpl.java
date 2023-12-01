@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -535,9 +536,49 @@ public class AdminServiceImpl implements AdminService {
       }
     }
     
-    System.out.println(array.length());
+    System.out.println(bookList);
     
     return Map.of("bookList", bookList);
+  }
+  
+  @Override
+  public Map<String, Object> addBook(HttpServletRequest request) {
+    
+    String isbn = request.getParameter("isbn");
+    String title = request.getParameter("title");
+    String cover = request.getParameter("cover");
+    String author = request.getParameter("author");
+    String publisher = request.getParameter("publisher");
+    long timestamp = Long.parseLong(request.getParameter("pubdate"));
+    Date pubdate = new Date(timestamp);
+    String description = request.getParameter("description");
+    String categoryName = request.getParameter("categoryName");
+    int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+    
+    // 이미 등록된 책인지 체크
+    boolean checkResult = adminMapper.checkAddBook(isbn);
+    System.out.println("checkResult : " + checkResult);
+    if(checkResult == true) {
+      return Map.of("addResult", 2);
+    } else {
+      
+      BookDto book = BookDto.builder()
+          .isbn(isbn)
+          .title(title)
+          .cover(cover)
+          .author(author)
+          .publisher(publisher)
+          .pubdate(pubdate)
+          .description(description)
+          .categoryName(categoryName)
+          .categoryId(categoryId)
+          .build();
+      
+      int addResult = adminMapper.insertBook(book);
+      return Map.of("addResult", addResult);
+      
+    }
+    
   }
   
   
