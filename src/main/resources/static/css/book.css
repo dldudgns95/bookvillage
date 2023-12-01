@@ -13,6 +13,13 @@
   text-align: center;
 }
 
+/*좌측*/
+.menu_title {
+  background-color: aquamarine;
+  height: 100px;
+  
+}
+
 /*search*/
 /*검색*/
 .search_wrap {

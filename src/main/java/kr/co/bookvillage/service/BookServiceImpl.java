@@ -54,12 +54,13 @@ public class BookServiceImpl implements BookService {
     if (pageIndex != -1) {
       bookSearchDto.setSt(bookSearchDto.getSt().substring(0, pageIndex));
     }
+    
     Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt());
     
     List<BookDto> bookSearchList = bookMapper.getBook(map);
     model.addAttribute("bookSearchList", bookSearchList);
     
-    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result"));
+    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result?userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()));    
     model.addAttribute("totalCount", total);
     
     
@@ -81,8 +82,8 @@ public class BookServiceImpl implements BookService {
   
   // 한줄평 목록 가져오기
   @Override
-  public void getScore(String isbn, Model model) {
-    List<ScoreDto> scoreList = scoreMapper.getScore(isbn);
+  public void getScoreList(String isbn, Model model) {
+    List<ScoreDto> scoreList = scoreMapper.getScoreList(isbn);
     model.addAttribute("scoreList", scoreList);
   }
   
@@ -92,12 +93,12 @@ public class BookServiceImpl implements BookService {
     scoreMapper.deleteScore(scoreDto);        
   }
   
-  // 한줄평 좋아요 (남의 것만 가능) --구현안됨
-  @Override
+  // 한줄평 좋아요 (남의 것만 가능) --아직구현안됨
+//  @Override
   public void likeScore(ScoreDto scoreDto, Model model) {
-    scoreDto.setRecommend(scoreDto.getRecommend()+1);
-    int scoreLike = scoreDto.getRecommend();
-    model.addAttribute("scoreLike", scoreLike);
+//    scoreDto.setRecommend(scoreDto.getRecommend()+1);
+//    int scoreLike = scoreDto.getRecommend();
+//    model.addAttribute("scoreLike", scoreLike);
   }
   
   

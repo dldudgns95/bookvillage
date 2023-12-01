@@ -47,6 +47,7 @@
         </ul>
       </nav>
       
+<!-- body -->      
     <div class="wrap wrap_flex">
       <div class="column-2">
         
@@ -56,7 +57,24 @@
         <div class="search_menu">
           <div class="search_ico">
             <i class="fa-solid fa-list"></i>
-          </div>            
+          </div>
+          <div class="sortBox">
+            <select name="sortNum" class="sl1">
+               <option value="n10">10</option>
+               <option value="n20">20</option>
+               <option value="n30">30</option>
+            </select>            
+            <select id="sortData" name="sortData" class="sl2">
+              <option value="title">제목</option>
+              <option value="author">저자</option>
+              <option value="pubDate">발행일</option>
+            </select>
+            <select id="sortMethod" name="sortMethod" class="sl3">
+              <option value="asc">오름차순</option>
+              <option value="desc">내림차순</option>
+            </select>
+          </div>
+
         </div>
         <hr>
           <div th:if="${#lists.size(bookSearchList) > 0}">

@@ -48,10 +48,20 @@
           </li>
         </ul>
       </nav>
-            
+  
+<!-- body -->          
+
     <div class="wrap wrap_flex">
       <div class="column-2">
-
+        <div class="menu_title">
+          자료검색
+        </div>
+        <ul class="menu_list">
+          <div>자료검색</div>
+          <div>주제별자료검색</div>
+          <div>희망도서신청</div>
+          <div>사서추천도서</div>
+        </ul>
       </div>
       
       <div class="column-8">
@@ -59,7 +69,7 @@
           <a href="javascript:void(0);" id="BackToSearch"><i class="fa-solid fa-arrow-left"></i> 검색 결과로 돌아가기</a>
         </div>
         <hr>
-        <div class="detail_book" th:each="bookDetail : ${bookDetailList}">
+        <div class="detail_book" th:each="bookDetail:${bookDetailList}">
           <div class="detail_img search_inline">
             <img th:src="${bookDetail.cover}"></img>
           </div>
@@ -141,34 +151,35 @@
         <hr>
          
         <h4 class="detail_title">한줄평</h4>
-        <span th:if="${scoreList.isEmpty()}">등록된 한줄평이 없습니다.</span>
-        <div class="score_list" th:each="score : ${scoreList}">
-          <div>
-            <span th:if="${score.review}">
-                <span th:text="${score.review}"></span>
-                <span th:text="${score.reviewDate}"></span>
-                <span th:if="${score.star == 5}" >★★★★★</span>
-                <span th:if="${score.star == 4}" >★★★★☆</span>
-                <span th:if="${score.star == 3}" >★★★☆☆</span>
-                <span th:if="${score.star == 2}" >★★☆☆☆</span>
-                <span th:if="${score.star == 1}" >★☆☆☆☆</span>
-            </span>
-                        
-            <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">    
-              <!-- 삭제 버튼 -->
-              <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'정말로 삭제하시겠습니까?\')'"><i class="fa-solid fa-xmark"></i></a>
-            </span>
-            <span class="my_score" th:unless="${score.userNo != null and score.userNo == session?.user?.userNo}">    
-              <!-- 추천 버튼 -->
-              <a th:href="@{/book/likeScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="'return confirm(\'추천하시겠습니까?\')'"><i class="fa-regular fa-thumbs-up"></i></a>
-            </span>
-          </div>
-        </div>        
+        <div th:if="${#lists.isEmpty(scoreList)}">등록된 한줄평이 없습니다.</div>
+        <div th:if="${not #lists.isEmpty(scoreList)}">
+          <div class="score_list" th:each="score:${scoreList}">
+            <div>
+              <span th:text="${score.review}"></span>
+              <span th:text="${score.reviewDate}"></span>
+              <span th:if="${score.star == 5}" >★★★★★</span>
+              <span th:if="${score.star == 4}" >★★★★☆</span>
+              <span th:if="${score.star == 3}" >★★★☆☆</span>
+              <span th:if="${score.star == 2}" >★★☆☆☆</span>
+              <span th:if="${score.star == 1}" >★☆☆☆☆</span>     
+              
+              <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">                   <!-- 삭제 버튼 -->
+                <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="return confirm('정말로 삭제하시겠습니까?')"><i class="fa-solid fa-xmark"></i></a>
+              </span>
+              <span class="my_score" th:unless="${score.userNo != null and score.userNo == session?.user?.userNo}">    
+                <!-- 추천 버튼 -->
+                <a th:href="@{/book/likeScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="return confirm('추천하시겠습니까?')"><i class="fa-regular fa-thumbs-up"></i></a>
+              </span>                   
+            </div>
+          </div>        
+        </div>
+
          
         <div class="detail_score">
           <form name="score" id="score" class="score" method="post">
             <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}">
-            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+            <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+            <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
             <input type="hidden" name="reviewDate">
             <fieldset>
               <span>평가하기</span>
@@ -179,8 +190,8 @@
               <input type="radio" name="star" class="star" value="1" id="rate5"><label for="rate5">★</label>
             </fieldset>
             <div class="detail_review">
-              <textarea th:if="${session.user?.userNo == null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" disabled="disabled" placeholder="로그인 후 입력가능합니다."></textarea>
-              <textarea th:if="${session.user?.userNo != null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" placeholder="한줄평을 남겨주세요(100자 이하)"></textarea>
+              <textarea th:if="${session.user == null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" disabled="disabled" placeholder="로그인 후 입력가능합니다."></textarea>
+              <textarea th:if="${session.user != null}" type="text" id="review" class="review" maxlength="100" cols="90" rows="3" placeholder="한줄평을 남겨주세요(100자 이하)"></textarea>
               <input type="button" value="등록" title="등록" class="btn btn-outline-secondary" onclick="saveReview()">
             </div>
           </form>

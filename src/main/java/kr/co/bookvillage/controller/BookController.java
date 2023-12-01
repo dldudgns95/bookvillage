@@ -32,7 +32,7 @@ public class BookController {
   public String search() {
     return "book/search";
   }
-  // 검색 버튼 클릭 후 '검색 리스트 페이지'로 이동
+  // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
   @GetMapping("/search/result")
   public String result(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     bookService.searchBook(bookSearchDto, request, model);
@@ -42,7 +42,7 @@ public class BookController {
   @GetMapping("/search/detail")
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, Model model) {
     bookService.getBookDetail(isbn, model);
-    bookService.getScore(scoreDto.getIsbn(), model);
+    bookService.getScoreList(scoreDto.getIsbn(), model);
     return "book/detail";
   }
   
