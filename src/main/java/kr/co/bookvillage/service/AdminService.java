@@ -32,4 +32,5 @@ public interface AdminService  {
   public void getFacApplyList(HttpServletRequest request, Model model);
   public Map<String, Object> getAddBookSearch(HttpServletRequest request);
   public Map<String, Object> addBook(HttpServletRequest request);
+  public int updateBookApply(HttpServletRequest request);
 }

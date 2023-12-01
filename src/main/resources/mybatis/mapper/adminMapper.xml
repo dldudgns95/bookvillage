@@ -481,5 +481,14 @@
      WHERE USER_NO = #{userNo}
   </update>
   
+  <!-- 대출중일때 대출권수 늘어나게 -->
+  <update id="updateBookApply" parameterType="int">
+    UPDATE BOOK_APPLY
+       SET STATUS = 1
+     WHERE APPLY_NO = #{applyNo}
+  </update>
+  
+  
+  
   
 </mapper>

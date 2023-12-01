@@ -585,5 +585,11 @@ public class AdminServiceImpl implements AdminService {
     
   }
   
+  @Override
+  public int updateBookApply(HttpServletRequest request) {
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    return adminMapper.updateBookApply(applyNo);
+  }
+  
   
 }
