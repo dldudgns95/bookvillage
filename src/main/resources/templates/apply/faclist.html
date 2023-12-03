@@ -1,10 +1,34 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{/layout/header::head('시설 신청')}"></head>
+  
+<head th:replace="~{/layout/header::head('시설신청')}"></head>
 
 <style>
-	div.child1{
+  .flex_admin {
+    display: flex;
+  }
+  
+  .padding_top {
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 20px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  /* 관리자 페이지 카테고리 */
+   div.child1{
 		width: 100px;
 		height: 300px;
 		float:left;
@@ -12,55 +36,119 @@
 		margin-right:20px;
 		background-color: lightsteelblue;
 		text-align: center;
-	}
-	div.child2{
-		width: 750px;
-		height: 200px;
-		float:left;
-	}
-	div.cal{
-		width: 500px;
-		float:left;
-		text-align: center;
-	}
-   div.nt{
-	  margin-left:30px;
-   }
+	} 
+  
+  .input-group {
+    margin: 0 auto;
+  }
+  
+  /* 도서에서 쓰일 테이블 */
+  .table {
+    table-layout: fixed;
+  }
+  
+  .table_isbn {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 132px;
+    height: 41px;
+  }
+  .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 565px;
+    height: 41px;
+  }
+  
+  .table_author {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 170px;
+    height: 41px;
+  }
+  
+  .table_publisher {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 105px;
+    height: 41px;
+  }
+  
+  .admin_spacebetween{
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* 캘린더 크기 조절 */
+  #calendar {
+    width: 900px;
+  }
+  /* 모달 이미지 크기 조절 */  
+  .modal_img {
+    width: 300px;
+  }
+  
+  /* 캘린더 좌측 우측 아이콘 색상 */
+  .fc-icon-chevron-right, .fc-icon-chevron-left {
+    color: #ffffff;
+  }
+  
 </style>
-
+<!--tippy사용-->
+<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
+<script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
 <body>
-
+  
   <div th:replace="~{/layout/header::header}"></div>
-  <div class="parent">
-    <div class="wrap wrap_9">
-      <div class="child1">
+  
+  <div class="flex_admin padding_top">
+	 <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
 		  <li style="margin:20px"><a th:href="@{/}">희망도서신청</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;">시설 이용 신청</h5>	
-		  
-	  </div>
-		<div class="child2">		
-		   <div class="cal" id='calendar'></div>
-	       <th:block th:if="${session.user != null and session.user.auth == 9}">
-			<a th:href="@{/admin/facWrite.form}"><button>시설등록</button></a> 
-			</th:block>			   
-		   <div class="nt">이용할 날짜를 선택해주세요</div>
-		</div>
-   </div>
-   <script th:inline="javascript">
-	  
+    
+    <div class="admin_contents">
+      <div id='calendar'></div>
+      <div>
+	<th:block th:if="${session.user != null and session.user.auth == 9}">
+        <a th:href="@{/admin/facApplyList.do}"><button type="button" class="btn btn-primary">시설 등록하기</button></a>
+      </div>
+    </th:block>
+    </div>
+
+  </div>
+  
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        <!-- 모달 내용이 들어갈 자리 -->  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script th:inline="javascript">
+    
     
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
       var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
         headerToolbar : { // 헤더에 표시할 툴 바
-          start : 'prev next',
+          left : 'prev',
           center : 'title',
-          end : 'today'
+          right : 'next'
         },
         titleFormat : function(date) {
           return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
@@ -68,10 +156,9 @@
         //initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
         selectable : true, // 달력 일자 드래그 설정가능
         droppable : true,
-        editable : true,
+        editable : false,
         nowIndicator: true, // 현재 시간 마크
         locale: 'ko', // 한국어 설정
-        
         dateClick: function(info) {  // 날짜 클릭이벤트 진행
           let user = /*[[${session.user}]]*/ null;
           if(user === null) {   // 로그인 여부 체크
@@ -175,11 +262,7 @@
       $("#myModal").modal("show");
    }
        
-   const fnFacWrite = () => {
-     $('#btn_write').click(() => {
-       location.href="/apply/facWrite.form";
-     })
-   }
+
    
    const fnAddFacApply = () => {
      $(document).on('click', '.btn_add_fac_apply', (ev) => {
@@ -204,10 +287,12 @@
        
      })
    }
-    
-   fnFacWrite();
+   
    fnAddFacApply();
-   </script>
-</div>
+    
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
 </body>
 </html>

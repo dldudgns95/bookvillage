@@ -5,6 +5,7 @@
 
 <mapper namespace="kr.co.bookvillage.dao.FacMapper">
 	
+
   <!-- 시설 Map -->
   <resultMap type="AttachFacDto" id="AttachFacMap">
     <id column="FAC_ATTACH_NO"             property="facAttachNo" />
@@ -20,19 +21,57 @@
   </resultMap> 
   
 
-<!-- fac 리스트 가져오기 -->
- 
-  <select id="getFacList" parameterType="Map">
-	SELECT FAC_NO, FAC_NAME, FAC_CONTENT
-	  FROM FACILITY
-  </select>
   
-  <select id="getFac" parameterType="int">
-	SELECT FAC_NO, FAC_NAME, FAC_CONTENT
-	  FROM FROM FACILITY
-	 WHERE FAC_NO = #{facNo}	
-  </select>
-
+  <!-- 시설이용신청 Map -->
+  <resultMap type="facApplyDto" id="FacApplyMap">
+    <id column="FAC_APPLY_NO"     property="facApplyNo" />
+    <result column="FAC_REG_DATE" property="facRegDate" />
+    <result column="FAC_START"    property="facStart" />
+    <result column="FAC_STATUS"   property="facStatus" />
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo" />
+      <result column="NAME" property="name" />
+    </association>
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO" property="facNo" />
+      <result column="FAC_NAME" property="facName" />
+    </association>
+  </resultMap>
+  
+  <!-- 시설 등록 -->
+  <insert id="addFacility" parameterType="FacilityDto">
+    INSERT INTO FACILITY(
+      FAC_NO
+    , FAC_NAME
+    , FAC_CONTENT
+    ) VALUES (
+      FACILITY_SEQ.NEXTVAL
+    , #{facName}
+    , #{facContent}
+    )
+  </insert>
+  
+  <!-- 시설 이미지 등록 -->
+  <insert id="addFacImage" parameterType="AttachFacDto">
+    INSERT INTO ATTACH_FAC(
+      FAC_ATTACH_NO
+    , FAC_NO
+    , FAC_PATH
+    , FAC_ORIGINAL_FILENAME
+    , FAC_FILESYSTEM_NAME
+    , FAC_HAS_THUMBNAIL
+    ) VALUES (
+      ATTACH_FAC_SEQ.NEXTVAL
+    , FACILITY_SEQ.CURRVAL
+    , #{facPath}
+    , #{facOriginalFilename}
+    , #{facFilesystemName}
+    , #{facHasThumbnail}
+    )
+  </insert>
+  
+  
+  
   <!-- 사용 가능한 시설 조회 -->
   <select id="availableFacList" parameterType="String" resultMap="AttachFacMap">
     SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
@@ -77,5 +116,16 @@
       FROM FAC_APPLY
      WHERE USER_NO = #{userNo}
        AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
-  </select>  
+  </select>
+ 
+  <!-- 시설이용신청 리스트 조회 -->
+  <select id="getFacApplyList" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+      FROM FAC_APPLY FA INNER JOIN USER_T U
+        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+        ON FA.FAC_NO = F.FAC_NO
+     WHERE FAC_STATUS = 0
+  </select>
+  
+ 
 </mapper>
