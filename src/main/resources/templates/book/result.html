@@ -102,7 +102,8 @@
                         <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
                         <td>
                           <form method="post" id="WishForm">
-                            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
+                            <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+                            <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="hidden" id="wishDate" name="wishDate" />
                             <button type="button" id="toggleWishBtn" class="btn"></button>
@@ -110,7 +111,8 @@
                         </td>
                         <td>
                           <form id="searchDetail" name="searchDetail" action="detail" method="get">
-                            <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+                            <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+                            <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="submit" value="상세" title="상세" class="btn btn-outline-secondary">
                           </form>
@@ -121,7 +123,7 @@
            
               </li>
             </ul>
-            <div th:utext="${paging}"></div>
+            <div style="display: flex; justify-content: center;" class="page_btn" th:utext="${paging}"></div>
           </div>
           
           <div th:if="${#lists.size(bookSearchList) == 0}">
