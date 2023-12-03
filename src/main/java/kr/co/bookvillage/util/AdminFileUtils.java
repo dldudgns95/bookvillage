@@ -12,7 +12,7 @@ public class AdminFileUtils {
   // 맥 전용 반환
    public String getFacMacImagePath() {
      LocalDate today = LocalDate.now();
-     return "/users/seoga-eul/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+     return "/Users/seoga-eul/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
    }
 
   // 블로그 작성시 사용된 이미지가 저장될 경로 반환하기
