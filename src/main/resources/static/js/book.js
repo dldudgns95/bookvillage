@@ -1,3 +1,4 @@
+
 //검색어(st) 없으면 검색 막기
 $(document).ready(function() {
             $('#search').submit(function(event) {

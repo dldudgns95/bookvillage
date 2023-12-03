@@ -12,7 +12,10 @@ import kr.co.bookvillage.dto.WishDto;
 
 public interface BookService {
 
-  // 검색
+  // 신간
+  public void getNewBook(Model model);
+  
+  // 검색 & 정렬
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request,Model model);
   
   // 상세

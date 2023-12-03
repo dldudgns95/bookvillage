@@ -4,9 +4,6 @@
 @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css');
 
 /*common*/
-.search_inline {
-  display: inline-block;
-}
 .wrap_flex {
   display: flex; /*2단 레이아웃 구성 위한 flex*/
   position: relative;
@@ -50,6 +47,22 @@
 .search_btn {
   display: inline-block;
 }
+/*신작 도서*/
+.list_area h5 {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+.new_book_container {
+  display: flex;
+  justify-content: space-between;
+}
+.new_book {
+  width: 200px;
+  margin-right: 10px;
+  text-align: center; 
+}
+
 
 /*result*/
 /*2단 레이아웃*/
@@ -61,23 +74,58 @@
 .column-8 {
     flex: 8;
 }
+/*검색 메뉴*/
+.search_menu {
+  display: flex;
+  justify-content: space-between;
+}
+.search_cnt_text {
+  font-size: 120%;
+  color: rgb(37, 94, 188);
+  font-weight: 600;
+}
+.search_cnt_cnt {
+  font-weight: 600;
+}
+
 /*검색 리스트*/
 .search_list {
   display: flex;
   margin-bottom: 20px;
+  padding-bottom: 20px;
+  align-items: center;
+  position: relative;
+}
+.search_list::after {
+  content: "";
+  display: block;
+  height: 1px; /* 선의 높이 조절 */
+  width: 100%; /* 부모 요소의 가로폭에 맞게 설정 */
+  background-color: #ccc; /* 선의 색상 조절 */
+  position: absolute;
+  bottom: 0;
+  left: 0;
 }
 .search_img {
-  display: flex;
-  flex: 1.5;
   left: 20px;
-  margin-right: 20px;
 }
 .search_info {
-  display: flex;
-  flex-direction: column;
-  flex: 8.5;
   align-items: flex-start;
-  margin-top: 10px;
+  margin-left: 40px;
+  flex-grow: 1;
+}
+.search_info h4 {
+  text-align: left;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  -webkit-line-clamp: 1; /* 최대 표시 줄 수 */
+  margin-bottom: 15px;
+}
+.search_info_detail {
+  text-align: left;
+  margin-bottom: 5px;
+  font-weight: 500;
 }
 .search_info span::after {
   content: '|'; /* 각 span 요소 끝에 | 추가 */
@@ -87,8 +135,17 @@
   content: ''; /* 마지막 span 요소 뒤에는 |를 추가하지 않음 */
 }
 .listTable {
-   width: 100%;
-   color: aquamarine;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  border: #D3D3D3 1px solid;
+}
+.listTable th, .listTable td {
+  padding: 5px; 
+}
+
+.listTable td {
+  border: #D3D3D3 1px solid;
 }
 
 /*Detail*/

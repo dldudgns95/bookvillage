@@ -3,7 +3,6 @@
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
 
-
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -71,16 +70,30 @@
             <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
           </div>
         </form>
+        <div class="">
+          실시간 급상승: 2024, ... 클릭하면 여기 적혀있는 말 검색되게 해야지 ㅋㅋ
+        </div>
       </div>
       
       <div class="list_area">
-        <h5>이 달의 추천 도서</h5>
+        <h5> <img src="/image/logo_noname.png" width="60px"> 신간 도서 </h5>
+        <div class="new_book_container">
+          <div class="new_book" th:each="book : ${newBookList}">
+            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+              <img th:src="${book.cover}"/>
+            </a>
+              <div th:text="${book.title}"></div>
+          </div>
+        </div>        
+          
+        <h5> <img src="/image/logo_noname.png" width="60px"> 추천 도서 </h5>  
         <div class="recommendContents">
           <ul>
             <li></li>
           </ul>
         </div>
-        <h5>베스트 셀러</h5>
+        
+        <h5> <img src="/image/logo_noname.png" width="60px"> 베스트 셀러</h5>
         <div class="bestContents">
           
         </div>

@@ -38,8 +38,15 @@ public class BookServiceImpl implements BookService {
   private final MyPageUtils myPageUtils;
   private final BookPageUtils bookPageUtils;
   
+  // 신간 도서
+  @Override
+  public void getNewBook(Model model) {
+    List<BookDto> newBookList = bookMapper.getNewBook();
+    model.addAttribute("newBookList",newBookList);
+  }
   
-  // 책 검색
+  
+  // 책 검색 & 정렬
   @Override
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     
