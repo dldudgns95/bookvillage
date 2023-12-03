@@ -3,6 +3,8 @@ package kr.co.bookvillage.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,7 +20,6 @@ import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.WishDto;
-import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.BookPageUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
@@ -50,17 +51,12 @@ public class BookServiceImpl implements BookService {
     
     bookPageUtils.setPaging(page, total, display);
     
-    int pageIndex = bookSearchDto.getSt().indexOf("?page");
-    if (pageIndex != -1) {
-      bookSearchDto.setSt(bookSearchDto.getSt().substring(0, pageIndex));
-    }
-    
     Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt());
     
     List<BookDto> bookSearchList = bookMapper.getBook(map);
     model.addAttribute("bookSearchList", bookSearchList);
     
-    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result?userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()));    
+    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result", "userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()));
     model.addAttribute("totalCount", total);
     
     
@@ -130,5 +126,26 @@ public class BookServiceImpl implements BookService {
     bookMapper.updateBookStatus(bookDto);
   }
   
-  
+  // 카테고리 추출
+  @Override
+  public void categoryParser(BookDto bookDto) {
+    
+    String inputString = bookDto.getCategoryName();
+    
+    // 정규표현식 패턴
+    String regex = ">([^>]+)>";
+
+    // 패턴과 입력 문자열을 사용하여 Matcher 생성
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(inputString);
+
+    // 매칭된 부분 찾기
+    if (matcher.find()) {
+        // 첫 번째 그룹의 값 출력
+        String result = matcher.group(1);
+        System.out.println(result);
+    } else {
+        System.out.println("매칭된 부분이 없습니다.");
+    }    
+  }
 }

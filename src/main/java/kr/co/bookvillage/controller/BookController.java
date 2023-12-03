@@ -36,6 +36,8 @@ public class BookController {
   @GetMapping("/search/result")
   public String result(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     bookService.searchBook(bookSearchDto, request, model);
+    String searchText = bookSearchDto.getSt();
+    model.addAttribute("searchText", searchText);
     return "book/result";
   }
   // 상세 버튼 클릭 후 '도서 상세 페이지'로 이동

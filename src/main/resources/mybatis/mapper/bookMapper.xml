@@ -20,7 +20,14 @@
 
   <select id="getBook" parameterType="map" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY 
+                                       <choose>
+                                        <when test="sortType == 'title'">TITLE ASC</when>
+                                        <when test="sortType == 'author'">AUTHOR ASC</when>
+                                        <when test="sortType == 'pubDate'">PUBDATE ASC</when>
+                                        <otherwise>PUBDATE DESC</otherwise>
+                                       </choose> 
+                       ) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
               FROM BOOK 
              WHERE 
               <choose>

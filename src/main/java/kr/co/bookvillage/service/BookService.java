@@ -34,4 +34,6 @@ public interface BookService {
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 
+  // 카테고리 추출
+  public void categoryParser (BookDto bookDto);
 }

@@ -16,6 +16,25 @@ $(document).ready(function() {
     });
 });
 
+//정렬
+function sortBooks(sortType) {
+
+      $.ajax({
+        type: 'GET',
+        url: '/search/result',  // 실제 API 엔드포인트로 변경해야 합니다.
+        data: { sortType: sortType },
+        success: function(response) {
+          // 서버로부터 받은 응답(response)을 이용하여 화면을 갱신하는 작업을 수행합니다.
+          // 예를 들어, 정렬된 도서 목록을 받아서 화면에 출력하는 등의 동작을 수행합니다.
+        },
+        error: function(error) {
+          console.error('Error during sorting:', error);
+        }
+      });
+      
+    }
+
+
 
 //별점
 function saveReview() {
@@ -31,10 +50,12 @@ function saveReview() {
    const isbn = document.querySelector('.score input[name="isbn"]').value;
    const userNo = document.querySelector('.score input[name="userNo"]').value;
    
-   if (userNo==0) {
-      alert("로그인이 필요합니다.");
-      event.preventDefault();
-      return;
+   if (userNo === '0') {
+    var confirmLogin = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+    if (confirmLogin) {
+      window.location.href = '/user/login.form';
+    }
+    return false; // 이벤트 막기
    }
    const reviewText = document.getElementById('review').value;
    
@@ -56,8 +77,7 @@ function saveReview() {
    });
 }
 
-//관심도선
-//관심도서 토글
+//관심도서
 $(document).ready(function() {
   $("#WishForm button").click(function() {
     const toggleWishBtn = document.getElementById('toggleWishBtn');
@@ -65,6 +85,16 @@ $(document).ready(function() {
     var currentDate = new Date();
     var timestamp = currentDate.getTime();
     document.getElementById('wishDate').value = timestamp;
+    
+    // userNo가 0이면 이벤트 막기
+    var userNo = $("input[name='userNo']").val();
+    if (userNo === '0') {
+      var confirmLogin = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+      if (confirmLogin) {
+        window.location.href = '/user/login.form';
+      }
+      return false; // 이벤트 막기
+     }
     
     var formData = {
       userNo: $("input[name='userNo']").val(),
@@ -155,6 +185,16 @@ $(document).ready(function() {
       isbn: $("input[name='isbn']").val(),
     };
 
+    // userNo가 0이면 이벤트 막기
+    var userNo = $("input[name='userNo']").val();
+    if (userNo === '0') {
+      var confirmLogin = confirm('로그인이 필요합니다. 로그인 페이지로 이동하시겠습니까?');
+      if (confirmLogin) {
+        window.location.href = '/user/login.form';
+      }
+      return false; // 이벤트 막기
+     }
+    
     // 서버로 POST 요청 보내기
     $.ajax({
       type: "POST",
@@ -163,6 +203,10 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       success: function(response) {
         alert("대출 확인되었습니다. 반납 기한은 7일입니다.");
+        var confirmLogin = confirm('대출 내역 조회로 이동하시겠습니까?');
+        if (confirmLogin) {
+          window.location.href = '/mypage/booklist.do';
+        }
         console.log('Book Status update successfully.');
       },
       error: function(error) {
@@ -184,4 +228,21 @@ $(document).ready(function() {
       }
     });
   });
+});
+
+//이용안내
+$(document).ready(function() {
+  const promotionEl = document.querySelector('.guide');
+  const promotionToggleBtn = document.querySelector('.toggle-guide')
+  let isHidePromotion = false;
+  promotionToggleBtn.addEventListener('click', function () {
+    isHidePromotion = !isHidePromotion 
+    if (isHidePromotion) {
+      // true면 숨김처리
+      promotionEl.classList.add('hide')
+    } else {
+      //false면 보임처리
+      promotionEl.classList.remove('hide')
+    }
+  })
 });
