@@ -44,7 +44,12 @@ public class BookServiceImpl implements BookService {
     List<BookDto> newBookList = bookMapper.getNewBook();
     model.addAttribute("newBookList",newBookList);
   }
-  
+  // 추천 도서
+  @Override
+  public void getRecoBook(Model model) {
+    List<BookDto> recoBookList = bookMapper.getRecoBook();
+    model.addAttribute("recoBookList",recoBookList);
+  }
   
   // 책 검색 & 정렬
   @Override

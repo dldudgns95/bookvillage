@@ -88,15 +88,15 @@
           
         <h5> <img src="/image/logo_noname.png" width="60px"> 추천 도서 </h5>  
         <div class="recommendContents">
-          <ul>
-            <li></li>
-          </ul>
+          <div class="new_book_container">
+            <div class="new_book" th:each="book : ${recoBookList}">
+            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+              <img th:src="${book.cover}"/>
+            </a>
+              <div th:text="${book.title}"></div>
+          </div>
         </div>
         
-        <h5> <img src="/image/logo_noname.png" width="60px"> 베스트 셀러</h5>
-        <div class="bestContents">
-          
-        </div>
       </div>
       
     </div>

@@ -31,6 +31,7 @@ public class BookController {
   @GetMapping("/search.do")
   public String search(Model model) {
     bookService.getNewBook(model);
+    bookService.getRecoBook(model);
     return "book/search";
   }
   // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
