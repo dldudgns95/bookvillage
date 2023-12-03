@@ -18,7 +18,7 @@
     <result  column="CATEGORY_ID"   property="categoryId" />
   </resultMap>
 
-  <!-- 신간 도서 가져오기 -->
+<!-- 신간 도서 가져오기 -->
 <select id="getNewBook" resultMap="BookMap">
   SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
   FROM (
@@ -26,6 +26,17 @@
     FROM BOOK
   )
   WHERE RN BETWEEN 1 AND 5
+</select>
+
+  <!-- 추천 도서 가져오기 -->
+<select id="getRecoBook" resultMap="BookMap">
+  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+  FROM (
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+     ORDER BY DBMS_RANDOM.VALUE 
+  )
+  WHERE ROWNUM BETWEEN 1 AND 5
 </select>
   
   <!-- 책 검색 결과 조회 및 정렬 -->

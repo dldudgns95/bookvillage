@@ -44,7 +44,12 @@ public class BookServiceImpl implements BookService {
     List<BookDto> newBookList = bookMapper.getNewBook();
     model.addAttribute("newBookList",newBookList);
   }
-  
+  // 추천 도서
+  @Override
+  public void getRecoBook(Model model) {
+    List<BookDto> recoBookList = bookMapper.getRecoBook();
+    model.addAttribute("recoBookList",recoBookList);
+  }
   
   // 책 검색 & 정렬
   @Override
@@ -58,12 +63,12 @@ public class BookServiceImpl implements BookService {
     
     bookPageUtils.setPaging(page, total, display);
     
-    Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt());
+    Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt(), "sortType", bookSearchDto.getSortType());
     
     List<BookDto> bookSearchList = bookMapper.getBook(map);
     model.addAttribute("bookSearchList", bookSearchList);
     
-    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result", "userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()));
+    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result", "userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()+"&sortType="+bookSearchDto.getSortType()));
     model.addAttribute("totalCount", total);
     
     
@@ -99,9 +104,6 @@ public class BookServiceImpl implements BookService {
   // 한줄평 좋아요 (남의 것만 가능) --아직구현안됨
 //  @Override
   public void likeScore(ScoreDto scoreDto, Model model) {
-//    scoreDto.setRecommend(scoreDto.getRecommend()+1);
-//    int scoreLike = scoreDto.getRecommend();
-//    model.addAttribute("scoreLike", scoreLike);
   }
   
   

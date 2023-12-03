@@ -47,21 +47,23 @@
 .search_btn {
   display: inline-block;
 }
-/*신작 도서*/
+/*신작, 추천 도서*/
 .list_area h5 {
   margin-top: 20px;
   margin-bottom: 20px;
   font-weight: 600;
 }
-.new_book_container {
+.bookLi_container {
   display: flex;
   justify-content: space-between;
 }
-.new_book {
+
+.bookLi {
   width: 200px;
   margin-right: 10px;
   text-align: center; 
 }
+
 
 
 /*result*/
@@ -143,10 +145,10 @@
 .listTable th, .listTable td {
   padding: 5px; 
 }
-
 .listTable td {
   border: #D3D3D3 1px solid;
 }
+
 
 /*Detail*/
 .detail_book {
