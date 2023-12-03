@@ -3,7 +3,6 @@
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
 
-
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -55,44 +54,40 @@
       
       <div class="column-8">
         <div class="search_menu">
-          <div class="search_ico">
-            <i class="fa-solid fa-list"></i>
+          <div class="search_cnt">
+           <span class="search_cnt_text">'[[${searchText}]]'</span> 검색결과 <span class="search_cnt_cnt"> '[[${totalCount}]]' </span> 건
           </div>
           <div class="sortBox">
-            <select name="sortNum" class="sl1">
-               <option value="n10">10</option>
-               <option value="n20">20</option>
-               <option value="n30">30</option>
-            </select>            
-            <select id="sortData" name="sortData" class="sl2">
-              <option value="title">제목</option>
-              <option value="author">저자</option>
-              <option value="pubDate">발행일</option>
-            </select>
-            <select id="sortMethod" name="sortMethod" class="sl3">
-              <option value="asc">오름차순</option>
-              <option value="desc">내림차순</option>
-            </select>
+            <form id="sort" name="sort" action="result" method="get">
+              <input type="hidden" name="userNo" th:value="${bookSearchDto.userNo}" />
+              <input type="hidden" name="ss" th:value="${bookSearchDto.ss}" />
+              <input type="hidden" name="st" th:value="${bookSearchDto.st}" />
+              <button type="submit" name="sortType" value="title" class="btn btn-outline-secondary">제목순</button>
+              <button type="submit" name="sortType" value="author" class="btn btn-outline-secondary">저자순</button>
+              <button type="submit" name="sortType" value="pubDate" class="btn btn-outline-secondary">발행일순</button>
+            </form>
           </div>
-
         </div>
+        
         <hr>
           <div th:if="${#lists.size(bookSearchList) > 0}">
             <ul th:each="book : ${bookSearchList}" class="search_list" >
-              <li class="search_img search_inline">
-                <img th:src="${book.cover}" style="width: 100px;"></img>
+              <li class="search_img">
+                <a th:href="@{/book/search/detail(isbn=${book.isbn})}"> <!-- 표지, 제목 클릭하면 상세로 이동 -->
+                  <img th:src="${book.cover}" style="width: 150px;" />
               </li>
-              <li class="search_info search_inline">
+              <li class="search_info">
                 <div><h4 th:text="${book.title}"></h4></div>
-                <div>저자: <span th:text="${book.author}"></span></div>
-                <div>
+                </a>                
+                <div class="search_info_detail">저자: <span th:text="${book.author}"></span></div>
+                <div class="search_info_detail">
                   출판사: <span th:text="${book.publisher}"></span> 
                   출간일: <span th:text="${book.pubdate}"></span> 
                   ISBN: <span th:text="${book.isbn}"></span>
                 </div>
                 
-                <div>
-                  <table border="2" class="listTable">
+
+                  <table class="listTable">
                     <thead>
                       <tr>
                         <th>대출상태</th>
@@ -123,9 +118,7 @@
                       </tr>
                     </tbody>
                   </table>
-                </div>               
-
-                                
+           
               </li>
             </ul>
             <div th:utext="${paging}"></div>
@@ -150,7 +143,7 @@
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
-  
+
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
