@@ -59,20 +59,17 @@
             <i class="fa-solid fa-list"></i>
           </div>
           <div>
-           '[[${searchText}]]  ' 검색결과 ' [[${totalCount}]] ' 건
+           '[[${searchText}]]' 검색결과 '[[${totalCount}]]' 건
           </div>
           <div class="sortBox">
-            <span class="sortFilter">
-              <button type="button" onclick="location.href='search/result'">제목순</button>
-              <a href="/search/result?sortType=title" onclick="" class="sortBooks('title')">제목순</a>
-              <a href="javascript:void(0)" onclick="" class="sortBooks('author')">저자순</a>
-              <a href="javascript:void(0)" onclick="" class="sortBooks('pubDate')">발행일순</a>
-            </span>
-            <select name="sortNum" class="sl1">
-               <option value="n10">10개씩 보기</option>
-               <option value="n20">20개씩 보기</option>
-               <option value="n30">30개씩 보기</option>
-            </select>            
+            <form id="sort" name="sort" action="result" method="get">
+              <input type="hidden" name="userNo" th:value="${bookSearchDto.userNo}" />
+              <input type="hidden" name="ss" th:value="${bookSearchDto.ss}" />
+              <input type="hidden" name="st" th:value="${bookSearchDto.st}" />
+              <button type="submit" name="sortType" value="title" class="btn btn-outline-secondary">제목순</button>
+              <button type="submit" name="sortType" value="author" class="btn btn-outline-secondary">저자순</button>
+              <button type="submit" name="sortType" value="pubDate" class="btn btn-outline-secondary">발행일순</button>
+            </form>
           </div>
 
         </div>

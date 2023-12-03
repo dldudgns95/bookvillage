@@ -16,26 +16,6 @@ $(document).ready(function() {
     });
 });
 
-//정렬
-function sortBooks(sortType) {
-
-      $.ajax({
-        type: 'GET',
-        url: '/search/result',  // 실제 API 엔드포인트로 변경해야 합니다.
-        data: { sortType: sortType },
-        success: function(response) {
-          // 서버로부터 받은 응답(response)을 이용하여 화면을 갱신하는 작업을 수행합니다.
-          // 예를 들어, 정렬된 도서 목록을 받아서 화면에 출력하는 등의 동작을 수행합니다.
-        },
-        error: function(error) {
-          console.error('Error during sorting:', error);
-        }
-      });
-      
-    }
-
-
-
 //별점
 function saveReview() {
    // 사용자가 선택한 별점

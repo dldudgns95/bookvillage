@@ -18,6 +18,7 @@
     <result  column="CATEGORY_ID"   property="categoryId" />
   </resultMap>
 
+  <!-- 책 검색 결과 조회 및 정렬 -->
   <select id="getBook" parameterType="map" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY 
@@ -61,6 +62,7 @@
         </when>
       </choose>       
   </select>
+  
   
   <select id="getBookDetail" parameterType="String" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
