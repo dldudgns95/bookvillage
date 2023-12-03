@@ -18,21 +18,23 @@
     <result  column="CATEGORY_ID"   property="categoryId" />
   </resultMap>
 
-  <select id="getBook" parameterType="BookSearchDto" resultMap="BookMap">
+  <select id="getBook" parameterType="map" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
-      FROM BOOK
-     WHERE 
-      <choose>
-        <when test="ss == 'total'">
-          TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
-        </when>
-        <when test="ss == 'title'">
-          TITLE LIKE '%' || #{st} || '%'
-        </when>
-        <when test="ss == 'author'">
-          AUTHOR LIKE '%' || #{st} || '%'
-        </when>
-      </choose>       
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+              FROM BOOK 
+             WHERE 
+              <choose>
+                <when test="ss == 'total'">
+                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'title'">
+                  TITLE LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'author'">
+                  AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+              </choose>)
+     WHERE RN BETWEEN #{begin} AND #{end}        
   </select>
   
   <!--페이징 처리에 필요한 전체 갯수-->

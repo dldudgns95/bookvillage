@@ -20,7 +20,7 @@ public interface BookService {
   
   // 별점, 한줄평
   public int insertScore(ScoreDto scoreDto);
-  public void getScore(String isbn, Model model);
+  public void getScoreList(String isbn, Model model);
   public void deleteScore(ScoreDto scoreDto);
   public void likeScore(ScoreDto scoreDto, Model model);
   

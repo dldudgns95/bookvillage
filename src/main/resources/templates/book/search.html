@@ -55,8 +55,8 @@
       <div class="search_area">
         <form id="search" name="search" action="search/result" method="get">
           <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
-          <input type="hidden" name="pageNum" value="1">
-          <input type="hidden" name="pageSize" value="10">
+   <!--   <input type="hidden" name="pageNum" value="1">
+          <input type="hidden" name="pageSize" value="10">  -->
           <div class="search_select">
             <select name="ss" id="ss" class="btn btn-outline-secondary">
               <option value="total" selected>전체</option>
