@@ -99,16 +99,13 @@
     </div>
     
     <div class="admin_contents">
-      <div>
-        <button type="button" class="btn btn-primary" id="btn_write">시설 등록하기</button>
-      </div>
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">시설사진</th>
+            <th scope="col">등록번호</th>
             <th scope="col">시설번호</th>
             <th scope="col">시설이름</th>
-            <th scope="col">시설설명</th>
+            <th scope="col">시설명</th>
             <th scope="col">신청날짜</th>
             <th scope="col">시작날짜</th>
             <th scope="col"></th>
@@ -126,7 +123,7 @@
               <td scope="row" th:text="${facApply.facilityDto.facName}"></td>
               <td scope="row" th:text="${facApply.facRegDate}"></td>
               <td scope="row" th:text="${facApply.facStart}"></td>
-              <td scope="row">
+              <td scope="row" class="flex_admin">
                 <form th:action="@{/admin/approveFacApply.do}" method="post">
                   <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                   <button type="submit" class="btn btn-primary">승인</button>
@@ -147,15 +144,6 @@
   </div>
   
   <script th:inline="javascript">
-    
-       
-    const fnFacWrite = () => {
-      $('#btn_write').click(() => {
-        location.href="/admin/facWrite.form";
-      })
-    }
-   
-    fnFacWrite();
       
   </script>
   
