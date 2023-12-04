@@ -212,6 +212,14 @@ public class UserController {
     
   }
 
+
+//  @GetMapping("/books")
+//  public String getBooks(Model model) {
+//      List<BookDto> newBooks = bookService.getNewBooks();
+//      model.addAttribute("newBooks", newBooks);
+//      return "books"; // books.html을 응답으로 사용
+//  }
+  
   
   
 

@@ -44,7 +44,7 @@ public interface UserMapper {
   public List<FaqDto> getFaqList();
   public List<NoticeDto> getNoticeList();
   
-  public List<BookDto> newBookList();
+  public List<BookDto> getBookList();
   
 
   

@@ -27,7 +27,7 @@
     
 
   <select id="getUser" parameterType="Map" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
     <where>
       <if test="email != null">EMAIL = #{email}</if>
@@ -94,7 +94,7 @@
    </update>
    
    <select id="findId"  resultType="UserDto">
-      SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+      SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
         FROM USER_T
        WHERE NAME  = #{name}
          AND MOBILE = #{mobile}    
@@ -137,18 +137,9 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-    
-  <select id="nononon" resultMap="UserMap">
-      SELECT U.USER_NO, U.EMAIL, U.NAME, U.MOBILE, U.GENDER, U.AGREE, U.STATE, U.AUTH,
-         U.PW_MODIFIED_DATE, U.JOINED_DATE, U.STATUS, U.BOOKCOUNT, A.LOGIN_DATE
-    FROM USER_T U INNER JOIN ACCESS_T A 
-      ON U.EMAIL = A.EMAIL
-    WHERE A.LOGIN_DATE <![CDATA[ <= ]]>  TRUNC(SYSDATE) - 90;
-  </select>
-  
   
   <select id="changePw90" parameterType="String" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
      WHERE SYSDATE - PW_MODIFIED_DATE  >= 90
        AND EMAIL = #{email}
@@ -161,7 +152,7 @@
        SET PW_MODIFIED_DATE = SYSDATE
      WHERE EMAIL = #{email}
        AND AUTH = 0
-       AND (SYSDATE - NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90;
+       AND (SYSDATE - NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90
   </update>
   
   <insert id="kakaoJoin" parameterType="UserDto" >
@@ -193,12 +184,12 @@
     
   </insert>
 
-  <!-- 신간 도서 슬라이드!!!!!!!!!!!!!!!!!!!!! -->
-  <select id="newBookList" parameterType="BookDto">
-  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+  <!-- 신간 도서 슬라이드 -->
+  <select id="getBookList" parameterType="BookDto">
+   SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
     FROM BOOK
-   ORDER BY PUBDATE DESC
-   LIMIT 10
+    ORDER BY PUBDATE DESC
+    OFFSET 0 ROWS FETCH FIRST 10 ROWS ONLY
   </select>
 
   <select id="getFaqList" resultType="FaqDto">

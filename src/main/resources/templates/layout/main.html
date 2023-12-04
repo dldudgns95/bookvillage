@@ -138,43 +138,19 @@
   
   <div class="title2">신간 도서 목록</div>
     
-    <!-- 신간도서 슬라이드 -->
-    <!-- Slider main container -->
-    <div class="swiper second">
-      <!-- Additional required wrapper -->
+      <div id="bookContainer" class="book_list"></div>
 
 
-
-      <div class="swiper-wrapper">
-        <!-- Slides -->
-        <div class="swiper-slide"  >
-          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
-        </div>
-        
-        <div class="swiper-slide"  >
-          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
-        </div>
-        
-        <div class="swiper-slide"  >
-          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
-        </div>
-               
-      </div>
-      
-      <!-- If we need pagination -->
-      <div class="swiper-pagination"></div>
-    
-      <!-- If we need navigation buttons -->
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-button-next"></div>
-
-    </div>
- 
 
   </div>
 </div>
 
-    
+    <div class="owl-carousel">
+    <!-- 이미지 목록 반복 -->
+    <div th:each="book : ${book}">
+        <img th:src="${book.cover}" alt="Slide Image">
+    </div>
+</div>
     
     
     
@@ -182,9 +158,33 @@
   
   
   <script>
-    
-  
+    $(document).ready(function () {
+        $.ajax({
+            url: '/main/bookImageList.do',
+            type: 'GET',
+            success: function (data) {
+                // 서버에서 받은 데이터(data)를 활용하여 이미지 슬라이드를 구성
+                // 예: 각 이미지에 대한 반복문
+                data.forEach(function (book) {
+                    $('.owl-carousel').append('<div><img src="' + book.cover + '" alt="Slide Image"></div>');
+                });
+
+                // Owl Carousel 초기화
+                $(".owl-carousel").owlCarousel({
+                    items: 1,
+                    loop: true,
+                    autoplay: true,
+                    autoplayTimeout: 3000,
+                    autoplayHoverPause: true
+                });
+            },
+            error: function (error) {
+                console.error('Error fetching book list:', error);
+            }
+        });
+    });
 </script>
+
   <div th:replace="~{/layout/footer::footer}"></div>
   
 </body>
