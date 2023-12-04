@@ -24,6 +24,6 @@ public interface MypageMapper {
   public int getWishCount(int userNo);                                           // 관심도서갯수
   public List<WishDto> getWishBookList(Map<String, Object> map);                 // 관심도서리스트
   public int cancleCheckout(int checkoutNo);                                     // 도서대출신청 취소(대출테이블에서삭제)
-  public int updateBookStatus(BookDto book);                                      // 도서대출신청 취소(책의대출상태를 대출가능으로변경)
+  public int updateBookStatus(BookDto book);                                     // 도서대출신청 취소(책의대출상태를 대출가능으로변경)
   public int minusBookCount(int userNo);                                         // 도서대출신청 취소(유저의대출권수변경)
 }
