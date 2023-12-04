@@ -47,6 +47,7 @@ public class BookController {
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, WishDto wishDto, Model model) {
     bookService.getBookDetail(isbn, model);
     bookService.getScoreList(scoreDto.getIsbn(), model);
+    bookService.getStarAvg(isbn, model);
     int checkWish = bookService.checkWish(wishDto);
     model.addAttribute("checkWish", checkWish);
     return "book/detail";

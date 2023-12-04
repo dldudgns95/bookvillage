@@ -95,6 +95,13 @@ public class BookServiceImpl implements BookService {
     model.addAttribute("scoreList", scoreList);
   }
   
+  // 평균 별점
+  @Override
+  public void getStarAvg(String isbn, Model model) {
+    Double starAvg = scoreMapper.getStarAvg(isbn);
+    model.addAttribute("starAvg", (starAvg != null) ? starAvg : 0.0);   
+  }
+  
   // 한줄평 삭제 (내 것만 가능)
   @Override
   public void deleteScore(ScoreDto scoreDto) {
