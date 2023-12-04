@@ -110,7 +110,7 @@ public class BookServiceImpl implements BookService {
   // 관심도서 목록
   // 관심도서 존재 확인
   @Override
-  public int wishExists(WishDto wishDto) {
+  public int checkWish(WishDto wishDto) {
     int checkWish = wishMapper.wishExists(wishDto);// 관심도서 항목에 존재하지 않으면 0, 존재하면 1이 담긴다. 
     return checkWish;
   }
@@ -126,6 +126,10 @@ public class BookServiceImpl implements BookService {
   }
   
   // 대출 처리
+  @Override
+  public void updateBookCount(int userNo) {
+    bookMapper.updateBookCount(userNo);    
+  }
   @Override
   public void updateCheckout(BookDto bookDto) {
     bookMapper.insertCheckoutStatus(bookDto);    
