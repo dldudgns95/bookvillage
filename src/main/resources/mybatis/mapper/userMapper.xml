@@ -70,6 +70,7 @@
       , PW_MODIFIED_DATE
       , JOINED_DATE
       , STATUS
+      , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -83,6 +84,7 @@
       , SYSDATE
       , SYSDATE
       , 1
+      , 0
      )
    </insert>
    
@@ -118,6 +120,7 @@
         , STATE
         , PW_MODIFIED_DATE
         , JOINED_DATE
+        , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -128,6 +131,7 @@
         , 1
         , SYSDATE
         , SYSDATE
+        , 0
       )
   </insert>
   
@@ -168,6 +172,7 @@
       , PW_MODIFIED_DATE
       , JOINED_DATE
       , STATUS
+      , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -180,6 +185,7 @@
       , SYSDATE
       , SYSDATE
       , 1
+      ,0
      )
     
   </insert>
@@ -203,6 +209,15 @@
       FROM NOTICE
      ORDER BY NT_NO DESC
   </select>
+  
+  <update id="updatetmpPw" parameterType="Map">
+    UPDATE USER_T
+       SET PW = #{pwCode}
+         , PW_MODIFIED_DATE = SYSDATE
+     WHERE EMAIL = #{email}
+  </update>
+
+
   
   
 </mapper>

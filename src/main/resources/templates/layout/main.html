@@ -55,6 +55,9 @@
   margin: 10px;
   padding: 10px;
 }
+.sliserImg{
+  margin-bottom: 5px;
+}
 
   
 </style>
@@ -184,7 +187,7 @@
         var statusText = book.status === 1 ? '대출 가능' : '대출 중';
 
         // 이미지를 동적으로 추가
-        carousel.owlCarousel('add', `<div><a th:href="@{/book/search/detail(isbn=${book.isbn})}"><img src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
+        carousel.owlCarousel('add', `<div><a th:href="@{/book/search/detail(isbn=${book.isbn})}"><img class="sliserImg" src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
 
         // Owl Carousel 초기화
         carousel.owlCarousel({

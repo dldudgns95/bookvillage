@@ -51,7 +51,6 @@ public class MainController {
     List<BookDto> book = userService.getBookList();
    model.addAttribute("book", book);
     
-   // BookDto book = userService.getBookList();
     return Map.of("book", book == null ? "" : book);
   }
   
