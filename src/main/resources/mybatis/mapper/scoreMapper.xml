@@ -29,10 +29,9 @@
   
   <!-- 평균별점 -->
   <select id="getStarAvg" parameterType="String" resultType="Double">
-    SELECT ISBN, AVG(STAR) AS AVERAGE_STAR
-      FROM SCORE
-     WHERE ISBN = #{isbn} 
-     GROUP BY ISBN
+    SELECT AVG(STAR) AS AVERAGE_STAR
+    FROM SCORE
+    WHERE ISBN = #{isbn}
   </select>
 
   <select id="getMyScoreList" parameterType="String" resultType="ScoreDto">
