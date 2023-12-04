@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dto.BookCheckoutDto;
+import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.dto.WishDto;
@@ -190,8 +191,27 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("wishList", wishList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
+ 
+  }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public int cancleBookCheckout(HttpServletRequest request) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    String isbn = request.getParameter("isbn");
+    BookDto book = BookDto.builder()
+                     .isbn(isbn)
+                     .build();
     
     
+    int deleteResult = mypageMapper.cancleCheckout(checkoutNo);
+    if(deleteResult == 1) {
+      mypageMapper.updateBookStatus(book);
+      mypageMapper.minusBookCount(userNo);
+    }
+    return deleteResult;
   }
 
 }

@@ -56,7 +56,7 @@
 
   <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
     <where>
       <if test="email != null">EMAIL = #{email}</if>
@@ -141,8 +141,27 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 대출신청취소 - 대출신청테이블에서 삭제 -->
+  <delete id="cancleCheckout" parameterType="int">
+    DELETE
+      FROM BOOK_CHECKOUT
+     WHERE STATUS = 0 AND CHECKOUT_NO = #{checkoutNo}
+  </delete>
   
-
+  <!-- 대출신청취소 - 책을 대출가능으로 업데이트 -->
+  <update id="updateBookStatus" parameterType="BookDto">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN = #{isbn}
+  </update>
+  
+  <!-- 대출신청취소 - 유저의 대출권수 줄이기 -->
+  <update id="minusBookCount" parameterType="int">
+    UPDATE USER_T
+       SET BOOKCOUNT = BOOKCOUNT - 1
+     WHERE USER_NO = #{userNo}
+       AND BOOKCOUNT &gt; 0
+  </update>
 
 
 </mapper>

@@ -69,7 +69,7 @@ public class MypageController {
     return "mypage/review";
   }
   
-  // 도서대출연기신청(대출상태가 대출중인경우에만가능) - 수정해야함
+  // 도서대출연기신청(대출상태가 대출중인경우에만가능)
   @GetMapping("/delayBookCheckout.do")
   public String delayBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
@@ -78,6 +78,15 @@ public class MypageController {
     redirectAttributes.addFlashAttribute("delayResult", delayResult);
     return "redirect:/mypage/booklist.do";
   }
+  
+  // 대출신청취소
+  @GetMapping("/cancleCheckout.do")
+  public String cancleCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int deleteResult = mypageService.cancleBookCheckout(request);
+    redirectAttributes.addFlashAttribute("deleteResult", deleteResult);
+    return "redirect:/mypage/booklist.do";
+  }
+  
   
   // 관심도서목록 페이지로 이동
   @GetMapping("/wish.do")
@@ -92,6 +101,7 @@ public class MypageController {
     return "mypage/facApply";
   }
   
+  // 희망도서목록 페이지로 이동
   @GetMapping("/applyBook.do")
   public String applyBook() {
     return "mypage/applyBook";

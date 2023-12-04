@@ -440,13 +440,4 @@ INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, ST
 INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
 
-
-<<<<<<< HEAD
-=======
-
->>>>>>> main
-
-
-
-
 commit;
