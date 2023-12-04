@@ -18,7 +18,7 @@
   }
   
   .mypage {
-    width: 900px;
+    width: 800px;
     height: 500px;
     display: inline-block;
     text-align: center; 
@@ -57,7 +57,7 @@
       </ul>       
     </div>
     <th:block th:if="${session.user != null}">
-    <div class="mypage">
+    <div class="mypage" style="text-align: center;">
       <h3>대출조회및연기</h3>
       <div>
         <h4>이용자 대출상태</h4>
@@ -95,6 +95,9 @@
                 <td th:text="${book.checkoutDate}"></td>
                 <td th:text="${book.dueDate}"></td>
                 <td>
+                  <th:block th:if="${book.status == 0}">
+                    대출요청
+                  </th:block>
                   <th:block th:if="${book.status == 1}">
                     대출중
                   </th:block>
@@ -141,6 +144,7 @@
           alert('연기신청을 완료했습니다.');           
           } else {
           alert('연기신청이 불가능합니다.');
+          return;
           }
         } 
     }

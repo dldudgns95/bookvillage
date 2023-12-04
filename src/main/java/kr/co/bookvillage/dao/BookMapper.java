@@ -11,6 +11,12 @@ import kr.co.bookvillage.dto.BookSearchDto;
 
 @Mapper
 public interface BookMapper {
+  //신간도서 가져오기
+  public List<BookDto> getNewBook();
+  //추천도서 가져오기
+  public List<BookDto> getRecoBook();
+  
+  //도서 검색 정렬 결과 가져오기
   public List<BookDto> getBook(Map<String, Object> map);
   //페이징 total
   public int getBookCount(BookSearchDto bookSearchDto);

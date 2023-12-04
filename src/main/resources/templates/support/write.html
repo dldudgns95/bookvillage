@@ -4,21 +4,21 @@
 <head th:replace="~{/layout/header::head('새 공지사항 작성하기')}"></head>
 
 <style>
-	div.child1{
-		width: 100px;
-		height: 300px;
-		float:left;
-		margin-top: 50px;
-		margin-right:20px;
-		background-color: lightsteelblue;
-		text-align: center;
-	}
-	div.child2{
-		width: 750px;
-		height: 200px;
-		float:left;
-	}
-	
+  div.child1{
+    width: 100px;
+    height: 300px;
+    float:left;
+    margin-top: 50px;
+    margin-right:20px;
+    background-color: lightsteelblue;
+    text-align: center;
+  }
+  div.child2{
+    width: 750px;
+    height: 200px;
+    float:left;
+  }
+  
 </style>
 
   <div th:replace="~{/layout/header::header}"></div>
@@ -29,14 +29,14 @@
       <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+      <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+      <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
       <h5 style="text-align: center;">공지사항 작성하기</h5>
       <div class="child2">
       <div>
-		  
+      
       <form class="frm_notice_add" method="post" th:action="@{/support/add.do}" enctype="multipart/form-data">
          <input type="hidden" name="userNo" id="userNo" th:value="${session.user.userNo}">
         <div class="mt-3">
@@ -53,12 +53,12 @@
         </div>
         <div class="attached_list mt-2" id="attached_list"></div>       
         <div class="text-center mt-5">
-		  <a th:href="@{/support/list.do}">
+      <a th:href="@{/support/list.do}">
             <button class="btn btn-secondary" type="button">작성취소</button>
           </a> 
           <button type="submit" class="btn btn-primary">작성완료</button>
           </div>
-      </form>	
+      </form> 
       </div> 
    </div>
    </div>
@@ -79,7 +79,7 @@
           ev.preventDefault();
           return;
         }
-      })	 
+      })   
       
    </script>
 </div>

@@ -142,7 +142,13 @@ const fnCheckName = () => {
 
 const fnCheckMobile = () => {
   $('#mobile').keyup((ev) => {
-    ev.target.value = ev.target.value.replaceAll('-', '');
+    ev.target.value = ev.target.value.replaceAll(/[^0-9]/g, '');
+    
+    // 유효성 검사: 길이 확인
+    if (ev.target.value.length !== 11) {
+      $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+      return;
+    }
     // 휴대전화번호 검사 정규식 (010숫자8개)
     let regMobile = /^010[0-9]{8}$/;
     mobilePassed = regMobile.test(ev.target.value);
@@ -176,3 +182,5 @@ const fnJoin = () => {
   })
 }
  
+ 
+

@@ -6,27 +6,71 @@
 <script th:src="@{/js/main.js}"></script>
 
 
+<style>
+  .main_notice_list {
+    width: 100%;
+    display: flex;
+    margin: 10px;
+    justify-content: center;
+  }
+
+  .main_notice_list_box1,
+  .main_notice_list_box2 {
+    font-size: 12px;
+    width: calc(50% - 10px);
+    height: 300px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    padding: 10px;
+  }
+
+  .main_notice_list_box1 {
+  }
+
+  .notice_list {
+    margin: 10px;
+    justify-content: center;
+  }
+
+  .swiper-slide-box {
+    width: 100%;
+  }
+
+  .detail_img {
+    display: flex;
+    flex: 3;
+    left: 20px;
+    margin-right: 20px;
+  }
+
+  .search_inline {
+    display: inline-block;
+  }
+
+
+  
+</style>
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
     
-     
     <!-- Slider main container -->
-    <div class="swiper">
+    <div class="swiper first">
       <!-- Additional required wrapper -->
 
       <div class="swiper-wrapper">
         <!-- Slides -->
         <div class="swiper-slide">
-          <img th:src="@{'/image/long_banner2.png'}" alt="Banner Image">
+          <img class="main1" th:src="@{'/image/long_banner2.png'}" alt="Banner Image">
         </div>
         <div class="swiper-slide">
-          <img th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
+          <img class="main1" th:src="@{'/image/long_banner3.png'}" alt="Banner Image">
         </div>
         <div class="swiper-slide">
-          <img th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
+          <img class="main1" th:src="@{'/image/long_banner1.png'}" alt="Banner Image">
         </div>
       </div>
       
@@ -38,9 +82,109 @@
       <div class="swiper-button-next"></div>
 
     </div>
+
+    
+    <!-- 슬라이드 밑 박스 2개 -->
+
+    <div class="main_notice_list">
+      
+    <!-- 첫 번째 박스 - 공지사항 목록 -->
+      <div class="main_notice_list_box1">
+
+        <div class="table-responsive notice_list">
+          <h3 class="title2">공지사항</h3>
+          
+          <table  class="table align-middle">
+            <thead>
+              <tr>
+                <td>순번</td>
+                <td>제목</td>
+                <td>작성날자</td>
+              </tr>              
+            </thead>
+            <tbody id="ntBoby"></tbody>
+          </table>
+          
+        </div>
+
+
+      </div>
+  
+      <!-- 두 번째 박스 FAQ 목록-->
+      <div class="main_notice_list_box2">
+        
+        <div class="table-responsive notice_list">
+            <h3 class="title2">FAQ</h3>
+            
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <td>순번</td>
+                        <td>제목</td>
+                        <td>내용</td>
+                    </tr>
+                </thead>
+                <tbody id="faqTableBody"></tbody>
+            </table>
+        </div>
+        
+      </div>
+      
+      
+    </div>
+    
+   <!-- 신간도서 슬라이드  th:each="bookDetail:${bookDetailList}" -->
+<div>
+  
+  <div class="title2">신간 도서 목록</div>
+    
+    <!-- 신간도서 슬라이드 -->
+    <!-- Slider main container -->
+    <div class="swiper second">
+      <!-- Additional required wrapper -->
+
+
+
+      <div class="swiper-wrapper">
+        <!-- Slides -->
+        <div class="swiper-slide"  >
+          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
+        </div>
+        
+        <div class="swiper-slide"  >
+          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
+        </div>
+        
+        <div class="swiper-slide"  >
+          <img class="main2" th:src="@{'/image/k672936554_1.jpg'}" alt="Banner Image">
+        </div>
+               
+      </div>
+      
+      <!-- If we need pagination -->
+      <div class="swiper-pagination"></div>
+    
+      <!-- If we need navigation buttons -->
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+
+    </div>
+ 
+
+  </div>
+</div>
+
+    
+    
+    
     
   </div>
   
+  
+  <script>
+    
+  
+</script>
   <div th:replace="~{/layout/footer::footer}"></div>
   
 </body>

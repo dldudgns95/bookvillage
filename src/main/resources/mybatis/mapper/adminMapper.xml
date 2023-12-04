@@ -202,6 +202,13 @@
   
   
   
+  <!-- 전체 시설 조회 -->
+  <select id="getFacList" resultMap="AttachFacMap">
+    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
+      FROM ATTACH_FAC AF INNER JOIN FACILITY F
+        ON AF.FAC_NO = F.FAC_NO
+  </select>
+  
   <!-- 사용 가능한 시설 조회 -->
   <select id="availableFacList" parameterType="String" resultMap="AttachFacMap">
     SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
@@ -481,7 +488,7 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <!-- 대출중일때 대출권수 늘어나게 -->
+  <!-- 희망도서 추가 완료 업데이트 -->
   <update id="updateBookApply" parameterType="int">
     UPDATE BOOK_APPLY
        SET STATUS = 1

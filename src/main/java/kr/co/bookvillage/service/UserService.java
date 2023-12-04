@@ -1,12 +1,16 @@
 package kr.co.bookvillage.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 
+import kr.co.bookvillage.dto.FaqDto;
+import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
 
 public interface UserService {
@@ -33,12 +37,29 @@ public interface UserService {
  
   // 임시 비밀번호 메일 보내기
   public ResponseEntity<Map<String, Object>> sendTmpCode(String email);
-  public int updateTmpPw(String email);
-
-
+  //public int updateTmpPw(String email);
+  public ResponseEntity<Map<String, Object>> updateTmpPw(String email);
+  
+  public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile) throws Exception;
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception;
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception;
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception ;
+  public UserDto getKakaoProfile(String accessToken) throws Exception;
   
   
+  public int autoUpdatePw90(HttpServletRequest request);
+ 
   
+  public void getNewBookImage(HttpServletRequest request, Model model);
   
+  public List<FaqDto> getFaqList();
+  public List<NoticeDto> getNoticeList();
   
 }
+
+
+
+
+
+
+

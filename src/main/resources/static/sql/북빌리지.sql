@@ -440,17 +440,12 @@ INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, ST
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 
 
-SELECT *
-FROM USER_T
-WHERE AUTH = 0 -- 일반 사용자
-  AND TO_DATE(SYSDATE) - TO_DATE(NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90 -- 마지막 로그인 후 90일 이상 지난 사용자
-  AND EXISTS (
-    SELECT 1
-    FROM ACCESS_T
-    WHERE ACCESS_T.EMAIL = USER_T.EMAIL
-  );
 
 
 commit;
