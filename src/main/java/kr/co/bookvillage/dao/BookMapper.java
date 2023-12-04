@@ -22,8 +22,10 @@ public interface BookMapper {
   public int getBookCount(BookSearchDto bookSearchDto);
   //마이페이지 정보 표시
   public List<BookDto> getBookDetail(String isbn);
+
   
   //대출
   public void updateBookStatus(BookDto bookDto);
+  public void updateBookCount(int userNo);
   public void insertCheckoutStatus(BookDto bookDto);
 }
