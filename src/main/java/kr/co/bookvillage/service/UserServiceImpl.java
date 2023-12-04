@@ -603,22 +603,15 @@ public class UserServiceImpl implements UserService {
                        
   }
   
-  
-  
-  
-  
-  ////// 수정  - 안됨
   @Override
-  public void getNewBookImage(HttpServletRequest request, Model model) {
-   // Map<String, Object> map = Map.of("", );
+  public void getBookList(Model model) {
     
-    List<BookDto> book = userMapper.newBookList();
     
-    model.addAttribute("book", book);
-        
-        
-    
+    model.addAttribute("book", userMapper.getBookList());
   }
+  
+  
+  
   
   
   

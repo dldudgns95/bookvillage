@@ -7,12 +7,17 @@
 /* 함수 호출 */
 $(() => {
   fnCheckMobileId();
+  fnCheckNameId();
+  fnCheckEmailId();
 })
 
 
 /* 전역변수 선언 */
 var mobilePassed = false;
-
+var emailPassed = false;
+var pwPassed = false;
+var pw2Passed = false;
+var namePassed = false;
 
 
 $(document).ready(()=> {
@@ -50,6 +55,39 @@ const fnCheckMobileId = () => {
       $('#msg_mobile').text('');
     } else {
       $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+    }
+  });
+}
+
+// 이름 정규식 검사
+const fnCheckNameId = () => {
+  $('#name').blur((ev) => {
+    let name = ev.target.value;
+    let bytes = 0;
+    for(let i = 0; i < name.length; i++){
+      if(name.charCodeAt(i) > 128){  // 코드값이 128을 초과하는 문자는 한 글자 당 2바이트임
+        bytes += 2;
+      } else {
+        bytes++;
+      }
+    }
+    namePassed = (bytes <= 50);
+    if(!namePassed){
+      $('#msg_name').text('이름은 50바이트 이내로 작성해야 합니다.');
+    }
+  })
+}
+
+// 이메일 정규식 검사
+const fnCheckEmailId = () => {
+  $('#email').keyup((ev) => {
+
+    // 이메일 검사 정규식
+    let regEmail = /^[A-Za-z0-9-_]+@[A-Za-z0-9]{2,}([.][A-Za-z]{2,6}){1,2}$/;
+    if (regEmail.test(ev.target.value)) {
+      $('#msg_emailTmpPW').text('');
+    } else {
+      $('#msg_emailTmpPW').text('이메일을 확인하세요.');
     }
   });
 }
