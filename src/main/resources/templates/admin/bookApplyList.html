@@ -100,8 +100,20 @@
 
   </div>
   
-  <script>
+  <script th:inline="javascript">
+    
+    const fnUpdateResult = () => {
+      let updateResult = /*[[${updateResult}]]*/ null;
+      if(updateResult !== null) {
+        if(updateResult === 1) {
+          alert('희망도서의 추가가 완료되었습니다.');
+        } else {
+          alert('희망도서의 추가를 실패했습니다.');
+        }
+      }
+    }
    
+   fnUpdateResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

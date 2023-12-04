@@ -131,11 +131,10 @@
       )
   </insert>
   
-  <update id="updatetmpPw" parameterType="Map">
+  <update id="autoupdatetmpPw" parameterType="UserDto">
     UPDATE USER_T
-       SET PW = #{pwCode}
-         , PW_MODIFIED_DATE = SYSDATE
-     WHERE EMAIL = #{email}
+       SET PW_MODIFIED_DATE = SYSDATE
+     WHERE USER_NO = #{userNo}
   </update>
   
     
@@ -151,14 +150,68 @@
   <select id="changePw90" parameterType="String" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
-     WHERE SYSDATE - PW_MODIFIED_DATE >= 90
+     WHERE SYSDATE - PW_MODIFIED_DATE  >= 90
        AND EMAIL = #{email}
        AND STATE = 0
        AND (AUTH = 1 OR AUTH = 0)
   </select>
   
-
+  <update id="updatePw90" parameterType="UserDto">
+    UPDATE USER_T
+       SET PW_MODIFIED_DATE = SYSDATE
+     WHERE EMAIL = #{email}
+       AND AUTH = 0
+       AND (SYSDATE - NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90;
+  </update>
   
+  <insert id="kakaoJoin" parameterType="UserDto" >
+     INSERT INTO USER_T (
+        USER_NO
+      , EMAIL
+      , NAME
+      , MOBILE
+      , GENDER
+      , AGREE
+      , STATE
+      , AUTH
+      , PW_MODIFIED_DATE
+      , JOINED_DATE
+      , STATUS
+      ) VALUES (
+          USER_T_SEQ.NEXTVAL
+        , #{email}
+        , #{name}
+        , #{mobile}
+        , #{gender}
+        , #{agree}
+        , 2
+        , 0
+      , SYSDATE
+      , SYSDATE
+      , 1
+     )
+    
+  </insert>
+
+  <!-- 신간 도서 슬라이드!!!!!!!!!!!!!!!!!!!!! -->
+  <select id="newBookList" parameterType="BookDto">
+  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+    FROM BOOK
+   ORDER BY PUBDATE DESC
+   LIMIT 10
+  </select>
+
+  <select id="getFaqList" resultType="FaqDto">
+    SELECT FAQ_NO, FAQ_TITLE, FAQ_CONTENT
+      FROM FAQ
+     ORDER BY FAQ_NO DESC
+  </select>
+  
+    <select id="getNoticeList" resultType="NoticeDto">
+    SELECT NT_NO, NT_TITLE, NT_CONTENT, USER_NO, NT_DATE, NT_ATTACH_COUNT
+      FROM NOTICE
+     ORDER BY NT_NO DESC
+  </select>
   
   
 </mapper>

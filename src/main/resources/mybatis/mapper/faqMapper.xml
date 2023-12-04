@@ -25,7 +25,7 @@
   </select>
  
   <select id="getFaqList" parameterType="Map">
-	SELECT FAQ_NO,FAQ_TITLE
+	SELECT FAQ_NO,FAQ_TITLE, FAQ_CONTENT
 	  FROM FAQ
   </select>
   
@@ -42,7 +42,7 @@
   <update id="updateFaq" parameterType="FaqDto">
     UPDATE FAQ
 	    SET FAQ_TITLE = #{faqTitle}
-	        , FAQ_CONTENT = #{faqContent}
+	      , FAQ_CONTENT = #{faqContent}
 	    WHERE FAQ_NO = #{faqNo}
   </update>
 </mapper>

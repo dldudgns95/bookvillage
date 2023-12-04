@@ -78,6 +78,10 @@
     justify-content: space-between;
   }
   
+  .table_img {
+    width: 300px;
+  }
+  
 </style>
 
 <body>
@@ -90,8 +94,8 @@
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
       <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
-      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
       <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서등록</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
@@ -105,38 +109,33 @@
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">신청번호</th>
-            <th scope="col">회원번호</th>
-            <th scope="col">회원이름</th>
-            <th scope="col">시설이름</th>
-            <th scope="col">신청날짜</th>
-            <th scope="col">시작날짜</th>
+            <th scope="col">시설사진</th>
+            <th scope="col">시설정보</th>
             <th scope="col"></th>
           </tr>
         </thead>
         <tbody>
-          <th:block th:if="${#lists.isEmpty(facApplyList)}">
-            <tr><td colspan="7">등록된 시설이 없습니다.</td></tr>
+          <th:block th:if="${#lists.isEmpty(facList)}">
+            <tr><td colspan="3">등록된 시설이 없습니다.</td></tr>
           </th:block>
-          <th:block th:each="facApply,vs:${facApplyList}">
+          <th:block th:each="fac,vs:${facList}">
             <tr>
-              <td scope="row" th:text="${facApply.facApplyNo}"></td>
-              <td scope="row" th:text="${facApply.userDto.userNo}"></td>
-              <td scope="row" th:text="${facApply.userDto.name}"></td>
-              <td scope="row" th:text="${facApply.facilityDto.facName}"></td>
-              <td scope="row" th:text="${facApply.facRegDate}"></td>
-              <td scope="row" th:text="${facApply.facStart}"></td>
-              <td scope="row" class="flex_admin">
+              <td scope="row"><img th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300"></td>
+              <td scope="row">
+                <div th:text="|시설명 : ${fac.facilityDto.facName}|"></div>
+                <div th:text="${fac.facilityDto.facContent}"></div>
+              </td>
+              <td scope="row">
                 <div>
-                  <form th:action="@{/admin/approveFacApply.do}" method="post">
-                    <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
-                    <button type="submit" class="btn btn-primary">승인</button>
+                  <form th:action="@{/admin/facEdit.form}" method="get">
+                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
+                    <button type="submit" class="btn btn-primary">수정</button>
                   </form>
                 </div>
                 <div>
-                  <form th:action="@{/admin/refuseFacApply.do}" method="post">
-                    <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
-                    <button type="submit" class="btn btn-primary">거절</button>
+                  <form th:action="@{/admin/facDelete.do}" method="get">
+                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
+                    <button type="submit" class="btn btn-primary">삭제</button>
                   </form>
                 </div>
               </td>
@@ -159,7 +158,7 @@
       })
     }
    
-    fnFacWrite();
+    fnFacWrite(); 
       
   </script>
   

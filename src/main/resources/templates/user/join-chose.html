@@ -15,17 +15,23 @@
       
       <form id="frm_join_chose" th:action="@{/user/joinChose.form}">
 
-      
-          <a th:href="@{/user/agree.form}"><button type="button" id="find_id" class="btn btn-primary" style="margin-right: 20px;">일반 회원가입</button></a>
+      <h1 class="title">회원가입</h1>
         
         
           <div class="text-center">
           <div class="text-center">
+            <a th:href="@{/user/agree.form}"><button type="button" width="180px;" id="find_id" class="btn btn-primary" style="margin-right: 20px;">일반 회원가입</button></a>
             <a th:href="${naverLoginURL}">
-              <img th:src="@{/image/btnG_완성형.png}" width="200px0">
+              <img th:src="@{/image/btnG_완성형.png}" width="180px;" >
+            </a>
+            
+            <a th:href="${kakaoLoginURL}">
+              <img th:src="@{/image/kakao.png}" width="180px;" height="48px;" >
             </a>
           </div>
           </div>
+        
+
         
        </form>
 

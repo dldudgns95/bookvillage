@@ -18,22 +18,54 @@
     <result  column="CATEGORY_ID"   property="categoryId" />
   </resultMap>
 
-  <select id="getBook" parameterType="BookSearchDto" resultMap="BookMap">
+<!-- 신간 도서 가져오기 -->
+<select id="getNewBook" resultMap="BookMap">
+  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+  FROM (
+    SELECT ROW_NUMBER() OVER (ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+    FROM BOOK
+  )
+  WHERE RN BETWEEN 1 AND 5
+</select>
+
+  <!-- 추천 도서 가져오기 -->
+<select id="getRecoBook" resultMap="BookMap">
+  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+  FROM (
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK
-     WHERE 
-      <choose>
-        <when test="ss == 'total'">
-          TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
-        </when>
-        <when test="ss == 'title'">
-          TITLE LIKE '%' || #{st} || '%'
-        </when>
-        <when test="ss == 'author'">
-          AUTHOR LIKE '%' || #{st} || '%'
-        </when>
-      </choose>       
+     ORDER BY DBMS_RANDOM.VALUE 
+  )
+  WHERE ROWNUM BETWEEN 1 AND 5
+</select>
+  
+  <!-- 책 검색 결과 조회 및 정렬 -->
+  <select id="getBook" parameterType="map" resultMap="BookMap">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY 
+                                       <choose>
+                                        <when test="sortType == 'title'">TITLE ASC</when>
+                                        <when test="sortType == 'author'">AUTHOR ASC</when>
+                                        <when test="sortType == 'pubDate'">PUBDATE ASC</when>
+                                        <otherwise>PUBDATE DESC</otherwise>
+                                       </choose> 
+                       ) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+              FROM BOOK 
+             WHERE 
+              <choose>
+                <when test="ss == 'total'">
+                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'title'">
+                  TITLE LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'author'">
+                  AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+              </choose>)
+     WHERE RN BETWEEN #{begin} AND #{end}        
   </select>
+  
   
   <!--페이징 처리에 필요한 전체 갯수-->
   <select id="getBookCount" parameterType="BookSearchDto" resultType="int">
@@ -53,6 +85,7 @@
       </choose>       
   </select>
   
+  <!-- 도서 상세로 이동 -->
   <select id="getBookDetail" parameterType="String" resultMap="BookMap">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK

@@ -4,58 +4,58 @@
 <head th:replace="~{/layout/header::head('공지사항')}"></head>
 
 <style>
-	div.child1{
-		width: 100px;
-		height: 300px;
-		float:left;
-		margin-top: 50px;
-		margin-right:20px;
-		background-color: lightsteelblue;
-		text-align: center;
-		
-		
-	}
-	div.child2{
-		width: 750px;
-		height: 200px;
-		float:left;
-		text-align: center;
-	}
-	
+  div.child1{
+    width: 100px;
+    height: 300px;
+    float:left;
+    margin-top: 50px;
+    margin-right:20px;
+    background-color: lightsteelblue;
+    text-align: center;
+    
+    
+  }
+  div.child2{
+    width: 750px;
+    height: 200px;
+    float:left;
+    text-align: center;
+  }
+  
 </style>
+  <div th:replace="~{/layout/header::header}"></div>
 
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
   <div class="parent">
-    <div class="wrap wrap_9">
+    <div>
       <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+      <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+      <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
       <h5 style="text-align: center;">공지사항</h5>
       <div>
         <!-- 관리자로 로그인 한 경우 -->
         <th:block th:if="${session.user != null and session.user.auth == 9}">
-   		  <a th:href="@{/support/write.form}">
+        <a th:href="@{/support/write.form}">
             <button type="button" class="btn btn-secondary">새 공지 작성하기</button>
           </a>       
         </th:block>
       </div>
       <div class="child2">
-
-      <div id="notice_list" class="notice_list"></div>
-
-   	  </div>
-   	  
+       <div id="notice_list" class="notice_list"></div>
+      </div>    
    <script th:inline="javascript">
-	// 전역 변수
+  // 전역 변수
+    
+      // 전역 변수
       var page = 1;
       var totalPage = 0;
     
+     
       const fnGetNoticeList = () => {
         $.ajax({
           // 요청
@@ -64,27 +64,19 @@
           data: 'page=' + page,
           // 응답
           dataType: 'json',
-          success: (resData) => {  // resData = {"noticeList": [], "totalPage": 10}
+          success: (resData) => {  // resData = {"uploadList": [], "totalPage": 10}
             totalPage = resData.totalPage;
-			 let str = '';
-					      str += '<div class="notice" table-responsive"><table class="table align-middle">';            
-			              str += '<thead><tr><td>순번</td>';
-			              str += '<td>제목</td>';        
-			              str += '<td>작성일</td>';
-			              str += '</tr></thead><tbody>';
-			            $.each(resData.noticeList, (i, notice) => {
-			        	  str += '<tr><td class="notice" data-nt_no="' + notice.ntNo + '">' + notice.ntNo + '</td>';
-			              str += '<td>' + notice.ntTitle + '</td>';
-			              str += '<td>' + notice.ntDate + '</td>'
-			              str += '</tr>';
-			              
-			            })
-			            str += '</tbody></table>';
-			            $('#notice_list').append(str);
-			          }
-			        })
-			      }
-            
+            $.each(resData.noticeList, (i, notice) => {
+              let str = '<div class="notice" data-nt_no="' + notice.ntNo + '">';
+              str += '<div>제목: ' + notice.ntTitle + '</div>';
+              str += '<div>작성일: ' + notice.ntDate + '</div>';
+              str += '<div>첨부: ' + notice.ntAttachCount + '개</div>';
+              str += '</div>';
+              $('#notice_list').append(str);
+            })
+          }
+        })
+      }
       const fnNoticeDetail = () => {
         $(document).on('click', '.notice', function(){
           location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');
@@ -125,10 +117,10 @@
         let addResult = /*[[${addResult}]]*/ null;
         if(addResult !== null){
           if(addResult === true){
-            alert('FAQ가 등록 되었습니다.');
+            alert('공지사항이 업로드 되었습니다.');
             $('#notice_list').empty();
           } else {
-            alert('FAQ 등록이 실패하였습니다.');
+            alert('공지사항 업로드가 실패하였습니다.');
           }
         }
       }
@@ -137,10 +129,10 @@
         let removeResult = /*[[${removeResult}]]*/ null;
         if(removeResult !== null){
           if(removeResult === 1){
-            alert('FAQ가 삭제되었습니다.');
+            alert('공지사항이 삭제되었습니다.');
             $('#notice_list').empty();
           } else {
-            alert('FAQ 삭제가 실패했습니다.');
+            alert('공지사항 삭제가 실패했습니다.');
           }
         }
       }
@@ -150,8 +142,9 @@
       fnScroll();
       fnAddResult();
       fnRemoveResult();
-    
    </script>
+
 </div>
+
 </body>
 </html>

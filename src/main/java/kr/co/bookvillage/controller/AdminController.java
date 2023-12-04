@@ -45,6 +45,7 @@ public class AdminController {
   
   @RequestMapping(value="/userDetail.do", method={RequestMethod.GET, RequestMethod.POST})
   public String userDetail(HttpServletRequest request, Model model) {
+    System.out.println("controller:: userNo : " + request.getParameter("userNo"));
     adminService.getUserDetail(request, model);
     return "admin/userDetail";
   }
@@ -70,7 +71,7 @@ public class AdminController {
   @GetMapping("/facApplyList.do")
   public String facApplyList(HttpServletRequest request, Model model) {
     adminService.getFacApplyList(request, model);
-    return "admin/facList";
+    return "admin/facApplyList";
   }
   
   @GetMapping("/facWrite.form")
@@ -80,9 +81,8 @@ public class AdminController {
   
   @PostMapping("/facAdd.do")
   public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
-    System.out.println("facAdd.do::controller");
     adminService.addFacility(multiRequest);
-    return "redirect:/admin/facList.do";
+    return "redirect:/admin/facApplyList.do";
   }
   
   @GetMapping("/insertBooks.do")
@@ -92,8 +92,8 @@ public class AdminController {
   }
   
   @GetMapping("/facList.do")
-  public String facList(HttpServletRequest request, Model model) {
-    model.addAttribute("facList", adminService.getFacTotalList(request));
+  public String facList(Model model) {
+    adminService.getFacList(model);
     return "admin/facList";
   }
   
@@ -151,30 +151,34 @@ public class AdminController {
     return "admin/bookCheckoutReturnList";
   }
   
+  // 도서 대출 승인
   @PostMapping("/approvalBookCheckout.do")
   public String approvalBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckout(request));
     return "redirect:/admin/bookCheckoutList.do";
   }
   
+  // 유저 상세에서 사용하는 도서 대출
   @PostMapping("/approvalUserBookCheckout.do")
   public String approvalUserBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateCheckoutResult", adminService.approvalBookCheckout(request));
-    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
-    return "redirect:/admin/userDetail.do";
+    System.out.println("controller:: userNo : " + request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
   }
   
+  // 도서 반납 승인
   @PostMapping("/approvalBookCheckoutReturn.do")
   public String approvalBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.approvalBookCheckoutReturn(request));
     return "redirect:/admin/bookCheckoutReturnList.do";
   }
   
+  // 유저 상세에서 사용하는 도서 반납
   @PostMapping("/approvalUserBookCheckoutReturn.do")
   public String approvalUserBookCheckoutReturn(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateReturnResult", adminService.approvalBookCheckoutReturn(request));
-    redirectAttributes.addFlashAttribute("userNo", request.getParameter("userNo"));
-    return "redirect:/admin/userDetail.do";
+    System.out.println("controller:: userNo : " + request.getParameter("userNo"));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
   }
   
   @GetMapping("/addBookList.do")
@@ -192,6 +196,12 @@ public class AdminController {
   @GetMapping(value="/addBook.do", produces="application/json")
   public Map<String, Object> addBook(HttpServletRequest request) {
     return adminService.addBook(request);
+  }
+  
+  @GetMapping("/updateBookApply.do")
+  public String updateBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateResult", adminService.updateBookApply(request));
+    return "redirect:/admin/bookApplyList.do";
   }
   
   // 임시

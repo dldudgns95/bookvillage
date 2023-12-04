@@ -18,6 +18,7 @@ public interface AdminService  {
   public void getBookDetail(HttpServletRequest request, Model model);
   public void getSearchBookList(HttpServletRequest request, Model model);
   public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception;
+  public void getFacList(Model model);
   public Map<String, Object> getFacTotalList(HttpServletRequest request);
   public int addFacApply(HttpServletRequest request);
   public boolean checkFacApply(HttpServletRequest request);
@@ -32,4 +33,5 @@ public interface AdminService  {
   public void getFacApplyList(HttpServletRequest request, Model model);
   public Map<String, Object> getAddBookSearch(HttpServletRequest request);
   public Map<String, Object> addBook(HttpServletRequest request);
+  public int updateBookApply(HttpServletRequest request);
 }

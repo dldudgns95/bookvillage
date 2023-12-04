@@ -230,7 +230,8 @@ public class AdminServiceImpl implements AdminService {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
-    
+    int checkStatus = Integer.parseInt(multiRequest.getParameter("checkStatus"));
+    System.out.println("checkStatus : " + checkStatus);
     FacilityDto facility = FacilityDto.builder()
                                       .facName(facName)
                                       .facContent(facContent)
@@ -248,7 +249,12 @@ public class AdminServiceImpl implements AdminService {
     
     for(MultipartFile multipartFile : files) {
       if(multipartFile != null && !multipartFile.isEmpty()) {
-        String path = adminFileUtils.getFacPath();
+        String path = "";
+        if(checkStatus == 0) {
+          path = adminFileUtils.getFacPath();
+        } else if(checkStatus == 1) {
+          path = adminFileUtils.getFacMacImagePath();
+        }
         File dir = new File(path);
         if(!dir.exists()) {
           dir.mkdirs();
@@ -294,6 +300,11 @@ public class AdminServiceImpl implements AdminService {
         
       }
     }
+  }
+  
+  @Override
+  public void getFacList(Model model) {
+    model.addAttribute("facList", adminMapper.getFacList());
   }
   
   @Override
@@ -583,6 +594,12 @@ public class AdminServiceImpl implements AdminService {
       
     }
     
+  }
+  
+  @Override
+  public int updateBookApply(HttpServletRequest request) {
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    return adminMapper.updateBookApply(applyNo);
   }
   
   

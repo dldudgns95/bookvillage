@@ -3,6 +3,8 @@ package kr.co.bookvillage.service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,13 +16,11 @@ import org.springframework.ui.Model;
 import kr.co.bookvillage.dao.BookMapper;
 import kr.co.bookvillage.dao.ScoreMapper;
 import kr.co.bookvillage.dao.WishMapper;
-import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.BookSearchDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.WishDto;
-import kr.co.bookvillage.util.AdminFileUtils;
-import kr.co.bookvillage.util.AdminPageUtils;
+import kr.co.bookvillage.util.BookPageUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,28 +36,41 @@ public class BookServiceImpl implements BookService {
   private final ScoreMapper scoreMapper;
   private final WishMapper wishMapper;
   private final MyPageUtils myPageUtils;
-  private final AdminPageUtils adminPageUtils;
-  private final AdminFileUtils adminFileUtils;
+  private final BookPageUtils bookPageUtils;
   
+  // 신간 도서
+  @Override
+  public void getNewBook(Model model) {
+    List<BookDto> newBookList = bookMapper.getNewBook();
+    model.addAttribute("newBookList",newBookList);
+  }
+  // 추천 도서
+  @Override
+  public void getRecoBook(Model model) {
+    List<BookDto> recoBookList = bookMapper.getRecoBook();
+    model.addAttribute("recoBookList",recoBookList);
+  }
   
-  // 책 검색
+  // 책 검색 & 정렬
   @Override
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
-    List<BookDto> bookSearchList = bookMapper.getBook(bookSearchDto);
-    model.addAttribute("bookSearchList", bookSearchList);
     
     //페이징
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-    int page = Integer.parseInt(opt.orElse("1"));
-    int total = bookMapper.getBookCount(bookSearchDto);
+    int page = Integer.parseInt(opt.orElse("1")); //page 값이 전달되지 않으면 1로 본다.
     int display = 10;
+    int total = bookMapper.getBookCount(bookSearchDto);
     
-    adminPageUtils.setPaging(page, total, display);
-    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    bookPageUtils.setPaging(page, total, display);
     
-    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result"));
-    model.addAttribute("beginNo", total - (page - 1) * display);
+    Map<String, Object> map = Map.of("begin", bookPageUtils.getBegin(), "end", bookPageUtils.getEnd(),"ss", bookSearchDto.getSs(),"st", bookSearchDto.getSt(), "sortType", bookSearchDto.getSortType());
+    
+    List<BookDto> bookSearchList = bookMapper.getBook(map);
+    model.addAttribute("bookSearchList", bookSearchList);
+    
+    model.addAttribute("paging", bookPageUtils.getMvcPaging(request.getContextPath() + "/book/search/result", "userNo="+bookSearchDto.getUserNo()+"&ss="+bookSearchDto.getSs()+"&st="+bookSearchDto.getSt()+"&sortType="+bookSearchDto.getSortType()));
     model.addAttribute("totalCount", total);
+    
     
   }
   
@@ -77,8 +90,8 @@ public class BookServiceImpl implements BookService {
   
   // 한줄평 목록 가져오기
   @Override
-  public void getScore(String isbn, Model model) {
-    List<ScoreDto> scoreList = scoreMapper.getScore(isbn);
+  public void getScoreList(String isbn, Model model) {
+    List<ScoreDto> scoreList = scoreMapper.getScoreList(isbn);
     model.addAttribute("scoreList", scoreList);
   }
   
@@ -88,12 +101,9 @@ public class BookServiceImpl implements BookService {
     scoreMapper.deleteScore(scoreDto);        
   }
   
-  // 한줄평 좋아요 (남의 것만 가능) --구현안됨.. 그냥 1올라가고 끝임 두번 눌러도 다른 사람이 눌러도 올라가지 않는다. 디비써야하나
-  @Override
+  // 한줄평 좋아요 (남의 것만 가능) --아직구현안됨
+//  @Override
   public void likeScore(ScoreDto scoreDto, Model model) {
-    scoreDto.setRecommend(scoreDto.getRecommend()+1);
-    int scoreLike = scoreDto.getRecommend();
-    model.addAttribute("scoreLike", scoreLike);
   }
   
   
@@ -125,5 +135,26 @@ public class BookServiceImpl implements BookService {
     bookMapper.updateBookStatus(bookDto);
   }
   
-  
+  // 카테고리 추출
+  @Override
+  public void categoryParser(BookDto bookDto) {
+    
+    String inputString = bookDto.getCategoryName();
+    
+    // 정규표현식 패턴
+    String regex = ">([^>]+)>";
+
+    // 패턴과 입력 문자열을 사용하여 Matcher 생성
+    Pattern pattern = Pattern.compile(regex);
+    Matcher matcher = pattern.matcher(inputString);
+
+    // 매칭된 부분 찾기
+    if (matcher.find()) {
+        // 첫 번째 그룹의 값 출력
+        String result = matcher.group(1);
+        System.out.println(result);
+    } else {
+        System.out.println("매칭된 부분이 없습니다.");
+    }    
+  }
 }

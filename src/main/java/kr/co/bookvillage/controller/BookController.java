@@ -29,24 +29,28 @@ public class BookController {
   /*페이지 이동*/
   // 자료검색 카테고리 클릭 후 '검색 페이지'로 이동
   @GetMapping("/search.do")
-  public String search() {
+  public String search(Model model) {
+    bookService.getNewBook(model);
+    bookService.getRecoBook(model);
     return "book/search";
   }
-  // 검색 버튼 클릭 후 '검색 리스트 페이지'로 이동
+  // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
   @GetMapping("/search/result")
-  public String searchResult(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
+  public String result(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     bookService.searchBook(bookSearchDto, request, model);
-    return "book/searchResult";
+    String searchText = bookSearchDto.getSt();
+    model.addAttribute("searchText", searchText);
+    return "book/result";
   }
   // 상세 버튼 클릭 후 '도서 상세 페이지'로 이동
   @GetMapping("/search/detail")
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, Model model) {
     bookService.getBookDetail(isbn, model);
-    bookService.getScore(scoreDto.getIsbn(), model);
+    bookService.getScoreList(scoreDto.getIsbn(), model);
     return "book/detail";
   }
   
-  /*평가, 한줄평*/
+  /*별점, 한줄평*/
   //평가 저장
   @PostMapping("/addScore.do")
   public String addScore(@RequestBody ScoreDto scoreDto) {
