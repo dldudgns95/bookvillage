@@ -1,32 +1,72 @@
 package kr.co.bookvillage.controller;
 
-import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import kr.co.bookvillage.dto.FacilityDto;
-import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.service.FacService;
 import lombok.RequiredArgsConstructor;
 
-@RequestMapping(value="/apply")
-@RequiredArgsConstructor
+@RequestMapping("/apply")
 @Controller
+@RequiredArgsConstructor
 public class ApplyController {
-	private FacService facService;
-	
-	@GetMapping("/faclist.do")
-	public String faclist( ) {
-		return "apply/faclist";
-	}
-	
-    @GetMapping("/getfaclist.do")
-    public String getfaclist(Model model) {
-    	List<FacilityDto> faclist = facService.getFacList();
-    	model.addAttribute("faclist", faclist);
-		return "apply/faclist";
-    }
+  
+  private final FacService facService;
+  
+  
+  @GetMapping("/facApplyList.do")
+  public String facApplyList(HttpServletRequest request, Model model) {
+    facService.getFacApplyList(request, model);
+    return "apply/faclist";
+  }
+  
+  @GetMapping("/facWrite.form")
+  public String facWriteForm() {
+    return "admin/facWrite";
+  }
+  
+  @PostMapping("/facAdd.do")
+  public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
+	  facService.addFacility(multiRequest);
+    return "redirect:/admin/facApplyList.do";
+  }
+  
+  @GetMapping("/facist.do")
+  public String facList(HttpServletRequest request, Model model) {
+    model.addAttribute("facList", facService.getFacTotalList(request));
+    return "apply/faclist";
+  }
+  
+  @ResponseBody
+  @GetMapping(value="/facTotalList.do", produces="application/json")
+  public Map<String, Object> facTotalList(HttpServletRequest request) {
+    return facService.getFacTotalList(request);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/addFacApply.do", produces="application/json")
+  public Map<String, Object> addFacApply(HttpServletRequest request) {
+    return Map.of("addResult", facService.addFacApply(request));
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/checkFacApply.do", produces="application/json")
+  public Map<String, Object> checkFacApply(HttpServletRequest request) {
+    return Map.of("checkResult", facService.checkFacApply(request));
+  }
+  // 임시
+  @GetMapping("/faclist.do")
+  public String temp() {
+    return "apply/faclist";
+  }
+  
 }

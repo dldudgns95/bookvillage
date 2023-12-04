@@ -3,7 +3,6 @@
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
 
-
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
@@ -54,7 +53,8 @@
     
       <div class="search_area">
         <form id="search" name="search" action="search/result" method="get">
-          <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
    <!--   <input type="hidden" name="pageNum" value="1">
           <input type="hidden" name="pageSize" value="10">  -->
           <div class="search_select">
@@ -67,26 +67,40 @@
           <div class="search_text">
             <input type="text" id="st" name="st" placeholder="검색어를 입력하세요."> 
           </div>
+          <input type="hidden" name="sortType" />
           <div class="search_btn">
             <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
           </div>
         </form>
+        <div class="PopularWord">
+          실시간 급상승: 2024, ... 클릭하면 여기 적혀있는 말 검색되게 해야지 ㅋㅋ
+        </div>
       </div>
       
       <div class="list_area">
-        <h5>이 달의 추천 도서</h5>
+        <h5> <img src="/image/logo_noname.png" width="60px"> 추천 도서 </h5>  
         <div class="recommendContents">
-          <ul>
-            <li></li>
-          </ul>
+          <div class="bookLi_container">
+            <div class="bookLi" th:each="book : ${recoBookList}">
+            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+              <img th:src="${book.cover}"/>
+            </a>
+              <div th:text="${book.title}"></div>
+            </div>
+          </div>
         </div>
-        <h5>베스트 셀러</h5>
-        <div class="bestContents">
-          
-        </div>
+        
+        <h5> <img src="/image/logo_noname.png" width="60px"> 신간 도서 </h5>
+        <div class="bookLi_container">
+          <div class="bookLi" th:each="book : ${newBookList}">
+            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+              <img th:src="${book.cover}"/>
+            </a>
+              <div class="" th:text="${book.title}"></div>
+          </div>
+        </div>          
+        
       </div>
-      
-    </div>
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>

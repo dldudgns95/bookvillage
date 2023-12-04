@@ -1,7 +1,5 @@
 package kr.co.bookvillage.dto;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,4 +17,5 @@ public class NoticeDto {
     private String ntDate;
     private int ntAttachCount;
     private UserDto userDto;
+
 }

@@ -303,6 +303,11 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
+  public void getFacList(Model model) {
+    model.addAttribute("facList", adminMapper.getFacList());
+  }
+  
+  @Override
   public Map<String, Object> getFacTotalList(HttpServletRequest request) {
     
     String facStart = request.getParameter("facStart");

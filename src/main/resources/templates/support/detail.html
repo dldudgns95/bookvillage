@@ -4,6 +4,7 @@
 <head th:replace="~{/layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
 
 <style>
+<<<<<<< HEAD
   div.child1{
     width: 100px;
     height: 300px;
@@ -22,6 +23,26 @@
   }
 
   
+=======
+	div.child1{
+		width: 100px;
+		height: 300px;
+		float:left;
+		margin-top: 50px;
+		margin-right:20px;
+		background-color: lightsteelblue;
+		text-align: center;
+	}
+	div.child2{
+		width: 750px;
+		height: 500px;
+		float:left;
+		margin-top: 15px;
+
+	}
+
+	
+>>>>>>> main
 </style>
 
 <body>
@@ -36,7 +57,11 @@
       <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
+<<<<<<< HEAD
       <h5 style="text-align: center;"th:text="|${notice.ntNo}번 공지사항|"></h5> 
+=======
+      <h5 style="text-align: center;"th:text="|${notice.ntNo}번 공지사항|"></h5>	
+>>>>>>> main
         <th:block th:if="${session.user != null and session.user.auth == 9}">
             <form id="frm_btn">
               <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
@@ -45,6 +70,7 @@
             </form>
           </th:block>
       <div class="child2">  
+<<<<<<< HEAD
   
         <div th:text="|작성일 : ${notice.ntDate}|"></div>
         <div th:text="|제목 : ${notice.ntTitle}|"></div>
@@ -75,6 +101,38 @@
             <div><a th:href="@{/support/downloadAll.do(ntNo=${notice.ntNo})}">모두 다운로드</a></div>
           </th:block>
         </div>        
+=======
+	
+	      <div th:text="|작성일 : ${notice.ntDate}|"></div>
+	      <div th:text="|제목 : ${notice.ntTitle}|"></div>
+	      <div>내용</div>
+	      	<th:block th:if="${#strings.isEmpty(notice.ntContent)}">
+	      		<div>내용없음</div>
+	      	</th:block>
+	      	<th:block th:if="${not #strings.isEmpty(notice.ntContent)}">
+	        	<div th:text="${notice.ntContent}"></div>
+	      </th:block>	      
+			<h6>첨부 다운로드</h6>
+	      <div>
+	        <th:block th:if="${#lists.isEmpty(attachList)}">
+	          <div>첨부 없음</div>          
+	        </th:block>
+	        <th:block th:if="${not #lists.isEmpty(attachList)}">
+	          <th:block th:each="atc:${attachList}">
+	            <div class="attach" th:data-attach_nt_no="${atc.attachNtNo}">
+	              <th:block th:if="${atc.ntHasThumbnail == 1}">
+	                <img th:src="@{|${atc.ntPath}/s_${atc.ntFilesystemName}|}" alt="썸네일" width="50">
+	              </th:block>
+	              <th:block th:if="${atc.ntHasThumbnail == 0}">
+	                <img th:src="@{/image/attach1.png}" alt="썸네일" width="50">
+	              </th:block>
+	              <a th:text="${atc.ntOriginalFilename}"></a>
+	            </div>
+	          </th:block>
+	          <div><a th:href="@{/support/downloadAll.do(ntNo=${notice.ntNo})}">모두 다운로드</a></div>
+	        </th:block>
+	      </div> 	      
+>>>>>>> main
    </div>
 
    </div>
@@ -122,7 +180,11 @@
       fnRemove();
       fnDownload();
       fnModifyResult();
+<<<<<<< HEAD
          
+=======
+      	 
+>>>>>>> main
   </script>    
   </div>
 

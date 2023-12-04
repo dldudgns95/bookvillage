@@ -21,11 +21,12 @@
 	
 </style>
 
-<body>
+
 
   <div th:replace="~{/layout/header::header}"></div>
+  <body>
   <div class="parent">
-    <div class="wrap wrap_9">
+    <div>
       <div class="child1">
         <ul>
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
@@ -73,5 +74,7 @@
       
    </script>
 </div>
+  <div th:replace="~{/layout/footer::footer}"></div>
+
 </body>
 </html>

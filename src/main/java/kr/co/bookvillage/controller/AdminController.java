@@ -71,7 +71,7 @@ public class AdminController {
   @GetMapping("/facApplyList.do")
   public String facApplyList(HttpServletRequest request, Model model) {
     adminService.getFacApplyList(request, model);
-    return "admin/facList";
+    return "admin/facApplyList";
   }
   
   @GetMapping("/facWrite.form")
@@ -92,8 +92,8 @@ public class AdminController {
   }
   
   @GetMapping("/facList.do")
-  public String facList(HttpServletRequest request, Model model) {
-    model.addAttribute("facList", adminService.getFacTotalList(request));
+  public String facList(Model model) {
+    adminService.getFacList(model);
     return "admin/facList";
   }
   

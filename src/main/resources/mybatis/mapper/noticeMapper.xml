@@ -11,7 +11,7 @@
     <result  column="NT_CONTENT"      property="ntContent"/>
     <result  column="NT_DATE"  	  	  property="ntDate"/>
     <result  column="NT_ATTACH_COUNT" property="ntAttachCount"/>
-      <association javaType="UserDto"      property="userDto">
+  <association javaType="UserDto"      property="userDto">
       <id        column="USER_NO"        property="userNo"/>
       <result    column="EMAIL"          property="email" />
       <result    column="PW"             property="pw" />
@@ -23,30 +23,40 @@
       <result    column="AUTH"           property="auth" />
       <result    column="PW_MODIFIED_AT" property="pwModifiedAt" />
       <result    column="JOINED_AT"      property="joinedAt" />
-      <result    column="STATUE"         property="status" />
+      <result    column="STATUS"         property="status" />
     </association>
   </resultMap>
+      <resultMap type="AttachNtDto" id="AttachNtMap">
+		  <id column="ATTACH_NT_NO" 				 property="attachNtNo"/>
+		 <result  column="NT_PATH"      		     property="ntPath"/>
+	     <result  column="NT_ORIGINAL_FILENAME"      property="ntOriginalFilename"/>
+	     <result  column="NT_FILESYSTEM_NAME"  	  	 property="ntFilesystemName"/>
+	     <result  column="NT_DOWNLOAD_COUNT" 		 property="ntDownloadCount"/>
+	     <result  column="NT_HAS_THUMBNAIL" 		 property="ntHasThumbnail"/>
+	<association javaType="NoticeDto" property="noticeDto">
+		 <id  column="NT_NO"   	     	  property="ntNo"/>
+	    <result  column="NT_TITLE"        property="ntTitle"/>
+	    <result  column="NT_CONTENT"      property="ntContent"/>
+	    <result  column="NT_DATE"  	  	  property="ntDate"/>
+	    <result  column="NT_ATTACH_COUNT" property="ntAttachCount"/>
+	</association>	  
+	 
+	  </resultMap>
 <!-- 공지사항 추가하기 -->
   <insert id="insertNotice" parameterType="NoticeDto">
-    <selectKey order="BEFORE" resultType="int" keyProperty="ntNo">
-      SELECT NOTICE_SEQ.NEXTVAL
-        FROM DUAL
-    </selectKey>
     INSERT INTO NOTICE (
         NT_NO
       , NT_TITLE
       , NT_CONTENT
-      , USER_NO
       , NT_DATE
     ) VALUES (
-        #{ntNo}
+        NOTICE_SEQ.NEXTVAL
       , #{ntTitle}
       , #{ntContent}
-      , #{userDto.userNo}
    	  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS')
     )
   </insert>
-   <insert id="insertAttach" parameterType="AttachNtDto">
+<insert id="insertAttach" parameterType="AttachNtDto">
     INSERT INTO ATTACH_NT (
         ATTACH_NT_NO
       , NT_PATH
@@ -62,9 +72,9 @@
       , #{ntFilesystemName}
       , 0
       , #{ntHasThumbnail}
-      , #{ntNo}
+      , NOTICE_SEQ.CURRVAL
     )
-  </insert>
+</insert>
 <!-- 공지사항 리스트 가져오기 -->
   <select id="getNoticeCount" resultType="int">
     SELECT COUNT(*)
@@ -72,7 +82,7 @@
   </select>
  
   <select id="getNoticeList" parameterType="Map" resultMap="NoticeMap">
-    SELECT A.NT_NO, A.NT_TITLE, A.NT_CONTENT, A.USER_NO, A.NT_DATE, A.NT_ATTACH_COUNT
+    SELECT A.NT_NO, A.NT_TITLE, A.NT_CONTENT, A.NT_DATE, A.NT_ATTACH_COUNT, A.USER_NO
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY NT_NO DESC) AS RN,
                     N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE,
                    (SELECT COUNT(*) FROM ATTACH_NT ATC WHERE N.NT_NO = ATC.NT_NO) AS NT_ATTACH_COUNT,
@@ -84,7 +94,7 @@
   
   <select id="getNotice" parameterType="int" resultMap="NoticeMap">
     SELECT N.NT_NO, N.NT_TITLE, N.NT_CONTENT, N.NT_DATE
-         , USR.USER_NO, USR.EMAIL, USR.NAME
+         , USR.USER_NO
       FROM USER_T USR RIGHT OUTER JOIN NOTICE N
         ON USR.USER_NO = N.USER_NO
      WHERE N.NT_NO = #{ntNo}
@@ -101,4 +111,29 @@
       FROM ATTACH_NT
      WHERE ATTACH_NT_NO = #{attachNtNo}
   </select>
+    
+  <update id="updateDownloadCount" parameterType="int">
+    UPDATE ATTACH_NT
+       SET NT_DOWNLOAD_COUNT = NT_DOWNLOAD_COUNT + 1
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </update>
+  
+  <update id="updateNotice" parameterType="NoticeDto">
+    UPDATE NOTICE
+       SET NT_TITLE = #{ntTitle}
+         , NT_CONTENT = #{ntContent}
+     WHERE NT_NO = #{ntNo}
+  </update>
+  
+  <delete id="deleteAttach" parameterType="int">
+    DELETE
+      FROM ATTACH_NT
+     WHERE ATTACH_NT_NO = #{attachNtNo}
+  </delete>
+  
+  <delete id="deleteNotice" parameterType="int">
+    DELETE
+      FROM NOTICE
+     WHERE NT_NO = #{ntNo}
+  </delete>
 </mapper>

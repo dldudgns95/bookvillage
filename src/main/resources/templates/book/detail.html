@@ -118,13 +118,13 @@
               <button th:if="${bookDetailList[0].status == 0}" type="button" disabled='disabled' class="btn btn-outline-secondary" id="checkout_btn">대출중</button>
             </li>      
             <li>
-              <button type="button" class="btn btn-outline-secondary">이용안내</button>
+              <button type="button" class="btn btn-outline-secondary toggle-guide">이용안내<i class="fa-solid fa-chevron-down"></i></button>
             </li>        
           </ul>
         </div>
         <hr>
         
-        <div class="detail_guide">
+        <div class="detail_guide guide">
           <dl>
             <dt>책빌리지 대출 안내</dt>
             <dd>

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AttachNtDto {
 	private int attachNtNo;
-	private int ntNo;
+    private int ntNo;
 	private String ntPath;
 	private String ntOriginalFilename;
 	private String ntFilesystemName;
