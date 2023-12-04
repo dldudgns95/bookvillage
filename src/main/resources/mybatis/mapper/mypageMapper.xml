@@ -42,7 +42,7 @@
     </association>    
   </resultMap>
   
-  <resultMap id="WishMap" type="kr.co.bookvillage.dto.WishDto">
+  <resultMap id="WishMap"      type="kr.co.bookvillage.dto.WishDto">
     <id     column="ISBN"      property="isbn" />
     <result column="USER_NO"   property="userNo" />
     <result column="WISH_DATE" property="wishDate" />
@@ -54,7 +54,7 @@
     </association>
   </resultMap>
 
-
+  <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
@@ -65,6 +65,7 @@
     </where>
   </select>
   
+  <!-- 유저정보 변경 -->
   <update id="updateUser" parameterType="UserDto">
     UPDATE USER_T
        SET NAME = #{name}
@@ -74,6 +75,7 @@
      WHERE USER_NO = #{userNo}    
   </update>
   
+  <!-- 비밀번호 변경 -->
   <update id="updateUserPw" parameterType="Map">
     UPDATE USER_T
        SET PW = #{pw}
@@ -81,12 +83,14 @@
      WHERE USER_NO = #{userNo}
   </update>
   
+  <!-- 접속유저의 대출권수 -->
   <select id="getUserBookCheckoutCount" parameterType="int" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT
      WHERE USER_NO = #{userNo}
   </select>
   
+  <!-- 접속유저의 대출리스트 -->
   <select id="getUserBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
     SELECT A.CHECKOUT_NO, A.USER_NO, A.ISBN, A.STATUS, A.CHECKOUT_DATE, A.START_DATE, A.DUE_DATE, A.END_DATE , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, BC.CHECKOUT_NO, BC.USER_NO, BC.ISBN, BC.STATUS, BC.CHECKOUT_DATE, BC.START_DATE, BC.DUE_DATE, BC.END_DATE, B.TITLE
@@ -96,18 +100,21 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 접속유저의 대출연장신청 -->
   <update id="updateDueDate" parameterType="int">
     UPDATE BOOK_CHECKOUT
        SET DUE_DATE = DUE_DATE + 7, DELAY = 1
      WHERE STATUS = 1 AND DELAY = 0 AND CHECKOUT_NO = #{checkoutNo}
   </update>
   
+  <!-- 접속유저가 작성한 한줄평갯수 -->
   <select id="getReviewCount" parameterType="int" resultType="int">
     SELECT COUNT(*)
       FROM SCORE
      WHERE USER_NO = #{userNo}
   </select>
   
+  <!-- 접속유저가 작성한 한줄평리스트 -->
   <select id="getReviewList" parameterType="Map" resultMap="ScoreMap">
     SELECT A.ISBN, A.USER_NO, A.REVIEW_DATE, A.STAR, A.REVIEW , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_DATE) AS RN, S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE
@@ -117,12 +124,14 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 접속유저의 관심도서 갯수 -->
   <select id="getWishCount" parameterType="int" resultType="int">
     SELECT COUNT(*)
       FROM WISH
      WHERE USER_NO = #{userNo}
   </select>
   
+  <!-- 접속유저의 관심도서 리스트 -->
   <select id="getWishBookList" parameterType="Map" resultMap="WishMap">
     SELECT A.ISBN, A.USER_NO, A.WISH_DATE, A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY WISH_DATE DESC) AS RN, W.ISBN, W.USER_NO, W.WISH_DATE, B.TITLE
@@ -131,6 +140,8 @@
              WHERE W.USER_NO = #{userNo}) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  
 
 
 
