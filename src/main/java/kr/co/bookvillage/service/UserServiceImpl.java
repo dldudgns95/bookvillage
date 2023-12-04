@@ -598,16 +598,13 @@ public class UserServiceImpl implements UserService {
                         .userNo(userNo)
                         .build();
      int autoUpdatePw90Result = userMapper.autoupdatetmpPw(user);  
-     
      return autoUpdatePw90Result;
-                       
   }
   
   @Override
-  public void getBookList(Model model) {
+  public List<BookDto> getBookList() {
     
-    
-    model.addAttribute("book", userMapper.getBookList());
+    return userMapper.getBookList();
   }
   
   

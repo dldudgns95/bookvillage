@@ -53,7 +53,7 @@ public interface UserService {
   
   public List<FaqDto> getFaqList();
   public List<NoticeDto> getNoticeList();
-  public void getBookList(Model model);
+  public List<BookDto> getBookList();
   
 }
 
