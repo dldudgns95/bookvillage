@@ -44,9 +44,11 @@ public class BookController {
   }
   // 상세 버튼 클릭 후 '도서 상세 페이지'로 이동
   @GetMapping("/search/detail")
-  public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, Model model) {
+  public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, WishDto wishDto, Model model) {
     bookService.getBookDetail(isbn, model);
     bookService.getScoreList(scoreDto.getIsbn(), model);
+    int checkWish = bookService.checkWish(wishDto);
+    model.addAttribute("checkWish", checkWish);
     return "book/detail";
   }
   
@@ -81,7 +83,7 @@ public class BookController {
   @PostMapping("/checkWish.do")
   @ResponseBody
   public String checkWish(@RequestBody WishDto wishDto) {
-    int checkWish = bookService.wishExists(wishDto);
+    int checkWish = bookService.checkWish(wishDto);
     return "{\"checkWish\":" + checkWish + "}";
   }
   
@@ -111,6 +113,11 @@ public class BookController {
     bookService.updateCheckout(bookDto);
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }
-  
+  //대출처리(mypage)
+  @PostMapping("/updateMyCheckOut.do")
+  public String updateMyCheckOut(@RequestBody BookDto bookDto) {
+    bookService.updateBookCount(bookDto.getUserNo());
+    return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
+  }  
 
 }

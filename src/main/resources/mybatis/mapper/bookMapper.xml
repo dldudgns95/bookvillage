@@ -91,9 +91,15 @@
       FROM BOOK
      WHERE ISBN = ${isbn}     
   </select>
+
+
   
   <!--대출하기-->
-  <update id="updateBookStatus">
+  <update id="updateBookCount" parameterType="int">
+    UPDATE USER_T SET BOOKCOUNT = BOOKCOUNT_SEQ.NEXTVAL WHERE USER_NO = ${userNo}
+  </update>
+
+  <update id="updateBookStatus" parameterType="BookDto">
     UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
   </update>
   
@@ -112,5 +118,6 @@
     , SYSDATE  
     )
   </insert>
+  
   
 </mapper>

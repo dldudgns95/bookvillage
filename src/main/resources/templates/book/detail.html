@@ -105,7 +105,10 @@
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
                 <input type="hidden" id="wishDate" name="wishDate" />
-                <button type="button" id="toggleWishBtn" class="btn btn-outline-secondary" th:classappend="${listWish?.status == 1 ? 'wishAdded' : 'notAdded'}">관심 </button>
+                <button type="button" class="btn btn-outline-secondary wishBtn" >관심
+                  <span th:if="${checkWish == 1}">♥</span>
+                  <span th:if="${checkWish == 0}">♡</span>                  
+                </button>
               </form>
             </li>
             <li>
@@ -163,7 +166,8 @@
               <span th:if="${score.star == 2}" >★★☆☆☆</span>
               <span th:if="${score.star == 1}" >★☆☆☆☆</span>     
               
-              <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">                   <!-- 삭제 버튼 -->
+              <span class="my_score" th:if="${score.userNo != null and score.userNo == session?.user?.userNo}">                   
+                <!-- 삭제 버튼 -->
                 <a th:href="@{/book/deleteScore.do(isbn=${score.isbn}, userNo=${score.userNo})}" th:onclick="return confirm('정말로 삭제하시겠습니까?')"><i class="fa-solid fa-xmark"></i></a>
               </span>
               <span class="my_score" th:unless="${score.userNo != null and score.userNo == session?.user?.userNo}">    
