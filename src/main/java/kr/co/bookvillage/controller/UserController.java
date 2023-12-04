@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.UserService;
@@ -42,42 +44,18 @@ public class UserController {
       }
     }
     model.addAttribute("referer", referer);
-    // 네이버로그인-1
+    // 네이버, 카카오-1
     model.addAttribute("naverLoginURL", userService.getNaverLoginURL(request));
     model.addAttribute("kakaoLoginURL", userService.getKakaoLoginURL(request) );
 
     return "user/login";
   }
   
-
-  
   @GetMapping("/naver/getAccessToken.do")
   public String getAccessToken(HttpServletRequest resRequest) throws Exception {
     String accessToken = userService.getNaverLoginAccessToken(resRequest);
     return "redirect:/user/naver/getProfile.do?accessToken=" + accessToken;
   }
-  
-  @GetMapping("/kakao/getAccessToken.do")
-  public String KakaotAccessToken( HttpServletRequest request ) throws Exception {
-      String accessToken = userService.getKakaoLoginAccessToken(request);
-      return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
-  }
-
-
-  @GetMapping("/kakao/getProfile.do")
-  public  String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken")); 
-    UserDto user = userService.getUser(kakaoProfile.getEmail());
-
-    if(user == null) {
-      model.addAttribute("kakaoProfile", kakaoProfile);
-      return "user/kakao_join";
-    } else {
-      userService.kakaoLogin(request, response, kakaoProfile);
-      return "redirect:/main.do";
-    }
-  }
-  
   
   @GetMapping("/naver/getProfile.do")
   public  String getProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
@@ -101,6 +79,26 @@ public class UserController {
     userService.naverJoin(request, response);
   }
   
+  @GetMapping("/kakao/getAccessToken.do")
+  public String KakaotAccessToken( HttpServletRequest request ) throws Exception {
+      String accessToken = userService.getKakaoLoginAccessToken(request);
+      return "redirect:/user/kakao/getProfile.do?accessToken=" + accessToken;
+  }
+
+  @GetMapping("/kakao/getProfile.do")
+  public  String getKakaoProfile(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+    UserDto kakaoProfile = userService.getKakaoProfile(request.getParameter("accessToken")); 
+    UserDto user = userService.getUser(kakaoProfile.getEmail());
+
+    if(user == null) {
+      model.addAttribute("kakaoProfile", kakaoProfile);
+      return "user/kakao_join";
+    } else {
+      userService.kakaoLogin(request, response, kakaoProfile);
+      return "redirect:/main.do";
+    }
+  }
+  
   @PostMapping("/kakao/join.do")
   public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) {
     userService.naverJoin(request, response);
@@ -109,7 +107,8 @@ public class UserController {
   
   // 로그인
   @PostMapping("/login.do")
-  public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
+  public void login(HttpSession session , UserDto dto, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    //원래 이거 한줄
     userService.login(request, response);
   }
   
@@ -129,13 +128,11 @@ public class UserController {
     return "user/join-chose";
   }
   
-  
   // 약관 동의 페이지로 이동
   @GetMapping("/agree.form")
   public String agreeForm() {
     return "user/agree";
   }
-  
  
   // 회원 가입 페이지로 이동
   @GetMapping("/join.form")
@@ -193,7 +190,6 @@ public class UserController {
     return userService.checkEmail(email);
   }
   
-  
   // 비번 인증코드 발송 및 업데이트
   @PostMapping(value = "/sendTmpCodes.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpCodes(@RequestBody Map<String, String> requestBody) {
@@ -201,24 +197,24 @@ public class UserController {
       return userService.sendTmpCode(email);
   }
 
-
-  //
-//  @PostMapping(value = "/sendTmpPw.do")
-//  public String sendTmpPw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-//    redirectAttributes.addFlashAttribute("updateResult", userService.updateTmpPw(request.getParameter("email")));
-//    
-//    return "redirect:/user/login.form";
-//  }
-
   @PostMapping(value = "/sendTmpPw.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestBody Map<String, String> requestBody) {
       String email = requestBody.get("email");
       return userService.updateTmpPw(email);
   }
+
+  // 90일 경과 후 비밀번호 업데이트 
+  @GetMapping("/autoUpdatePw.do")
+  public String autoUpdatePw(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int autoUpdatePw90Result = userService.autoUpdatePw90(request); 
+    redirectAttributes.addFlashAttribute("autoUpdatePw90Result", autoUpdatePw90Result);
+    return "redirect:/main.do";
+    
+  }
+
   
   
-  
-  
+
   
 }
   

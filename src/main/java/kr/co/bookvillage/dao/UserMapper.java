@@ -1,10 +1,14 @@
 package kr.co.bookvillage.dao;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.InactiveUserDto;
+import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
 
 @Mapper
@@ -35,7 +39,15 @@ public interface UserMapper {
   public int updatePw90(UserDto user);
   
   public int kakaoJoin(UserDto user);
+  public int autoupdatetmpPw(UserDto user);
+  
+  public List<FaqDto> getFaqList();
+  public List<NoticeDto> getNoticeList();
+  
+  public List<BookDto> newBookList();
+  
 
+  
   
 }
 

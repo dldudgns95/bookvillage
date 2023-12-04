@@ -4,8 +4,14 @@
  * 비밀번호 찾기
  */
 
+/* 함수 호출 */
+$(() => {
+  fnCheckMobileId();
+})
+
+
 /* 전역변수 선언 */
-var emailPassed = false;
+var mobilePassed = false;
 
 
 
@@ -27,9 +33,32 @@ function toggleForm(formType) {
     }
 }
 
+// 휴대전화 정규식..
+const fnCheckMobileId = () => {
+  $('#mobile').keyup((ev) => {
+    ev.target.value = ev.target.value.replace(/[^0-9]/g, '');
+
+    // 유효성 검사: 길이 확인
+    if (ev.target.value.length !== 11) {
+      $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+      return;
+    }
+
+    // 휴대전화번호 검사 정규식 (010숫자8개)
+    let regMobile = /^010[0-9]{8}$/;
+    if (regMobile.test(ev.target.value)) {
+      $('#msg_mobile').text('');
+    } else {
+      $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+    }
+  });
+}
 
 
 // 아이디 찾기
+
+
+
 $(document).ready(() => {
     $("#find_id").click(() => {
 
@@ -136,7 +165,7 @@ $(document).ready(() => {
                       console.log('Ajax 요청 성공', resData);
 
                             alert('이메일이 인증되었습니다. 메일함에 임시비밀번호를 확인하세요');
-                              // 
+                                   $('#btn_verify_code').prop('disabled', true);
                               $.ajax({
                                 type:'post',
                                 url: '/user/sendTmpPw.do',

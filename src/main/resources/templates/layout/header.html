@@ -52,6 +52,7 @@
     <div class="search_bar" >
       <input type="text"  style="width:300px;" name="search" placeholder="검색어를 입력하세요" >
       <button type="button" class="btn btn-outline-secondary">검색</button>
+      
     </div>
     <script>
       const fnMain = () => {
@@ -61,7 +62,11 @@
       }
       fnMain();
     </script>
+    
+    
     <div class="login_wrap">
+      
+      
       <th:block th:if="${session.user == null}">
         <ul class="ico_user_group">
           <li><a th:href="@{/user/login.form}"><i class="fa-solid fa-arrow-right-to-bracket"></i> 로그인</a></li>
@@ -78,6 +83,8 @@
         </ul>
       </th:block>
     </div>
+    
+    
     <div class="gnb_wrap">
       <ul class="gnb">
         <li><a th:href="@{/book/search.do}">자료검색</a></li>
@@ -89,6 +96,7 @@
 
   </div>
   
-  
+
+
 </body>
 </html>

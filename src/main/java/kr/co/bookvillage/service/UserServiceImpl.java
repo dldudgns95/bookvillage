@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.UserMapper;
+import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.InactiveUserDto;
+import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.util.MyJavaMailUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
@@ -31,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserServiceImpl implements UserService {
   
+
   private final UserMapper userMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
@@ -80,7 +86,7 @@ public class UserServiceImpl implements UserService {
           outt.flush();
           outt.close();
       } else {
-          // 90일 이전인 경우에 실행할거 있으면 적기
+          // 90일 이전인 경우에 실행할거 있으면 적기  
       }
       response.sendRedirect(request.getParameter("referer"));
   } else {
@@ -282,8 +288,6 @@ public class UserServiceImpl implements UserService {
   }
   
   
-  
-  
   // 이메일 주소 등록되어있는지 확인
   @Transactional(readOnly = true)
   @Override
@@ -375,6 +379,7 @@ public class UserServiceImpl implements UserService {
       }
   
   
+  
       
   // 인증코드 메일 발송
   @Override
@@ -392,6 +397,7 @@ public class UserServiceImpl implements UserService {
    
   }
 
+  // 임시 비밀번호 발송 및 업데이트
   @Override
   public ResponseEntity<Map<String, Object>> updateTmpPw(String email) {
     
@@ -407,7 +413,6 @@ public class UserServiceImpl implements UserService {
     
    return new ResponseEntity<>(Map.of("email", email, "pwCode", hashedPwCode), HttpStatus.OK);
   
-    //return userMapper.updatetmpPw(Map.of("email", email, "pwTmpCode", hashedPwCode));
 
   }
   
@@ -452,11 +457,7 @@ public class UserServiceImpl implements UserService {
     }
     
   }
-  
     
-  
-  
-  
   // 카카오 로그인1.. 
   @Override
   public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
@@ -543,10 +544,7 @@ public class UserServiceImpl implements UserService {
    
    JSONObject obj = new JSONObject(responseBody.toString());
    
-
    JSONObject kakaoAccount = obj.getJSONObject("kakao_account");
-
-   
    
    UserDto user = UserDto.builder()    
        .email(kakaoAccount.getString("email"))
@@ -554,8 +552,6 @@ public class UserServiceImpl implements UserService {
        .gender(kakaoAccount.getString("gender"))
        .mobile(kakaoAccount.getString("phone_number"))
                          .build();
-   
-  
    
    return user;
    
@@ -582,6 +578,64 @@ public class UserServiceImpl implements UserService {
         
       }
   }
+  
+   @Override
+  public List<FaqDto> getFaqList() {
+    return userMapper.getFaqList();
+  }
+   
+   @Override
+  public List<NoticeDto> getNoticeList() {
+    return userMapper.getNoticeList();
+  }
 
+  @Override
+  public int autoUpdatePw90(HttpServletRequest request) {
 
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    
+    UserDto user = UserDto.builder()
+                        .userNo(userNo)
+                        .build();
+     int autoUpdatePw90Result = userMapper.autoupdatetmpPw(user);  
+     
+     return autoUpdatePw90Result;
+                       
+  }
+  
+  
+  
+  
+  
+  ////// 수정  - 안됨
+  @Override
+  public void getNewBookImage(HttpServletRequest request, Model model) {
+   // Map<String, Object> map = Map.of("", );
+    
+    List<BookDto> book = userMapper.newBookList();
+    
+    model.addAttribute("book", book);
+        
+        
+    
+  }
+  
+  
+  
+  
 }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+
