@@ -16,7 +16,7 @@ public class ScoreDto {
   private String isbn;
   private int userNo;
   private Date reviewDate;
-  private int star;
+  private double star;
   private String review;
   // book 테이블
   private String title;

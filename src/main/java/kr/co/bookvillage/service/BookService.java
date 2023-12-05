@@ -28,6 +28,7 @@ public interface BookService {
   // 별점, 한줄평
   public int insertScore(ScoreDto scoreDto);
   public void getScoreList(String isbn, Model model);
+  public void getStarAvg(String isbn,Model model);
   public void deleteScore(ScoreDto scoreDto);
   public void likeScore(ScoreDto scoreDto, Model model);
   
@@ -42,6 +43,7 @@ public interface BookService {
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 
+  
   // 카테고리 추출
   public void categoryParser (BookDto bookDto);
 

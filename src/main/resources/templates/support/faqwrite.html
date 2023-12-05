@@ -4,19 +4,24 @@
 <head th:replace="~{/layout/header::head('새 공지사항 작성하기')}"></head>
 
 <style>
-	div.child1{
-		width: 100px;
-		height: 300px;
-		float:left;
-		margin-top: 50px;
-		margin-right:20px;
-		background-color: lightsteelblue;
-		text-align: center;
-	}
+	.side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
 	div.child2{
-		width: 750px;
-		height: 200px;
-		float:left;
+		width: 800px;
+    	height: 500px;
+   		display: inline-block;
+   	 	margin-left: 320px;
 	}
 	
 </style>
@@ -27,17 +32,17 @@
   <body>
   <div class="parent">
     <div>
-      <div class="child1">
-        <ul>
+       <div class="side_bar">
+	    <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>
+        <ul id="side_list">
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
 		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;">FAQ 작성하기</h5>
       <div class="child2">
       <div>
-		  
+      <h5 style="text-align: center;">FAQ 작성하기</h5>
       <form id="frm_faq_add" method="post" th:action="@{/support/faqadd.do}" enctype="multipart/form-data">    
         <div class="mt-3">
           <label for="faqTitle" class="form-label">제목</label>
@@ -47,11 +52,11 @@
           <label for="faqContent" class="form-label">내용</label>
           <textarea rows="3" name="faqContent" id="faqContent" class="form-control"></textarea>
         </div>      
-        <div class="text-center mt-5">
+        <div class="mt-3">
 		  <a th:href="@{/support/faqlist.do}">
             <button class="btn btn-secondary" type="button">작성취소</button>
           </a> 
-          <button type="submit" class="btn btn-primary">작성완료</button>
+          <button type="submit" class="btn btn-success">작성완료</button>
           </div>
       </form>	
       </div> 
@@ -74,7 +79,6 @@
       
    </script>
 </div>
-  <div th:replace="~{/layout/footer::footer}"></div>
 
 </body>
 </html>

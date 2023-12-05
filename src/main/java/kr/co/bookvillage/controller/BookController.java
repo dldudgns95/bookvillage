@@ -1,5 +1,9 @@
 package kr.co.bookvillage.controller;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
@@ -47,6 +51,7 @@ public class BookController {
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, WishDto wishDto, Model model) {
     bookService.getBookDetail(isbn, model);
     bookService.getScoreList(scoreDto.getIsbn(), model);
+    bookService.getStarAvg(isbn, model);
     int checkWish = bookService.checkWish(wishDto);
     model.addAttribute("checkWish", checkWish);
     return "book/detail";
@@ -120,4 +125,36 @@ public class BookController {
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }  
 
+  
+  //그래프
+  @GetMapping("/chart.do")
+  public String showChart(Model model) {
+      // 실제 데이터베이스에서 데이터를 가져와야 함 (여기서는 임의의 데이터 사용)
+      List<ScoreDto> scoreList = getDummyScoreData();
+
+      // 데이터를 전달
+      model.addAttribute("scoreList", scoreList);
+
+      return "chart"; // 차트를 표시할 뷰의 이름
+  }
+  
+  private List<ScoreDto> getDummyScoreData() {
+    List<ScoreDto> dummyData = new ArrayList<>();
+
+    // 예시 데이터 추가
+    dummyData.add(ScoreDto.builder()
+            .isbn("1234567890")
+            .userNo(1)
+            .reviewDate(Date.valueOf("2023-01-01"))
+            .star(4.5)
+            .review("Great book!")
+            .title("Sample Book")
+            .author("Sample Author")
+            .status(1)
+            .build());
+
+    // 추가 데이터 추가...
+
+    return dummyData;
+}
 }

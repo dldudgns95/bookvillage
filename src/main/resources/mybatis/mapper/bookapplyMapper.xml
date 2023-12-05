@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.BookApplyMapper">
+	
+<!-- faq 추가하기 -->
+<insert id="insertBook" parameterType="BookApplyDto">
+    INSERT INTO BOOK_APPLY (
+        APPLY_NO,
+        USER_NO,
+        BOOK_NAME,
+        AUTHOR,
+        PUBLISHER,
+        WISH,
+        STATUS
+    ) VALUES (
+        BOOK_APPLY_SEQ.NEXTVAL,
+        #{userDto.userNo},
+        #{bookName},
+        #{author},
+        #{publisher},
+        #{wish},
+        0
+    )
+</insert>
+
+</mapper>

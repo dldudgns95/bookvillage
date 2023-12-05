@@ -13,7 +13,6 @@ public interface NoticeMapper {
 	  public int insertNotice(NoticeDto notice);
 	  public int insertAttach(AttachNtDto attach);
 	  public int getNoticeCount();
-	  public List<NoticeDto> getNoticeList(Map<String, Object> map);
 	  public NoticeDto getNotice(int ntNo);
 	  public List<AttachNtDto> getAttachList(int ntNo);
 	  public AttachNtDto getAttach(int attachNo);
@@ -21,4 +20,6 @@ public interface NoticeMapper {
 	  public int updateNotice(NoticeDto notice);
 	  public int deleteAttach(int attachNo);
 	  public int deleteNotice(int ntNo);
+	  public List<NoticeDto> getNoticeList(Map<String, Object> map);
+
 }

@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.10.1/chart.min.js"></script>
+<head th:replace="~{/layout/header::head('소장자료 검색')}">
+  
+  <script th:src="https://cdn.jsdelivr.net/npm/chart.js@3"></script>
+</head>
 
 
 <body>
@@ -150,7 +152,7 @@
         <hr>
          
         <h4 class="detail_title">평점 분포</h4>
-        <h5>평균 ★: </h5>
+        <h5>평균 ★ [[${starAvg} ?: 0.0]] </h5>
         <hr>
          
         <h4 class="detail_title">한줄평</h4>
@@ -205,7 +207,7 @@
         
 
         
-        <canvas id="line-chart" width="400" height="200"></canvas>
+        <canvas id="barChart" width="400" height="300"></canvas>
 
       </div>
       
@@ -213,7 +215,8 @@
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
-  
+    <script th:src="@{/js/score_chart.js}"></script>
+
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
