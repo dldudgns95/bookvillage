@@ -1,5 +1,6 @@
 package kr.co.bookvillage.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -146,6 +147,7 @@ public class BookServiceImpl implements BookService {
     bookMapper.updateBookStatus(bookDto);
   }
   
+  
   // 카테고리 추출
   @Override
   public void categoryParser(BookDto bookDto) {
@@ -159,13 +161,17 @@ public class BookServiceImpl implements BookService {
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(inputString);
 
+    List<String> categories = new ArrayList<>();
+    
     // 매칭된 부분 찾기
-    if (matcher.find()) {
-        // 첫 번째 그룹의 값 출력
-        String result = matcher.group(1);
-        System.out.println(result);
-    } else {
-        System.out.println("매칭된 부분이 없습니다.");
-    }    
+    while (matcher.find()) {
+      // 첫 번째 그룹의 값 리스트에 추가
+      String result = matcher.group(1);
+      categories.add(result);
+    }
+    
+    for (String category : categories) {
+      System.out.println(category);
+    }
   }
 }

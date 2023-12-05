@@ -249,3 +249,11 @@
 .wishBtn {
   cursor: pointer;
 }
+
+/*그래프*/
+canvas {
+  display: block;
+  margin: 20px auto;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
