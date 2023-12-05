@@ -4,23 +4,36 @@
 <head th:replace="~{/layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
 
 <style>
-  div.child1{
-    width: 100px;
-    height: 300px;
-    float:left;
-    margin-top: 50px;
-    margin-right:20px;
-    background-color: lightsteelblue;
+   .side_bar {
+    width: 200px;
+    display: inline-block;
     text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  div.child1{
+ 	width: 800px;
+    display: inline-block;
+    margin-left: 320px;
+
   }
   div.child2{
-    width: 750px;
-    height: 500px;
-    float:left;
-    margin-top: 15px;
+	border: 1px solid #ccc;
+ 	width: 800px;
+    display: inline-block;
 
   }
-
+	div.child2-1{
+		height:200px;
+		margin-top: 10px;
+		margin-bottom: 20px;		
+	}
+	
   
 </style>
 
@@ -28,26 +41,20 @@
 
   <div th:replace="~{/layout/header::header}"></div>
   <div class="parent">
-    <div>
-      <div class="child1">
+      <div class="side_bar">
+	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
         <ul>
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
       <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
       <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;"th:text="|${notice.ntNo}번 공지사항|"></h5> 
-        <th:block th:if="${session.user != null and session.user.auth == 9}">
-            <form id="frm_btn">
-              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-              <button type="button" id="btn_edit" class="btn btn-secondary">편집</button>
-              <button type="button" id="btn_remove" class="btn btn-secondary">삭제</button>
-            </form>
-          </th:block>
-      <div class="child2">  
-  
+    
+      <div class="child1">  
+	  <h5 style="text-align: center;"th:text="|${notice.ntNo}번 공지사항|"></h5>
+	  <h5 th:text="|${notice.ntTitle}|"></h5> 
+	  <div class="child2">  
         <div th:text="|작성일 : ${notice.ntDate}|"></div>
-        <div th:text="|제목 : ${notice.ntTitle}|"></div>
         <div>내용</div>
           <th:block th:if="${#strings.isEmpty(notice.ntContent)}">
             <div>내용없음</div>
@@ -56,7 +63,6 @@
             <div th:text="${notice.ntContent}"></div>
         </th:block>       
       <h6>첨부 다운로드</h6>
-        <div>
           <th:block th:if="${#lists.isEmpty(attachList)}">
             <div>첨부 없음</div>          
           </th:block>
@@ -74,10 +80,19 @@
             </th:block>
             <div><a th:href="@{/support/downloadAll.do(ntNo=${notice.ntNo})}">모두 다운로드</a></div>
           </th:block>
-        </div>        
+       
    </div>
+  <div class="child2-1">
+       <th:block th:if="${session.user != null and session.user.auth == 9}">
+       <form id="frm_btn">
+        <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
+        <button type="button" id="btn_edit" class="btn btn-secondary">편집</button>
+        <button type="button" id="btn_remove" class="btn btn-secondary">삭제</button>
+        </form>
+        </th:block> 
+        </div> 	 
+      </div>
 
-   </div>
    <script th:inline="javascript">
  var frmBtn = $('#frm_btn');
     
@@ -102,7 +117,7 @@
       const fnDownload = () => {
         $('.attach').click(function(){
           if(confirm('다운로드 할까요?')){
-            location.href = '/support/download.do?attachNtNo=' + $(this).data('attachNtNo');
+            location.href = '/support/download.do?attachNtNo=' + $(this).data('attach_nt_no');
           }
         })
       }

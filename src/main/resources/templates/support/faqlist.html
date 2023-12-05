@@ -1,26 +1,34 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+	
+<head th:replace="~{/layout/header::head('FAQ')}">
+</head>
 
-<head th:replace="~{/layout/header::head('FAQ')}"></head>
 
 <style>
-    div.child1 {
-        width: 100px;
-        height: 300px;
-        float: left;
-        margin-top: 50px;
-        margin-right: 20px;
-        background-color: lightsteelblue;
-        text-align: center;
-    }
-
-    div.child2 {
-        width: 750px;
-        height: 200px;
-        float: left;
-        text-align: center;
-    }
-
+    .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  div.child2{
+    width: 800px;
+    display: inline-block;
+    text-align: center; 
+    margin-left: 320px;
+  }
+  div.btn{
+	margin-left: 300px;  
+	  
+  }  
 </style>
 <div th:replace="~{/layout/header::header}"></div>
 
@@ -28,23 +36,29 @@
 
 <div class="parent">
     <div>
-        <div class="child1">
-            <ul>
+        <div class="side_bar">
+     	 <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>
+           <ul id="side_list">
                 <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
                 <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
                 <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
             </ul>
         </div>
-        <div>
-            <h5 style="text-align: center;">FAQ</h5>
-            <!-- 관리자로 로그인 한 경우 -->
-            <th:block th:if="${session.user != null and session.user.auth == 9}">
-                <a th:href="@{/support/faqwrite.form}">
-                    <button type="button" class="btn btn-secondary">새 FAQ 작성하기</button>
-                </a>
-            </th:block>
-        </div>
         <div class="child2">
+        <h5 style="text-align: center;">FAQ</h5>	
+        </div>    
+        <div class="btn">
+  		<th:block th:if="${session.user != null and session.user.auth == 9}">
+              <a th:href="@{/support/faqwrite.form}">
+                 <button type="button" class="btn btn-secondary">새 FAQ 작성하기</button>
+              </a>
+        </th:block>
+        </div>
+        
+        <div class="child2">
+
+            <!-- 관리자로 로그인 한 경우 -->
+	
             <table class="table align-middle">
                 <thead>
                 <tr>
@@ -58,13 +72,17 @@
                     <tr>
                         <td th:text="${f.faqNo}"></td>
                         <td><a th:href="@{/support/faqdetail.do(faqNo=${f.faqNo})}" th:text="${f.faqTitle}"></a></td>
-                        <td th:text="${f.faqContent}"></td>
+               			<td>
+	                   		<span th:if="${#strings.length(f.faqContent) > 10}" th:text="${#strings.substring(f.faqContent, 0, 10)} + '...'"></span>
+	                    	<span th:unless="${#strings.length(f.faqContent) > 10}" th:text="${f.faqContent}"></span>
+	                	</td>
                     </tr>
                 </th:block>
                 </tbody>
             </table>
 		</div>           
         <script th:inline="javascript">
+	
             const fnAddResult = () => {
                 let addResult = /*[[${addResult}]]*/ null;
                 if (addResult !== null) {
