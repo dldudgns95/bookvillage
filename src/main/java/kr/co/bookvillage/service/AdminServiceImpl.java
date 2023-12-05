@@ -495,6 +495,7 @@ public class AdminServiceImpl implements AdminService {
     String ttbkey = "ttbalsltksxk2011001";
     String QueryType = request.getParameter("QueryType");
     String Query = request.getParameter("Query");
+    System.out.println(Query);
     String Start = request.getParameter("Start");
     
     StringBuilder sb = new StringBuilder();
