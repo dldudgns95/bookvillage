@@ -187,17 +187,9 @@
         var statusText = book.status === 1 ? '대출 가능' : '대출 중';
 
         // 이미지를 동적으로 추가
-        carousel.owlCarousel('add', `<div><a th:href="@{/book/search/detail(isbn=${book.isbn})}"><img class="sliserImg" src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
+        carousel.owlCarousel('add', `<div><a href="/book/search/detail?isbn=${book.isbn}"><img class="sliserImg" src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
 
-        // Owl Carousel 초기화
-        carousel.owlCarousel({
-          items: 5, // 한 번에 표시되는 아이템 수
-          loop: true,
-          margin: 10,
-          autoplay: true,
-          autoplayTimeout: 3000,
-          autoplayHoverPause: true,
-        });
+          console.log('isbn '+ book.isbn )
 
         // 추가한 아이템에 클릭 이벤트 등록
         carousel.find('.owl-item').on('click', function () {

@@ -108,7 +108,7 @@
        WHERE NAME = #{name}
          AND MOBILE = #{mobile}
    </select>
-  
+   
   <insert id="insertNaverUser" parameterType="UserDto">
       INSERT INTO USER_T (
           USER_NO
@@ -118,8 +118,10 @@
         , GENDER
         , AGREE
         , STATE
+        , AUTH
         , PW_MODIFIED_DATE
         , JOINED_DATE
+        , STATUS
         , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
@@ -129,8 +131,10 @@
         , #{gender}
         , #{agree}
         , 1
+        , 0
         , SYSDATE
         , SYSDATE
+        , 1
         , 0
       )
   </insert>
@@ -182,11 +186,11 @@
         , #{agree}
         , 2
         , 0
-      , SYSDATE
-      , SYSDATE
-      , 1
-      ,0
-     )
+        , SYSDATE
+        , SYSDATE
+        , 1
+        , 0
+       )
     
   </insert>
 
