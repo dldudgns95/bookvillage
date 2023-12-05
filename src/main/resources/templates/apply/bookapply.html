@@ -28,7 +28,6 @@
   }
   div.child2{
 	width: 800px;
-    display: flex;
     margin-left: 320px;
     justify-content: center;
 
@@ -42,24 +41,7 @@
       font-size: 15px;
 	  
   }
-  div.btn{
-	margin-left: 300px;  
-	  
-  }   
 
-  
-  /* 캘린더 크기 조절 */
-  #calendar {
-    width: 700px;
-  }
-  /* 모달 이미지 크기 조절 */  
-  .modal_img {
-    width: 300px;
-  }
-   /* 캘린더 좌측 우측 아이콘 색상 */
-  .fc-icon-chevron-right, .fc-icon-chevron-left {
-    color: #ffffff;
-  }
 </style>
 
 <body>
@@ -76,17 +58,52 @@
         </ul>
       </div>
 	  <div class="child1">
-     	<h5>시설이용신청</h5>
+     	<h5>희망도서신청</h5>
       </div>
-
 	  <div class="child2">
-	
+      <form id="frm_book_apply" method="post" th:action="@{/apply/bookapplyadd.do}" enctype="multipart/form-data">  
+    
+        <div class="mt-3">
+          <label for="bookName" class="form-label">책제목</label>
+          <input type="text" name="bookName" id="bookName" class="form-control">
+        </div>
+        <div class="mt-3">
+          <label for="author" class="form-label">저자</label>
+          <input type="text" name="author" id="author" class="form-control">
+        </div> 
+       <div class="mt-3">
+          <label for="publisher" class="form-label">출판사</label>
+          <input type="text" name="publisher" id="publisher" class="form-control">
+        </div> 
+       <div class="mt-3">
+          <label for="wish" class="form-label">신청사유</label>
+          <textarea rows="3" name="wish" id="wish" class="form-control"></textarea>
+        </div>                    
+        <div class="mt-3">
+		  <a th:href="@{/}">
+			<input type="hidden" name="userNo" th:value="${session.user.userNo}">  
+            <button class="btn btn-secondary" type="button">작성취소</button>
+          </a> 
+          <button type="submit" class="btn btn-success">작성완료</button>
+          </div>
+      </form>		
 	  </div>
 
     </div>
 
   <script th:inline="javascript">
-    
+    const fnSubmit = () => {
+    	  $('#frm_book_apply').submit((ev) => {
+    		  if($('#bookName').val() === ''){
+    			  alert('제목은 반드시 입력해야 합니다.');
+    			  $('#bookName').focus();
+    			  ev.preventDefault();
+    			  return;
+    		  }
+    	  })
+      }
+      
+      fnSubmit();
     
    
     
