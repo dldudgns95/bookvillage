@@ -36,7 +36,7 @@
   
   .table {
     
-    width: 800px;
+    width: 850px;
   }
   
 </style>
@@ -88,6 +88,8 @@
             </td>
             <td>
               <th:block th:if="${applyBook.status == 0}">
+                <input type="hidden" name="applyNo" th:value="${applyBook.applyNo}">
+                <input type="hidden" name="userNo" th:value="${session.user.userNo}">
                 <button type="button" id="btn_modifyApply" class="btn btn-outline-success">수정</button>
                 <button type="button" id="btn_cancleApply" class="btn btn-success">신청취소</button>
               </th:block>
