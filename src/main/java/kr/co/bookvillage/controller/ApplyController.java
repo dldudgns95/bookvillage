@@ -40,12 +40,6 @@ public class ApplyController {
     return "redirect:/admin/facApplyList.do";
   }
   
-  @GetMapping("/facist.do")
-  public String facList(HttpServletRequest request, Model model) {
-    model.addAttribute("facList", facService.getFacTotalList(request));
-    return "apply/faclist";
-  }
-  
   @ResponseBody
   @GetMapping(value="/facTotalList.do", produces="application/json")
   public Map<String, Object> facTotalList(HttpServletRequest request) {

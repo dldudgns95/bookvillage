@@ -1,91 +1,92 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('시설신청')}"></head>
+<head th:replace="~{/layout/header::head('시설신청')}">
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>	
+</head>
 
 <style>
-  .flex_admin {
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  div.child1{
+    width: 800px;
+    justify-content: center;
+    margin-left: 320px;
+    align-items: center;
+    text-align: center;
+    
+  }
+  div.child2{
+	width: 800px;
     display: flex;
+    margin-left: 320px;
+    justify-content: center;
+
+    
   }
-  
-  .padding_top {
-    padding-top: 10px;
+  div.child3{
+	  display: flex;
+	  width: 200px;
+	  margin-top: 70px;
+      margin-left: 20px;
+      font-size: 15px;
+	  
   }
-  
-  .admin_contents {
-    margin-left: 20px;
-  }
-  .tfoot_center {
-    text-align: center; 
-  }
-  
-  .search_select {
-    max-width: 150px;
-  }
-  
-  .btn-outline-secondary {
-    --bs-btn-hover-bg: #e9ecef;
-  }
-  
-  /* 카테고리 */
-   div.child1{
-		width: 100px;
-		height: 300px;
-		float:left;
-		margin-top: 50px;
-		margin-right:20px;
-		background-color: lightsteelblue;
-		text-align: center;
-	} 
-  
-  .input-group {
-    margin: 0 auto;
-  }
-  
-  
-  .admin_spacebetween{
-    display: flex;
-    justify-content: space-between;
-  }
+  div.btn{
+	margin-left: 300px;  
+	  
+  }   
+
   
   /* 캘린더 크기 조절 */
   #calendar {
-    width: 500px;
+    width: 700px;
   }
   /* 모달 이미지 크기 조절 */  
   .modal_img {
     width: 300px;
   }
-  
-  /* 캘린더 좌측 우측 아이콘 색상 */
+   /* 캘린더 좌측 우측 아이콘 색상 */
   .fc-icon-chevron-right, .fc-icon-chevron-left {
     color: #ffffff;
   }
-  
 </style>
-<!--tippy사용-->
-<script src="https://unpkg.com/popper.js/dist/umd/popper.min.js"></script>
-<script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js"></script>
+
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="flex_admin padding_top">
-	 <div class="child1">
-        <ul>
+  <div class="parent">
+	 
+     <div class="side_bar">
+	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">시설이용신청</h3>
+        <ul id="side_list">
           <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
 		  <li style="margin:20px"><a th:href="@{/}">희망도서신청</a></li>
         </ul>
       </div>
-    
-    <div class="admin_contents">
-      <div id='calendar'></div>
-      <div>
-	<th:block th:if="${session.user != null and session.user.auth == 9}">
-        <a th:href="@{/admin/facApplyList.do}"><button type="button" class="btn btn-primary">시설 등록하기</button></a>
+	  <div class="child1">
+     	<h5>시설이용신청</h5>
+     	<h6>희망하시는 날짜를 선택해주세요</h6>
       </div>
-    </th:block>
-    </div>
+      <div class="btn">
+		<th:block th:if="${session.user != null and session.user.auth == 9}">
+        <a th:href="@{/admin/facWrite.form}"><button type="button" class="btn btn-secondary">시설 등록하기</button></a>
+    	</th:block>
+      </div>
+	  <div class="child2">
+	    <div id='calendar'></div>
+	  </div>
 
   </div>
   
@@ -165,8 +166,8 @@
               }
             }
           })
-        }
-        
+        },
+
       });
       calendar.render();
     });
@@ -189,15 +190,15 @@
               modalContent += '  </div>';
               modalContent += '  <div>';
               modalContent += '    <div>';
-              modalContent += '      <div><h6>시설명 : '+f.facilityDto.facName+'</h6></div>';
-              modalContent += '      <div><h6>'+f.facilityDto.facContent+'</h6></div>';
+              modalContent += '      <div><h6>시설이름 : '+f.facilityDto.facName+'</h6></div>';
+              modalContent += '      <div><h6>시설설명 :'+f.facilityDto.facContent+'</h6></div>';
               modalContent += '      <div>';
               modalContent += '        <form class="frm_fac_apply" method="post" th:action="@{/apply/addFacApply.do}">';
               modalContent += '          <input type="hidden" name="userNo" value="'+user.userNo+'">';
               modalContent += '          <input type="hidden" name="facNo" value="'+f.facilityDto.facNo+'">';
               modalContent += '          <input type="hidden" name="facStart" value="'+info.dateStr+'">';
               modalContent += '          <input type="hidden" name="facName" value="'+f.facilityDto.facName+'">';
-              modalContent += '          <button type="button" class="btn btn-primary btn_add_fac_apply">신청하기</button>';
+              modalContent += '          <button type="button" class="btn btn-secondary btn_add_fac_apply">신청하기</button>';
               modalContent += '        </form>';
               modalContent += '      </div>';
               modalContent += '    </div>';
