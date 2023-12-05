@@ -192,6 +192,12 @@ public class AdminController {
     return "admin/addBookList";
   }
   
+  @GetMapping("/goBookSearch.do")
+  public String goBookSearch(HttpServletRequest request, RedirectAttributes redirectAttributes) { 
+    redirectAttributes.addFlashAttribute("searchBookName", request.getParameter("searchBookName"));
+    return "redirect:/admin/addBookList.do";
+  }
+  
   @ResponseBody
   @GetMapping(value="/addBookSearch.do", produces="application/json")
   public Map<String, Object> addBookSearch(HttpServletRequest request) {

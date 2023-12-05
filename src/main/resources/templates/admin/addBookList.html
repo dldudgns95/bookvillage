@@ -111,7 +111,8 @@
               <option value="Title">책제목</option>
               <option value="Author">저자</option>
             </select>
-            <input type="text" class="form-control search_text" name="checkQuery" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            <input th:if="${#strings.isEmpty(searchBookName)}" type="text" class="form-control search_text" name="checkQuery" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1" autofocus>
+            <input th:if="${not #strings.isEmpty(searchBookName)}" type="text" class="form-control search_text" name="checkQuery" th:value="${searchBookName}" aria-label="Username" aria-describedby="basic-addon1">
             <input type="hidden" class="Query" name="Query">
             <button class="btn btn-outline-secondary" type="button" id="btn_search">
               <i class="fa-solid fa-magnifying-glass white"></i>
@@ -219,8 +220,16 @@
       })
     }
     
+    const fnFocusSearchText = () => {
+      const value = $('.search_text').val();
+      $('.search_text').focus();
+      $('.search_text').val('');
+      $('.search_text').val(value);
+    }
+    
     fnAddBookSearch();
     fnAddBook();
+    fnFocusSearchText();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

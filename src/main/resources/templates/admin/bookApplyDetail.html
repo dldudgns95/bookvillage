@@ -91,7 +91,11 @@
       <div th:if="${bookApply.status == 0}">
         <form class="frm_book_apply" method="get" th:action="@{/admin/updateBookApply.do}">
           <input type="hidden" name="applyNo" th:value="${bookApply.applyNo}">
-          <button type="submit" class="btn btn-primary">희망도서 추가완료</button>
+          <input type="hidden" name="searchBookName" th:value="${bookApply.bookName}">
+          <button type="button" class="btn btn-primary btn_update">희망도서 추가완료</button>
+          <button type="button" class="btn btn-primary btn_go_search">도서 추가하기</button>
+        </form>
+        <form class="frm_book_search" method="get" th:action="@{/admin/goBookSearch.do}">
         </form>
       </div>
     </div>
@@ -100,16 +104,27 @@
   
   <script>
   
-  const fnFormCheck = () => {
-    $('.frm_book_apply').submit((ev) => {
-      if(!confirm('희망도서 추가를 완료하셨습니까?')) {
-        ev.preventDefault();
-        return;
+  
+  const fnBookApplyUpdate = () => {
+    $('.btn_update').click((ev) => {
+      if(confirm('희망도서 추가를 완료하셨습니까?')){
+        const frm = $(ev.target).closest('.frm_book_apply');
+        frm.attr('action', '/admin/updateBookApply.do');
+        frm.submit();
       }
     })
   }
   
-  fnFormCheck();  
+  const fnGoBookSearch = () => {
+    $('.btn_go_search').click((ev) => {
+      const frm = $(ev.target).closest('.frm_book_apply');
+      frm.attr('action', '/admin/goBookSearch.do');
+      frm.submit();
+    })
+  }
+  
+  fnBookApplyUpdate();
+  fnGoBookSearch();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
