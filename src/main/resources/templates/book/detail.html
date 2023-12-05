@@ -60,7 +60,7 @@
           <ul id="book_side_list">
             <li><a th:href="@{/mypage/booklist.do}">자료검색</a></li>
             <li><a th:href="@{/mypage/edit.form}">주제별자료검색</a></li>
-            <li><a th:href="@{/mypage/wish.do}">희망도서신청</a></li>
+            <li><a th:href="@{/apply/bookapply.do}">희망도서신청</a></li>
             <li><a th:href="@{/mypage/review.do}">사서추천도서</a></li>
           </ul>      
         </div>        
@@ -157,7 +157,8 @@
         <hr>
          
         <h4 class="detail_title">평점 분포</h4>
-        <h5>평균 ★ [[${starAvg} ?: 0.0]] </h5>
+        <canvas id="barChart" width="400" height="300"></canvas>
+        <h5><span class="starAvgText">평균 ★ [[${starAvg} ?: 0.0]]</span></h5>
         <hr>
         
         <div th:if="${not #lists.isEmpty(bestReview)}">
@@ -242,25 +243,19 @@
             <div class="detail_review">
               <textarea th:if="${session.user == null}" type="text" id="review" class="review" maxlength="100" cols="30" rows="3" disabled="disabled" placeholder="로그인 후 입력가능합니다."></textarea>
               <textarea th:if="${session.user != null}" type="text" id="review" class="review" maxlength="100" cols="30" rows="3" placeholder="한줄평을 남겨주세요(100자 이하)"></textarea>
-              <input type="hidden" id="checkWish" name="checkWish" th:value="${checkWish}">
+              <input type="hidden" id="checkScore" name="checkScore" th:value="${checkScore}">
               <input type="button" value="등록" title="등록" class="btn btn-outline-secondary" onclick="saveReview()" >
             </div>
           </form>
         </div>
         <hr>
         
-        
-
-        
-        <canvas id="barChart" width="400" height="300"></canvas>
-
       </div>
       
     </div>
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
-    <script th:src="@{/js/score_chart.js}"></script>
 
   </div>
   

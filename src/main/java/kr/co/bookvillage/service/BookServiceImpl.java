@@ -97,6 +97,12 @@ public class BookServiceImpl implements BookService {
   }
   
   @Override
+  public List<ScoreDto> cntStar(String isbn) {
+    return scoreMapper.cntStar(isbn);
+  }
+  
+  // 한줄평 이전 등록 여부 체크
+  @Override
   public int checkScore(ScoreDto scoreDto) {
     return scoreMapper.checkScore(scoreDto);
   }

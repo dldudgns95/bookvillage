@@ -23,10 +23,12 @@ import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.WishDto;
 import kr.co.bookvillage.service.BookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/book")
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class BookController {
   
   private final BookService bookService;
@@ -59,6 +61,10 @@ public class BookController {
     //한줄평 중복 체크 위해
     int checkScore = bookService.checkScore(scoreDto);
     model.addAttribute("checkScore",checkScore);
+    // 별점 그래프 위해
+    List<ScoreDto> cntStar = bookService.cntStar(isbn);
+    log.info("cntStar: {}", cntStar);
+    model.addAttribute("cntStar",cntStar);
     //대출
     int checkBookCkCnt = bookService.checkBookCOStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
     model.addAttribute("checkBookCkCnt", checkBookCkCnt);

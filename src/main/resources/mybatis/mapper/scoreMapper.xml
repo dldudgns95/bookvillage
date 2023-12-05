@@ -65,4 +65,11 @@
        AND USER_NO=#{userNo}
   </select>  
   
+  <select id="cntStar" parameterType="String" resultType="ScoreDto">
+    SELECT STAR, COUNT(*) AS COUNT_STAR
+      FROM SCORE
+     WHERE ISBN = #{isbn}
+     GROUP BY STAR
+  </select>
+  
 </mapper>
