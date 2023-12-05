@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,9 +52,16 @@ public class BookController {
   public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, WishDto wishDto, Model model) {
     bookService.getBookDetail(isbn, model);
     bookService.getScoreList(scoreDto.getIsbn(), model);
+    bookService.bestReview(isbn, model);
     bookService.getStarAvg(isbn, model);
     int checkWish = bookService.checkWish(wishDto);
     model.addAttribute("checkWish", checkWish);
+    //한줄평 중복 체크 위해
+    int checkScore = bookService.checkScore(scoreDto);
+    model.addAttribute("checkScore",checkScore);
+    //대출
+    int checkBookCkCnt = bookService.checkBookCOStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
+    model.addAttribute("checkBookCkCnt", checkBookCkCnt);
     return "book/detail";
   }
   
@@ -79,7 +87,7 @@ public class BookController {
                           @RequestParam("userNo") int userNo,
                           ScoreDto scoreDto, 
                           Model model) {
-    bookService.likeScore(scoreDto, model);
+    bookService.likeScore(scoreDto);
     return "redirect:/book/search/detail?isbn=" + scoreDto.getIsbn();
   }
   
@@ -108,7 +116,7 @@ public class BookController {
   /*대출*/
   //대출처리(book)
   @PostMapping("/updateBook.do")
-  public String updateBook(@RequestBody BookDto bookDto) {
+  public String updateBook(@RequestBody BookDto bookDto, Model model) {
     bookService.updateBook(bookDto);
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }
@@ -118,22 +126,16 @@ public class BookController {
     bookService.updateCheckout(bookDto);
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }
-  //대출처리(mypage)
-  @PostMapping("/updateMyCheckOut.do")
-  public String updateMyCheckOut(@RequestBody BookDto bookDto) {
-    bookService.updateBookCount(bookDto.getUserNo());
-    return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
-  }  
 
   
   //그래프
   @GetMapping("/chart.do")
   public String showChart(Model model) {
       // 실제 데이터베이스에서 데이터를 가져와야 함 (여기서는 임의의 데이터 사용)
-      List<ScoreDto> scoreList = getDummyScoreData();
+      List<ScoreDto> scoreLists = getDummyScoreData();
 
       // 데이터를 전달
-      model.addAttribute("scoreList", scoreList);
+      model.addAttribute("scoreLists", scoreLists);
 
       return "chart"; // 차트를 표시할 뷰의 이름
   }

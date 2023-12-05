@@ -22,7 +22,7 @@
   </insert>
   
   <select id="getScoreList" parameterType="String" resultType="ScoreDto">
-    SELECT ISBN, USER_NO, REVIEW_DATE, STAR, REVIEW
+    SELECT ISBN, USER_NO, REVIEW_DATE, STAR, REVIEW, GOOD
       FROM SCORE
      WHERE ISBN = #{isbn}     
   </select>
@@ -47,5 +47,22 @@
        AND USER_NO=#{userNo}
   </delete>
   
+  <update id="likeScore" parameterType="ScoreDto">
+    UPDATE SCORE SET GOOD = GOOD+1 WHERE ISBN = #{isbn} AND USER_NO = #{userNo}
+  </update>
+  
+  <select id="bestReview" parameterType="String" resultType="ScoreDto">
+    SELECT ISBN, USER_NO, REVIEW_DATE, STAR, REVIEW, GOOD
+    FROM SCORE
+    WHERE ISBN = #{isbn}
+        AND GOOD = (SELECT MAX(GOOD) FROM SCORE WHERE ISBN = #{isbn})
+  </select>
+  
+  <select id="checkScore" parameterType="ScoreDto" resultType="int">
+    SELECT COUNT(*)
+      FROM SCORE 
+     WHERE ISBN=#{isbn}
+       AND USER_NO=#{userNo}
+  </select>  
   
 </mapper>
