@@ -10,6 +10,7 @@ import kr.co.bookvillage.dto.ScoreDto;
 public interface ScoreMapper {
   public int insertScore(ScoreDto scoreDto);
   public List<ScoreDto> getScoreList(String isbn);
+  public Double getStarAvg(String isbn);
   public List<ScoreDto> getMyScoreList(String userNo);
   public void deleteScore(ScoreDto scoreDto);
 

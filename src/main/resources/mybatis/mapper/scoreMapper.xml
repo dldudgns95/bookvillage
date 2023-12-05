@@ -27,6 +27,13 @@
      WHERE ISBN = #{isbn}     
   </select>
   
+  <!-- 평균별점 -->
+  <select id="getStarAvg" parameterType="String" resultType="Double">
+    SELECT AVG(STAR) AS AVERAGE_STAR
+    FROM SCORE
+    WHERE ISBN = #{isbn}
+  </select>
+
   <select id="getMyScoreList" parameterType="String" resultType="ScoreDto">
     SELECT S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE, B.AUTHOR, B.STATUS
       FROM SCORE S LEFT OUTER JOIN BOOK B
@@ -39,5 +46,6 @@
      WHERE ISBN=#{isbn}
        AND USER_NO=#{userNo}
   </delete>
+  
   
 </mapper>
