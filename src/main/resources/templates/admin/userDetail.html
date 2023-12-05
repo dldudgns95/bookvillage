@@ -116,8 +116,11 @@
         </div>
       </div>
       <div>
-        <button type="button" class="btn btn-primary">회원수정</button>
-        <button type="button" class="btn btn-primary">회원탈퇴</button>
+        <form class="frm_user">
+          <input type="hidden" name="userNo" th:value="${user.userNo}">
+          <button type="button" class="btn btn-primary btn_edit">회원수정</button>
+          <button type="button" class="btn btn-primary btn_delete">회원탈퇴</button>
+        </form>
       </div>
       <hr>
       <div>
@@ -223,10 +226,30 @@
       }
     }
     
+    const fnUserEdit = () => {
+      $('.btn_edit').click(() => {
+        $('.frm_user').attr('action', '/admin/userEdit.form');
+        $('.frm_user').attr('method', 'get');
+        $('.frm_user').submit();
+      })
+    }
+    
+    const fnUserDelete = () => {
+      $('.btn_delete').click(() => {
+        if(confirm('해당 유저를 탈퇴시키겠습니까?')){
+          $('.frm_user').attr('action', '/admin/userDelete.do');
+          $('.frm_user').attr('method', 'post');
+          $('.frm_user').submit();
+        }
+      })
+    }
+    
     fnCheckBookCheckout();  
     fnCheckBookCheckoutReturn();
     fnUpdateCheckoutResult();
     fnUpdateReturnResult();
+    fnUserEdit();
+    fnUserDelete();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

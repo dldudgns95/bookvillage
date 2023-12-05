@@ -107,12 +107,20 @@
               FROM USER_T)
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
-  <!-- 유저 목록 가져오기-->
+  
+  <!-- 유저 상세 정보 가져오기-->
   <select id="getUserDetail" parameterType="int" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
       FROM USER_T
      WHERE USER_NO = #{userNo}
   </select>
+  
+  <!-- 유저 탈퇴시키기 -->
+  <delete id="deleteUser" parameterType="int">
+    DELETE 
+      FROM USER_T
+     WHERE USER_NO = #{userNo}    
+  </delete>
   
   <!-- 검색 유저수 카운트-->
   <select id="userSearchCount" parameterType="Map" resultType="int">
@@ -247,6 +255,7 @@
     , 0
     )
   </insert>
+  
   <!-- 해당유저 해당날짜에 이용신청 여부 확인 -->
   <select id="checkFacApply" parameterType="Map" resultType="boolean">
     SELECT COUNT(*)

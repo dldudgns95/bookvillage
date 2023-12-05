@@ -50,6 +50,12 @@ public class AdminController {
     return "admin/userDetail";
   }
   
+  @PostMapping("/userDelete.do")
+  public String userDelete(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteUser(request));
+    return "redirect:/admin/userList.do";
+  }
+  
   @GetMapping("/bookList.do")
   public String bookList(HttpServletRequest request, Model model) {
     adminService.getBookList(request, model); 
@@ -80,9 +86,9 @@ public class AdminController {
   }
   
   @PostMapping("/facAdd.do")
-  public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
-    adminService.addFacility(multiRequest);
-    return "redirect:/admin/facApplyList.do";
+  public String facAdd(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("addResult", adminService.addFacility(multiRequest));
+    return "redirect:/admin/facList.do";
   }
   
   @GetMapping("/insertBooks.do")

@@ -156,6 +156,12 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
+  public int deleteUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.deleteUser(userNo);
+  }
+  
+  @Override
   public void getSearchUserList(HttpServletRequest request, Model model) {
     
     String column = request.getParameter("column");
@@ -226,7 +232,7 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
-  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
+  public int addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
@@ -300,6 +306,7 @@ public class AdminServiceImpl implements AdminService {
         
       }
     }
+    return addResult;
   }
   
   @Override

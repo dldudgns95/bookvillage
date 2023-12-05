@@ -16,6 +16,7 @@ public interface AdminMapper {
   public int userTotalCount();
   public List<UserDto> getUserList(Map<String, Object> map);
   public UserDto getUserDetail(int userNo);
+  public int deleteUser(int userNo);
   public int userSearchCount(Map<String, Object> map);
   public List<UserDto> getSearchUserList(Map<String, Object> map);
   public int bookTotalCount();

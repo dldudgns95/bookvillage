@@ -13,11 +13,12 @@ public interface AdminService  {
   public int insertBook(HttpServletRequest request);
   public void getUserList(HttpServletRequest request, Model model);
   public void getUserDetail(HttpServletRequest request, Model model);
+  public int deleteUser(HttpServletRequest request);
   public void getSearchUserList(HttpServletRequest request, Model model);
   public void getBookList(HttpServletRequest request, Model model);
   public void getBookDetail(HttpServletRequest request, Model model);
   public void getSearchBookList(HttpServletRequest request, Model model);
-  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception;
+  public int addFacility(MultipartHttpServletRequest multiRequest) throws Exception;
   public void getFacList(Model model);
   public Map<String, Object> getFacTotalList(HttpServletRequest request);
   public int addFacApply(HttpServletRequest request);

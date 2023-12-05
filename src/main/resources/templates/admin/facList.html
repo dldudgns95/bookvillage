@@ -127,15 +127,10 @@
               </td>
               <td scope="row">
                 <div>
-                  <form th:action="@{/admin/facEdit.form}" method="get">
+                  <form class="frm_fac" method="get">
                     <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
-                    <button type="submit" class="btn btn-primary">수정</button>
-                  </form>
-                </div>
-                <div>
-                  <form th:action="@{/admin/facDelete.do}" method="get">
-                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
-                    <button type="submit" class="btn btn-primary">삭제</button>
+                    <button type="button" class="btn btn-primary btn_edit">수정</button>
+                    <button type="button" class="btn btn-primary btn_delete">삭제</button>
                   </form>
                 </div>
               </td>
@@ -157,9 +152,38 @@
         location.href="/admin/facWrite.form";
       })
     }
+    
+    const fnFacEdit = () => {
+      $('.btn_edit').click(() => {
+        $('.frm_fac').attr('action', '/admin/facEdit.form');
+        $('.frm_fac').submit();
+      })
+    }
+    
+    const fnFacDelete = () => {
+      $('.btn_delete').click(() => {
+        if(confirm('해당 시설을 삭제하시겠습니까?')){
+          $('.frm_fac').attr('action', '/admin/facDelete.do');
+          $('.frm_fac').submit();
+        }
+      })
+    }
+    
+    const fnAddResult = () => {
+      let addResult = /*[[${addResult}]]*/ null;
+      if(addResult !== null) {
+        if(addResult === 1) {
+          alert('해당 시설이 정상적으로 등록되었습니다.');
+        } else {
+          alert('해당 시설의 등록을 실패했습니다.');
+        }
+      }
+    }
    
     fnFacWrite(); 
-      
+    fnFacEdit();
+    fnFacDelete();
+    fnAddResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
