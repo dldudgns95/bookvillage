@@ -49,65 +49,6 @@ public class BookPageUtils {
     
   }
   
-  public String getMvcPaging(String url) {
-    
-    /*
-     *<nav aria-label="...">
-        <ul class="pagination">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item active" aria-current="page">
-            <a class="page-link" href="#">2</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-      </nav>
-     */
-    
-    StringBuilder sb = new StringBuilder();
-    
-    sb.append("<div><nav aria-label=\"...\">");
-    sb.append("<ul class=\"pagination\">");
-    
-    
-    // 이전 블록
-    if(beginPage == 1) {
-      sb.append("<li class=\"page-item disabled\">");
-      sb.append("<a class=\"page-link\" tabindex=\"-1\" aria-disabled=\"true\">이전</a>");
-      sb.append("</li>");
-    } else {
-      sb.append("<li class=\"page-item\">");
-      sb.append("<a class=\"page-link\" href=\""+ url + "?page=" + (beginPage - 1) +"\" tabindex=\"-1\"\">이전</a>");
-      sb.append("</li>");
-    }
-    
-    
-    // 페이지 번호
-    for(int p = beginPage; p <= endPage; p++) {
-      if(p == page) {
-        sb.append("<li class=\"page-item active\" aria-current=\"page\"><a class=\"page-link\">"+p+"</a></li>");
-      } else {
-        sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+ url + "?page=" + p + "\">" + p +"</a></li>");
-      }
-    }
-    
-    // 다음 블록
-    if(endPage == totalPage) {
-      sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" aria-disabled=\"true\">다음</a></li>");
-    } else {
-      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+url + "?page=" + (endPage + 1)+"\">다음</a></li>");
-    }
-    
-    sb.append("</ul></nav></div>");
-    
-    return sb.toString();
-    
-  }
   
   public String getMvcPaging(String url, String params) {
     
@@ -120,11 +61,11 @@ public class BookPageUtils {
     // 이전 블록
     if(beginPage == 1) {
       sb.append("<li class=\"page-item disabled\">");
-      sb.append("<a class=\"page-link\" href=\""+ url + "?page=" + (beginPage - 1) +"&" + params +"\" tabindex=\"-1\" aria-disabled=\"true\">이전</a>");
+      sb.append("<a class=\"page-link\" href=\""+ url + "?page=" + (beginPage - 1) +"&" + params +"\" tabindex=\"-1\" aria-disabled=\"true\">←</a>");
       sb.append("</li>");
     } else {
       sb.append("<li class=\"page-item\">");
-      sb.append("<a class=\"page-link\" href=\""+ url + "?page=" + (beginPage - 1) +"&" + params +"\" tabindex=\"-1\"\">이전</a>");
+      sb.append("<a class=\"page-link\" href=\""+ url + "?page=" + (beginPage - 1) +"&" + params +"\" tabindex=\"-1\"\">←</a>");
       sb.append("</li>");
     }
     
@@ -140,9 +81,9 @@ public class BookPageUtils {
     
     // 다음 블록
     if(endPage == totalPage) {
-      sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" aria-disabled=\"true\">다음</a></li>");
+      sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" aria-disabled=\"true\">→</a></li>");
     } else {
-      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+url + "?page=" + (endPage + 1)+"&" + params +"\">다음</a></li>");
+      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\""+url + "?page=" + (endPage + 1)+"&" + params +"\">→</a></li>");
       
     }
     
@@ -151,39 +92,4 @@ public class BookPageUtils {
     return sb.toString();
   }
 
-  public String getAjaxPaging() {
-    
-    StringBuilder sb = new StringBuilder();
-    
-    sb.append("<div>");
-    
-    // 이전 블록
-    if(beginPage == 1) {
-      sb.append("<a>이전</a>");
-    } else {
-      sb.append("<a href=\"javascript:fnAjaxPaging(" + (beginPage-1) + ")\">이전</a>");
-    }
-    
-    // 페이지 번호
-    for(int p = beginPage; p <= endPage; p++) {
-      if(p == page) {
-        sb.append("<a>" + p + "</a>");
-      } else {
-        sb.append("<a href=\"javascript:fnAjaxPaging(" + p + ")\">" + p + "</a>");
-      }
-    }
-    
-    // 다음 블록
-    if(endPage == totalPage) {
-      sb.append("<a>다음</a>");
-    } else {
-      sb.append("<a href=\"javascript:fnAjaxPaging(" + (endPage+1) + ")\">다음</a>");
-    }
-    
-    sb.append("</div>");
-    
-    return sb.toString();
-    
-  }
-  
 }

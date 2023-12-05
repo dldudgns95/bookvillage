@@ -8,6 +8,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,9 +20,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.UserMapper;
+import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.InactiveUserDto;
+import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.util.MyJavaMailUtils;
 import kr.co.bookvillage.util.MySecurityUtils;
@@ -31,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class UserServiceImpl implements UserService {
   
+
   private final UserMapper userMapper;
   private final MySecurityUtils mySecurityUtils;
   private final MyJavaMailUtils myJavaMailUtils;
@@ -38,6 +44,8 @@ public class UserServiceImpl implements UserService {
       
   private final String client_id = "akfMPV_DLx7u40rpRi7W";
   private final String client_secret = "5J5oz6ohRI";
+  
+  private final String ka_Client_id = "9ffad004d68c4c286ec206cd6660ae00";
             
   
   public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -78,7 +86,7 @@ public class UserServiceImpl implements UserService {
           outt.flush();
           outt.close();
       } else {
-          // 90일 이전인 경우에 실행할거 있으면 적기
+          // 90일 이전인 경우에 실행할거 있으면 적기  
       }
       response.sendRedirect(request.getParameter("referer"));
   } else {
@@ -280,8 +288,6 @@ public class UserServiceImpl implements UserService {
   }
   
   
-  
-  
   // 이메일 주소 등록되어있는지 확인
   @Transactional(readOnly = true)
   @Override
@@ -373,8 +379,9 @@ public class UserServiceImpl implements UserService {
       }
   
   
+  
       
-  // 임시 비밀번호 메일 발송
+  // 인증코드 메일 발송
   @Override
   public ResponseEntity<Map<String, Object>> sendTmpCode(String email) {
 
@@ -387,11 +394,12 @@ public class UserServiceImpl implements UserService {
   
    return new ResponseEntity<>(Map.of("pwCode", pwCode), HttpStatus.OK);
 
-    
+   
   }
 
+  // 임시 비밀번호 발송 및 업데이트
   @Override
-  public int updateTmpPw(String email) {
+  public ResponseEntity<Map<String, Object>> updateTmpPw(String email) {
     
     String pwCode = mySecurityUtils.getRandomString(10, true, true);
 
@@ -400,20 +408,227 @@ public class UserServiceImpl implements UserService {
         , "<div>임시비밀번호는 <Strong>" + pwCode + "</strong> 입니다. <br> 로그인 후에 비밀번호를 변경을 해주세요</div>");
    
      String hashedPwCode = mySecurityUtils.getSHA256(pwCode);
-    
      
-   
-    return userMapper.updatetmpPw(Map.of("email", email, "pwCode", hashedPwCode));
+     userMapper.updatetmpPw(Map.of("email", email,"pwCode", hashedPwCode));
+    
+   return new ResponseEntity<>(Map.of("email", email, "pwCode", hashedPwCode), HttpStatus.OK);
+  
 
+  }
+  
+  // 카카오 가입
+  @Override
+  public void kakaoJoin(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    String mobile = request.getParameter("mobile");
+    String email = request.getParameter("email");
+  //  String pw = request.getParameter("pw");
+    String name = request.getParameter("name");
+    String gender = request.getParameter("gender");
+    
+    UserDto user = UserDto.builder()    
+                          .mobile(mobile)
+                          .email(email)
+  //                       .pw(pw)
+                          .name(name)
+                          .gender(gender)
+                          .build();
+    
+    int kakaoJoinResult = userMapper.kakaoJoin(user);
+    
+  try {
+      
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      if(kakaoJoinResult == 1) {
+        request.getSession().setAttribute("user", userMapper.getUser(Map.of("email", email)));
+        userMapper.insertAccess(email);
+        out.println("alert('카카오 간편가입이 완료되었습니다.')");
+      } else {
+        out.println("alert('카카오 간편가입이 실패했습니다.')");
+      }
+      out.println("location.href='" + request.getContextPath() + "/main.do'");
+      out.println("</script>");
+      out.flush();
+      out.close();
+      
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+  }
+    
+  // 카카오 로그인1.. 
+  @Override
+  public String getKakaoLoginURL(HttpServletRequest request) throws Exception {
+      String apiURL = "https://kauth.kakao.com/oauth/authorize";
+      String response_type = "code";
+      String redirect_uri = URLEncoder.encode("http://localhost:8080/" + "user/kakao/getAccessToken.do", "UTF-8");
+      String state = new BigInteger(130, new SecureRandom()).toString();
+
+      StringBuilder sb = new StringBuilder();
+      sb.append(apiURL);
+      sb.append("?response_type=").append(response_type);
+      sb.append("&client_id=").append(ka_Client_id);
+      sb.append("&redirect_uri=").append(redirect_uri);
+      sb.append("&state=").append(state);
+
+      return sb.toString();
+  }
+
+  // 카카오 로그인2..
+  @Override
+  public String getKakaoLoginAccessToken(HttpServletRequest request) throws Exception {
+    
+    String apiURL ="https://kauth.kakao.com/oauth/token";
+    String grant_type = "authorization_code";
+    
+    String code =request.getParameter("code");
+    String state =request.getParameter("state");
+    
+    StringBuilder sb = new StringBuilder();
+    sb.append(apiURL);
+    sb.append("?grant_type=").append(grant_type);
+    sb.append("&client_id=").append(ka_Client_id);
+    sb.append("&code=").append(code);
+    sb.append("&state=").append(state);
+    
+    // 요청
+    URL url = new URL(sb.toString());
+    HttpURLConnection con = (HttpURLConnection)url.openConnection();
+    con.setRequestMethod("GET"); 
+    
+    // 응답
+    BufferedReader reader = null;
+    int responseCode = con.getResponseCode();
+    if(responseCode == 200) {
+      reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+    } else {
+      reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+    }
+    
+    String line = null;
+    StringBuilder responseBody = new StringBuilder();
+    while ((line = reader.readLine()) != null) {
+      responseBody.append(line);
+    }
+    
+    JSONObject obj = new JSONObject(responseBody.toString());
+    return obj.getString("access_token");
+  }
+  
+  // 카카오 3..
+  //https://developers.kakao.com/docs/latest/ko/kakaologin/rest-api#req-user-info
+ @Override
+ public UserDto getKakaoProfile(String accessToken) throws Exception {
+ 
+   String apiURL = "https://kapi.kakao.com/v2/user/me";
+   URL url = new URL(apiURL);
+   HttpURLConnection con = (HttpURLConnection)url.openConnection();
+   con.setRequestMethod("GET");
+   con.setRequestProperty("Authorization", "Bearer " + accessToken);
+   
+   // 응답
+   BufferedReader reader = null;
+   int responseCode = con.getResponseCode();
+   if(responseCode == 200) {
+     reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+   } else {
+     reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+   }
+   String line = null;
+   StringBuilder responseBody = new StringBuilder();
+   while ((line = reader.readLine()) != null) {
+     responseBody.append(line);
+   }
+   
+   JSONObject obj = new JSONObject(responseBody.toString());
+   
+   JSONObject kakaoAccount = obj.getJSONObject("kakao_account");
+   
+   UserDto user = UserDto.builder()    
+       .email(kakaoAccount.getString("email"))
+       .name(kakaoAccount.getString("name"))
+       .gender(kakaoAccount.getString("gender"))
+       .mobile(kakaoAccount.getString("phone_number"))
+                         .build();
+   
+   return user;
+   
+ }
+  
+  @Override
+  public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
+      throws Exception {
+    String email = kakaoProfile.getEmail();
+    UserDto user = userMapper.getUser(Map.of("email", email));
+    
+    if(user != null) {
+      request.getSession() .setAttribute("user", user);
+      userMapper.insertAccess(email);
+      } else {
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.println("<script>");
+        out.println("alert('일치하는 회원 정보가 없습니다.')");
+        out.println("location.href='" + request.getContextPath() + "/main.do'");
+        out.println("</script>");
+        out.flush();
+        out.close();
+        
+      }
+  }
+  
+   @Override
+  public List<FaqDto> getFaqList() {
+    return userMapper.getFaqList();
+  }
+   
+   @Override
+  public List<NoticeDto> getNoticeList() {
+    return userMapper.getNoticeList();
+  }
+
+  @Override
+  public int autoUpdatePw90(HttpServletRequest request) {
+
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    
+    UserDto user = UserDto.builder()
+                        .userNo(userNo)
+                        .build();
+     int autoUpdatePw90Result = userMapper.autoupdatetmpPw(user);  
+     
+     return autoUpdatePw90Result;
+                       
+  }
+  
+  @Override
+  public void getBookList(Model model) {
+    
+    
+    model.addAttribute("book", userMapper.getBookList());
   }
   
   
   
   
   
-
   
   
-
-
 }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
+

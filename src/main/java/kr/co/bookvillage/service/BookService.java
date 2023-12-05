@@ -1,5 +1,7 @@
 package kr.co.bookvillage.service;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
@@ -12,7 +14,12 @@ import kr.co.bookvillage.dto.WishDto;
 
 public interface BookService {
 
-  // 검색
+  // 신간 도서
+  public void getNewBook(Model model);
+  // 추천 도서
+  public void getRecoBook(Model model);
+  
+  // 검색 & 정렬
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request,Model model);
   
   // 상세
@@ -26,12 +33,17 @@ public interface BookService {
   
   
   // 관심도서
-  public int wishExists(WishDto wishDto);
+  public int checkWish(WishDto wishDto);
   public void insertWish(WishDto wishDto);
   public void deleteWish(WishDto wishDto);
   
   // 대출
+  public void updateBookCount(int userNo); //회원의 대출권수 업데이트
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 
+  // 카테고리 추출
+  public void categoryParser (BookDto bookDto);
+
+  
 }

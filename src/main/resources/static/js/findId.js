@@ -4,9 +4,20 @@
  * 비밀번호 찾기
  */
 
-/* 전역변수 선언 */
-var emailPassed = false;
+/* 함수 호출 */
+$(() => {
+  fnCheckMobileId();
+  fnCheckNameId();
+  fnCheckEmailId();
+})
 
+
+/* 전역변수 선언 */
+var mobilePassed = false;
+var emailPassed = false;
+var pwPassed = false;
+var pw2Passed = false;
+var namePassed = false;
 
 
 $(document).ready(()=> {
@@ -27,9 +38,65 @@ function toggleForm(formType) {
     }
 }
 
+// 휴대전화 정규식..
+const fnCheckMobileId = () => {
+  $('#mobile').keyup((ev) => {
+    ev.target.value = ev.target.value.replace(/[^0-9]/g, '');
+
+    // 유효성 검사: 길이 확인
+    if (ev.target.value.length !== 11) {
+      $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+      return;
+    }
+
+    // 휴대전화번호 검사 정규식 (010숫자8개)
+    let regMobile = /^010[0-9]{8}$/;
+    if (regMobile.test(ev.target.value)) {
+      $('#msg_mobile').text('');
+    } else {
+      $('#msg_mobile').text('휴대전화번호를 확인하세요.');
+    }
+  });
+}
+
+// 이름 정규식 검사
+const fnCheckNameId = () => {
+  $('#name').blur((ev) => {
+    let name = ev.target.value;
+    let bytes = 0;
+    for(let i = 0; i < name.length; i++){
+      if(name.charCodeAt(i) > 128){  // 코드값이 128을 초과하는 문자는 한 글자 당 2바이트임
+        bytes += 2;
+      } else {
+        bytes++;
+      }
+    }
+    namePassed = (bytes <= 50);
+    if(!namePassed){
+      $('#msg_name').text('이름은 50바이트 이내로 작성해야 합니다.');
+    }
+  })
+}
+
+// 이메일 정규식 검사
+const fnCheckEmailId = () => {
+  $('#email').keyup((ev) => {
+
+    // 이메일 검사 정규식
+    let regEmail = /^[A-Za-z0-9-_]+@[A-Za-z0-9]{2,}([.][A-Za-z]{2,6}){1,2}$/;
+    if (regEmail.test(ev.target.value)) {
+      $('#msg_emailTmpPW').text('');
+    } else {
+      $('#msg_emailTmpPW').text('이메일을 확인하세요.');
+    }
+  });
+}
 
 
 // 아이디 찾기
+
+
+
 $(document).ready(() => {
     $("#find_id").click(() => {
 
@@ -58,8 +125,8 @@ $(document).ready(() => {
                     alert("조회 결과가 없습니다.");
                 } else {
                     // 성공 시 화면에 결과를 출력
-                    $("#result_id").html("<span>아이디는 " + resData.email + "입니다.</span>");
-                
+                    let maskedEmail = maskEmail(resData.email);
+                    $("#result_id").html("<span>아이디는 " + maskedEmail + "입니다.</span>");
                 }
             },
             error: (xhr) => {
@@ -70,6 +137,19 @@ $(document).ready(() => {
     });
 });
 
+
+// '@' 기준으로 앞의 3글자를 '***'로 처리하는 함수
+function maskEmail(email) {
+    let atIndex = email.indexOf('@');
+
+    if (atIndex > 0) {
+        let username = email.substring(0, Math.max(atIndex - 3, 0)) + '***';
+        let domain = email.substring(atIndex);
+        return username + domain;
+    } else {
+        return email;  
+    }
+}
 
 $(document).ready(() => {
   // 비밀번호 찾기
@@ -120,8 +200,23 @@ $(document).ready(() => {
                     $('#btn_verify_code').click(() => {
                         emailPassed = $('#pwCode').val() === resData.pwCode;
                         if (emailPassed) {
+                      console.log('Ajax 요청 성공', resData);
+
                             alert('이메일이 인증되었습니다. 메일함에 임시비밀번호를 확인하세요');
-                            $('#frm_find_password').submit();
+                                   $('#btn_verify_code').prop('disabled', true);
+                              $.ajax({
+                                type:'post',
+                                url: '/user/sendTmpPw.do',
+                                 contentType: 'application/json', 
+                                 data: JSON.stringify({ email: email }), 
+                                 success: (resData2) => {
+                                   console.log('Ajax 요청 성공', resData2);
+                                   alert(email +"로 임시 비밀번호를 전송했습니다.");
+                                   $('#btn_verify_code').prop('disabled', true);
+
+                                 }
+                              })
+
                         } else {
                             alert('이메일 인증이 실패했습니다.');
                         }

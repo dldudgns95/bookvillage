@@ -29,24 +29,30 @@ public class BookController {
   /*페이지 이동*/
   // 자료검색 카테고리 클릭 후 '검색 페이지'로 이동
   @GetMapping("/search.do")
-  public String search() {
+  public String search(Model model) {
+    bookService.getNewBook(model);
+    bookService.getRecoBook(model);
     return "book/search";
   }
   // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
   @GetMapping("/search/result")
   public String result(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     bookService.searchBook(bookSearchDto, request, model);
+    String searchText = bookSearchDto.getSt();
+    model.addAttribute("searchText", searchText);
     return "book/result";
   }
   // 상세 버튼 클릭 후 '도서 상세 페이지'로 이동
   @GetMapping("/search/detail")
-  public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, Model model) {
+  public String detail(@RequestParam("isbn") String isbn, ScoreDto scoreDto, WishDto wishDto, Model model) {
     bookService.getBookDetail(isbn, model);
     bookService.getScoreList(scoreDto.getIsbn(), model);
+    int checkWish = bookService.checkWish(wishDto);
+    model.addAttribute("checkWish", checkWish);
     return "book/detail";
   }
   
-  /*평가, 한줄평*/
+  /*별점, 한줄평*/
   //평가 저장
   @PostMapping("/addScore.do")
   public String addScore(@RequestBody ScoreDto scoreDto) {
@@ -77,7 +83,7 @@ public class BookController {
   @PostMapping("/checkWish.do")
   @ResponseBody
   public String checkWish(@RequestBody WishDto wishDto) {
-    int checkWish = bookService.wishExists(wishDto);
+    int checkWish = bookService.checkWish(wishDto);
     return "{\"checkWish\":" + checkWish + "}";
   }
   
@@ -107,6 +113,11 @@ public class BookController {
     bookService.updateCheckout(bookDto);
     return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
   }
-  
+  //대출처리(mypage)
+  @PostMapping("/updateMyCheckOut.do")
+  public String updateMyCheckOut(@RequestBody BookDto bookDto) {
+    bookService.updateBookCount(bookDto.getUserNo());
+    return "redirect:/book/search/detail?isbn=" + bookDto.getIsbn();
+  }  
 
 }
