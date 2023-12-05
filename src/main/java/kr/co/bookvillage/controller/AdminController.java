@@ -92,7 +92,7 @@ public class AdminController {
   }
   
   @GetMapping("/insertBooks.do")
-  public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+  public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes){
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
     return "redirect:/admin/bookList.do";
   }
