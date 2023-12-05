@@ -18,6 +18,7 @@ public class ScoreDto {
   private Date reviewDate;
   private double star;
   private String review;
+  private int good;
   // book 테이블
   private String title;
   private String author;

@@ -27,10 +27,12 @@ public interface BookService {
   
   // 별점, 한줄평
   public int insertScore(ScoreDto scoreDto);
+  public int checkScore(ScoreDto scoreDto);
   public void getScoreList(String isbn, Model model);
   public void getStarAvg(String isbn,Model model);
   public void deleteScore(ScoreDto scoreDto);
-  public void likeScore(ScoreDto scoreDto, Model model);
+  public void likeScore(ScoreDto scoreDto);
+  public void bestReview(String isbn,Model model);
   
   
   // 관심도서
@@ -39,7 +41,7 @@ public interface BookService {
   public void deleteWish(WishDto wishDto);
   
   // 대출
-  public void updateBookCount(int userNo); //회원의 대출권수 업데이트
+  public int checkBookCOStatus(int userNo); //회원의 대출 가능 여부 체크
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 
