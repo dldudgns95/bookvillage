@@ -17,7 +17,7 @@
      WHERE ISBN = #{isbn}
        AND USER_NO = #{userNo}  
   </select>
-  
+
   <insert id="insertWish" parameterType="WishDto">
     INSERT INTO WISH(
       ISBN
@@ -29,7 +29,7 @@
     , #{wishDate}
     )
   </insert>
-
+  
   <delete id="deleteWish" parameterType="WishDto">
     DELETE FROM WISH 
      WHERE ISBN=#{isbn}

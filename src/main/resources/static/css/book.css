@@ -51,11 +51,19 @@
 .list_area h5 {
   margin-top: 20px;
   margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   font-weight: 600;
+  border-top: #ccc solid 1px;
+  border-bottom: #ccc solid 1px;
 }
 .bookLi_container {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 30px;
+}
+.bookLi_container img {
+  height: 270px;
 }
 
 .bookLi {
@@ -77,6 +85,9 @@
     flex: 8;
 }
 /*검색 메뉴*/
+.search_area {
+  margin-bottom: 50px;
+}
 .search_menu {
   display: flex;
   justify-content: space-between;
@@ -235,12 +246,14 @@
 
 
 /*관심도서*/
-#toggleWishBtn {
+.wishBtn {
   cursor: pointer;
 }
-.notAdded::after {
-    content: '♡';
-}
-.wishAdded::after {
-    content: '♥';
+
+/*그래프*/
+canvas {
+  display: block;
+  margin: 20px auto;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
 }

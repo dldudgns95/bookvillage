@@ -79,7 +79,7 @@
               <li class="search_info">
                 <div><h4 th:text="${book.title}"></h4></div>
                 </a>                
-                <div class="search_info_detail">저자: <span th:text="${book.author}"></span></div>
+                <div class="search_info_detail">저자 &nbsp; : <span th:text="${book.author}"></span></div>
                 <div class="search_info_detail">
                   출판사: <span th:text="${book.publisher}"></span> 
                   출간일: <span th:text="${book.pubdate}"></span> 
@@ -98,15 +98,15 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
-                        <td th:text="${book.status == 1 ? '대출 가능' : '대출 중'}"></td>
+                        <td th:text="${book.status == 1 ? '대출가능' : '대출중'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
+                        <td th:text="${book.status == 1 ? '대출가능' : '대출중'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
                         <td>
-                          <form method="post" id="WishForm">
+                          <form method="post"  th:id="WishForm" >
                             <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
                             <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="hidden" id="wishDate" name="wishDate" />
-                            <button type="button" id="toggleWishBtn" class="btn"></button>
+                            <button type="button" class="btn wishBtn "><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-plus-minus"></i></button>
                           </form>
                         </td>
                         <td>
