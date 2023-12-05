@@ -56,8 +56,18 @@
     <div class="logo"></div>
     
     <div class="search_bar" >
-      <input type="text"  style="width:300px;" name="search" placeholder="검색어를 입력하세요" >
-      <a href="/main/mainSearch.form"><button type="button" class="btn btn-outline-secondary">검색</button></a>
+        <form id="search" name="search" action="/book/search/result" method="get">
+          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
+          <input type="hidden" name="ss" value="total" />
+          <div class="search_text">
+            <input type="text" style="width:300px;" id="st" name="st" placeholder="검색어를 입력하세요."> 
+          </div>
+          <input type="hidden" name="sortType" />
+          <div class="search_btn">
+            <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
+          </div>
+        </form>   
     </div>
     
     

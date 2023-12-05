@@ -212,13 +212,16 @@ public class UserController {
     
   }
 
-
-//  @GetMapping("/books")
-//  public String getBooks(Model model) {
-//      List<BookDto> newBooks = bookService.getNewBooks();
-//      model.addAttribute("newBooks", newBooks);
-//      return "books"; // books.html을 응답으로 사용
-//  }
+  // 휴면 
+  @GetMapping("/active.form")
+  public String activeForm() {
+    return "user/active";
+  }
+  
+  @GetMapping("/active.do")
+  public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    userService.active(session, request, response);
+  }
   
   
   
