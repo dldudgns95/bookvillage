@@ -35,4 +35,6 @@ public interface AdminService  {
   public int updateBookApply(HttpServletRequest request);
   public int approveFacApply(HttpServletRequest request);
   public int refuseFacApply(HttpServletRequest request);
+  public int deleteFac(HttpServletRequest request);
+  public int deleteBook(HttpServletRequest request);
 }

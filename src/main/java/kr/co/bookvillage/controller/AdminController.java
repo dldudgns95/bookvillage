@@ -222,6 +222,30 @@ public class AdminController {
     return "redirect:/admin/facApplyList.do";
   }
   
+  @PostMapping("/approveUserFacApply.do")
+  public String approveUserFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateApproveResult", adminService.approveFacApply(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
+  @PostMapping("/refuseUserFacApply.do")
+  public String refuseUserFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateRefuseResult", adminService.refuseFacApply(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
+  @PostMapping("/facDelete.do")
+  public String facDelete(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteFac(request));
+    return "redirect:/admin/facList.do";
+  }
+  
+  @PostMapping("/deleteBook.do")
+  public String deleteBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteBook(request));
+    return "redirect:/admin/bookList.do";
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {

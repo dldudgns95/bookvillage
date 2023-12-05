@@ -135,8 +135,8 @@
               </td>
               <td scope="row">
                 <div>
-                  <form class="frm_fac" method="get">
-                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
+                  <form class="frm_fac">
+                    <input type="hidden" name="facNo" th:value="${fac.facilityDto.facNo}">
                     <button type="button" class="btn btn-primary btn_edit">수정</button>
                     <button type="button" class="btn btn-primary btn_delete">삭제</button>
                   </form>
@@ -162,17 +162,21 @@
     }
     
     const fnFacEdit = () => {
-      $('.btn_edit').click(() => {
-        $('.frm_fac').attr('action', '/admin/facEdit.form');
-        $('.frm_fac').submit();
+      $('.btn_edit').click((ev) => {
+        let frm_fac = $(ev.target).closest('.frm_fac');
+        frm_fac.attr('action', '/admin/facEdit.form');
+        frm_fac.attr('method', 'get');
+        frm_fac.submit();
       })
     }
     
     const fnFacDelete = () => {
-      $('.btn_delete').click(() => {
+      $('.btn_delete').click((ev) => {
+        let frm_fac = $(ev.target).closest('.frm_fac');
         if(confirm('해당 시설을 삭제하시겠습니까?')){
-          $('.frm_fac').attr('action', '/admin/facDelete.do');
-          $('.frm_fac').submit();
+          frm_fac.attr('action', '/admin/facDelete.do');
+          frm_fac.attr('method', 'post');
+          frm_fac.submit();
         }
       })
     }
@@ -187,11 +191,23 @@
         }
       }
     }
+    
+    const fnDeleteResult = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('해당 시설이 정상적으로 삭제되었습니다.');
+        } else {
+          alert('해당 시설의 삭제를 실패했습니다.');
+        }
+      }
+    }
    
     fnFacWrite(); 
     fnFacEdit();
     fnFacDelete();
     fnAddResult();
+    fnDeleteResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

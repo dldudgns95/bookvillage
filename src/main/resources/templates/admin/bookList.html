@@ -236,8 +236,20 @@
       })
     }
     
+    const fnDeleteResult = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('해당 도서가 정상적으로 삭제되었습니다.');
+        } else {
+          alert('해당 도서의 삭제를 실패했습니다.');
+        }
+      }
+    }    
+    
     fnBookCount();
     fnBookSearch(); 
+    fnDeleteResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

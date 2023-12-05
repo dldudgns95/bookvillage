@@ -77,11 +77,18 @@
           <input type="text" readonly class="form-control-plaintext" id="publisher" th:value="${bookApply.publisher}">
         </div>
       </div>
+      <div class="mb-1 row">
+        <label for="status" class="col-sm-3 col-form-label">신청상태</label>
+        <div class="col-sm-9">
+          <input th:if="${bookApply.status == 0}" type="text" readonly class="form-control-plaintext" id="status" value="도서신청완료">
+          <input th:if="${bookApply.status == 1}" type="text" readonly class="form-control-plaintext" id="status" value="도서추가완료">
+        </div>
+      </div>
       <div class="mb-3">
         <label for="exampleFormControlTextarea1" class="form-label">신청사유</label>
         <textarea class="form-control" readonly id="exampleFormControlTextarea1" rows="3" th:text="${bookApply.wish}"></textarea>
       </div>
-      <div>
+      <div th:if="${bookApply.status == 0}">
         <form class="frm_book_apply" method="get" th:action="@{/admin/updateBookApply.do}">
           <input type="hidden" name="applyNo" th:value="${bookApply.applyNo}">
           <button type="submit" class="btn btn-primary">희망도서 추가완료</button>

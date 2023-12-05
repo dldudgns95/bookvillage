@@ -152,6 +152,8 @@ public class AdminServiceImpl implements AdminService {
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
     model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
+    model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
+    model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
     
   }
   
@@ -619,6 +621,18 @@ public class AdminServiceImpl implements AdminService {
   public int refuseFacApply(HttpServletRequest request) {
     int facApplyNo = Integer.parseInt(request.getParameter("facApplyNo"));
     return adminMapper.refuseFacApply(facApplyNo);
+  }
+  
+  @Override
+  public int deleteFac(HttpServletRequest request) {
+    int facNo = Integer.parseInt(request.getParameter("facNo"));
+    return adminMapper.deleteFac(facNo);
+  }
+  
+  @Override
+  public int deleteBook(HttpServletRequest request) {
+    String isbn = request.getParameter("isbn");
+    return adminMapper.deleteBook(isbn);
   }
   
   

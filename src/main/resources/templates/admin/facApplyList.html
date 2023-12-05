@@ -104,7 +104,7 @@
           <tr>
             <th scope="col">등록번호</th>
             <th scope="col">시설번호</th>
-            <th scope="col">시설이름</th>
+            <th scope="col">회원명</th>
             <th scope="col">시설명</th>
             <th scope="col">신청날짜</th>
             <th scope="col">시작날짜</th>
@@ -144,7 +144,32 @@
   </div>
   
   <script th:inline="javascript">
-      
+  
+    const fnUpdateApproveResult = () => {
+      let updateApproveResult = /*[[${updateApproveResult}]]*/ null;
+      if(updateApproveResult !== null) {
+        if(updateApproveResult === 1) {
+          alert('이용 신청을 정상적으로 승인하였습니다.');
+        } else {
+          alert('이용 신청의 승인을 실패하였습니다.');
+        }
+      }
+    }
+    
+    const fnUpdateRefuseResult = () => {
+      let updateRefuseResult = /*[[${updateRefuseResult}]]*/ null;
+      if(updateRefuseResult !== null) {
+        if(updateRefuseResult === 1) {
+          alert('이용 신청을 정상적으로 거부하였습니다.');
+        } else {
+          alert('이용 신청의 거부을 실패하였습니다.');
+        }
+      }
+    }
+    
+    fnUpdateApproveResult();
+    fnUpdateRefuseResult();
+  
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
