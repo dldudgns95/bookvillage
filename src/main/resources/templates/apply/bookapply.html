@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('시설신청')}">
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>	
+</head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  div.child1{
+    width: 800px;
+    justify-content: center;
+    margin-left: 320px;
+    align-items: center;
+    text-align: center;
+    
+  }
+  div.child2{
+	width: 800px;
+    display: flex;
+    margin-left: 320px;
+    justify-content: center;
+
+    
+  }
+  div.child3{
+	  display: flex;
+	  width: 200px;
+	  margin-top: 70px;
+      margin-left: 20px;
+      font-size: 15px;
+	  
+  }
+  div.btn{
+	margin-left: 300px;  
+	  
+  }   
+
+  
+  /* 캘린더 크기 조절 */
+  #calendar {
+    width: 700px;
+  }
+  /* 모달 이미지 크기 조절 */  
+  .modal_img {
+    width: 300px;
+  }
+   /* 캘린더 좌측 우측 아이콘 색상 */
+  .fc-icon-chevron-right, .fc-icon-chevron-left {
+    color: #ffffff;
+  }
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="parent">
+	 
+     <div class="side_bar">
+	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">희망도서신청</h3>
+        <ul id="side_list">
+          <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
+		  <li style="margin:20px"><a th:href="@{/apply/bookapply.do}">희망도서신청</a></li>
+        </ul>
+      </div>
+	  <div class="child1">
+     	<h5>시설이용신청</h5>
+      </div>
+
+	  <div class="child2">
+	
+	  </div>
+
+    </div>
+
+  <script th:inline="javascript">
+    
+    
+   
+    
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

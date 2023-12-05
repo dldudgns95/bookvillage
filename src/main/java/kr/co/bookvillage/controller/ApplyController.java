@@ -40,12 +40,6 @@ public class ApplyController {
     return "redirect:/admin/facApplyList.do";
   }
   
-  @GetMapping("/facist.do")
-  public String facList(HttpServletRequest request, Model model) {
-    model.addAttribute("facList", facService.getFacTotalList(request));
-    return "apply/faclist";
-  }
-  
   @ResponseBody
   @GetMapping(value="/facTotalList.do", produces="application/json")
   public Map<String, Object> facTotalList(HttpServletRequest request) {
@@ -63,10 +57,13 @@ public class ApplyController {
   public Map<String, Object> checkFacApply(HttpServletRequest request) {
     return Map.of("checkResult", facService.checkFacApply(request));
   }
-  // 임시
+
   @GetMapping("/faclist.do")
   public String temp() {
     return "apply/faclist";
   }
-  
+  @GetMapping("/bookapply.do")
+  public String bookapply() {
+    return "apply/bookapply";
+  }
 }
