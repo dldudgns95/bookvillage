@@ -250,5 +250,27 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("beginNo", total - (page -1) * display);
   }
   
+  @Override
+  public int modifyBookApply(HttpServletRequest request) {
+    
+    String bookName = request.getParameter("bookName");
+    String author = request.getParameter("author");
+    String publisher = request.getParameter("publisher");
+    String wish = request.getParameter("wish");
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    
+    BookApplyDto applyBook = BookApplyDto.builder()
+                                .bookName(bookName)
+                                .author(author)
+                                .publisher(publisher)
+                                .wish(wish)
+                                .applyNo(applyNo)
+                                .build();
+    
+    int modifyResult = mypageMapper.updateBookApply(applyBook);
+    
+    return modifyResult;
+  }
+  
 
 }

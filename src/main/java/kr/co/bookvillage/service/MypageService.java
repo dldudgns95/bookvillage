@@ -21,4 +21,5 @@ public interface MypageService {
   public int cancleBookCheckout(HttpServletRequest request);
   public int removeWish(String isbn, int userNo);
   public void loadBookApplyList(HttpServletRequest request, Model model);
+  public int modifyBookApply(HttpServletRequest request);
 }

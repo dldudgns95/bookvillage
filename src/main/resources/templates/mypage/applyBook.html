@@ -88,10 +88,16 @@
             </td>
             <td>
               <th:block th:if="${applyBook.status == 0}">
-                <input type="hidden" name="applyNo" th:value="${applyBook.applyNo}">
-                <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-                <button type="button" id="btn_modifyApply" class="btn btn-outline-success">수정</button>
-                <button type="button" id="btn_cancleApply" class="btn btn-success">신청취소</button>
+                <form id="frm_btn" method="post">
+                  <input type="hidden" name="applyNo" th:value="${applyBook.applyNo}">
+                  <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+                  <input type="hidden" name="wish" th:value="${applyBook.wish}">
+                  <input type="hidden" name="bookName" th:value="${applyBook.bookName}">
+                  <input type="hidden" name="author" th:value="${applyBook.author}">
+                  <input type="hidden" name="publisher" th:value="${applyBook.publisher}">
+                  <button type="button" id="btn_modifyApply" class="btn btn-outline-success">수정</button>
+                  <button type="button" id="btn_cancleApply" class="btn btn-success">신청취소</button>
+                </form>
               </th:block>
               <th:block th:if="${applyBook.status == 1}">
 
@@ -109,6 +115,21 @@
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    var frmBtn = $('#frm_btn');
+    
+    const fnEditApplyBook = () => {
+      $('#btn_modifyApply').click(() => {
+        frmBtn.attr('action', '/mypage/applyBookEdit.form');
+        frmBtn.submit();
+      })
+    }
+    
+    
+    fnEditApplyBook();
+  </script>
   
 </body>
 </html>

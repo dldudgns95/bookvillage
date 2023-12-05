@@ -198,6 +198,18 @@
              WHERE B.USER_NO = #{userNo}) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
-
+  
+  <!-- 희망도서 신청내역 수정 -->
+  <update id="updateBookApply" parameterType="BookApplyDto">
+    UPDATE BOOK_APPLY
+       SET BOOK_NAME = #{bookName}
+         , AUTHOR = #{author}
+         , PUBLISHER = #{publisher}
+         , WISH = #{wish}
+     WHERE APPLY_NO = #{applyNo}
+  </update>
+  
+  
+  
 
 </mapper>

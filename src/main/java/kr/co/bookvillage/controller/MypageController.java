@@ -11,12 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 
@@ -122,6 +124,19 @@ public class MypageController {
     return "mypage/applyBook";
   }
   
+  // 희망도서 수정페이지로 이동
+  @PostMapping("/applyBookEdit.form")
+  public String editApply(@ModelAttribute("applyBook") BookApplyDto applyBook) {
+    return "mypage/applyBookEdit";
+  }
+  
+  // 희망도서 수정내역 저장
+  @PostMapping("/modifyApplyBook.form")
+  public String modifyBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = mypageService.modifyBookApply(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/mypage/applyBook.do";
+  }
   
   
   
