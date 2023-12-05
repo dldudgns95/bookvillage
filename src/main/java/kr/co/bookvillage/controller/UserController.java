@@ -190,13 +190,13 @@ public class UserController {
     return userService.checkEmail(email);
   }
   
-  // 비번 인증코드 발송 및 업데이트
+  // 비번 인증코드 발송
   @PostMapping(value = "/sendTmpCodes.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpCodes(@RequestBody Map<String, String> requestBody) {
       String email = requestBody.get("email");
       return userService.sendTmpCode(email);
   }
-
+  // 임시 비번 발송 및 업데이트
   @PostMapping(value = "/sendTmpPw.do", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Map<String, Object>> sendTmpPw(@RequestBody Map<String, String> requestBody) {
       String email = requestBody.get("email");
@@ -212,13 +212,16 @@ public class UserController {
     
   }
 
-
-//  @GetMapping("/books")
-//  public String getBooks(Model model) {
-//      List<BookDto> newBooks = bookService.getNewBooks();
-//      model.addAttribute("newBooks", newBooks);
-//      return "books"; // books.html을 응답으로 사용
-//  }
+  // 휴면 
+  @GetMapping("/active.form")
+  public String activeForm() {
+    return "user/active";
+  }
+  
+  @GetMapping("/active.do")
+  public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    userService.active(session, request, response);
+  }
   
   
   

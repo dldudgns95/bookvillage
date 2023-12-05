@@ -1,6 +1,7 @@
 package kr.co.bookvillage.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,21 +44,17 @@ public class MainController {
     return "main/mainSearch";
   }
   
-  // 책 이미지..??
-//  @GetMapping(value = "/bookImageList.do")
-//  public List<BookDto> bookImageList(Model model){
-//     return userService.getBookList("book", book);
-//  }
+  // 책 이미지..
+  @ResponseBody
+  @GetMapping(value = "/bookImageList.do", produces="application/json")
+  public Map<String, Object> bookImageList(Model model){
+    List<BookDto> book = userService.getBookList();
+   model.addAttribute("book", book);
+    
+    return Map.of("book", book == null ? "" : book);
+  }
   
 
-//  @GetMapping("/books")
-//  public String getBooks(Model model) {
-//      List<BookDto> newBooks = bookService.getNewBooks();
-//      model.addAttribute("newBooks", newBooks);
-//      return "books"; // books.html을 응답으로 사용
-//  }
-//  
-  
   
   
   

@@ -5,7 +5,6 @@
 
 <script th:src="@{/js/main.js}"></script>
 
-
 <style>
   .main_notice_list {
     width: 100%;
@@ -16,7 +15,7 @@
 
   .main_notice_list_box1,
   .main_notice_list_box2 {
-    font-size: 12px;
+    font-size: 15px;
     width: calc(50% - 10px);
     height: 300px;
     box-sizing: border-box;
@@ -47,6 +46,18 @@
     display: inline-block;
   }
 
+.owl-item img {
+  width: 200px; 
+  height: 270px;
+  object-fit: contain;
+}
+.newBookList{
+  margin: 10px;
+  padding: 10px;
+}
+.sliserImg{
+  margin-bottom: 5px;
+}
 
   
 </style>
@@ -134,55 +145,67 @@
     </div>
     
    <!-- 신간도서 슬라이드  th:each="bookDetail:${bookDetailList}" -->
-<div>
-  
-  <div class="title2">신간 도서 목록</div>
-    
-      <div id="bookContainer" class="book_list"></div>
 
-
-
-  </div>
-</div>
-
-    <div class="owl-carousel">
-    <!-- 이미지 목록 반복 -->
-    <div th:each="book : ${book}">
-        <img th:src="${book.cover}" alt="Slide Image">
-    </div>
-</div>
-    
-    
-    
-  </div>
-  
+   <div class="newBookList"> 
+    <div class="title2">신간 도서 목록</div>
+      
+      <div class="carousel-container">
+        <div class="owl-carousel" id="bookCarousel">
+      </div>
+    </div> 
+   </div>
   
   <script>
-    $(document).ready(function () {
-        $.ajax({
-            url: '/main/bookImageList.do',
-            type: 'GET',
-            success: function (data) {
-                // 서버에서 받은 데이터(data)를 활용하여 이미지 슬라이드를 구성
-                // 예: 각 이미지에 대한 반복문
-                data.forEach(function (book) {
-                    $('.owl-carousel').append('<div><img src="' + book.cover + '" alt="Slide Image"></div>');
-                });
-
-                // Owl Carousel 초기화
-                $(".owl-carousel").owlCarousel({
-                    items: 1,
-                    loop: true,
-                    autoplay: true,
-                    autoplayTimeout: 3000,
-                    autoplayHoverPause: true
-                });
-            },
-            error: function (error) {
-                console.error('Error fetching book list:', error);
-            }
-        });
+    
+    // 보존,,,
+   $(document).ready(function() {
+    // Owl Carousel 초기화
+    $('.owl-carousel').owlCarousel({
+      items: 5, // 한 번에 표시되는 아이템 수
+      loop: true,
+      margin: 50,
+      autoplay: true,
+      autoplayTimeout: 2000,
+      autoplayHoverPause: true,
     });
+  });    
+  
+  
+  
+  //////// 이게 돌고 있따!!!!!!!
+  
+   $(document).ready(function () {
+  var carousel = $("#bookCarousel");
+
+  $.ajax({
+    type: 'GET',
+    url: '/main/bookImageList.do',
+    contentType: 'application/json',
+    success: function (response) {
+      response.book.forEach(function (book) {
+        var truncatedTitle = book.title.substring(0, 20) + (book.title.length > 20 ? '...' : '');
+        var statusText = book.status === 1 ? '대출 가능' : '대출 중';
+
+        // 이미지를 동적으로 추가
+        carousel.owlCarousel('add', `<div><a href="/book/search/detail?isbn=${book.isbn}"><img class="sliserImg" src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
+
+          console.log('isbn '+ book.isbn )
+
+        // 추가한 아이템에 클릭 이벤트 등록
+        carousel.find('.owl-item').on('click', function () {
+          // 클릭된 아이템의 ISBN을 가져와서 상세 페이지로 이동
+          var isbn = $(this).find('img').attr('data-isbn');
+          window.location.href = '/book/search/detail?isbn=' +  book.isbn;
+        });
+      });
+    },
+    error: function (error) {
+      console.log('Error fetching book data: ' + error);
+    }
+  });
+});
+
+
 </script>
 
   <div th:replace="~{/layout/footer::footer}"></div>

@@ -63,6 +63,8 @@ public class UserServiceImpl implements UserService {
     if(inactiveUser != null) {
       session.setAttribute("inactiveUser", inactiveUser);
       response.sendRedirect(request.getContextPath() + "/user/active.form");
+      
+
     }
     
     // 정상적인 로그인 처리하기
@@ -81,7 +83,7 @@ public class UserServiceImpl implements UserService {
           PrintWriter outt = response.getWriter();
           outt.println("<script>");
           outt.println("alert('마지막 비밀번호 변경일로부터 90일이 경과했습니다. 비밀번호를 변경해주세요.')");
-          outt.println("location.href='" + request.getContextPath() + "/mypage/modifyPw.form'");
+          outt.println("location.href='" +  "/mypage/modifyPw.form'");
           outt.println("</script>");
           outt.flush();
           outt.close();
@@ -214,7 +216,6 @@ public class UserServiceImpl implements UserService {
                     .build();
     
     return user;
-    
   }
   
   @Override
@@ -278,7 +279,6 @@ public class UserServiceImpl implements UserService {
       out.flush();
       out.close();
     }
-    
   }
   
   
@@ -299,7 +299,6 @@ public class UserServiceImpl implements UserService {
                        && userMapper.getInactiveUser(map) == null;
     
     return new ResponseEntity<>(Map.of("enableEmail", enableEmail), HttpStatus.OK);
-    
   }
   
   @Override
@@ -339,7 +338,6 @@ public class UserServiceImpl implements UserService {
     int joinResult = userMapper.insertUsesr(user);
     
     try {
-      
       response.setContentType("text/html; charset=UTF-8");
       PrintWriter out = response.getWriter();
       out.println("<script>");
@@ -359,7 +357,6 @@ public class UserServiceImpl implements UserService {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    
   }
 
  
@@ -554,7 +551,6 @@ public class UserServiceImpl implements UserService {
                          .build();
    
    return user;
-   
  }
   
   @Override
@@ -575,7 +571,6 @@ public class UserServiceImpl implements UserService {
         out.println("</script>");
         out.flush();
         out.close();
-        
       }
   }
   
@@ -591,28 +586,58 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public int autoUpdatePw90(HttpServletRequest request) {
-
     int userNo = Integer.parseInt(request.getParameter("userNo"));
-    
     UserDto user = UserDto.builder()
                         .userNo(userNo)
                         .build();
      int autoUpdatePw90Result = userMapper.autoupdatetmpPw(user);  
-     
      return autoUpdatePw90Result;
-                       
   }
   
   @Override
-  public void getBookList(Model model) {
-    
-    
-    model.addAttribute("book", userMapper.getBookList());
+  public List<BookDto> getBookList() {
+    return userMapper.getBookList();
   }
   
+  // 휴면...
+  @Override
+  public void inactiveUserBatch() {
+    userMapper.insertInactiveUser();
+    userMapper.deleteUserForInactive();
+  }
   
-  
-  
+  @Override
+  public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
+    InactiveUserDto  inactiveUser = (InactiveUserDto)session.getAttribute("inactiveUser");
+    String email = inactiveUser.getEmail();
+    
+    int insertActiveUserResult = userMapper.insertActiveUser(email);
+    int deleteInactiveUserResult = userMapper.deleteInactiveUser(email);
+    
+    try {
+      response.setContentType("text/html; charset=UTF-8");
+      PrintWriter out = response.getWriter();
+      out.println("<script>");
+      
+      if(insertActiveUserResult == 1 && deleteInactiveUserResult == 1) {
+        out.println("alert('휴면계정이 복구되었습니다. 계정 활성화를 위해 곧바로 로그인해주세요.')");
+        out.println("location.href='" + "/main.do'");
+      } else {
+        out.println("alert('휴면계정 복구가 실패했습니다. 다시 시도해주세요.')");
+        out.println("history.back()");
+      }
+      out.println("</script>");
+      out.flush();
+      out.close();
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    
+    
+    
+    
+  }
+
   
   
   
