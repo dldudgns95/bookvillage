@@ -1,6 +1,7 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
+import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.ScoreDto;
@@ -213,5 +215,40 @@ public class MypageServiceImpl implements MypageService {
     }
     return deleteResult;
   }
+  
+  @Override
+  public int removeWish(String isbn, int userNo) {
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("isbn", isbn);
+    map.put("userNo", userNo);
+    
+    return mypageMapper.deleteWish(map);
+  }
+  
+  @Override
+  public void loadBookApplyList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getApplyBookCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<BookApplyDto> applyBookList = mypageMapper.getApplyBookList(map);
+    
+    model.addAttribute("applyBookList", applyBookList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/applyBook.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+  }
+  
 
 }

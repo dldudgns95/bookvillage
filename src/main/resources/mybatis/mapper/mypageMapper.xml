@@ -53,6 +53,18 @@
       <result    column="STATUS"        property="status"/>
     </association>
   </resultMap>
+  
+  <resultMap id="BookApplyMap" type="BookApplyDto">
+    <id column="APPLY_NO" property="applyNo"/>
+    <result column="BOOK_NAME" property="bookName"/>
+    <result column="AUTHOR" property="author"/>
+    <result column="PUBLISHER" property="publisher"/>
+    <result column="WISH" property="wish"/>
+    <result column="STATUS" property="status"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo"/>
+    </association>
+  </resultMap>
 
   <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
@@ -115,7 +127,7 @@
   </select>
   
   <!-- 접속유저가 작성한 한줄평리스트 -->
-  <select id="getReviewList" parameterType="Map" resultMap="ScoreMap">
+  <select id="getReviewList" parameterType="Map" resultType="ScoreDto">
     SELECT A.ISBN, A.USER_NO, A.REVIEW_DATE, A.STAR, A.REVIEW , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_DATE) AS RN, S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE
               FROM SCORE S INNER JOIN BOOK B
@@ -132,7 +144,7 @@
   </select>
   
   <!-- 접속유저의 관심도서 리스트 -->
-  <select id="getWishBookList" parameterType="Map" resultMap="WishMap">
+  <select id="getWishBookList" parameterType="Map" resultType="WishDto">
     SELECT A.ISBN, A.USER_NO, A.WISH_DATE, A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY WISH_DATE DESC) AS RN, W.ISBN, W.USER_NO, W.WISH_DATE, B.TITLE
               FROM WISH W INNER JOIN BOOK B
@@ -162,6 +174,30 @@
      WHERE USER_NO = #{userNo}
        AND BOOKCOUNT &gt; 0
   </update>
+  
+  <!-- 관심도서 삭제 -->
+  <delete id="deleteWish" parameterType="WishDto">
+    DELETE 
+      FROM WISH
+     WHERE ISBN = #{isbn} AND USER_NO = #{userNo}
+  </delete>
+  
+  <!-- 희망도서 갯수 -->
+  <select id="getApplyBookCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <!-- 희망도서 신청목록 -->
+  <select id="getApplyBookList" parameterType="Map" resultMap="BookApplyMap">
+    SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_NO
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY APPLY_NO) AS RN, B.APPLY_NO, B.BOOK_NAME, B.AUTHOR, B.PUBLISHER, B.WISH, B.STATUS, U.USER_NO
+              FROM BOOK_APPLY B INNER JOIN USER_T U
+                ON B.USER_NO = U.USER_NO
+             WHERE B.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
 
 
 </mapper>

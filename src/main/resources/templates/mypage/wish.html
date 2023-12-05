@@ -67,24 +67,30 @@
           <tr>
             <td>도서명</td>
             <td>관심도서등록일</td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
           <tr th:if="${#lists.isEmpty(wishList)}">
-            <td colspan="2">등록된관심도서가없습니다.</td>
+            <td colspan="3">등록된 관심도서가 없습니다.</td>
           </tr>
+          <form method="post" id="frm_wish">
           <th:block th:if="${not #lists.isEmpty(wishList)}">
             <th:block th:each="wish : ${wishList}">
               <tr th:if="${session.user.userNo eq wish.userNo}">
-                <td><a th:href="@{/book/search/detail(isbn=${wish.isbn})}" th:text="${wish.bookDto.title}"></a></td>
-                <td th:text="${wish.wishDate}"></td>
+                <td><a th:href="@{/book/search/detail(isbn=${wish.isbn})}" th:text="${wish.title}"></a></td>
+                <td th:text="${#dates.format(wish.wishDate, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+                <input type="hidden" name="isbn" th:value="${wish.isbn}">
+                <td><i class="fa-solid fa-xmark"></i></td>
               </tr>
             </th:block>
           </th:block>
+          </form>
         </tbody>
         <tfoot th:if="${not #lists.isEmpty(wishList)}">
           <tr>
-            <td colspan="2" th:utext="${paging}"></td>
+            <td colspan="3" th:utext="${paging}"></td>
           </tr>
         </tfoot>
       </table>
@@ -93,6 +99,35 @@
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    $(document).ready(function(){
+      $('.fa-xmark').on('click', function(){
+        var isbn = $(this).closest('tr').find('input[name="isbn"]').val();
+        var userNo = $(this).closest('tr').find('input[name="userNo"]').val();
+        $.ajax({
+          type: 'post',
+          url: '/mypage/deleteWish.do',
+          data: {
+            isbn: isbn,
+            userNo: userNo
+          },
+          success: function(resData) {
+            console.log(resData);
+                if (resData.removeResult === 1) {
+                    alert('관심도서 삭제되었습니다.');
+                    location.reload();
+                } else {
+                    alert('관심도서 삭제가 되지 않았습니다.');
+                }
+          }
+        })
+      })
+    })
+    
+   
+  </script>
   
 </body>
 </html>

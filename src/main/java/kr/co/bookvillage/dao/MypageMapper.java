@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.ScoreDto;
@@ -26,4 +27,7 @@ public interface MypageMapper {
   public int cancleCheckout(int checkoutNo);                                     // 도서대출신청 취소(대출테이블에서삭제)
   public int updateBookStatus(BookDto book);                                     // 도서대출신청 취소(책의대출상태를 대출가능으로변경)
   public int minusBookCount(int userNo);                                         // 도서대출신청 취소(유저의대출권수변경)
+  public int deleteWish(Map<String, Object> map);                                // 관심도서 삭제
+  public int getApplyBookCount(int userNo);                                      // 희망도서신청갯수
+  public List<BookApplyDto> getApplyBookList(Map<String, Object> map);           // 희망도서신청리스트
 }

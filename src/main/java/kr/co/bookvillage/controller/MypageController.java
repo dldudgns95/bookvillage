@@ -1,5 +1,6 @@
 package kr.co.bookvillage.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.service.MypageService;
@@ -95,6 +98,17 @@ public class MypageController {
     return "mypage/wish";
   }
   
+  // 관심도서목록에서 삭제
+  @ResponseBody
+  @PostMapping(value="/deleteWish.do", produces="application/json")
+  public Map<String, Object> deleteWish(@RequestParam(value="isbn", required=false, defaultValue="0") String isbn,
+                                        @RequestParam(value="userNo", required=false, defaultValue="0") int userNo) {
+    Map<String, Object> result = new HashMap<>();
+    int removeResult = mypageService.removeWish(isbn, userNo);
+    result.put("removeResult", removeResult);
+    return result;
+  }
+  
   // 시설이용신청목록 페이지로 이동
   @GetMapping("/facApply.do")
   public String facApplyList() {
@@ -103,9 +117,12 @@ public class MypageController {
   
   // 희망도서목록 페이지로 이동
   @GetMapping("/applyBook.do")
-  public String applyBook() {
+  public String applyBook(HttpServletRequest request, Model model) {
+    mypageService.loadBookApplyList(request, model);
     return "mypage/applyBook";
   }
+  
+  
   
   
 }

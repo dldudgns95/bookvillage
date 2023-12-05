@@ -19,4 +19,6 @@ public interface MypageService {
   public void loadReviewList(HttpServletRequest request, Model model);
   public void loadWishBookList(HttpServletRequest request, Model model);
   public int cancleBookCheckout(HttpServletRequest request);
+  public int removeWish(String isbn, int userNo);
+  public void loadBookApplyList(HttpServletRequest request, Model model);
 }
