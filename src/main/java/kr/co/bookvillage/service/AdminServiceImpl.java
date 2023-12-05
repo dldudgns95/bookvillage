@@ -469,7 +469,7 @@ public class AdminServiceImpl implements AdminService {
     int updateResult = adminMapper.approvalBookCheckoutReturn(checkoutNo);
     if(updateResult == 1) {
       if(status == 3) {
-        adminMapper.activeUser(userNo);
+        adminMapper.updateActiveUser(userNo);
       }
       adminMapper.activeBook(isbn);
       adminMapper.minusBookCount(userNo);
@@ -607,6 +607,18 @@ public class AdminServiceImpl implements AdminService {
   public int updateBookApply(HttpServletRequest request) {
     int applyNo = Integer.parseInt(request.getParameter("applyNo"));
     return adminMapper.updateBookApply(applyNo);
+  }
+  
+  @Override
+  public int approveFacApply(HttpServletRequest request) {
+    int facApplyNo = Integer.parseInt(request.getParameter("facApplyNo"));
+    return adminMapper.approveFacApply(facApplyNo);
+  }
+  
+  @Override
+  public int refuseFacApply(HttpServletRequest request) {
+    int facApplyNo = Integer.parseInt(request.getParameter("facApplyNo"));
+    return adminMapper.refuseFacApply(facApplyNo);
   }
   
   

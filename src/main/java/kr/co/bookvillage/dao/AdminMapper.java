@@ -47,9 +47,12 @@ public interface AdminMapper {
   public int approvalBookCheckoutReturn(int checkoutNo);
   public int activeBook(long isbn);
   public int minusBookCount(int userNo);
-  public int activeUser(int userNo);
+  public int updateActiveUser(int userNo);
+  public int updateInactiveUser(int userNo);
   public List<FacApplyDto> getFacApplyList();
   public boolean checkAddBook(String isbn);
   public int addUserBookCount(int userNo);
   public int updateBookApply(int applyNo);
+  public int approveFacApply(int facApplyNo);
+  public int refuseFacApply(int facApplyNo);
 }

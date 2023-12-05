@@ -138,7 +138,7 @@ CREATE TABLE FAC_APPLY (
   FAC_START    DATE   NOT NULL,
   FAC_STATUS   NUMBER NOT NULL,
   CONSTRAINT PK_FAC_APPLY PRIMARY KEY(FAC_APPLY_NO),
-  CONSTRAINT FK1_FAC_APPLY FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL,
+  CONSTRAINT FK1_FAC_APPLY FOREIGN KEY(USER_NO) REFERENCES USER_T(USER_NO) ON DELETE CASCADE,
   CONSTRAINT FK2_FAC_APPLY FOREIGN KEY(FAC_NO) REFERENCES FACILITY(FAC_NO) ON DELETE SET NULL
 );
 
@@ -244,7 +244,7 @@ CREATE TABLE BOOK_CHECKOUT (
   CHECKOUT_NO    NUMBER            NOT NULL,      -- 대출번호(시퀀스 사용)
   USER_NO        NUMBER            NULL,          -- 회원번호(USER 테이블 참조)
   ISBN           VARCHAR2(13 BYTE) NULL,          -- ISBN(BOOK 테이블 참조)
-  STATUS         NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체)
+  STATUS         NUMBER            NOT NULL,      -- 대출상태(0:대출신청, 1:대출중, 2:반납완료, 3:연체, 4:대출취소)
   CHECKOUT_DATE  DATE              NOT NULL,      -- 대출요청일
   START_DATE     DATE              NULL,          -- 대출시작날짜
   DUE_DATE       DATE              NULL,          -- 대출반납예정일
@@ -441,12 +441,6 @@ INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, ST
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 4, '총 균 쇠', '재레드 다이아몬드', '김영사', '베스트셀러라해서 한번 읽어보고싶어요.', 0);
 INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
-
-
-<<<<<<< HEAD
-=======
-
->>>>>>> main
 
 
 

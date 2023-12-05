@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import kr.co.bookvillage.dto.BookDto;
-
 public interface AdminService  {
   public int insertBook(HttpServletRequest request);
   public void getUserList(HttpServletRequest request, Model model);
@@ -35,4 +33,6 @@ public interface AdminService  {
   public Map<String, Object> getAddBookSearch(HttpServletRequest request);
   public Map<String, Object> addBook(HttpServletRequest request);
   public int updateBookApply(HttpServletRequest request);
+  public int approveFacApply(HttpServletRequest request);
+  public int refuseFacApply(HttpServletRequest request);
 }

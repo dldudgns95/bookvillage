@@ -108,6 +108,7 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
+  
   <!-- 유저 상세 정보 가져오기-->
   <select id="getUserDetail" parameterType="int" resultType="UserDto">
     SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
@@ -208,8 +209,6 @@
     )
   </insert>
   
-  
-  
   <!-- 전체 시설 조회 -->
   <select id="getFacList" resultMap="AttachFacMap">
     SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
@@ -224,7 +223,8 @@
         ON AF.FAC_NO = F.FAC_NO
      WHERE F.FAC_NO NOT IN (SELECT FAC_NO
                               FROM FAC_APPLY
-                             WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart})
+                             WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+                               AND FAC_STATUS IN (0, 1))
   </select>
   
   <!-- 사용 불가능한 시설 조회 -->
@@ -234,7 +234,8 @@
         ON AF.FAC_NO = F.FAC_NO
      WHERE F.FAC_NO IN (SELECT FAC_NO
                           FROM FAC_APPLY
-                         WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart})
+                         WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+                           AND FAC_STATUS IN (0, 1))
   </select>
   
   <!-- 시설 이용 신청 -->
@@ -262,6 +263,7 @@
       FROM FAC_APPLY
      WHERE USER_NO = #{userNo}
        AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+       AND FAC_STATUS IN (0, 1)
   </select>
   
   <!-- 희망도서 수 카운트-->
@@ -467,10 +469,16 @@
   </update>
   
   <!-- 연체중인 회원 반납 시 대출 가능하게 업데이트 -->
-  <update id="activeUser" parameterType="int">
+  <update id="updateActiveUser" parameterType="int">
     UPDATE USER_T
        SET STATUS = 1
-         , END_DATE = SYSDATE
+     WHERE CHECKOUT_NO = #{checkoutNo}
+  </update>
+  
+  <!-- 회원 대출 불가 상태로 업데이트 -->
+  <update id="updateInactiveUser" parameterType="int">
+    UPDATE USER_T
+       SET STATUS = 0
      WHERE CHECKOUT_NO = #{checkoutNo}
   </update>
   
@@ -502,6 +510,20 @@
     UPDATE BOOK_APPLY
        SET STATUS = 1
      WHERE APPLY_NO = #{applyNo}
+  </update>
+  
+  <!-- 시설이용 신청 승인 -->
+  <update id="approveFacApply" parameterType="int">
+    UPDATE FAC_APPLY
+       SET FAC_STATUS = 1
+     WHERE FAC_APPLY_NO = #{facApplyNo}
+  </update>
+  
+  <!-- 시설이용 신청 거절 -->
+  <update id="refuseFacApply" parameterType="int">
+    UPDATE FAC_APPLY
+       SET FAC_STATUS = 2
+     WHERE FAC_APPLY_NO = #{facApplyNo}
   </update>
   
   

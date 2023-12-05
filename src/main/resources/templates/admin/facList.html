@@ -82,6 +82,14 @@
     width: 300px;
   }
   
+  .fac_contents {
+    width: 450px;
+  }
+  
+  .fac_contents #text {
+    width: 450px;
+  }
+  
 </style>
 
 <body>
@@ -110,7 +118,7 @@
         <thead>
           <tr>
             <th scope="col">시설사진</th>
-            <th scope="col">시설정보</th>
+            <th scope="col" class="fac_contents">시설정보</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -121,7 +129,7 @@
           <th:block th:each="fac,vs:${facList}">
             <tr>
               <td scope="row"><img th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300"></td>
-              <td scope="row">
+              <td scope="row" class="fac_contents">
                 <div th:text="|시설명 : ${fac.facilityDto.facName}|"></div>
                 <div th:text="${fac.facilityDto.facContent}"></div>
               </td>

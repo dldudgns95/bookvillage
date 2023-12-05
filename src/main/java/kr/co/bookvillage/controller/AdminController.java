@@ -210,6 +210,18 @@ public class AdminController {
     return "redirect:/admin/bookApplyList.do";
   }
   
+  @PostMapping("/approveFacApply.do")
+  public String approveFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateApproveResult", adminService.approveFacApply(request));
+    return "redirect:/admin/facApplyList.do";
+  }
+  
+  @PostMapping("/refuseFacApply.do")
+  public String refuseFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateRefuseResult", adminService.refuseFacApply(request));
+    return "redirect:/admin/facApplyList.do";
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
