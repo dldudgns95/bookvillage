@@ -57,10 +57,13 @@ public class ApplyController {
   public Map<String, Object> checkFacApply(HttpServletRequest request) {
     return Map.of("checkResult", facService.checkFacApply(request));
   }
-  // 임시
+
   @GetMapping("/faclist.do")
   public String temp() {
     return "apply/faclist";
   }
-  
+  @GetMapping("/bookapply.do")
+  public String bookapply() {
+    return "apply/bookapply";
+  }
 }
