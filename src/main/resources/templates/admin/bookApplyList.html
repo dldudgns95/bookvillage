@@ -74,10 +74,10 @@
                 <td scope="row" th:text="${book.publisher}"></td>
                 <td scope="row">
                   <th:block th:if="${book.status == 0}">
-                    신청중
+                    신청완료
                   </th:block>
                   <th:block th:if="${book.status == 1}">
-                    신청완료
+                    추가완료
                   </th:block>
                 </td>
                 <td scope="row">

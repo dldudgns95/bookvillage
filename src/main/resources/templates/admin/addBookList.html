@@ -111,7 +111,9 @@
               <option value="Title">책제목</option>
               <option value="Author">저자</option>
             </select>
-            <input type="text" class="form-control search_text" name="Query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            <input th:if="${#strings.isEmpty(searchBookName)}" type="text" class="form-control search_text" name="checkQuery" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+            <input th:if="${not #strings.isEmpty(searchBookName)}" type="text" class="form-control search_text bookName" name="checkQuery" th:value="${searchBookName}" aria-label="Username" aria-describedby="basic-addon1">
+            <input type="hidden" class="Query" name="Query">
             <button class="btn btn-outline-secondary" type="button" id="btn_search">
               <i class="fa-solid fa-magnifying-glass white"></i>
             </button>
@@ -152,46 +154,47 @@
     
     const fnBookSearch = () => {
       let query = $('.search_text').val().trim();
-        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
-        if(!checkTitle.test(query)) {
-          alert('검색어를 정확히 입력해주세요(영어,숫자,한글)');
-          return;
+      let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+      if(!checkTitle.test(query)) {
+        alert('검색어를 정확히 입력해주세요(영어,숫자,한글)');
+        return;
+      }
+      query = query.replace(/ /gi,"");
+      $('.Query').val(query);
+      $.ajax({
+        method: 'get',
+        url: '/admin/addBookSearch.do',
+        data: $('#frm_search').serialize(),
+        dataType: 'json',
+        success: (resData) => {
+          console.log(resData);
+          let str = '';
+          $.each(resData.bookList, (i, book) => {
+            str += '<tr>';
+            str += '  <td><img class="table_cover" src="'+book.cover+'"></td>';
+            str += '  <td>'+book.isbn+'</td>';
+            str += '  <td>'+book.title+'</td>';
+            str += '  <td>'+book.author+'</td>';
+            str += '  <td>'+book.publisher+'</td>';
+            str += '  <td>';
+            str += '    <form class="frm_add_book">';
+            str += '      <input type="hidden" name="isbn" value="'+book.isbn+'">';
+            str += '      <input type="hidden" name="title" value="'+book.title+'">';
+            str += '      <input type="hidden" name="cover" value="'+book.cover+'">';
+            str += '      <input type="hidden" name="author" value="'+book.author+'">';
+            str += '      <input type="hidden" name="publisher" value="'+book.publisher+'">';
+            str += '      <input type="hidden" name="pubdate" value="'+book.pubdate+'">';
+            str += '      <input type="hidden" name="description" value="'+book.description+'">';
+            str += '      <input type="hidden" name="categoryName" value="'+book.categoryName+'">';
+            str += '      <input type="hidden" name="categoryId" value="'+book.categoryId+'">';
+            str += '      <button type="button" class="btn_add_book btn btn-primary">도서추가</button>';
+            str += '    </form>';
+            str += '  </td>';
+            str += '</tr>';
+          });
+          $('.search_body').html(str);
         }
-        // $('#hidden_query').val(query);
-        $.ajax({
-          method: 'get',
-          url: '/admin/addBookSearch.do',
-          data: $('#frm_search').serialize(),
-          dataType: 'json',
-          success: (resData) => {
-            console.log(resData);
-            let str = '';
-            $.each(resData.bookList, (i, book) => {
-              str += '<tr>';
-              str += '  <td><img class="table_cover" src="'+book.cover+'"></td>';
-              str += '  <td>'+book.isbn+'</td>';
-              str += '  <td>'+book.title+'</td>';
-              str += '  <td>'+book.author+'</td>';
-              str += '  <td>'+book.publisher+'</td>';
-              str += '  <td>';
-              str += '    <form class="frm_add_book">';
-              str += '      <input type="hidden" name="isbn" value="'+book.isbn+'">';
-              str += '      <input type="hidden" name="title" value="'+book.title+'">';
-              str += '      <input type="hidden" name="cover" value="'+book.cover+'">';
-              str += '      <input type="hidden" name="author" value="'+book.author+'">';
-              str += '      <input type="hidden" name="publisher" value="'+book.publisher+'">';
-              str += '      <input type="hidden" name="pubdate" value="'+book.pubdate+'">';
-              str += '      <input type="hidden" name="description" value="'+book.description+'">';
-              str += '      <input type="hidden" name="categoryName" value="'+book.categoryName+'">';
-              str += '      <input type="hidden" name="categoryId" value="'+book.categoryId+'">';
-              str += '      <button type="button" class="btn_add_book btn btn-primary">도서추가</button>';
-              str += '    </form>';
-              str += '  </td>';
-              str += '</tr>';
-            });
-            $('.search_body').html(str);
-          }
-        })
+      })
     }
     
     const fnAddBook = () => {
@@ -217,8 +220,20 @@
       })
     }
     
+    const fnFocusSearchText = () => {
+      window.addEventListener('DOMContentLoaded', function() {
+        const value = $('.bookName').val();
+        console.log(value);
+        $('.search_text').focus();
+        $('.search_text').val('');
+        $('.search_text').val(value);
+      })
+      
+    }
+    
     fnAddBookSearch();
     fnAddBook();
+    fnFocusSearchText();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

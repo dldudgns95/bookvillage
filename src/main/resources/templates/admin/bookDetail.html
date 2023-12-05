@@ -130,8 +130,11 @@
           </h6>
           <h6 th:utext="${book.description}"></h6>
           <div>
-            <button type="button" class="btn btn-primary">내용수정</button>
-            <button type="button" class="btn btn-primary">도서삭제</button>
+            <form class="frm_book">
+              <input type="hidden" name="isbn" th:value="${book.isbn}">
+              <button type="button" class="btn btn-primary btn_edit">내용수정</button>
+              <button type="button" class="btn btn-primary btn_delete">도서삭제</button>
+            </form>
           </div>
         </div>
       </div>
@@ -140,6 +143,27 @@
   </div>
   
   <script th:inline="javascript">
+   
+   const fnBookEdit = () => {
+      $('.btn_edit').click(() => {
+        $('.frm_book').attr('action', '/admin/bookEdit.form');
+        $('.frm_book').attr('method', 'get');
+        $('.frm_book').submit();
+      })
+    }
+    
+    const fnBookDelete = () => {
+      $('.btn_delete').click(() => {
+        if(confirm('해당 도서를 삭제시키겠습니까?')){
+          $('.frm_book').attr('action', '/admin/deleteBook.do');
+          $('.frm_book').attr('method', 'post');
+          $('.frm_book').submit();
+        }
+      })
+    }
+   
+   fnBookEdit();
+   fnBookDelete();
    
   </script>
   

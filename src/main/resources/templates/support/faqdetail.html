@@ -4,20 +4,23 @@
 <head th:replace="~{/layout/header::head('FAQ')}"></head>
 
 <style>
-	div.child1{
-		width: 100px;
-		height: 300px;
-		float:left;
-		margin-top: 50px;
-		margin-right:20px;
-		background-color: lightsteelblue;
-		text-align: center;
-	}
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
 	div.child2{
-		width: 750px;
-		height: 200px;
-		margin-top:13px;
-		float:left;
+		width: 800px;
+	    height: 500px;
+	    display: inline-block;
+	    margin-left: 320px;
 	}
 	div.child2-1{
 		border: 1px solid #ccc;
@@ -34,15 +37,16 @@
   <div th:replace="~{/layout/header::header}"></div>
   <div class="parent">
     <div>
-      <div class="child1">
-        <ul>
+      <div class="side_bar">
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>		  
+        <ul id="side_list">
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
 		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
 		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-	  <h5 style="text-align: center;">FAQ</h5>
       <div class="child2">
+	  <h5 style="text-align: center;">FAQ</h5>
       <h5 th:text="|${faq.faqTitle}|"></h5>
       <div class="child2-1" th:text="${faq.faqContent}"></div>
       </th:block>

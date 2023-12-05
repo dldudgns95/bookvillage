@@ -5,10 +5,11 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 
+import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
@@ -50,13 +51,18 @@ public interface UserService {
   public int autoUpdatePw90(HttpServletRequest request);
  
   
-  public void getNewBookImage(HttpServletRequest request, Model model);
-  
   public List<FaqDto> getFaqList();
   public List<NoticeDto> getNoticeList();
+  public List<BookDto> getBookList();
+  
+  // 휴면회원.. 
+  public void inactiveUserBatch(); 
+  public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response);
+  
+  
+  
   
 }
-
 
 
 

@@ -7,8 +7,11 @@
   .flex_main {
     display: flex;
     padding-top: 10px;
-    padding-bottom: 10px;
     justify-content: center;
+  }
+  
+  .felx_main_bottom {
+    padding-bottom: 10px;
   }
   
   .flex_div {
@@ -48,7 +51,7 @@
     <a th:href="@{/admin/facApplyList.do}"><div class="flex_div"><h2><i class="fa-solid fa-house"></i> 시설신청</h2></div></a>
   </div>
   
-  <div class="flex_main">
+  <div class="flex_main felx_main_bottom">
     <a th:href="@{/admin/addBookList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서등록</h2></div></a>
     <a th:href="@{/admin/bookList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서관리</h2></div></a>
     <a th:href="@{/admin/bookCheckoutList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서대출</h2></div></a>

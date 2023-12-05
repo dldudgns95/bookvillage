@@ -26,6 +26,7 @@
         <div class="mb-3 row">
           <label for="email" class="col-sm-3 col-form-label">아이디</label>
           <div class="col-sm-9"><input type="text" name="email" id="email" placeholder="이메일" class="form-control"></div>
+          <div class="col-sm-9" id="msg_emailLogin"></div>
         </div>
         
         <div class="mb-3 row">      
@@ -61,11 +62,33 @@
   </div>
   
   <script>
+$(() => {
+  fnCheckEmailLogin();
+})    
+    
+var emailPassed = false;
+    
+    
 $(document).ready(function() {
     $("#btn_findId").on("click", () => {
       location.href = '/user/findId.form';
     });
 });
+
+
+// 이메일 정규식 검사
+const fnCheckEmailLogin = () => {
+  $('#email').keyup((ev) => {
+
+    // 이메일 검사 정규식
+    let regEmail = /^[A-Za-z0-9-_]+@[A-Za-z0-9]{2,}([.][A-Za-z]{2,6}){1,2}$/;
+    if (regEmail.test(ev.target.value)) {
+      $('#msg_emailLogin').text('');
+    } else {
+      $('#msg_emailLogin').text('이메일을 확인하세요.');
+    }
+  });
+}
 
     
   </script>

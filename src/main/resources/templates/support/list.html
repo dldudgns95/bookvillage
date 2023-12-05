@@ -4,23 +4,29 @@
 <head th:replace="~{/layout/header::head('공지사항')}"></head>
 
 <style>
-  div.child1{
-    width: 100px;
-    height: 300px;
-    float:left;
-    margin-top: 50px;
-    margin-right:20px;
-    background-color: lightsteelblue;
+  .side_bar {
+    width: 200px;
+    display: inline-block;
     text-align: center;
-    
-    
+    margin-top: 30px;
+    position: fixed;
   }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
   div.child2{
-    width: 750px;
-    height: 200px;
-    float:left;
-    text-align: center;
+    width: 800px;
+    display: inline-block;
+    text-align: center; 
+    margin-left: 320px;
   }
+  div.btn{
+	margin-left: 300px;  
+	  
+  }    
   
 </style>
   <div th:replace="~{/layout/header::header}"></div>
@@ -29,26 +35,30 @@
 
   <div class="parent">
     <div>
-      <div class="child1">
-        <ul>
+      <div class="side_bar">
+      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
+        <ul id="side_list">
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-      <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-      <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+      	  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+          <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
         </ul>
       </div>
-      <h5 style="text-align: center;">공지사항</h5>
-      <div>
+		<div class="child2">
+		   <h5 style="text-align: center;">공지사항</h5>
+		</div>   
+		<div class="btn">
         <!-- 관리자로 로그인 한 경우 -->
         <th:block th:if="${session.user != null and session.user.auth == 9}">
         <a th:href="@{/support/write.form}">
             <button type="button" class="btn btn-secondary">새 공지 작성하기</button>
           </a>       
-        </th:block>
-      </div>
-      <div class="child2">
+        </th:block> 
+        </div>
+      <div class="child2"> 
        <div id="notice_list" class="notice_list"></div>
-      </div>    
-   <script th:inline="javascript">
+      </div>
+
+           <script th:inline="javascript">
   // 전역 변수
     
       // 전역 변수
@@ -56,27 +66,34 @@
       var totalPage = 0;
     
      
-      const fnGetNoticeList = () => {
-        $.ajax({
-          // 요청
-          type: 'get',
-          url: '/support/getList.do',
-          data: 'page=' + page,
-          // 응답
-          dataType: 'json',
-          success: (resData) => {  // resData = {"uploadList": [], "totalPage": 10}
+     const fnGetNoticeList = () => {
+    $.ajax({
+        // 요청
+        type: 'get',
+        url: '/support/getList.do',
+        data: 'page=' + page,
+        // 응답
+        dataType: 'json',
+        success: (resData) => {  
             totalPage = resData.totalPage;
+            let str = '';
+            // 여기서 align-middle의 따옴표가 빠져있었습니다.
+            str += '<div><table class="table align-middle"><thead><tr><th>순번</th><th>제목</th><th>내용</th><th>작성일</th></tr></thead><tbody>';
             $.each(resData.noticeList, (i, notice) => {
-              let str = '<div class="notice" data-nt_no="' + notice.ntNo + '">';
-              str += '<div>제목: ' + notice.ntTitle + '</div>';
-              str += '<div>작성일: ' + notice.ntDate + '</div>';
-              str += '<div>첨부: ' + notice.ntAttachCount + '개</div>';
-              str += '</div>';
-              $('#notice_list').append(str);
-            })
-          }
-        })
-      }
+				const truncatedTitle = notice.ntTitle.length > 10 ? notice.ntTitle.substring(0, 10) + '...' : notice.ntTitle;
+				const truncatedContent = notice.ntContent.length > 10 ? notice.ntContent.substring(0, 10) + '...' : notice.ntContent;
+				str += '<tr><td>' + notice.ntNo + '</td>';
+                str += '<td><a href="/support/detail.do?ntNo='+ notice.ntNo + '">' + truncatedTitle + '</a></td>';
+                str += '<td>' + truncatedContent + '</td>';                
+                str += '<td>' + notice.ntDate + '</td></tr>';
+                
+            });
+            // 여기서 순서를 바꾸어서 #notice_list에 먼저 추가하도록 수정했습니다.
+            $('#notice_list').append(str);
+            str += '</tbody></table></div>';
+        }
+    });
+}
       const fnNoticeDetail = () => {
         $(document).on('click', '.notice', function(){
           location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');

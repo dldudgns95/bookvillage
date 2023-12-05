@@ -71,15 +71,15 @@
   </insert>
   
   
-  
-  <!-- 사용 가능한 시설 조회 -->
+    <!-- 사용 가능한 시설 조회 -->
   <select id="availableFacList" parameterType="String" resultMap="AttachFacMap">
     SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
       FROM ATTACH_FAC AF INNER JOIN FACILITY F
         ON AF.FAC_NO = F.FAC_NO
      WHERE F.FAC_NO NOT IN (SELECT FAC_NO
                               FROM FAC_APPLY
-                             WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart})
+                             WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+                               AND FAC_STATUS IN (0, 1))
   </select>
   
   <!-- 사용 불가능한 시설 조회 -->
@@ -89,9 +89,18 @@
         ON AF.FAC_NO = F.FAC_NO
      WHERE F.FAC_NO IN (SELECT FAC_NO
                           FROM FAC_APPLY
-                         WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart})
+                         WHERE TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+                           AND FAC_STATUS IN (0, 1))
   </select>
-  
+
+  <!-- 해당유저 해당날짜에 이용신청 여부 확인 -->
+  <select id="checkFacApply" parameterType="Map" resultType="boolean">
+    SELECT COUNT(*)
+      FROM FAC_APPLY
+     WHERE USER_NO = #{userNo}
+       AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
+       AND FAC_STATUS IN (0, 1)
+  </select>
   <!-- 시설 이용 신청 -->
   <insert id="addFacApply" parameterType="Map">
     INSERT INTO FAC_APPLY(
@@ -110,14 +119,7 @@
     , 0
     )
   </insert>
-  <!-- 해당유저 해당날짜에 이용신청 여부 확인 -->
-  <select id="checkFacApply" parameterType="Map" resultType="boolean">
-    SELECT COUNT(*)
-      FROM FAC_APPLY
-     WHERE USER_NO = #{userNo}
-       AND TO_CHAR(FAC_START, 'YYMMDD') = #{facStart}
-  </select>
- 
+
   <!-- 시설이용신청 리스트 조회 -->
   <select id="getFacApplyList" resultMap="FacApplyMap">
     SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME

@@ -82,6 +82,14 @@
     width: 300px;
   }
   
+  .fac_contents {
+    width: 450px;
+  }
+  
+  .fac_contents #text {
+    width: 450px;
+  }
+  
 </style>
 
 <body>
@@ -110,7 +118,7 @@
         <thead>
           <tr>
             <th scope="col">시설사진</th>
-            <th scope="col">시설정보</th>
+            <th scope="col" class="fac_contents">시설정보</th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -121,21 +129,16 @@
           <th:block th:each="fac,vs:${facList}">
             <tr>
               <td scope="row"><img th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300"></td>
-              <td scope="row">
+              <td scope="row" class="fac_contents">
                 <div th:text="|시설명 : ${fac.facilityDto.facName}|"></div>
                 <div th:text="${fac.facilityDto.facContent}"></div>
               </td>
               <td scope="row">
                 <div>
-                  <form th:action="@{/admin/facEdit.form}" method="get">
-                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
-                    <button type="submit" class="btn btn-primary">수정</button>
-                  </form>
-                </div>
-                <div>
-                  <form th:action="@{/admin/facDelete.do}" method="get">
-                    <input type="hidden" name="facApplyNo" th:value="${fac.facilityDto.facNo}">
-                    <button type="submit" class="btn btn-primary">삭제</button>
+                  <form class="frm_fac">
+                    <input type="hidden" name="facNo" th:value="${fac.facilityDto.facNo}">
+                    <button type="button" class="btn btn-primary btn_edit">수정</button>
+                    <button type="button" class="btn btn-primary btn_delete">삭제</button>
                   </form>
                 </div>
               </td>
@@ -157,9 +160,54 @@
         location.href="/admin/facWrite.form";
       })
     }
+    
+    const fnFacEdit = () => {
+      $('.btn_edit').click((ev) => {
+        let frm_fac = $(ev.target).closest('.frm_fac');
+        frm_fac.attr('action', '/admin/facEdit.form');
+        frm_fac.attr('method', 'get');
+        frm_fac.submit();
+      })
+    }
+    
+    const fnFacDelete = () => {
+      $('.btn_delete').click((ev) => {
+        let frm_fac = $(ev.target).closest('.frm_fac');
+        if(confirm('해당 시설을 삭제하시겠습니까?')){
+          frm_fac.attr('action', '/admin/facDelete.do');
+          frm_fac.attr('method', 'post');
+          frm_fac.submit();
+        }
+      })
+    }
+    
+    const fnAddResult = () => {
+      let addResult = /*[[${addResult}]]*/ null;
+      if(addResult !== null) {
+        if(addResult === 1) {
+          alert('해당 시설이 정상적으로 등록되었습니다.');
+        } else {
+          alert('해당 시설의 등록을 실패했습니다.');
+        }
+      }
+    }
+    
+    const fnDeleteResult = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('해당 시설이 정상적으로 삭제되었습니다.');
+        } else {
+          alert('해당 시설의 삭제를 실패했습니다.');
+        }
+      }
+    }
    
     fnFacWrite(); 
-      
+    fnFacEdit();
+    fnFacDelete();
+    fnAddResult();
+    fnDeleteResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

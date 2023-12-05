@@ -33,7 +33,6 @@ import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.util.MyFileUtils;
 import kr.co.bookvillage.util.MyPageUtils;
-
 import lombok.RequiredArgsConstructor;
 import net.coobird.thumbnailator.Thumbnails;
 

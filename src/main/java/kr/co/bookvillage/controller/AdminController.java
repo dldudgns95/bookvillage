@@ -50,6 +50,12 @@ public class AdminController {
     return "admin/userDetail";
   }
   
+  @PostMapping("/userDelete.do")
+  public String userDelete(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteUser(request));
+    return "redirect:/admin/userList.do";
+  }
+  
   @GetMapping("/bookList.do")
   public String bookList(HttpServletRequest request, Model model) {
     adminService.getBookList(request, model); 
@@ -80,13 +86,13 @@ public class AdminController {
   }
   
   @PostMapping("/facAdd.do")
-  public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
-    adminService.addFacility(multiRequest);
-    return "redirect:/admin/facApplyList.do";
+  public String facAdd(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("addResult", adminService.addFacility(multiRequest));
+    return "redirect:/admin/facList.do";
   }
   
   @GetMapping("/insertBooks.do")
-  public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes) throws Exception {
+  public String insertBooks(HttpServletRequest request, RedirectAttributes redirectAttributes){
     redirectAttributes.addFlashAttribute("bookCount", adminService.insertBook(request));
     return "redirect:/admin/bookList.do";
   }
@@ -186,6 +192,12 @@ public class AdminController {
     return "admin/addBookList";
   }
   
+  @GetMapping("/goBookSearch.do")
+  public String goBookSearch(HttpServletRequest request, RedirectAttributes redirectAttributes) { 
+    redirectAttributes.addFlashAttribute("searchBookName", request.getParameter("searchBookName"));
+    return "redirect:/admin/addBookList.do";
+  }
+  
   @ResponseBody
   @GetMapping(value="/addBookSearch.do", produces="application/json")
   public Map<String, Object> addBookSearch(HttpServletRequest request) {
@@ -202,6 +214,42 @@ public class AdminController {
   public String updateBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("updateResult", adminService.updateBookApply(request));
     return "redirect:/admin/bookApplyList.do";
+  }
+  
+  @PostMapping("/approveFacApply.do")
+  public String approveFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateApproveResult", adminService.approveFacApply(request));
+    return "redirect:/admin/facApplyList.do";
+  }
+  
+  @PostMapping("/refuseFacApply.do")
+  public String refuseFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateRefuseResult", adminService.refuseFacApply(request));
+    return "redirect:/admin/facApplyList.do";
+  }
+  
+  @PostMapping("/approveUserFacApply.do")
+  public String approveUserFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateApproveResult", adminService.approveFacApply(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
+  @PostMapping("/refuseUserFacApply.do")
+  public String refuseUserFacApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateRefuseResult", adminService.refuseFacApply(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
+  @PostMapping("/facDelete.do")
+  public String facDelete(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteFac(request));
+    return "redirect:/admin/facList.do";
+  }
+  
+  @PostMapping("/deleteBook.do")
+  public String deleteBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteBook(request));
+    return "redirect:/admin/bookList.do";
   }
   
   // 임시

@@ -16,6 +16,7 @@ public interface AdminMapper {
   public int userTotalCount();
   public List<UserDto> getUserList(Map<String, Object> map);
   public UserDto getUserDetail(int userNo);
+  public int deleteUser(int userNo);
   public int userSearchCount(Map<String, Object> map);
   public List<UserDto> getSearchUserList(Map<String, Object> map);
   public int bookTotalCount();
@@ -32,6 +33,7 @@ public interface AdminMapper {
   public boolean checkFacApply(Map<String, Object> map);
   public int bookApplyCount();
   public List<BookApplyDto> getBookApplyList(Map<String, Object> map);
+  public List<BookApplyDto> getUserBookApplyList(int userNo);
   public BookApplyDto getBookApplyDetail(int applyNo);
   public List<BookCheckoutDto> getUserBookCheckoutList(int userNo);
   public int bookCheckoutCount();
@@ -46,9 +48,15 @@ public interface AdminMapper {
   public int approvalBookCheckoutReturn(int checkoutNo);
   public int activeBook(long isbn);
   public int minusBookCount(int userNo);
-  public int activeUser(int userNo);
+  public int updateActiveUser(int userNo);
+  public int updateInactiveUser(int userNo);
   public List<FacApplyDto> getFacApplyList();
+  public List<FacApplyDto> getUserFacApplyList(int userNo);
   public boolean checkAddBook(String isbn);
   public int addUserBookCount(int userNo);
   public int updateBookApply(int applyNo);
+  public int approveFacApply(int facApplyNo);
+  public int refuseFacApply(int facApplyNo);
+  public int deleteFac(int facNo);
+  public int deleteBook(String isbn);
 }

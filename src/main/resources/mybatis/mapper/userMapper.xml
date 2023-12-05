@@ -27,7 +27,7 @@
     
 
   <select id="getUser" parameterType="Map" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
     <where>
       <if test="email != null">EMAIL = #{email}</if>
@@ -70,6 +70,7 @@
       , PW_MODIFIED_DATE
       , JOINED_DATE
       , STATUS
+      , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -83,6 +84,7 @@
       , SYSDATE
       , SYSDATE
       , 1
+      , 0
      )
    </insert>
    
@@ -94,7 +96,7 @@
    </update>
    
    <select id="findId"  resultType="UserDto">
-      SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+      SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
         FROM USER_T
        WHERE NAME  = #{name}
          AND MOBILE = #{mobile}    
@@ -106,7 +108,7 @@
        WHERE NAME = #{name}
          AND MOBILE = #{mobile}
    </select>
-  
+   
   <insert id="insertNaverUser" parameterType="UserDto">
       INSERT INTO USER_T (
           USER_NO
@@ -116,8 +118,11 @@
         , GENDER
         , AGREE
         , STATE
+        , AUTH
         , PW_MODIFIED_DATE
         , JOINED_DATE
+        , STATUS
+        , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -126,8 +131,11 @@
         , #{gender}
         , #{agree}
         , 1
+        , 0
         , SYSDATE
         , SYSDATE
+        , 1
+        , 0
       )
   </insert>
   
@@ -137,18 +145,9 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-    
-  <select id="nononon" resultMap="UserMap">
-      SELECT U.USER_NO, U.EMAIL, U.NAME, U.MOBILE, U.GENDER, U.AGREE, U.STATE, U.AUTH,
-         U.PW_MODIFIED_DATE, U.JOINED_DATE, U.STATUS, U.BOOKCOUNT, A.LOGIN_DATE
-    FROM USER_T U INNER JOIN ACCESS_T A 
-      ON U.EMAIL = A.EMAIL
-    WHERE A.LOGIN_DATE <![CDATA[ <= ]]>  TRUNC(SYSDATE) - 90;
-  </select>
-  
   
   <select id="changePw90" parameterType="String" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
      WHERE SYSDATE - PW_MODIFIED_DATE  >= 90
        AND EMAIL = #{email}
@@ -161,7 +160,7 @@
        SET PW_MODIFIED_DATE = SYSDATE
      WHERE EMAIL = #{email}
        AND AUTH = 0
-       AND (SYSDATE - NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90;
+       AND (SYSDATE - NVL(PW_MODIFIED_DATE, JOINED_DATE)) >= 90
   </update>
   
   <insert id="kakaoJoin" parameterType="UserDto" >
@@ -177,6 +176,7 @@
       , PW_MODIFIED_DATE
       , JOINED_DATE
       , STATUS
+      , BOOKCOUNT
       ) VALUES (
           USER_T_SEQ.NEXTVAL
         , #{email}
@@ -186,19 +186,20 @@
         , #{agree}
         , 2
         , 0
-      , SYSDATE
-      , SYSDATE
-      , 1
-     )
+        , SYSDATE
+        , SYSDATE
+        , 1
+        , 0
+       )
     
   </insert>
 
-  <!-- 신간 도서 슬라이드!!!!!!!!!!!!!!!!!!!!! -->
-  <select id="newBookList" parameterType="BookDto">
-  SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+  <!-- 신간 도서 슬라이드 -->
+  <select id="getBookList" parameterType="BookDto">
+   SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
     FROM BOOK
-   ORDER BY PUBDATE DESC
-   LIMIT 10
+    ORDER BY PUBDATE DESC
+    OFFSET 0 ROWS FETCH FIRST 10 ROWS ONLY
   </select>
 
   <select id="getFaqList" resultType="FaqDto">
@@ -212,6 +213,54 @@
       FROM NOTICE
      ORDER BY NT_NO DESC
   </select>
+  
+  <update id="updatetmpPw" parameterType="Map">
+    UPDATE USER_T
+       SET PW = #{pwCode}
+         , PW_MODIFIED_DATE = SYSDATE
+     WHERE EMAIL = #{email}
+  </update>
+  
+
+  <insert id="insertActiveUser"  parameterType="String">
+    INSERT INTO USER_T (
+         SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
+           FROM INACTIVE_USER 
+          WHERE EMAIL = #{email}    
+      ) 
+  </insert>
+  
+  
+  <delete id="deleteInactiveUser" parameterType="String">
+    DELETE
+      FROM INACTIVE_USER 
+     WHERE EMAIL = #{email}  
+      
+  </delete>
+  
+  <insert id="insertInactiveUser">
+    INSERT INTO INACTIVE_USER(
+         SELECT USER_NO, U.EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT, SYSDATE
+           FROM USER_T U LEFT OUTER JOIN ACCESS_T A
+             ON U.EMAIL = A.EMAIL
+           WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12
+              OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12)
+           
+    )
+  </insert>
+  
+  
+  <delete id="deleteUserForInactive">
+    DELETE
+      FROM USER_T
+     WHERE EMAIL IN(SELECT U.EMAIL
+                      FROM USER_T U LEFT OUTER JOIN ACCESS_T A
+                        ON U.EMAIL = A.EMAIL
+                     WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12
+                        OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12))
+  </delete>
+  
+  
   
   
 </mapper>
