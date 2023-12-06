@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}">
-  
   <script th:src="https://cdn.jsdelivr.net/npm/chart.js@3"></script>
 </head>
 
@@ -58,10 +57,9 @@
         <div class="book_side_bar">
           <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">자료 검색</h3>
           <ul id="book_side_list">
-            <li><a th:href="@{/mypage/booklist.do}">자료검색</a></li>
-            <li><a th:href="@{/mypage/edit.form}">주제별자료검색</a></li>
-            <li><a th:href="@{/mypage/wish.do}">희망도서신청</a></li>
-            <li><a th:href="@{/mypage/review.do}">사서추천도서</a></li>
+            <li><a th:href="@{/book/search.do}">자료 검색</a></li>
+            <li><a th:href="@{/book/total.do}">전체 도서</a></li>
+            <li><a th:href="@{/book/recommand.do}">추천 도서</a></li>
           </ul>      
         </div>        
       </div>
@@ -157,7 +155,8 @@
         <hr>
          
         <h4 class="detail_title">평점 분포</h4>
-        <h5>평균 ★ [[${starAvg} ?: 0.0]] </h5>
+        <canvas id="barChart" width="400" height="300"></canvas>
+        <h5><span class="starAvgText">평균 ★ [[${starAvg} ?: 0.0]]</span></h5>
         <hr>
         
         <div th:if="${not #lists.isEmpty(bestReview)}">
@@ -242,25 +241,49 @@
             <div class="detail_review">
               <textarea th:if="${session.user == null}" type="text" id="review" class="review" maxlength="100" cols="30" rows="3" disabled="disabled" placeholder="로그인 후 입력가능합니다."></textarea>
               <textarea th:if="${session.user != null}" type="text" id="review" class="review" maxlength="100" cols="30" rows="3" placeholder="한줄평을 남겨주세요(100자 이하)"></textarea>
-              <input type="hidden" id="checkWish" name="checkWish" th:value="${checkWish}">
+              <input type="hidden" id="checkScore" name="checkScore" th:value="${checkScore}">
               <input type="button" value="등록" title="등록" class="btn btn-outline-secondary" onclick="saveReview()" >
             </div>
           </form>
         </div>
         <hr>
         
-        
-
-        
-        <canvas id="barChart" width="400" height="300"></canvas>
-
       </div>
       
     </div>
+    
+    <!--그래프-->
+    <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+          var ctx = document.getElementById('barChart').getContext('2d');
+          
+          var cntStarData = /*[[${cntStar}]]*/ null;
+          console.log('cntStarData:', cntStarData);
+
+          var labels = cntStarData.map(item => item.star);
+          var countStar = cntStarData.map(item => item.countStar);
+          console.log(labels);
+          console.log(countStar);
+          
+          var chart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: labels,
+                  datasets: [{
+                      label: '평점 분포',
+                      backgroundColor: 'rgb(255, 99, 132)',
+                      borderColor: 'rgb(255, 99, 132)',
+                      data: countStar
+                  }]
+              },
+          });
+      });
+    </script>
+    
+    
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
-    <script th:src="@{/js/score_chart.js}"></script>
 
   </div>
   
