@@ -54,25 +54,25 @@
       </div>
       <hr>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">유저번호</label>
+        <label for="userNo" class="col-sm-3 col-form-label">유저번호</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="userNo" th:value="${user.userNo}">
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">이메일</label>
+        <label for="email" class="col-sm-3 col-form-label">이메일</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="email" th:value="${user.email}">
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">이름</label>
+        <label for="name" class="col-sm-3 col-form-label">이름</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="name" th:value="${user.name}">
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">전화번호</label>
+        <label for="mobile" class="col-sm-3 col-form-label">전화번호</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="mobile" th:value="${user.mobile}">
         </div>
@@ -80,14 +80,13 @@
       <div class="mb-1 row">
         <label for="staticEmail" class="col-sm-3 col-form-label">가입형태</label>
         <div class="col-sm-9">
-          <input type="hidden" readonly class="form-control-plaintext" id="staticEmail" th:value="${user.mobile}">
           <span class="form-control-plaintext" th:if="${user.state == 0}">일반회원</span>
           <span class="form-control-plaintext" th:if="${user.state == 1}">네이버간편로그인</span>
           <span class="form-control-plaintext" th:if="${user.state == 2}">구글간편로그인</span>
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">회원등급</label>
+        <label for="auth" class="col-sm-3 col-form-label">회원등급</label>
         <div class="col-sm-9">
           <input type="hidden" readonly class="form-control-plaintext" id="auth" th:value="${user.auth}">
           <span class="form-control-plaintext" th:if="${user.auth == 0}">일반회원</span>
@@ -96,19 +95,25 @@
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">비밀번호수정일</label>
+        <label for="pwModifiedDate" class="col-sm-3 col-form-label">비밀번호수정일</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="pwModifiedDate" th:value="${#dates.format(user.pwModifiedDate, 'yyyy-MM-dd')}">
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">회원가입일</label>
+        <label for="joinedDate" class="col-sm-3 col-form-label">회원가입일</label>
         <div class="col-sm-9">
           <input type="text" readonly class="form-control-plaintext" id="joinedDate" th:value="${#dates.format(user.joinedDate, 'yyyy-MM-dd')}">
         </div>
       </div>
       <div class="mb-1 row">
-        <label for="staticEmail" class="col-sm-3 col-form-label">대출가능여부</label>
+        <label for="bookcount" class="col-sm-3 col-form-label">현재 대출권수</label>
+        <div class="col-sm-9">
+          <input type="text" readonly class="form-control-plaintext" id="bookcount" th:value="|${user.bookcount}권|">
+        </div>
+      </div>
+      <div class="mb-1 row">
+        <label for="status" class="col-sm-3 col-form-label">대출가능여부</label>
         <div class="col-sm-9">
           <input type="hidden" readonly class="form-control-plaintext" id="status" th:value="${user.status}">
           <span class="form-control-plaintext" th:if="${user.status == 0}">불가능</span>

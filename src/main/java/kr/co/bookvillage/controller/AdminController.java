@@ -264,6 +264,18 @@ public class AdminController {
     return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
   }
   
+  @GetMapping("/facEdit.form")
+  public String facEditForm(HttpServletRequest request, Model model) {
+    model.addAttribute("facApply", adminService.getFacDetail(request));
+    return "admin/facEdit";
+  }
+  
+  @PostMapping("/facEdit.do")
+  public String facEdit(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("editResult", adminService.editFacility(multiRequest));
+    return "redirect:/admin/facList.do";
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
