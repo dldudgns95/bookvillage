@@ -18,13 +18,25 @@
   }
   
   .mypage {
-    width: 700px;
+    width: 800px;
     height: 500px;
     display: inline-block;
-    font-size: 30px;
     text-align: center;
     margin-left: 320px;
     padding-top: 30px;
+  }
+  
+    .table_title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 500px;
+    height: 41px;
+  }
+  
+  .table {
+    
+    width: 850px;
   }
   
 </style>
@@ -47,11 +59,103 @@
       </ul>    
     </div>
     <th:block th:if="${session.user != null}">
-    <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
-    </th:block>
+    <div class="mypage">
+      <h3>희망도서 신청목록</h3>
+      <span style="font-size: 15px;">신청상태 : 신청중 - 관리자가 확인중입니다(수정/취소가능) / 신청완료 - 도서입고완료</span>
+      <table border="1" class="table table-hover" style="font-size: 15px;">
+        <thead>
+          <tr>
+            <td>도서명</td>
+            <td>저자</td>
+            <td>출판사</td>
+            <td>신청사유</td>
+            <td>신청상태</td>
+            <td>신청수정/취소</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:if="${#lists.isEmpty(applyBookList)}">
+            <td colspan="6">신청내역이 없습니다.</td>
+          </tr>
+          <tr th:each="applyBook : ${applyBookList}" th:if="${applyBook != null and session.user != null and session.user.userNo eq applyBook.userDto.userNo}">
+            <td th:text="${applyBook.bookName}"></td>
+            <td th:text="${applyBook.author}"></td>
+            <td th:text="${applyBook.publisher}"></td>
+            <td th:text="${applyBook.wish}"></td>
+            <td>
+              <span th:if="${applyBook.status == 0}">신청중</span>
+              <span th:if="${applyBook.status == 1}">신청완료</span>
+            </td>
+            <td>
+              <th:block th:if="${applyBook.status == 0}">
+                <form id="frm_btn" method="post">
+                  <input type="hidden" name="applyNo" th:value="${applyBook.applyNo}">
+                  <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+                  <input type="hidden" name="wish" th:value="${applyBook.wish}">
+                  <input type="hidden" name="bookName" th:value="${applyBook.bookName}">
+                  <input type="hidden" name="author" th:value="${applyBook.author}">
+                  <input type="hidden" name="publisher" th:value="${applyBook.publisher}">
+                  <button type="button" id="btn_modifyApply" class="btn btn-outline-success">수정</button>
+                  <button type="button" id="btn_cancleApply" class="btn btn-success">신청취소</button>
+                </form>
+              </th:block>
+              <th:block th:if="${applyBook.status == 1}">
+
+              </th:block>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot th:if="${not #lists.isEmpty(applyBookList)}">
+          <tr>
+            <td colspan="6" th:utext="${paging}"></td>
+          </tr>
+        </tfoot>
+      </table>    
+    </div>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    var frmBtn = $('#frm_btn');
+    
+    const fnEditApplyBook = () => {
+      $('#btn_modifyApply').click(() => {
+        frmBtn.attr('action', '/mypage/applyBookEdit.form');
+        frmBtn.submit();
+      })
+    }
+    
+    const fnCancleBookApply = () => {
+      $(document).on('click', '#btn_cancleApply', (ev) => {
+        var applyNoValue = $('input[name="applyNo"]').val();
+        if(!confirm('희망도서신청을 취소할까요?')){
+          return;
+        }        
+        $.ajax({
+          type: 'post',
+          url: '/mypage/deleteApply.do',
+          data: {
+            applyNo: applyNoValue
+          },
+          success: function(resData) {
+            if(resData.removeResult === 1) {
+              alert('희망도서신청이 취소되었습니다');
+              location.reload();
+            } else {
+              alert('희망도서신청 취소가 불가능합니다.');
+              return;
+            }
+          }
+        })
+      })
+    }
+    
+    
+    fnEditApplyBook();
+    fnCancleBookApply();
+  </script>
   
 </body>
 </html>

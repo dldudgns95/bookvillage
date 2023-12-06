@@ -1,5 +1,6 @@
 package kr.co.bookvillage.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,10 +11,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 
@@ -69,7 +74,7 @@ public class MypageController {
     return "mypage/review";
   }
   
-  // 도서대출연기신청(대출상태가 대출중인경우에만가능) - 수정해야함
+  // 도서대출연기신청(대출상태가 대출중인경우에만가능)
   @GetMapping("/delayBookCheckout.do")
   public String delayBookCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
@@ -79,6 +84,15 @@ public class MypageController {
     return "redirect:/mypage/booklist.do";
   }
   
+  // 대출신청취소
+  @GetMapping("/cancleCheckout.do")
+  public String cancleCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int deleteResult = mypageService.cancleBookCheckout(request);
+    redirectAttributes.addFlashAttribute("deleteResult", deleteResult);
+    return "redirect:/mypage/booklist.do";
+  }
+  
+  
   // 관심도서목록 페이지로 이동
   @GetMapping("/wish.do")
   public String wishList(HttpServletRequest request, Model model) {
@@ -86,15 +100,66 @@ public class MypageController {
     return "mypage/wish";
   }
   
+  // 관심도서목록에서 삭제
+  @ResponseBody
+  @PostMapping(value="/deleteWish.do", produces="application/json")
+  public Map<String, Object> deleteWish(@RequestParam(value="isbn", required=false, defaultValue="0") String isbn,
+                                        @RequestParam(value="userNo", required=false, defaultValue="0") int userNo) {
+    Map<String, Object> result = new HashMap<>();
+    int removeResult = mypageService.removeWish(isbn, userNo);
+    result.put("removeResult", removeResult);
+    return result;
+  }
+  
+  // 희망도서목록 페이지로 이동
+  @GetMapping("/applyBook.do")
+  public String applyBook(HttpServletRequest request, Model model) {
+    mypageService.loadBookApplyList(request, model);
+    return "mypage/applyBook";
+  }
+  
+  // 희망도서 수정페이지로 이동
+  @PostMapping("/applyBookEdit.form")
+  public String editApply(@ModelAttribute("applyBook") BookApplyDto applyBook) {
+    return "mypage/applyBookEdit";
+  }
+  
+  // 희망도서 수정내역 저장
+  @PostMapping("/modifyApplyBook.form")
+  public String modifyBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    int modifyResult = mypageService.modifyBookApply(request);
+    redirectAttributes.addFlashAttribute("modifyResult", modifyResult);
+    return "redirect:/mypage/applyBook.do";
+  }
+  
+  // 희망도서신청취소
+  @ResponseBody
+  @PostMapping(value="/deleteApply.do", produces="application/json")
+  public Map<String, Object> removeApply(@RequestParam(value="applyNo", required=false, defaultValue="0") int applyNo) {
+    
+    Map<String, Object> result = new HashMap<>();
+    int removeResult = mypageService.deleteApply(applyNo);
+    result.put("removeResult", removeResult);
+    return result;
+  }
+  
   // 시설이용신청목록 페이지로 이동
   @GetMapping("/facApply.do")
-  public String facApplyList() {
+  public String facApply(HttpServletRequest request, Model model) {
+    mypageService.loadFacApplyList(request, model);
     return "mypage/facApply";
   }
   
-  @GetMapping("/applyBook.do")
-  public String applyBook() {
-    return "mypage/applyBook";
+  // 시설이용신청 취소
+  @ResponseBody
+  @PostMapping(value="/deleteFacApply.do", produces="application/json")
+  public Map<String, Object> deleteFacApply(@RequestParam(value="facApplyNo", required=false, defaultValue="0") int facApplyNo){
+    
+    Map<String, Object> result = new HashMap<>();
+    int deleteResult = mypageService.deleteFacApply(facApplyNo);
+    result.put("deleteResult", deleteResult);
+       
+    return result;
   }
   
   
