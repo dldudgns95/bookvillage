@@ -3,7 +3,19 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.bookvillage.dao.UserMapper">
+
+<mapper namespace="kr.co.bookvillage.dao.MainMapper">
+
+
+  
+  <select id="reviewTop3List" >
+    SELECT B.ISBN, B.TITLE, B.COVER, B.AUTHOR, B.PUBLISHER, B.PUBDATE, B.STATUS, S.REVIEW_DATE, S.STAR
+      FROM BOOK B INNER JOIN SCORE S 
+        ON B.ISBN = S.ISBN
+    ORDER BY
+        (SELECT AVG(STAR) FROM SCORE WHERE ISBN = B.ISBN) DESC
+    FETCH FIRST 10 ROWS ONLY
+  </select>
   
   
   
