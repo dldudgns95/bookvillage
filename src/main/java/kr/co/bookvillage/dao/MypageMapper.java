@@ -35,4 +35,5 @@ public interface MypageMapper {
   public int deleteApply(int applyNo);                                           // 희망도서신청취소
   public int getFacApplyCount(int userNo);                                       // 시설이용신청갯수
   public List<FacApplyDto> getFacApplyList(Map<String, Object> map);             // 시설이용신청리스트
+  public int deleteFacApply(int facApplyNo);                                     // 시설이용신청취소(승인대기일때만 가능)
 }

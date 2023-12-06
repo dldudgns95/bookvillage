@@ -80,6 +80,8 @@
       <result column="FAC_NAME" property="facName" />
     </association>
   </resultMap>
+  
+  
 
   <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
@@ -248,6 +250,13 @@
              WHERE FA.USER_NO = #{userNo}) A
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
+  
+  <!-- 시설이용신청 취소 -->
+  <delete id="deleteFacApply" parameterType="int">
+    DELETE
+      FROM FAC_APPLY
+     WHERE FAC_STATUS = 0 AND FAC_APPLY_NO = #{facApplyNo}
+  </delete>
   
   
 

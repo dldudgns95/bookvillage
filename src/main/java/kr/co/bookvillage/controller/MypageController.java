@@ -150,5 +150,17 @@ public class MypageController {
     return "mypage/facApply";
   }
   
+  // 시설이용신청 취소
+  @ResponseBody
+  @PostMapping(value="/deleteFacApply.do", produces="application/json")
+  public Map<String, Object> deleteFacApply(@RequestParam(value="facApplyNo", required=false, defaultValue="0") int facApplyNo){
+    
+    Map<String, Object> result = new HashMap<>();
+    int deleteResult = mypageService.deleteFacApply(facApplyNo);
+    result.put("deleteResult", deleteResult);
+       
+    return result;
+  }
+  
   
 }

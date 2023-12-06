@@ -300,8 +300,12 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("facApplyList", facApplyList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/facApply.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
-    
-    
+
+  }
+  
+  @Override
+  public int deleteFacApply(int facApplyNo) {
+    return mypageMapper.deleteFacApply(facApplyNo);
   }
   
 
