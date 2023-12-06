@@ -31,4 +31,5 @@ public interface MypageMapper {
   public int getApplyBookCount(int userNo);                                      // 희망도서신청갯수
   public List<BookApplyDto> getApplyBookList(Map<String, Object> map);           // 희망도서신청리스트
   public int updateBookApply(BookApplyDto applyBook);                            // 희망도서신청내역수정
+  public int deleteApply(int applyNo);                                           // 희망도서신청취소
 }

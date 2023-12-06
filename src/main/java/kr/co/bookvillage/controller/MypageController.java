@@ -138,6 +138,16 @@ public class MypageController {
     return "redirect:/mypage/applyBook.do";
   }
   
+  // 희망도서신청취소
+  @ResponseBody
+  @PostMapping(value="/deleteApply.do", produces="application/json")
+  public Map<String, Object> removeApply(@RequestParam(value="applyNo", required=false, defaultValue="0") int applyNo) {
+    
+    Map<String, Object> result = new HashMap<>();
+    int removeResult = mypageService.deleteApply(applyNo);
+    result.put("removeResult", removeResult);
+    return result;
+  }
   
   
 }

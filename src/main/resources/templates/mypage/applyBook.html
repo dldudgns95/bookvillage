@@ -127,8 +127,34 @@
       })
     }
     
+    const fnCancleBookApply = () => {
+      $(document).on('click', '#btn_cancleApply', (ev) => {
+        var applyNoValue = $('input[name="applyNo"]').val();
+        if(!confirm('희망도서신청을 취소할까요?')){
+          return;
+        }        
+        $.ajax({
+          type: 'post',
+          url: '/mypage/deleteApply.do',
+          data: {
+            applyNo: applyNoValue
+          },
+          success: function(resData) {
+            if(resData.removeResult === 1) {
+              alert('희망도서신청이 취소되었습니다');
+              location.reload();
+            } else {
+              alert('희망도서신청 취소가 불가능합니다.');
+              return;
+            }
+          }
+        })
+      })
+    }
+    
     
     fnEditApplyBook();
+    fnCancleBookApply();
   </script>
   
 </body>

@@ -272,5 +272,10 @@ public class MypageServiceImpl implements MypageService {
     return modifyResult;
   }
   
+  @Override
+  public int deleteApply(int applyNo) {
+    return mypageMapper.deleteApply(applyNo);
+  }
+  
 
 }

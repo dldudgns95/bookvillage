@@ -18,7 +18,7 @@
   }
   
   .mypage {
-    width: 700px;
+    width: 800px;
     height: 500px;
     display: inline-block;
     font-size: 30px;
@@ -47,7 +47,9 @@
       </ul>       
     </div>
     <th:block th:if="${session.user != null}">
-    <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
+    <div class="mypage">
+      <h3>시설이용 신청내역</h3>
+    </div>
     </th:block>
   </div>
   

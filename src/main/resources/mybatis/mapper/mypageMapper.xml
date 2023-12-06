@@ -209,7 +209,12 @@
      WHERE APPLY_NO = #{applyNo}
   </update>
   
-  
+  <!-- 희망도서 신청취소 -->
+  <delete id="deleteApply" parameterType="int">
+    DELETE
+      FROM BOOK_APPLY
+     WHERE APPLY_NO = #{applyNo}
+  </delete>
   
 
 </mapper>
