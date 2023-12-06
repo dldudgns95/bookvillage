@@ -241,8 +241,9 @@ public class AdminServiceImpl implements AdminService {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
+    facContent = facContent.replace("\r\n","<br>");
+    System.out.println("serviceImpl:: facContent = " + facContent);
     int checkStatus = Integer.parseInt(multiRequest.getParameter("checkStatus"));
-    System.out.println("checkStatus : " + checkStatus);
     FacilityDto facility = FacilityDto.builder()
                                       .facName(facName)
                                       .facContent(facContent)
@@ -638,6 +639,20 @@ public class AdminServiceImpl implements AdminService {
     String isbn = request.getParameter("isbn");
     return adminMapper.deleteBook(isbn);
   }
+  
+  @Override
+  public int activeUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.updateActiveUser(userNo);
+  }
+  
+  @Override
+  public int inactiveUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.updateInactiveUser(userNo);
+  }
+  
+  
   
   
 }

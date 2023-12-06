@@ -37,4 +37,6 @@ public interface AdminService  {
   public int refuseFacApply(HttpServletRequest request);
   public int deleteFac(HttpServletRequest request);
   public int deleteBook(HttpServletRequest request);
+  public int activeUser(HttpServletRequest request);
+  public int inactiveUser(HttpServletRequest request);
 }

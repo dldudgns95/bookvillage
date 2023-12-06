@@ -118,7 +118,8 @@
       <div>
         <form class="frm_user">
           <input type="hidden" name="userNo" th:value="${user.userNo}">
-          <button type="button" class="btn btn-primary btn_edit">회원수정</button>
+          <button type="button" class="btn btn-primary btn_inactiveUser" th:if="${user.status == 1}">대출불가로 설정</button>
+          <button type="button" class="btn btn-primary btn_activeUser" th:if="${user.status == 0}">대출가능하게 설정</button>
           <button type="button" class="btn btn-primary btn_delete">회원탈퇴</button>
         </form>
       </div>
@@ -359,11 +360,23 @@
       }
     }
     
-    const fnUserEdit = () => {
-      $('.btn_edit').click(() => {
-        $('.frm_user').attr('action', '/admin/userEdit.form');
-        $('.frm_user').attr('method', 'get');
-        $('.frm_user').submit();
+    const fnInactiveUser = () => {
+      $('.btn_inactiveUser').click(() => {
+        if(confirm('해당 유저의 도서대출을 불가능하게 변경하시겠습니까?')){
+          $('.frm_user').attr('action', '/admin/inactiveUser.do');
+          $('.frm_user').attr('method', 'post');
+          $('.frm_user').submit();
+        }
+      })
+    }
+    
+    const fnactiveUser = () => {
+      $('.btn_activeUser').click(() => {
+        if(confirm('해당 유저의 도서대출을 가능하게 변경하시겠습니까?')){
+          $('.frm_user').attr('action', '/admin/activeUser.do');
+          $('.frm_user').attr('method', 'post');
+          $('.frm_user').submit();
+        }
       })
     }
     
@@ -399,14 +412,39 @@
       }
     }
     
+    const fnUpdateActiveUserResult = () => {
+      let updateActiveUserResult = /*[[${updateActiveUserResult}]]*/ null;
+      if(updateActiveUserResult !== null) {
+        if(updateActiveUserResult === 1) {
+          alert('해당 유저의 도서 대출을 가능하게 설정하였습니다.');
+        } else {
+          alert('도서대출 가능 설정 실패');
+        }
+      }
+    }
+    
+    const fnUpdateInactiveUserResult = () => {
+      let updateInactiveUserResult = /*[[${updateInactiveUserResult}]]*/ null;
+      if(updateInactiveUserResult !== null) {
+        if(updateInactiveUserResult === 1) {
+          alert('해당 유저의 도서 대출을 불가능하게 설정하였습니다.');
+        } else {
+          alert('도서대출 불가능 설정 실패');
+        }
+      }
+    }
+    
     fnCheckBookCheckout();  
     fnCheckBookCheckoutReturn();
     fnUpdateCheckoutResult();
     fnUpdateReturnResult();
-    fnUserEdit();
+    fnInactiveUser();
+    fnactiveUser();
     fnUserDelete();
     fnUpdateApproveResult();
     fnUpdateRefuseResult();
+    fnUpdateActiveUserResult();
+    fnUpdateInactiveUserResult();
     
   </script>
   

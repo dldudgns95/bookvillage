@@ -480,14 +480,14 @@
   <update id="updateActiveUser" parameterType="int">
     UPDATE USER_T
        SET STATUS = 1
-     WHERE CHECKOUT_NO = #{checkoutNo}
+     WHERE USER_NO = #{userNo}
   </update>
   
   <!-- 회원 대출 불가 상태로 업데이트 -->
   <update id="updateInactiveUser" parameterType="int">
     UPDATE USER_T
        SET STATUS = 0
-     WHERE CHECKOUT_NO = #{checkoutNo}
+     WHERE USER_NO = #{userNo}
   </update>
   
   <!-- 시설이용신청 리스트 조회 -->

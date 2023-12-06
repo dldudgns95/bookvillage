@@ -130,8 +130,8 @@
             <tr>
               <td scope="row"><img th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300"></td>
               <td scope="row" class="fac_contents">
-                <div th:text="|시설명 : ${fac.facilityDto.facName}|"></div>
-                <div th:text="${fac.facilityDto.facContent}"></div>
+                <div><h4 th:text="${fac.facilityDto.facName}"></h4></div>
+                <div th:utext="${fac.facilityDto.facContent}"></div>
               </td>
               <td scope="row">
                 <div>

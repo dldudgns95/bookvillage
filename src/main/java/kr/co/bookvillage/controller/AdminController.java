@@ -252,6 +252,18 @@ public class AdminController {
     return "redirect:/admin/bookList.do";
   }
   
+  @PostMapping("/activeUser.do")
+  public String activeUser(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateActiveUserResult", adminService.activeUser(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
+  @PostMapping("/inactiveUser.do")
+  public String inactiveUser(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("updateInactiveUserResult", adminService.inactiveUser(request));
+    return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
