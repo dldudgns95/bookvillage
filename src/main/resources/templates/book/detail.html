@@ -155,7 +155,9 @@
         <hr>
          
         <h4 class="detail_title">평점 분포</h4>
-        <canvas id="barChart" width="400" height="300"></canvas>
+        <div th:if="${not #lists.isEmpty(scoreList)}">
+          <canvas id="barChart" width="400" height="300"></canvas>
+        </div>
         <h5><span class="starAvgText">평균 ★ [[${starAvg} ?: 0.0]]</span></h5>
         <hr>
         

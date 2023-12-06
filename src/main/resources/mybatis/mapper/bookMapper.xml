@@ -122,6 +122,5 @@
      WHERE USER_NO = #{userNo}
        AND STATUS IN (0, 1)
   </select>
-  
-  
+
 </mapper>

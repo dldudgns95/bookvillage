@@ -98,14 +98,12 @@
                     <thead>
                       <tr>
                         <th>대출상태</th>
-                        <th>반납예정일</th>
                         <th>관심도서</th>
                         <th>상세보기</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td th:text="${book.status == 1 ? '대출가능' : '대출불가'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
                         <td th:text="${book.status == 1 ? '대출가능' : '대출불가'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
                         <td>
                           <form method="post"  th:id="WishForm" >
