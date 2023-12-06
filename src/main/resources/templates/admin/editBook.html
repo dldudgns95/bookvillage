@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 100px;
+    width:700px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .table td {
+    text-align: center;
+  }
+  
+  img {
+    width: 100px;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서등록</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <h1>도서 수정하기</h1>
+      </div>
+      <hr>
+      <form enctype="multipart/form-data" method="post" th:action="@{/admin/editBook.do}">
+        <div class="mb-3 row">
+          <label for="isbn" class="col-sm-2 col-form-label">ISBN</label>
+          <div class="col-sm-5">
+            <input type="text" readonly class="form-control" id="isbn" name="isbn" th:value="${book.isbn}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="title" class="col-sm-2 col-form-label">책 제목</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="title" name="title" th:value="${book.title}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="author" class="col-sm-2 col-form-label">저자</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="author" name="author" th:value="${book.author}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="publisher" name="publisher" th:value="${book.publisher}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="pubdate" class="col-sm-2 col-form-label">출간일(EX : 2023/01/01)</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="pubdate" name="pubdate" th:value="${book.pubdate}">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="categoryName" class="col-sm-2 col-form-label">카테고리</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="categoryName" name="categoryName" th:value="${book.categoryName}">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">책 소개</label>
+          <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">이미지 파일 선택(이미지 파일을 선택하시면 자동으로 변경됩니다.)</label>
+          <input class="form-control" type="file" id="files" name="files" accept="image/jpeg,image/gif,image/png" onchange='chk_file_type(this)'>
+        </div>
+        <div>
+          <div><span>현재 이미지 파일</span></div>
+          <img th:src="@{${book.cover}}">
+        </div>
+        <input type="hidden" name="cover" th:value="${book.cover}">
+        <button type="submit" class="btn btn-primary" id="btn_add">도서 수정완료</button>
+      </form>
+    </div>
+  </div>
+  
+  <script th:inline="javascript">
+    
+    const fnDescription = () => {
+      let description = /*[[${book.description}]]*/ null;
+      description = description.replace(/<br\s*[\/]?>/gi, "\n");
+      $('#description').append(description);
+    }
+    
+    fnDescription();
+    
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

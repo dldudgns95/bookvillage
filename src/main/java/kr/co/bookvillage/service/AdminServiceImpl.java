@@ -739,8 +739,196 @@ public class AdminServiceImpl implements AdminService {
       }
     }
     return editResult;
-    
   }
   
+  @Override
+  public int addDirectBook(MultipartHttpServletRequest multiRequest) throws Exception {
+    
+    String isbn = multiRequest.getParameter("isbn");
+    String title = multiRequest.getParameter("title");
+    String author = multiRequest.getParameter("author");
+    String publisher = multiRequest.getParameter("publisher");
+    String pubdate = multiRequest.getParameter("pubdate");
+    pubdate = pubdate.replaceAll("/", "-");
+    System.out.println("pubdate : " + pubdate);
+    Date date = null;
+    if(!pubdate.isEmpty()) {
+      date = java.sql.Date.valueOf(pubdate);
+    }
+    String description = multiRequest.getParameter("description");
+    description = description.replace("\r\n","<br>");
+    String categoryName = multiRequest.getParameter("categoryName");
+    String url = "";
+    List<MultipartFile> files = multiRequest.getFiles("files");
+    
+    int attachCount;
+    if(files.get(0).getSize() == 0) {
+      attachCount = 1;
+    } else {
+      attachCount = 0;
+    }
+    
+    for(MultipartFile multipartFile : files) {
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        String path = "";
+          path = adminFileUtils.getBookImagePath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String originalFilename = multipartFile.getOriginalFilename();
+        // String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
+        String extName = null;
+        String[] arr = originalFilename.split("\\.");  // [.] 또는 \\.
+        extName = arr[arr.length - 1];
+        String filesystemName = isbn + "." + extName;
+        
+        System.out.println("path : " + path);
+        
+        url = path + "/" + filesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
+        File file = new File(dir, filesystemName);
+        
+        // 같은 파일 있으면 지워버림
+        if(file.exists()) {
+          file.delete();
+        }
+        
+        System.out.println("file : " + file);
+        
+          //multipartFile.transferTo(file); // 이거 안됨
+          multipartFile.transferTo(paths.toFile());
+        
+      String contentType = Files.probeContentType(paths); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
+      int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
+      
+      // 썸네일이 있으면 원본파일 썸네일로 만들기
+      if(hasThumbnail == 1) {
+        File thumbnail = new File(dir, "s_" + filesystemName); // small 이미지를 의미하는 s_를 덧붙임
+        Thumbnails.of(file)
+                  .size(100, 100)       // 가로 100px, 세로 100px
+                  .toFile(thumbnail);
+      }
+      
+      // System.out.println("attachFac : " + attachFac);
+      // attachCount += adminMapper.addFacImage(attachFac);
+        
+      }
+    }
+    
+    BookDto bookDto = BookDto.builder()
+                             .isbn(isbn)
+                             .title(title)
+                             .author(author)
+                             .publisher(publisher)
+                             .pubdate(date)
+                             .description(description)
+                             .categoryName(categoryName)
+                             .cover(url)
+                             .build();
+    
+    return adminMapper.insertDirectBook(bookDto);
+  }
+  
+  @Override
+  public int editBook(MultipartHttpServletRequest multiRequest) throws Exception {
+    
+    String isbn = multiRequest.getParameter("isbn");
+    String title = multiRequest.getParameter("title");
+    String author = multiRequest.getParameter("author");
+    String publisher = multiRequest.getParameter("publisher");
+    String pubdate = multiRequest.getParameter("pubdate");
+    pubdate = pubdate.replaceAll("/", "-");
+    System.out.println("pubdate : " + pubdate);
+    Date date = null;
+    if(!pubdate.isEmpty()) {
+      date = java.sql.Date.valueOf(pubdate);
+    }
+    String description = multiRequest.getParameter("description");
+    description = description.replace("\r\n","<br>");
+    String categoryName = multiRequest.getParameter("categoryName");
+    String url = "";
+    List<MultipartFile> files = multiRequest.getFiles("files");
+    
+    int attachCount;
+    if(files.get(0).getSize() == 0) {
+      attachCount = 1;
+    } else {
+      attachCount = 0;
+    }
+    
+    // 파일을 첨부 안했으면 기존 cover를 저장
+    if(attachCount == 1) {
+      url = multiRequest.getParameter("cover");
+    }
+    
+    for(MultipartFile multipartFile : files) {
+      if(multipartFile != null && !multipartFile.isEmpty()) {
+        String path = "";
+          path = adminFileUtils.getBookImagePath();
+        File dir = new File(path);
+        if(!dir.exists()) {
+          dir.mkdirs();
+        }
+        
+        String originalFilename = multipartFile.getOriginalFilename();
+        // String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
+        String extName = null;
+        String[] arr = originalFilename.split("\\.");  // [.] 또는 \\.
+        extName = arr[arr.length - 1];
+        String filesystemName = isbn + "." + extName;
+        
+        System.out.println("path : " + path);
+        
+        url = path + "/" + filesystemName;
+        
+        Path paths = Paths.get(url).toAbsolutePath();
+        
+        File file = new File(dir, filesystemName);
+        
+        // 같은 파일 있으면 지워버림
+        if(file.exists()) {
+          file.delete();
+        }
+        
+        System.out.println("file : " + file);
+        
+          //multipartFile.transferTo(file); // 이거 안됨
+          multipartFile.transferTo(paths.toFile());
+        
+      String contentType = Files.probeContentType(paths); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
+      int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
+      
+      // 썸네일이 있으면 원본파일 썸네일로 만들기
+      if(hasThumbnail == 1) {
+        File thumbnail = new File(dir, "s_" + filesystemName); // small 이미지를 의미하는 s_를 덧붙임
+        Thumbnails.of(file)
+                  .size(100, 100)       // 가로 100px, 세로 100px
+                  .toFile(thumbnail);
+      }
+      
+      // System.out.println("attachFac : " + attachFac);
+      // attachCount += adminMapper.addFacImage(attachFac);
+        
+      }
+    }
+    
+    BookDto bookDto = BookDto.builder()
+                             .isbn(isbn)
+                             .title(title)
+                             .author(author)
+                             .publisher(publisher)
+                             .pubdate(date)
+                             .description(description)
+                             .categoryName(categoryName)
+                             .cover(url)
+                             .build();
+    
+    return adminMapper.editBook(bookDto);
+    
+  }
   
 }

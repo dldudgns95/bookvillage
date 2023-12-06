@@ -21,6 +21,12 @@ public class AdminFileUtils {
     return "/admin/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
   
+  // 도서 직접 등록시 사용된 이미지가 저장될 경로 반환하기
+  public String getBookImagePath() {
+    LocalDate today = LocalDate.now();
+    return "/admin/book/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+  }
+  
   // 블로그 이미지가 저장된 어제 경로를 반환
   public String getFacImagePathInYesterday() {
     LocalDate date = LocalDate.now();
