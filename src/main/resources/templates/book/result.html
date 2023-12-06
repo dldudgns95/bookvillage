@@ -136,8 +136,8 @@
           <div th:if="${#lists.size(bookSearchList) == 0}">
               <h3>검색 결과가 없습니다.</h3>
               <img th:src="@{'/image/big_logo.png'}" alt="Book village">
-              <p>희망도서 신청하러 가기 할 예정</p>
-              <p>이전 화면으로 돌아가기 할 예정</p>
+              <p><a href="/apply/bookapply.do" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-right"></i> 희망도서 신청하러 가기</a></p>
+              <p><a href="javascript:void(0);" id="BackToSearch" class="btn btn-outline-secondary"><i class="fa-solid fa-arrow-left"></i> 이전 페이지로 돌아가기</a></p>
           </div>
         </div>
 
