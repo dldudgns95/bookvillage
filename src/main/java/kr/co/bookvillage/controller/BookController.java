@@ -41,6 +41,14 @@ public class BookController {
     bookService.getRecoBook(model);
     return "book/search";
   }
+  @GetMapping("/total.do")
+  public String total(Model model) {
+    return "book/total";
+  }
+  @GetMapping("/recommand.do")
+  public String recommand(Model model) {
+    return "book/recommand";
+  }
   // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
   @GetMapping("/search/result")
   public String result(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
