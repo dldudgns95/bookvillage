@@ -95,9 +95,6 @@
 
   
   <!--대출하기-->
-  <update id="updateBookCount" parameterType="int">
-    UPDATE USER_T SET BOOKCOUNT = BOOKCOUNT+1 WHERE USER_NO = ${userNo}
-  </update>
 
   <update id="updateBookStatus" parameterType="BookDto">
     UPDATE BOOK SET STATUS=0 WHERE ISBN = ${isbn}
@@ -118,6 +115,13 @@
     , SYSDATE  
     )
   </insert>
+  
+  <select id="checkBookCOStatus" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+       AND STATUS IN (0, 1)
+  </select>
   
   
 </mapper>

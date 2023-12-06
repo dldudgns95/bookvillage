@@ -28,6 +28,8 @@ function saveReview() {
       return;
    }
    
+   
+   
    const starValue = selectedStar.value;
    const isbn = document.querySelector('.score input[name="isbn"]').value;
    const userNo = document.querySelector('.score input[name="userNo"]').value;
@@ -39,8 +41,14 @@ function saveReview() {
     }
     return false; // 이벤트 막기
    }
-   const reviewText = document.getElementById('review').value;
    
+   const checkWish = document.getElementById('checkWish').value;
+   if (checkWish !== 0) {
+     alert("이미 한줄평을 등록했습니다. 도서 당 하나만 등록 가능합니다");
+     return false; // 이벤트 막기
+   }
+   
+   const reviewText = document.getElementById('review').value;
    const currentDate = new Date();
 
    $.ajax({
@@ -166,6 +174,14 @@ $(document).ready(function() {
       }
       return false; // 이벤트 막기
      }
+
+      /* 대출 불가능한 경우 알림 창 표시 */
+      var checkBookCkCnt = $("input[name='checkBookCkCnt']").val();        
+      console.log(checkBookCkCnt);
+      if (checkBookCkCnt >= 5) {
+          alert('대출이 불가능합니다. 대출 권수를 초과하셨습니다.');
+          return false;
+      }
     
     // 서버로 POST 요청 보내기
     $.ajax({
@@ -174,8 +190,7 @@ $(document).ready(function() {
       contentType: "application/json",
       data: JSON.stringify(formData),
       success: function(response) {
-        alert("대출 확인되었습니다. 반납 기한은 7일입니다.");
-        var confirmLogin = confirm('대출 내역 조회로 이동하시겠습니까?');
+        var confirmLogin = confirm('대출 신청되었습니다. 신청 내역 조회로 이동하시겠습니까?');
         if (confirmLogin) {
           window.location.href = '/mypage/booklist.do';
         }
@@ -200,35 +215,22 @@ $(document).ready(function() {
       }
     });
     
-    $.ajax({
-      type: "POST",
-      url: "/book/updateMyCheckOut.do",
-      contentType: "application/json",
-      data: JSON.stringify(formData),
-      success: function(response) {
-        console.log('My Checkout Count update successfully.');
-        refresh();
-      },
-      error: function(error) {
-        console.log("Error:", error);
-      }
-    });    
   });
 });
 
 //이용안내
 $(document).ready(function() {
-  const promotionEl = document.querySelector('.guide');
-  const promotionToggleBtn = document.querySelector('.toggle-guide')
-  let isHidePromotion = false;
-  promotionToggleBtn.addEventListener('click', function () {
-    isHidePromotion = !isHidePromotion 
-    if (isHidePromotion) {
+  const guideEl = document.querySelector('.detail_guide');
+  const GuideBtn  = document.querySelector('.toggle-guide')
+  let isHide = true;
+  GuideBtn.addEventListener('click', function () {
+    isHide = !isHide 
+    if (isHide) {
       // true면 숨김처리
-      promotionEl.classList.add('hide')
+      guideEl.classList.add('hide')
     } else {
       //false면 보임처리
-      promotionEl.classList.remove('hide')
+      guideEl.classList.remove('hide')
     }
   })
 });

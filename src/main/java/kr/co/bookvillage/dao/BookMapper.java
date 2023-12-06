@@ -26,6 +26,6 @@ public interface BookMapper {
   
   //대출
   public void updateBookStatus(BookDto bookDto);
-  public void updateBookCount(int userNo);
+  public int checkBookCOStatus(int userNo);
   public void insertCheckoutStatus(BookDto bookDto);
 }

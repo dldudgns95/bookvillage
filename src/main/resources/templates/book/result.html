@@ -49,7 +49,15 @@
 <!-- body -->      
     <div class="wrap wrap_flex">
       <div class="column-2">
-        
+        <div class="book_side_bar">
+          <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">자료 검색</h3>
+          <ul id="book_side_list">
+            <li><a th:href="@{/mypage/booklist.do}">자료검색</a></li>
+            <li><a th:href="@{/mypage/edit.form}">주제별자료검색</a></li>
+            <li><a th:href="@{/mypage/wish.do}">희망도서신청</a></li>
+            <li><a th:href="@{/mypage/review.do}">사서추천도서</a></li>
+          </ul>      
+        </div>        
       </div>
       
       <div class="column-8">
@@ -98,8 +106,8 @@
                     </thead>
                     <tbody>
                       <tr>
-                        <td th:text="${book.status == 1 ? '대출가능' : '대출중'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
-                        <td th:text="${book.status == 1 ? '대출가능' : '대출중'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
+                        <td th:text="${book.status == 1 ? '대출가능' : '대출불가'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
+                        <td th:text="${book.status == 1 ? '대출가능' : '대출불가'}" th:style="${book.status != 1 ? 'color: red;' : ''}"></td>
                         <td>
                           <form method="post"  th:id="WishForm" >
                             <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
