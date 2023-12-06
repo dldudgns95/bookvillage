@@ -120,6 +120,9 @@
         </form>              
       </div>
       <div>
+        <button type="button" class="btn btn-primary" id="btn_add">도서 직접 등록하기</button>
+      </div>
+      <div>
         <table class="table">
           <thead>
             <tr>
@@ -192,6 +195,9 @@
             str += '  </td>';
             str += '</tr>';
           });
+          if(resData.bookList.length == 0 || resData.bookList === undefined) {
+            str += '<tr><td colspan="6">검색하신 도서의 정보가 존재하지 않습니다.</td></tr>';
+          }
           $('.search_body').html(str);
         }
       })
@@ -227,12 +233,19 @@
         $('.search_text').val('');
         $('.search_text').val(searchBookName);
       }
-      
+    }
+    
+    const fnBtnAdd = () => {
+      $('#btn_add').click(() => {
+        location.href="/admin/addBook.form";
+      })
     }
     
     fnAddBookSearch();
     fnAddBook();
     fnFocusSearchText();
+    fnBtnAdd();
+    
   </script> 
   
   <div th:replace="~{/layout/footer::footer}"></div>

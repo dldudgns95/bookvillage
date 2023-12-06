@@ -2,10 +2,13 @@ package kr.co.bookvillage.service;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import kr.co.bookvillage.dto.AttachFacDto;
 
 public interface AdminService  {
   public int insertBook(HttpServletRequest request);
@@ -39,4 +42,6 @@ public interface AdminService  {
   public int deleteBook(HttpServletRequest request);
   public int activeUser(HttpServletRequest request);
   public int inactiveUser(HttpServletRequest request);
+  public AttachFacDto getFacDetail(HttpServletRequest request);
+  public int editFacility(MultipartHttpServletRequest multiRequest) throws Exception;
 }

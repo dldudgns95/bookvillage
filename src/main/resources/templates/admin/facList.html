@@ -196,9 +196,20 @@
       let deleteResult = /*[[${deleteResult}]]*/ null;
       if(deleteResult !== null) {
         if(deleteResult === 1) {
-          alert('해당 시설이 정상적으로 삭제되었습니다.');
+          alert('해당 시설을 정상적으로 삭제되었습니다.');
         } else {
           alert('해당 시설의 삭제를 실패했습니다.');
+        }
+      }
+    }
+    
+    const fnEditResult = () => {
+      let editResult = /*[[${editResult}]]*/ null;
+      if(editResult !== null) {
+        if(editResult === 1) {
+          alert('해당 시설을 정상적으로 수정했습니다.');
+        } else {
+          alert('해당 시설의 수정을 실패했습니다.');
         }
       }
     }
@@ -208,6 +219,7 @@
     fnFacDelete();
     fnAddResult();
     fnDeleteResult();
+    fnEditResult();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

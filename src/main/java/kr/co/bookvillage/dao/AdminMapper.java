@@ -59,4 +59,7 @@ public interface AdminMapper {
   public int refuseFacApply(int facApplyNo);
   public int deleteFac(int facNo);
   public int deleteBook(String isbn);
+  public AttachFacDto getFacDetail(int facNo);
+  public int editFacility(FacilityDto facilityDto);
+  public int editAttachFac(AttachFacDto attachFacDto);
 }
