@@ -10,7 +10,7 @@
   }
   
   .admin_contents {
-    margin-left: 200px;
+    margin-left: 150px;
   }
   .tfoot_center {
     text-align: center; 
@@ -57,13 +57,14 @@
               <th scope="col">회원이름</th>
               <th scope="col">회원상태</th>
               <th scope="col">회원등급</th>
+              <th scope="col">현재 대출권수</th>
               <th scope="col">대출가능여부</th>
               <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
             <th:block th:if="${#lists.isEmpty(userList)}">
-              <tr><td colspan="6">검색된 회원이 없습니다.</td></tr>
+              <tr><td colspan="7">검색된 회원이 없습니다.</td></tr>
             </th:block>
             <th:block th:each="user,vs:${userList}">
               <tr>
@@ -92,6 +93,7 @@
                     관리자
                   </th:block>
                 </td>
+                <td scope="row" th:text="|${user.bookcount}권|"></td>
                 <td scope="row">
                   <th:block th:if="${user.status == 0}">
                     대출불가능
@@ -117,9 +119,9 @@
                   <form id="frm_search" method="get" th:action="@{/admin/userSearch.do}">
                     <div class="input-group w-100 p-3">
                       <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
-                        <option value="USER_NO" selected>회원번호</option>
+                        <option value="NAME" selected>회원이름</option>
+                        <option value="USER_NO">회원번호</option>
                         <option value="EMAIL">회원이메일</option>
-                        <option value="NAME">회원이름</option>
                       </select>
                       <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
                       <button class="btn btn-outline-secondary" type="submit" id="btn_search">
@@ -137,7 +139,7 @@
 
   </div>
   
-  <script>
+  <script th:inline="javascript">
   
     const fnUserSearch = () => {
       $('#frm_search').submit((ev) => {
@@ -174,7 +176,19 @@
       })
     }
     
-    fnUserSearch(); 
+    const fnDeleteResult = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('해당 유저를 정상적으로 탈퇴시켰습니다.');
+        } else {
+          alert('유저의 탈퇴가 실패되었습니다.');
+        }
+      }
+    }
+    
+    fnUserSearch();
+    fnDeleteResult(); 
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

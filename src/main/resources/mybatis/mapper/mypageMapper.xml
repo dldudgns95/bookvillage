@@ -53,10 +53,39 @@
       <result    column="STATUS"        property="status"/>
     </association>
   </resultMap>
+  
+  <resultMap id="BookApplyMap" type="BookApplyDto">
+    <id column="APPLY_NO" property="applyNo"/>
+    <result column="BOOK_NAME" property="bookName"/>
+    <result column="AUTHOR" property="author"/>
+    <result column="PUBLISHER" property="publisher"/>
+    <result column="WISH" property="wish"/>
+    <result column="STATUS" property="status"/>
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo"/>
+    </association>
+  </resultMap>
+  
+  <resultMap type="facApplyDto" id="FacApplyMap">
+    <id column="FAC_APPLY_NO"     property="facApplyNo" />
+    <result column="FAC_REG_DATE" property="facRegDate" />
+    <result column="FAC_START"    property="facStart" />
+    <result column="FAC_STATUS"   property="facStatus" />
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo" />
+      <result column="NAME" property="name" />
+    </association>
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO" property="facNo" />
+      <result column="FAC_NAME" property="facName" />
+    </association>
+  </resultMap>
+  
+  
 
   <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
     <where>
       <if test="email != null">EMAIL = #{email}</if>
@@ -115,7 +144,7 @@
   </select>
   
   <!-- 접속유저가 작성한 한줄평리스트 -->
-  <select id="getReviewList" parameterType="Map" resultMap="ScoreMap">
+  <select id="getReviewList" parameterType="Map" resultType="ScoreDto">
     SELECT A.ISBN, A.USER_NO, A.REVIEW_DATE, A.STAR, A.REVIEW , A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY REVIEW_DATE) AS RN, S.ISBN, S.USER_NO, S.REVIEW_DATE, S.STAR, S.REVIEW, B.TITLE
               FROM SCORE S INNER JOIN BOOK B
@@ -132,7 +161,7 @@
   </select>
   
   <!-- 접속유저의 관심도서 리스트 -->
-  <select id="getWishBookList" parameterType="Map" resultMap="WishMap">
+  <select id="getWishBookList" parameterType="Map" resultType="WishDto">
     SELECT A.ISBN, A.USER_NO, A.WISH_DATE, A.TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY WISH_DATE DESC) AS RN, W.ISBN, W.USER_NO, W.WISH_DATE, B.TITLE
               FROM WISH W INNER JOIN BOOK B
@@ -141,8 +170,94 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 대출신청취소 - 대출신청테이블에서 삭제 -->
+  <delete id="cancleCheckout" parameterType="int">
+    DELETE
+      FROM BOOK_CHECKOUT
+     WHERE STATUS = 0 AND CHECKOUT_NO = #{checkoutNo}
+  </delete>
   
-
-
+  <!-- 대출신청취소 - 책을 대출가능으로 업데이트 -->
+  <update id="updateBookStatus" parameterType="BookDto">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN = #{isbn}
+  </update>
+  
+  <!-- 대출신청취소 - 유저의 대출권수 줄이기 -->
+  <update id="minusBookCount" parameterType="int">
+    UPDATE USER_T
+       SET BOOKCOUNT = BOOKCOUNT - 1
+     WHERE USER_NO = #{userNo}
+       AND BOOKCOUNT &gt; 0
+  </update>
+  
+  <!-- 관심도서 삭제 -->
+  <delete id="deleteWish" parameterType="WishDto">
+    DELETE 
+      FROM WISH
+     WHERE ISBN = #{isbn} AND USER_NO = #{userNo}
+  </delete>
+  
+  <!-- 희망도서 갯수 -->
+  <select id="getApplyBookCount" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>
+  
+  <!-- 희망도서 신청목록 -->
+  <select id="getApplyBookList" parameterType="Map" resultMap="BookApplyMap">
+    SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_NO
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY APPLY_NO) AS RN, B.APPLY_NO, B.BOOK_NAME, B.AUTHOR, B.PUBLISHER, B.WISH, B.STATUS, U.USER_NO
+              FROM BOOK_APPLY B INNER JOIN USER_T U
+                ON B.USER_NO = U.USER_NO
+             WHERE B.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 희망도서 신청내역 수정 -->
+  <update id="updateBookApply" parameterType="BookApplyDto">
+    UPDATE BOOK_APPLY
+       SET BOOK_NAME = #{bookName}
+         , AUTHOR = #{author}
+         , PUBLISHER = #{publisher}
+         , WISH = #{wish}
+     WHERE APPLY_NO = #{applyNo}
+  </update>
+  
+  <!-- 희망도서 신청취소 -->
+  <delete id="deleteApply" parameterType="int">
+    DELETE
+      FROM BOOK_APPLY
+     WHERE APPLY_NO = #{applyNo}
+  </delete>
+  
+  <!-- 시설이용신청 갯수 -->
+  <select id="getFacApplyCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FAC_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>  
+  
+  <!-- 시설이용신청 목록 -->
+  <select id="getFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT A.FAC_APPLY_NO, A.FAC_REG_DATE, A.FAC_START, A.FAC_STATUS, A.USER_NO, A.NAME, A.FAC_NO, A.FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_APPLY_NO) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, U.NAME, FA.FAC_NO, FAC_NAME   
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+             WHERE FA.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  <!-- 시설이용신청 취소 -->
+  <delete id="deleteFacApply" parameterType="int">
+    DELETE
+      FROM FAC_APPLY
+     WHERE FAC_STATUS = 0 AND FAC_APPLY_NO = #{facApplyNo}
+  </delete>
+  
+  
 
 </mapper>

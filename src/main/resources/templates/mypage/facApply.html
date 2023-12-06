@@ -18,10 +18,9 @@
   }
   
   .mypage {
-    width: 700px;
+    width: 800px;
     height: 500px;
     display: inline-block;
-    font-size: 30px;
     text-align: center;
     margin-left: 320px;
     padding-top: 30px;
@@ -47,11 +46,93 @@
       </ul>       
     </div>
     <th:block th:if="${session.user != null}">
-    <div class="mypage" th:text="|${session.user.name}님의 마이페이지입니다.|"></div>
+    <div class="mypage">
+      <h3>시설이용 신청내역</h3>
+      <span>승인여부 : 승인대기 - 관리자가 확인중입니다 / 승인 - 이용이 확정되었습니다 / 거절</span>
+      <table border="1" class="table table-hover">
+        <thead>
+          <tr>
+            
+            <td>시설명</td>
+            <td>신청일자</td>
+            <td>사용일자</td>
+            <td>승인여부</td>
+            <td>신청취소</td>
+          </tr>
+        </thead>
+        <tbody>
+          <th:block th:if="${#lists.isEmpty(facApplyList)}">
+            <tr><td colspan="6">시설이용신청 내역이없습니다.</td></tr>
+          </th:block>
+          <th:block th:each="facApply : ${facApplyList}">
+            <tr>
+              
+              <td th:text="${facApply.facilityDto.facName}"></td>
+              <td th:text="${facApply.facRegDate}"></td>
+              <td th:text="${facApply.facStart}"></td>
+              <td>
+                <span th:if="${facApply.facStatus == 0}">승인대기</span>
+                <span th:if="${facApply.facStatus == 1}">승인</span>
+                <span th:if="${facApply.facStatus == 2}">거절</span>
+              </td>
+              <td th:if="${facApply.facStatus == 0}">
+                <form method="post" id="frm_btn">
+                <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
+                <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+                <button type="button" id="btn_cancleFac" class="btn btn-success">신청취소</button>
+                </form>
+              </td>
+              <td th:if="${facApply.facStatus != 0}">
+                
+              </td>
+            </tr>
+          </th:block>
+        </tbody>
+        <tfoot th:if="${not #lists.isEmpty(facApplyList)}">
+          <tr>
+            <td colspan="6" th:utext="${paging}"></td>
+          </tr>
+        </tfoot>
+        
+      </table>
+    </div>
     </th:block>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    var frmBtn = $('#frm_btn');
+    
+    const fnCancleFacApply = () => {
+      $(document).on('click', '#btn_cancleFac', (ev) => {
+        var facApplyNo = $('input[name="facApplyNo"]').val();
+        if(!confirm('시설이용신청을 취소할까요?')){
+          return;
+        }
+        $.ajax({
+          type: 'post',
+          url: '/mypage/deleteFacApply.do',
+          data: {
+            facApplyNo: facApplyNo
+          },
+          success: function(resData) {
+            if(resData.deleteResult === 1){
+              alert('시설이용신청이 취소되었습니다.');
+              location.reload();
+            } else {
+              alert('시설이용신청 취소가 불가능합니다.');
+              return;
+            }
+          }
+        })
+      })
+    }
+    
+    
+    fnCancleFacApply();
+  </script>
   
 </body>
 </html>

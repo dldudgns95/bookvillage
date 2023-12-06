@@ -78,11 +78,11 @@
       </div>
       
       <div class="list_area">
-        <h5> <img src="/image/logo_noname.png" width="60px"> 추천 도서 </h5>  
+        <h5> <img src="/image/logo_noname.png" width="60px" /> 추천 도서 </h5>  
         <div class="recommendContents">
           <div class="bookLi_container">
             <div class="bookLi" th:each="book : ${recoBookList}">
-            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+            <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
               <img th:src="${book.cover}"/>
             </a>
               <div th:text="${book.title}"></div>
@@ -93,7 +93,7 @@
         <h5> <img src="/image/logo_noname.png" width="60px"> 신간 도서 </h5>
         <div class="bookLi_container">
           <div class="bookLi" th:each="book : ${newBookList}">
-            <a th:href="@{/book/search/detail(isbn=${book.isbn})}">
+            <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
               <img th:src="${book.cover}"/>
             </a>
               <div class="" th:text="${book.title}"></div>

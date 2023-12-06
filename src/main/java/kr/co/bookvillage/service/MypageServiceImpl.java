@@ -1,6 +1,7 @@
 package kr.co.bookvillage.service;
 
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -16,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dao.MypageMapper;
+import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
+import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FacApplyDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.dto.WishDto;
@@ -190,8 +194,119 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("wishList", wishList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/review.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
-    
-    
+ 
   }
+  
+  @Transactional(readOnly=true)
+  @Override
+  public int cancleBookCheckout(HttpServletRequest request) {
+    int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    String isbn = request.getParameter("isbn");
+    BookDto book = BookDto.builder()
+                     .isbn(isbn)
+                     .build();
+    
+    
+    int deleteResult = mypageMapper.cancleCheckout(checkoutNo);
+    if(deleteResult == 1) {
+      mypageMapper.updateBookStatus(book);
+      mypageMapper.minusBookCount(userNo);
+    }
+    return deleteResult;
+  }
+  
+  @Override
+  public int removeWish(String isbn, int userNo) {
+
+    Map<String, Object> map = new HashMap<>();
+    map.put("isbn", isbn);
+    map.put("userNo", userNo);
+    
+    return mypageMapper.deleteWish(map);
+  }
+  
+  @Override
+  public void loadBookApplyList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getApplyBookCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<BookApplyDto> applyBookList = mypageMapper.getApplyBookList(map);
+    
+    model.addAttribute("applyBookList", applyBookList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/applyBook.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+  }
+  
+  @Override
+  public int modifyBookApply(HttpServletRequest request) {
+    
+    String bookName = request.getParameter("bookName");
+    String author = request.getParameter("author");
+    String publisher = request.getParameter("publisher");
+    String wish = request.getParameter("wish");
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    
+    BookApplyDto applyBook = BookApplyDto.builder()
+                                .bookName(bookName)
+                                .author(author)
+                                .publisher(publisher)
+                                .wish(wish)
+                                .applyNo(applyNo)
+                                .build();
+    
+    int modifyResult = mypageMapper.updateBookApply(applyBook);
+    
+    return modifyResult;
+  }
+  
+  @Override
+  public int deleteApply(int applyNo) {
+    return mypageMapper.deleteApply(applyNo);
+  }
+  
+  @Override
+  public void loadFacApplyList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getFacApplyCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<FacApplyDto> facApplyList = mypageMapper.getFacApplyList(map);
+    
+    model.addAttribute("facApplyList", facApplyList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/facApply.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+
+  }
+  
+  @Override
+  public int deleteFacApply(int facApplyNo) {
+    return mypageMapper.deleteFacApply(facApplyNo);
+  }
+  
 
 }
