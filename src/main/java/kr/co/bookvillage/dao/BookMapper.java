@@ -1,5 +1,6 @@
 package kr.co.bookvillage.dao;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -28,4 +29,5 @@ public interface BookMapper {
   public void updateBookStatus(BookDto bookDto);
   public int checkBookCOStatus(int userNo);
   public void insertCheckoutStatus(BookDto bookDto);
+  
 }
