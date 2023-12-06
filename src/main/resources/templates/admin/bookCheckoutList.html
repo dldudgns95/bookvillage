@@ -123,10 +123,10 @@
                 <form id="frm_search" method="get" th:action="@{/admin/bookCheckoutSearch.do}">
                   <div class="input-group w-75 p-3">
                     <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
-                      <option value="USER_NO" selected>회원번호</option>
+                      <option value="TITLE" selected>책 제목</option>
                       <option value="NAME">회원이름</option>
+                      <option value="USER_NO">회원번호</option>
                       <option value="ISBN">ISBN</option>
-                      <option value="TITLE">책 제목</option>
                     </select>
                     <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
                     <button class="btn btn-outline-secondary" type="submit" id="btn_search">
@@ -165,8 +165,59 @@
       }
     }
     
+    const fnCheckSearchText = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        
+        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+        let checkName = /^[a-zA-Z0-9가-힣]{2,}$/;
+        let checkUserNo = /^[0-9]{1,}$/;
+        let checkISBN = /^[0-9]{1,13}$/;
+        
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if($('.search_select').val() === "TITLE") {
+          if(!checkTitle.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        
+        if($('.search_select').val() === "NAME") {
+          if(!checkName.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        
+        if($('.search_select').val() === "USER_NO") {
+          if(!checkUserNo.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자로만 구성)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        
+        if($('.search_select').val() === "ISBN") {
+          if(!checkISBN.test(query)) {
+            alert('검색어를 정확히 입력해주세요(숫자 1~13자)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        
+      })
+    }
+    
     fnCheckBookCheckout();
     fnUpdateResult();
+    fnCheckSearchText();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

@@ -81,7 +81,7 @@ public class BookServiceImpl implements BookService {
     List<BookDto> bookDetailList = bookMapper.getBookDetail(isbn);
     model.addAttribute("bookDetailList", bookDetailList);
   }
-  
+
   // 별점, 한줄평 등록
   @Override
   public int insertScore(ScoreDto scoreDto) {
@@ -96,6 +96,18 @@ public class BookServiceImpl implements BookService {
     model.addAttribute("scoreList", scoreList);
   }
   
+  @Override
+  public int checkScore(ScoreDto scoreDto) {
+    return scoreMapper.checkScore(scoreDto);
+  }
+  
+  // 베스트 리뷰
+  @Override
+  public void bestReview(String isbn, Model model) {
+    List<ScoreDto> bestReview = scoreMapper.bestReview(isbn);
+    model.addAttribute("bestReview", bestReview);    
+  }
+    
   // 평균 별점
   @Override
   public void getStarAvg(String isbn, Model model) {
@@ -109,9 +121,10 @@ public class BookServiceImpl implements BookService {
     scoreMapper.deleteScore(scoreDto);        
   }
   
-  // 한줄평 좋아요 (남의 것만 가능) --아직구현안됨
-//  @Override
-  public void likeScore(ScoreDto scoreDto, Model model) {
+  // 한줄평 좋아요 (남의 것만 가능)
+  @Override
+  public void likeScore(ScoreDto scoreDto) {
+    scoreMapper.likeScore(scoreDto);
   }
   
   
@@ -135,8 +148,8 @@ public class BookServiceImpl implements BookService {
   
   // 대출 처리
   @Override
-  public void updateBookCount(int userNo) {
-    bookMapper.updateBookCount(userNo);    
+  public int checkBookCOStatus(int userNo) {
+    return bookMapper.checkBookCOStatus(userNo);
   }
   @Override
   public void updateCheckout(BookDto bookDto) {

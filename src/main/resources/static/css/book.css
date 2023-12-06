@@ -13,8 +13,15 @@
 /*좌측*/
 .menu_title {
   background-color: aquamarine;
-  height: 200px;
-  
+  height: 200px;  
+}
+
+.book_side_bar li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.book_side_bar li:hover {
+  background-color: #f0f0f0;
 }
 
 /*search*/
@@ -63,6 +70,7 @@
   margin-bottom: 30px;
 }
 .bookLi_container img {
+  width: 200px;
   height: 270px;
 }
 
@@ -78,7 +86,6 @@
 /*2단 레이아웃*/
 .column-2 {
     flex: 2;
-    background-color: #f0f0f0;
     margin-right: 20px;
 }
 .column-8 {
@@ -162,38 +169,77 @@
 
 
 /*Detail*/
+.detail_bar {
+  display: flex;
+  align-items: center;
+}
+.detail_bar a {
+  margin-left: auto;
+  margin-right: 5px;
+}
 .detail_book {
   display: flex; /*자식들이 플렉스니까 플렉스 컨테이너로 지정*/
 }
 .detail_img {
   display: flex;
-  flex: 3;
-  left: 20px;
-  margin-right: 20px;
+  left: 30px;
+  margin-right: 60px;
 }
-.detail_guide{
-  display: flex;
-  text-align: left;
-  justify-content: space-evenly;
-}
-.detail_guide dl:first-child {
-  margin-left: 20px;
-}
-.detail_guide dl:last-child {
-  margin-right: 20px;
-}
-.detail_guide .hide {
-  height: 0;
+.detail_img img {
+  width: 200px;
 }
 .detail_info {
   display: flex;
   flex-direction: column;
-  flex: 7;
   align-items: flex-start;
   margin-top: 10px;
 }
+.detail_info_title {
+  margin-bottom: 10px;
+}
+.detail_info_cate span {
+  color: rgb(37, 94, 188);
+  font-weight: 600;
+}
+.detail_info_description {
+  background-color: #F0F0F0;
+  text-align: left;
+  padding: 10px;
+  border-radius: 10px; 
+  margin-bottom: 10px;
+}
 .book_table {
   text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-collapse: separate;
+  border-spacing: 0 3px;
+}
+.book_table th {
+  padding-right: 20px;
+}
+.detail_guide{
+  background-color: #f0f0f0;
+  padding: 10px;
+  padding-top: 26px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-radius: 15px; 
+  display: flex;
+  text-align: left;
+  justify-content: space-evenly;
+  transition: height 0.9s ease; 
+}
+.hide {
+  display: none;
+}
+.detail_guide dt{
+  background-color: rgba(37, 94, 188,.3);
+  border-radius: 15px; 
+  padding: 5px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 600;
 }
 .detail_menu {
   display: flex;
@@ -203,13 +249,33 @@
 .detail_menu li{
   margin-right: 20px;
 }
-
+.detail_title {
+  font-weight: 800;
+  margin-bottom: 20px;
+}
 
 /*별점*/
+.detail_score {
+  display: flex;
+}
+.score {
+  width: 70%;
+  margin: auto;
+}
 .score fieldset {
   display: inline-block;
   direction: rtl;
   border: 0px;
+}
+.star_title{
+  display: inline-block;
+  font-weight: 800;
+  padding: 7px;
+  margin-right: 7px;
+  margin-bottom: 5px;
+  background-color: #FFDE59;
+  border-radius: 15px;
+  
 }
 .score input[type=radio] {
   display: none;
@@ -240,8 +306,57 @@
 }
 .detail_review {
   display: flex;
-  width: 90%;
   flex-direction: column;
+}
+.no_score {
+  padding: 30px;
+  font-size: 30px;
+}
+.score_list_el {
+  display: flex;
+  border: solid 1.5px #f0f0f0;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  margin-bottom: 20px;
+}
+.best {
+  background-color: #f0f0f0;
+}
+.score_list_right {
+  display: block;
+  text-align: left;
+}
+.score_list_right_t {
+  margin-bottom: 10px;
+}
+.el_star {
+  margin-right: 30px;
+}
+.el_user {
+  margin-right: 10px;
+}
+.el_reviewDate {
+  margin-right: 10px;
+}
+.el_good {
+  display: inline-block;
+  background-color: rgba(255, 222, 89,.8);
+  padding: 2px 4px;
+  border-radius: 8px;
+  margin-right: 10px;
+}
+.best_good {
+  font-size: 20px;
+  font-weight: 600;
+  color: #f0f0f0;
+  background-color: rgb(37, 94, 188);
+}
+.el_good span {
+  font-weight: 600;
+}
+.el_btn {
+  font-size: 20px;
 }
 
 

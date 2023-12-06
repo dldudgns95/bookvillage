@@ -50,80 +50,83 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public int insertBook(HttpServletRequest request){
     
+    
     String apiURL = "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
     String ttbkey = "ttbalsltksxk2011001";
     String QueryType = request.getParameter("QueryType");
-    String Start = request.getParameter("Start");
-    
-    StringBuilder sb = new StringBuilder();
-    sb.append(apiURL);
-    sb.append("?ttbkey=" + ttbkey);
-    sb.append("&QueryType=" + QueryType);
-    sb.append("&MaxResults=50");
-    sb.append("&Start=" + Start);
-    sb.append("&SearchTarget=Book");
-    sb.append("&output=JS");
-    sb.append("&Cover=Big");
-    sb.append("&Version=20131101");
-    
-    JSONObject obj = null;
     int count = 0;
-    try {
-      // 요청
-      URL url = new URL(sb.toString());
-      HttpURLConnection con = (HttpURLConnection)url.openConnection();
-      con.setRequestMethod("GET");  // 반드시 대문자로 작성
+    
+    for(int i = 1; i <= 6; i++) {
       
-      // 응답
-      BufferedReader reader = null;
-      int responseCode = con.getResponseCode();
-      if(responseCode == 200) {
-        reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-      } else {
-        reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
-      }
-      String line = null;
-      StringBuilder responseBody = new StringBuilder();
-      while ((line = reader.readLine()) != null) {
-        responseBody.append(line);
-      }
-      obj = new JSONObject(responseBody.toString());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-    
-    JSONArray array = (JSONArray)obj.get("item");
-    
-    // for문으로 값 하나씩 insert하기
-    for(Object lists : array) {
+      StringBuilder sb = new StringBuilder();
+      sb.append(apiURL);
+      sb.append("?ttbkey=" + ttbkey);
+      sb.append("&QueryType=" + QueryType);
+      sb.append("&MaxResults=50");
+      sb.append("&Start=" + i);
+      sb.append("&SearchTarget=Book");
+      sb.append("&output=JS");
+      sb.append("&Cover=Big");
+      sb.append("&Version=20131101");
+      
+      JSONObject obj = null;
       try {
-        JSONObject list = (JSONObject)lists;
-        String pubdate = list.getString("pubDate");
-        Date date = java.sql.Date.valueOf(pubdate);
-        BookDto bookDto = BookDto.builder()
-            .isbn(list.getString("isbn13"))
-            .title(list.getString("title"))
-            .cover(list.getString("cover"))
-            .author(list.getString("author"))
-            .publisher(list.getString("publisher"))
-            .pubdate(date)
-            .description(list.getString("description"))
-            .categoryName(list.getString("categoryName"))
-            .categoryId(list.getInt("categoryId"))
-            .build();
-        System.out.println(bookDto);
-        adminMapper.insertBook(bookDto);
+        // 요청
+        URL url = new URL(sb.toString());
+        HttpURLConnection con = (HttpURLConnection)url.openConnection();
+        con.setRequestMethod("GET");  // 반드시 대문자로 작성
+        
+        // 응답
+        BufferedReader reader = null;
+        int responseCode = con.getResponseCode();
+        if(responseCode == 200) {
+          reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+        } else {
+          reader = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+        }
+        String line = null;
+        StringBuilder responseBody = new StringBuilder();
+        while ((line = reader.readLine()) != null) {
+          responseBody.append(line);
+        }
+        obj = new JSONObject(responseBody.toString());
       } catch (Exception e) {
+        e.printStackTrace();
+      }
+      
+      SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+      
+      JSONArray array = (JSONArray)obj.get("item");
+      
+      // for문으로 값 하나씩 insert하기
+      for(Object lists : array) {
+        try {
+          JSONObject list = (JSONObject)lists;
+          String pubdate = list.getString("pubDate");
+          Date date = java.sql.Date.valueOf(pubdate);
+          BookDto bookDto = BookDto.builder()
+              .isbn(list.getString("isbn13"))
+              .title(list.getString("title"))
+              .cover(list.getString("cover"))
+              .author(list.getString("author"))
+              .publisher(list.getString("publisher"))
+              .pubdate(date)
+              .description(list.getString("description"))
+              .categoryName(list.getString("categoryName"))
+              .categoryId(list.getInt("categoryId"))
+              .build();
+          System.out.println(bookDto);
+          adminMapper.insertBook(bookDto);
+        } catch (Exception e) {
           // e.printStackTrace();
           count--;
-      } finally {
-        count++;
+        } finally {
+          count++;
+        }
       }
     }
     
-    System.out.println(array.length());
+    
     
     return count;
   }
@@ -152,7 +155,15 @@ public class AdminServiceImpl implements AdminService {
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
     model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
+    model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
+    model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
     
+  }
+  
+  @Override
+  public int deleteUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.deleteUser(userNo);
   }
   
   @Override
@@ -226,12 +237,13 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
-  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
+  public int addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
     
     String facName = multiRequest.getParameter("facName");
     String facContent = multiRequest.getParameter("facContent");
+    facContent = facContent.replace("\r\n","<br>");
+    System.out.println("serviceImpl:: facContent = " + facContent);
     int checkStatus = Integer.parseInt(multiRequest.getParameter("checkStatus"));
-    System.out.println("checkStatus : " + checkStatus);
     FacilityDto facility = FacilityDto.builder()
                                       .facName(facName)
                                       .facContent(facContent)
@@ -300,6 +312,7 @@ public class AdminServiceImpl implements AdminService {
         
       }
     }
+    return addResult;
   }
   
   @Override
@@ -462,7 +475,7 @@ public class AdminServiceImpl implements AdminService {
     int updateResult = adminMapper.approvalBookCheckoutReturn(checkoutNo);
     if(updateResult == 1) {
       if(status == 3) {
-        adminMapper.activeUser(userNo);
+        adminMapper.updateActiveUser(userNo);
       }
       adminMapper.activeBook(isbn);
       adminMapper.minusBookCount(userNo);
@@ -483,6 +496,7 @@ public class AdminServiceImpl implements AdminService {
     String ttbkey = "ttbalsltksxk2011001";
     String QueryType = request.getParameter("QueryType");
     String Query = request.getParameter("Query");
+    System.out.println(Query);
     String Start = request.getParameter("Start");
     
     StringBuilder sb = new StringBuilder();
@@ -601,6 +615,44 @@ public class AdminServiceImpl implements AdminService {
     int applyNo = Integer.parseInt(request.getParameter("applyNo"));
     return adminMapper.updateBookApply(applyNo);
   }
+  
+  @Override
+  public int approveFacApply(HttpServletRequest request) {
+    int facApplyNo = Integer.parseInt(request.getParameter("facApplyNo"));
+    return adminMapper.approveFacApply(facApplyNo);
+  }
+  
+  @Override
+  public int refuseFacApply(HttpServletRequest request) {
+    int facApplyNo = Integer.parseInt(request.getParameter("facApplyNo"));
+    return adminMapper.refuseFacApply(facApplyNo);
+  }
+  
+  @Override
+  public int deleteFac(HttpServletRequest request) {
+    int facNo = Integer.parseInt(request.getParameter("facNo"));
+    return adminMapper.deleteFac(facNo);
+  }
+  
+  @Override
+  public int deleteBook(HttpServletRequest request) {
+    String isbn = request.getParameter("isbn");
+    return adminMapper.deleteBook(isbn);
+  }
+  
+  @Override
+  public int activeUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.updateActiveUser(userNo);
+  }
+  
+  @Override
+  public int inactiveUser(HttpServletRequest request) {
+    int userNo = Integer.parseInt(request.getParameter("userNo"));
+    return adminMapper.updateInactiveUser(userNo);
+  }
+  
+  
   
   
 }

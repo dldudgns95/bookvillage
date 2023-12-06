@@ -5,9 +5,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FaqDto;
@@ -53,10 +53,16 @@ public interface UserService {
   
   public List<FaqDto> getFaqList();
   public List<NoticeDto> getNoticeList();
-  public void getBookList(Model model);
+  public List<BookDto> getBookList();
+  
+  // 휴면회원.. 
+  public void inactiveUserBatch(); 
+  public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response);
+  
+  
+  
   
 }
-
 
 
 

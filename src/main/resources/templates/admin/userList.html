@@ -137,7 +137,7 @@
 
   </div>
   
-  <script>
+  <script th:inline="javascript">
   
     const fnUserSearch = () => {
       $('#frm_search').submit((ev) => {
@@ -174,7 +174,19 @@
       })
     }
     
-    fnUserSearch(); 
+    const fnDeleteResult = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('해당 유저를 정상적으로 탈퇴시켰습니다.');
+        } else {
+          alert('유저의 탈퇴가 실패되었습니다.');
+        }
+      }
+    }
+    
+    fnUserSearch();
+    fnDeleteResult(); 
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

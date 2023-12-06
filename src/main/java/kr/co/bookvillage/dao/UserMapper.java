@@ -46,7 +46,12 @@ public interface UserMapper {
   
   public List<BookDto> getBookList();
   
-
+  // 휴면 회원처리
+  public int insertInactiveUser();
+  public int deleteUserForInactive();
+  public int insertActiveUser(String email);
+  public int deleteInactiveUser(String email);
+  
   
   
 }

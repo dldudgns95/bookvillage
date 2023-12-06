@@ -72,7 +72,7 @@
              
                   var row = '<tr>' +
                       '<td>' + nt.ntNo + '</td>' +
-                      '<td><a href="/support/faqdetail.do?faqNo=' + nt.ntNo + '">' + ntTitle + '</a></td>' +
+                      '<td><a href="/support/detail.do?ntNo=' + nt.ntNo + '">' + ntTitle + '</a></td>' +
                       '<td>' + nt.ntDate + '</td>' +
                       '</tr>';
                   ntBoby.append(row);
