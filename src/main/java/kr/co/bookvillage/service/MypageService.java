@@ -23,4 +23,6 @@ public interface MypageService {
   public void loadBookApplyList(HttpServletRequest request, Model model);
   public int modifyBookApply(HttpServletRequest request);
   public int deleteApply(int applyNo);
+  public void loadFacApplyList(HttpServletRequest request, Model model);
+  
 }

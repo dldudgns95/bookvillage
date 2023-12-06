@@ -111,12 +111,6 @@ public class MypageController {
     return result;
   }
   
-  // 시설이용신청목록 페이지로 이동
-  @GetMapping("/facApply.do")
-  public String facApplyList() {
-    return "mypage/facApply";
-  }
-  
   // 희망도서목록 페이지로 이동
   @GetMapping("/applyBook.do")
   public String applyBook(HttpServletRequest request, Model model) {
@@ -147,6 +141,13 @@ public class MypageController {
     int removeResult = mypageService.deleteApply(applyNo);
     result.put("removeResult", removeResult);
     return result;
+  }
+  
+  // 시설이용신청목록 페이지로 이동
+  @GetMapping("/facApply.do")
+  public String facApply(HttpServletRequest request, Model model) {
+    mypageService.loadFacApplyList(request, model);
+    return "mypage/facApply";
   }
   
   

@@ -20,6 +20,7 @@ import kr.co.bookvillage.dao.MypageMapper;
 import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FacApplyDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.dto.WishDto;
@@ -275,6 +276,32 @@ public class MypageServiceImpl implements MypageService {
   @Override
   public int deleteApply(int applyNo) {
     return mypageMapper.deleteApply(applyNo);
+  }
+  
+  @Override
+  public void loadFacApplyList(HttpServletRequest request, Model model) {
+    
+    HttpSession session = request.getSession();
+    int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = mypageMapper.getFacApplyCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                    , "end", adminPageUtils.getEnd()
+                                    , "userNo", userNo);
+    
+    List<FacApplyDto> facApplyList = mypageMapper.getFacApplyList(map);
+    
+    model.addAttribute("facApplyList", facApplyList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/facApply.do"));
+    model.addAttribute("beginNo", total - (page -1) * display);
+    
+    
   }
   
 

@@ -65,6 +65,21 @@
       <id column="USER_NO" property="userNo"/>
     </association>
   </resultMap>
+  
+  <resultMap type="facApplyDto" id="FacApplyMap">
+    <id column="FAC_APPLY_NO"     property="facApplyNo" />
+    <result column="FAC_REG_DATE" property="facRegDate" />
+    <result column="FAC_START"    property="facStart" />
+    <result column="FAC_STATUS"   property="facStatus" />
+    <association javaType="UserDto" property="userDto">
+      <id column="USER_NO" property="userNo" />
+      <result column="NAME" property="name" />
+    </association>
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO" property="facNo" />
+      <result column="FAC_NAME" property="facName" />
+    </association>
+  </resultMap>
 
   <!-- 접속한 유저의 정보가져오기(마이페이지) -->
   <select id="getMypageUser" parameterType="Map" resultType="UserDto">
@@ -216,5 +231,22 @@
      WHERE APPLY_NO = #{applyNo}
   </delete>
   
+  <!-- 시설이용신청 갯수 -->
+  <select id="getFacApplyCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FAC_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>  
+  
+  <!-- 시설이용신청 목록 -->
+  <select id="getFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT A.FAC_APPLY_NO, A.FAC_REG_DATE, A.FAC_START, A.FAC_STATUS, A.USER_NO, A.NAME, A.FAC_NO, A.FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_APPLY_NO) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, U.NAME, FA.FAC_NO, FAC_NAME   
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+             WHERE FA.USER_NO = #{userNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
 
 </mapper>

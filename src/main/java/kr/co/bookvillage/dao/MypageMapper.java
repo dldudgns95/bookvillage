@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import kr.co.bookvillage.dto.BookApplyDto;
 import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
+import kr.co.bookvillage.dto.FacApplyDto;
 import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.dto.WishDto;
@@ -32,4 +33,6 @@ public interface MypageMapper {
   public List<BookApplyDto> getApplyBookList(Map<String, Object> map);           // 희망도서신청리스트
   public int updateBookApply(BookApplyDto applyBook);                            // 희망도서신청내역수정
   public int deleteApply(int applyNo);                                           // 희망도서신청취소
+  public int getFacApplyCount(int userNo);                                       // 시설이용신청갯수
+  public List<FacApplyDto> getFacApplyList(Map<String, Object> map);             // 시설이용신청리스트
 }
