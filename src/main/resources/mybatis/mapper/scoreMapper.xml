@@ -29,7 +29,7 @@
   
   <!-- 평균별점 -->
   <select id="getStarAvg" parameterType="String" resultType="Double">
-    SELECT AVG(STAR) AS AVERAGE_STAR
+    SELECT ROUND(AVG(STAR), 1) AS AVERAGE_STAR
     FROM SCORE
     WHERE ISBN = #{isbn}
   </select>

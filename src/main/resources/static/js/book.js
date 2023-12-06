@@ -234,22 +234,3 @@ $(document).ready(function() {
     }
   })
 });
-
-//그래프
-
-document.addEventListener('DOMContentLoaded', function () {
-    var ctx = document.getElementById('barChart').getContext('2d');
-    
-    var chart = new Chart(ctx, {
-        type: 'bar', // 
-        data: {
-            labels: ['1점', '2점', '3점', '4점','5점'],
-            datasets: [{
-                label: '평점 분포',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [2, 10, 5,3,3]
-            }]
-        },
-    });
-});

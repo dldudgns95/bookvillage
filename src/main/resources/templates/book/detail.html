@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('소장자료 검색')}">
-  
   <script th:src="https://cdn.jsdelivr.net/npm/chart.js@3"></script>
 </head>
 
@@ -253,6 +252,36 @@
       </div>
       
     </div>
+    
+    <!--그래프-->
+    <script th:inline="javascript">
+      document.addEventListener('DOMContentLoaded', function () {
+          var ctx = document.getElementById('barChart').getContext('2d');
+          
+          var cntStarData = /*[[${cntStar}]]*/ null;
+          console.log('cntStarData:', cntStarData);
+
+          var labels = cntStarData.map(item => item.star);
+          var countStar = cntStarData.map(item => item.countStar);
+          console.log(labels);
+          console.log(countStar);
+          
+          var chart = new Chart(ctx, {
+              type: 'bar',
+              data: {
+                  labels: labels,
+                  datasets: [{
+                      label: '평점 분포',
+                      backgroundColor: 'rgb(255, 99, 132)',
+                      borderColor: 'rgb(255, 99, 132)',
+                      data: countStar
+                  }]
+              },
+          });
+      });
+    </script>
+    
+    
 
     <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
