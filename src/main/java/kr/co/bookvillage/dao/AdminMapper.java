@@ -48,7 +48,7 @@ public interface AdminMapper {
   public List<BookCheckoutDto> getBookCheckoutReturnSearchList(Map<String, Object> map);
   public int approvalBookCheckout(int checkoutNo);
   public int approvalBookCheckoutReturn(int checkoutNo);
-  public int activeBook(long isbn);
+  public int activeBook(String isbn);
   public int minusBookCount(int userNo);
   public int updateActiveUser(int userNo);
   public int updateInactiveUser(int userNo);
@@ -64,4 +64,5 @@ public interface AdminMapper {
   public AttachFacDto getFacDetail(int facNo);
   public int editFacility(FacilityDto facilityDto);
   public int editAttachFac(AttachFacDto attachFacDto);
+  public int inactiveBook(String isbn);
 }
