@@ -305,8 +305,6 @@ public class AdminController {
     return Map.of("checkResult", adminService.checkBook(request));
   }
   
-<<<<<<< HEAD
-=======
   @PostMapping("/inactiveBook.do")
   public String inactiveBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("inactiveResult", adminService.inactiveBook(request));
@@ -319,7 +317,6 @@ public class AdminController {
     return "redirect:/admin/bookDetail.do?isbn=" + request.getParameter("isbn");
   }
   
->>>>>>> main
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
