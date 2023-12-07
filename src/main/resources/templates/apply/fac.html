@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('시설소개')}">	
+</head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  div.child1{
+    width: 800px;
+    justify-content: center;
+    margin-left: 320px;
+    align-items: center;
+    text-align: center;
+    
+  }
+  div.child2{
+	width: 800px;
+    display: flex;
+    margin-left: 320px;
+    justify-content: center;
+	text-align: center;
+	margin-top: 30px;
+    
+  }
+  div.child3{
+	  display: flex;
+	  width: 200px;
+	  margin-top: 70px;
+      margin-left: 20px;
+      font-size: 15px;
+	  
+  }
+  div.child2 th, div.child2 td {
+    border: 2px solid lightgray;
+    padding: 15px;
+    text-align: center;
+  }
+
+
+div.child2 td img {
+  width: 250px; /* 이미지의 너비를 250px로 고정 */
+  height: 100px; /* 이미지 높이 자동 조절 */
+}
+
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="parent">
+	 
+     <div class="side_bar">
+	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">시설소개</h3>
+        <ul id="side_list">
+          <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
+          <li style="margin:20px"><a th:href="@{/apply/fac.do}">시설소개</a></li>
+		  <li style="margin:20px"><a th:href="@{/apply/bookapply.do}">희망도서신청</a></li>
+        </ul>
+      </div>
+	  <div class="child1">
+     	<h5>시설소개</h5>
+
+      </div>
+	  <div class="child2">
+	  <table class="table-primary">
+		   <thead>
+		   <tr>
+			   <th>시설사진</th>  
+			   <th>시설이름</td>  
+			   <th>시설정보</th>
+		   </tr>
+		  </thead>
+		  <tbody>
+          <th:block th:if="${#lists.isEmpty(facList)}">
+            <tr><td colspan="3">등록된 시설이 없습니다.</td></tr>
+          </th:block>
+          <th:block th:each="fac,vs:${facList}">
+            <tr>
+              <td><img th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300"></td>
+              <td><h5 th:utext="${fac.facilityDto.facName}"></h2></td>
+              <td th:utext="${fac.facilityDto.facContent}"></td>
+            </tr>
+          </th:block>
+        </tbody>
+	   </table>
+  </div>
+  <script th:inline="javascript">
+    
+    
+  
+  </script>
+    </div>
+
+
+</body>
+</html>

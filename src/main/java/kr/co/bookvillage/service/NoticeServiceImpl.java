@@ -31,6 +31,7 @@ import kr.co.bookvillage.dao.NoticeMapper;
 import kr.co.bookvillage.dto.AttachNtDto;
 import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MyFileUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,29 @@ public class NoticeServiceImpl implements NoticeService {
   private final NoticeMapper noticeMapper;
   private final MyFileUtils myFileUtils;
   private final MyPageUtils myPageUtils;
+  private final AdminPageUtils adminPageUtils;
+
+  @Override
+  public void getSearchNoticeList(HttpServletRequest request, Model model) {
+	  String column = request.getParameter("column");
+	  String query = request.getParameter("query");
+	  Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+	    int page = Integer.parseInt(opt.orElse("1"));
+	    int total = noticeMapper.noticeSearchCount(Map.of("column", column, "query", query));
+	    int display = 10;
+	    
+	    adminPageUtils.setPaging(page, total, display);
+	    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+	                                   , "end", adminPageUtils.getEnd()
+	                                   , "column", column
+	                                   , "query", query);
+	    
+	    model.addAttribute("noticeList", noticeMapper.getSearchNoticeList(map));
+	    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/support/noticeSearch.do", "column=" + column + "&query=" + query));
+	    model.addAttribute("beginNo", total - (page - 1) * display);
+	    model.addAttribute("totalCount", total);
+	  
+  }
   
   @Override
   public void addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
@@ -127,36 +151,26 @@ public class NoticeServiceImpl implements NoticeService {
         
   }
   
+
   @Transactional(readOnly=true)
   @Override
-  public Map<String, Object> getNoticeList(HttpServletRequest request) {
-    
+  public void loadNoticeList(HttpServletRequest request, Model model) {
+  
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     int total = noticeMapper.getNoticeCount();
-    int display = 9;
+    int display = 10;
     
-    myPageUtils.setPaging(page, total, display);
+    adminPageUtils.setPaging(page, total, display);
     
-    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                   , "end", myPageUtils.getEnd());
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd());
     
     List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
     
-    return Map.of("noticeList",noticeList
-                , "totalPage", myPageUtils.getTotalPage());
-    
-  }
-  
-  @Transactional(readOnly=true)
-  @Override
-  public void loadNotice(HttpServletRequest request, Model model) {
-    
-    Optional<String> opt = Optional.ofNullable(request.getParameter("ntNo"));
-    int ntNo = Integer.parseInt(opt.orElse("0"));
-    
-    model.addAttribute("notice", noticeMapper.getNotice(ntNo));
-    model.addAttribute("attachList", noticeMapper.getAttachList(ntNo));
+    model.addAttribute("noticeList", noticeList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/support/list.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
     
   }
   

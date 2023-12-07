@@ -1,5 +1,7 @@
 package kr.co.bookvillage.service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ public interface BookService {
   // 별점, 한줄평
   public int insertScore(ScoreDto scoreDto);
   public int checkScore(ScoreDto scoreDto);
+  public List<ScoreDto> cntStar(String isbn);
   public void getScoreList(String isbn, Model model);
   public void getStarAvg(String isbn,Model model);
   public void deleteScore(ScoreDto scoreDto);
@@ -41,7 +44,8 @@ public interface BookService {
   public void deleteWish(WishDto wishDto);
   
   // 대출
-  public int checkBookCOStatus(int userNo); //회원의 대출 가능 여부 체크
+  public int checkBookCOStatus(int userNo); //회원의 대출 가능 여부 체크 (대출 신청 책 5권 이하)
+  public Integer checkUserStatus(int userNo); //회원의 대출 가능 여부 체크 (회원 상태가 대출 가능 상태)
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 

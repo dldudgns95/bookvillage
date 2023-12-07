@@ -1,11 +1,13 @@
-/*
 package kr.co.bookvillage.service;
+
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface QnaService {
-	public void loadQnaList(HttpServletRequest request, Model model);
+
+	public void addAsk(MultipartHttpServletRequest multipartRequest) throws Exception;
+	public Map<String, Object> getQnaList(HttpServletRequest request);
 }
-*/

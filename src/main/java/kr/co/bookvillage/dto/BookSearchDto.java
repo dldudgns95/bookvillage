@@ -1,5 +1,7 @@
 package kr.co.bookvillage.dto;
 
+import java.sql.Date;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,8 +18,6 @@ public class BookSearchDto {
   private int userNo; // 페이징에 필요
   private String sortType; // 정렬 방식
 
-  
-  //카테고리
-  
+
 
 }

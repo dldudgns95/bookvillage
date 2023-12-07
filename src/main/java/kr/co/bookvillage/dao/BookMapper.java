@@ -1,5 +1,6 @@
 package kr.co.bookvillage.dao;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,8 @@ public interface BookMapper {
   
   //대출
   public void updateBookStatus(BookDto bookDto);
-  public int checkBookCOStatus(int userNo);
+  public int checkBookCOStatus(int userNo); //BOOKCOUNT 5개 이상이면 대출 막음
+  public Integer checkUserStatus(int userNo); //USER의 STATUS가 0이면 대출 막음
   public void insertCheckoutStatus(BookDto bookDto);
+  
 }

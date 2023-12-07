@@ -13,6 +13,8 @@ import kr.co.bookvillage.dto.UserDto;
 
 public interface AdminMapper {
   public int insertBook(BookDto bookDto);
+  public int insertDirectBook(BookDto bookDto);
+  public int editBook(BookDto bookDto);
   public int userTotalCount();
   public List<UserDto> getUserList(Map<String, Object> map);
   public UserDto getUserDetail(int userNo);

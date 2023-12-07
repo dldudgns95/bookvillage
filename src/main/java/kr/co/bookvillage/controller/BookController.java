@@ -23,10 +23,12 @@ import kr.co.bookvillage.dto.ScoreDto;
 import kr.co.bookvillage.dto.WishDto;
 import kr.co.bookvillage.service.BookService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RequestMapping("/book")
 @RequiredArgsConstructor
 @Controller
+@Slf4j
 public class BookController {
   
   private final BookService bookService;
@@ -38,6 +40,14 @@ public class BookController {
     bookService.getNewBook(model);
     bookService.getRecoBook(model);
     return "book/search";
+  }
+  @GetMapping("/total.do")
+  public String total(Model model) {
+    return "book/total";
+  }
+  @GetMapping("/recommand.do")
+  public String recommand(Model model) {
+    return "book/recommand";
   }
   // 검색 버튼 클릭 후 '검색 결과 리스트 페이지'로 이동
   @GetMapping("/search/result")
@@ -59,11 +69,20 @@ public class BookController {
     //한줄평 중복 체크 위해
     int checkScore = bookService.checkScore(scoreDto);
     model.addAttribute("checkScore",checkScore);
+    // 별점 그래프 위해
+    List<ScoreDto> cntStar = bookService.cntStar(isbn);
+    log.info("cntStar: {}", cntStar);
+    model.addAttribute("cntStar",cntStar);
     //대출
     int checkBookCkCnt = bookService.checkBookCOStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
     model.addAttribute("checkBookCkCnt", checkBookCkCnt);
+    Integer checkUserStatus = bookService.checkUserStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
+    model.addAttribute("checkUserStatus", checkUserStatus);
+    System.out.println("여기"+checkUserStatus);
     return "book/detail";
   }
+  
+  
   
   /*별점, 한줄평*/
   //평가 저장
@@ -128,35 +147,5 @@ public class BookController {
   }
 
   
-  //그래프
-  @GetMapping("/chart.do")
-  public String showChart(Model model) {
-      // 실제 데이터베이스에서 데이터를 가져와야 함 (여기서는 임의의 데이터 사용)
-      List<ScoreDto> scoreLists = getDummyScoreData();
-
-      // 데이터를 전달
-      model.addAttribute("scoreLists", scoreLists);
-
-      return "chart"; // 차트를 표시할 뷰의 이름
-  }
   
-  private List<ScoreDto> getDummyScoreData() {
-    List<ScoreDto> dummyData = new ArrayList<>();
-
-    // 예시 데이터 추가
-    dummyData.add(ScoreDto.builder()
-            .isbn("1234567890")
-            .userNo(1)
-            .reviewDate(Date.valueOf("2023-01-01"))
-            .star(4.5)
-            .review("Great book!")
-            .title("Sample Book")
-            .author("Sample Author")
-            .status(1)
-            .build());
-
-    // 추가 데이터 추가...
-
-    return dummyData;
-}
 }

@@ -23,4 +23,7 @@ public class ScoreDto {
   private String title;
   private String author;
   private int status;
+  
+  //그래프
+  private int countStar;
 }

@@ -3,7 +3,6 @@ package kr.co.bookvillage.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.service.FaqService;
 import kr.co.bookvillage.service.NoticeService;
+import kr.co.bookvillage.service.QnaService;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping(value="/support")
@@ -30,10 +30,19 @@ public class NoticeController {
 	 
 	private final NoticeService noticeService;
 	private final FaqService faqService;
-	  
+	private final QnaService qnaService;
+	
+	
+     @GetMapping("/noticeSearch.do")
+	 public String noticeSearch(HttpServletRequest request, Model model) {
+	    noticeService.getSearchNoticeList(request, model);
+	    return "support/list"; 
+	}
+     
 	@GetMapping("/list.do")
-	public String list( ) {
-		return "support/list";
+	public String list(HttpServletRequest request, Model model) {
+	    noticeService.loadNoticeList(request, model);
+	    return "support/list";
 	}
 	
 	@GetMapping("/write.form")
@@ -48,18 +57,14 @@ public class NoticeController {
 		return "redirect:/support/list.do";
 	}
 	
-	@ResponseBody
-	@GetMapping(value="/getList.do", produces="application/json")
-	public Map<String, Object> getList(HttpServletRequest request){
-		return noticeService.getNoticeList(request);
-	}
-	
 
 	
 	@GetMapping("/detail.do")
-	public String detail(HttpServletRequest request, Model model) {
-	    noticeService.loadNotice(request, model);
-	    return "support/detail";
+	  public String detail(@RequestParam(value="ntNo", required=false, defaultValue="0") int ntNo
+              , Model model) {
+				NoticeDto notice = noticeService.getNotice(ntNo);
+				model.addAttribute("notice", notice);
+			return "support/detail";
 	}
 	
 
@@ -113,13 +118,18 @@ public class NoticeController {
 	    return "redirect:/support/list.do";
 	  }
 
+	@GetMapping("/faqSearch.do")
+		 public String faqSearch(HttpServletRequest request, Model model) {
+		    faqService.getSearchFaqList(request, model);
+		    return "support/faqlist"; 
+	}
+	
     @GetMapping("/faqlist.do")
-    public String list(Model model) {
-    	List<FaqDto> faqList = faqService.getFaqList();
-    	model.addAttribute("faqList", faqList);
-    	return "support/faqlist";
+    public String faqlist(HttpServletRequest request, Model model) {
+      faqService.loadFaqList(request, model);
+      return "support/faqlist";
     }
-
+    
 	@GetMapping("/faqwrite.form")
 	public String faqwrite() {
 		return "support/faqwrite";

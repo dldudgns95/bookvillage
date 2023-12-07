@@ -42,8 +42,8 @@ function saveReview() {
     return false; // 이벤트 막기
    }
    
-   const checkWish = document.getElementById('checkWish').value;
-   if (checkWish !== 0) {
+   const checkScore = document.getElementById('checkScore').value;
+   if (checkScore != 0) {
      alert("이미 한줄평을 등록했습니다. 도서 당 하나만 등록 가능합니다");
      return false; // 이벤트 막기
    }
@@ -182,6 +182,13 @@ $(document).ready(function() {
           alert('대출이 불가능합니다. 대출 권수를 초과하셨습니다.');
           return false;
       }
+      var checkUserStatus = $("input[name='checkUserStatus']").val(); 
+      console.log('0이면 연체 :'+ checkUserStatus);
+      if (checkUserStatus == 0) {
+          alert('대출이 불가능합니다. 현재 연체 상태입니다..');
+          return false;
+      }
+      
     
     // 서버로 POST 요청 보내기
     $.ajax({
@@ -234,4 +241,3 @@ $(document).ready(function() {
     }
   })
 });
-

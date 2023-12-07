@@ -29,19 +29,21 @@
 	margin-left: 300px;  
 	  
   }  
+   div.search{
+	text-align: center; 
+	margin-left: 200px;
+	width: 900px;  
+	  
+  }   
 </style>
 <div th:replace="~{/layout/header::header}"></div>
 
-<body>
-
-<div class="parent">
-    <div>
         <div class="side_bar">
      	 <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>
            <ul id="side_list">
                 <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
                 <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-                <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+	            <li style="margin:20px"><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
             </ul>
         </div>
         <div class="child2">
@@ -56,7 +58,20 @@
         </div>
         
         <div class="child2">
-
+ 				 <div class="search">
+                  <form id="frm_search" method="get" th:action="@{/support/faqSearch.do}">
+                    <div class="input-group w-50 p-3">
+                      <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
+                        <option value="FAQ_TITLE" selected>제목</option>
+                        <option value="FAQ_CONTENT">내용</option>
+                      </select>
+                      <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">
+                        <i class="fa-solid fa-magnifying-glass white"></i>
+                      </button>
+                    </div>
+                  </form> 
+                 </div>           
             <!-- 관리자로 로그인 한 경우 -->
 	
             <table class="table align-middle">
@@ -68,9 +83,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <th:block th:each="f : ${faqList}">
+                <th:block th:each="f, vs:${faqList}">
                     <tr>
-                        <td th:text="${f.faqNo}"></td>
+               			<td th:text="${beginNo - vs.index}"></td>
                         <td><a th:href="@{/support/faqdetail.do(faqNo=${f.faqNo})}" th:text="${f.faqTitle}"></a></td>
                			<td>
 	                   		<span th:if="${#strings.length(f.faqContent) > 10}" th:text="${#strings.substring(f.faqContent, 0, 10)} + '...'"></span>
@@ -79,6 +94,11 @@
                     </tr>
                 </th:block>
                 </tbody>
+  				<tfoot th:if="${not #lists.isEmpty(faqList)}">
+					<tr>
+				     <td colspan="5" th:utext="${paging}"></td>
+				    </tr>
+        		</tfoot>              
             </table>
 		</div>           
         <script th:inline="javascript">
@@ -105,11 +125,36 @@
                     }
                 }
             }
+            const fnNoticeSearch = () => {
+		      $('#frm_search').submit((ev) => {
+		        let query = $('.serach_text').val().trim();
+		        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+		        let checkContent = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+		        if(query === '') {
+		          alert('검색어를 입력해주세요.');
+		          ev.preventDefault();
+		          return;
+		        }
+		        if($('.search_select').val() === "FAQ_TITLE") {
+		          if(!checkTitle.test(query)) {
+		            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+		            ev.preventDefault();
+		            return;
+		          }
+		        }
+		        if($('.search_select').val() === "FAQ_CONTENT") {
+		          if(!checkContent.test(query)) {
+		            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+		            ev.preventDefault();
+		            return;
+		          }
+		        }
+		      })
+		    }
+     	    fnNoticeSearch(); 
             fnAddResult();
             fnRemoveResult();
         </script>
-    </div>
-</div>
 
 </body>
 </html>
