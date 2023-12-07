@@ -299,6 +299,12 @@ public class AdminController {
     return "redirect:/admin/bookDetail.do?isbn=" + multiRequest.getParameter("isbn");
   }
   
+  @ResponseBody
+  @GetMapping(value="/checkBook.do", produces="application/json")
+  public Map<String, Object> checkBook(HttpServletRequest request) {
+    return Map.of("checkResult", adminService.checkBook(request));
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {

@@ -931,4 +931,9 @@ public class AdminServiceImpl implements AdminService {
     
   }
   
+  @Override
+  public boolean checkBook(HttpServletRequest request) {
+    return adminMapper.checkAddBook(request.getParameter("isbn"));
+  }
+  
 }

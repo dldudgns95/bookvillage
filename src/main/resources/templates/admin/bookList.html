@@ -183,12 +183,12 @@
         </table>
       </div>
       <div>
-        <form th:action="@{/admin/insertBooks.do}" method="get">
+        <form class="frm_update_book" th:action="@{/admin/insertBooks.do}" method="get">
           <select name="QueryType">
             <option value="ItemNewAll">신간 전체 리스트</option>
             <option value="Bestseller">베스트셀러</option>
           </select>
-          <button type="submit">도서업데이트</button>
+          <button type="submit" id="btn_update_book">도서업데이트</button>
         </form>
       </div>
     </div>
@@ -241,9 +241,17 @@
       }
     }    
     
+    const fnEditButton = () => {
+      $('.frm_update_book').submit((ev) => {
+        $('#btn_update_book').text('처리중');
+        $('#btn_update_book').prop('disabled', true);
+      })
+    }
+    
     fnBookCount();
     fnBookSearch(); 
     fnDeleteResult();
+    fnEditButton();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

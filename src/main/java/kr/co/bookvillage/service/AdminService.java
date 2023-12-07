@@ -46,4 +46,5 @@ public interface AdminService  {
   public int editFacility(MultipartHttpServletRequest multiRequest) throws Exception;
   public int addDirectBook(MultipartHttpServletRequest multiRequest) throws Exception;
   public int editBook(MultipartHttpServletRequest multiRequest) throws Exception;
+  public boolean checkBook(HttpServletRequest request);
 }

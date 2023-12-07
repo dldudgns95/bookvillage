@@ -98,7 +98,7 @@
           <label for="formFile" class="form-label">이미지 파일 선택</label>
           <input class="form-control" type="file" id="files" name="files" accept="image/jpeg,image/gif,image/png" onchange='chk_file_type(this)'>
         </div>
-        <button type="submit" class="btn btn-primary" id="btn_add">도서 등록완료</button>
+        <button type="button" class="btn btn-primary" id="btn_add">도서 등록완료</button>
       </form>
     </div>
   </div>
@@ -106,11 +106,9 @@
   <script>
     
     const fnCheckReg = () => {
-      $('.frm_add_book').submit((ev) => {
+      $('#btn_add').click((ev) => {
         let isbn = $('#isbn').val().trim();
         let title = $('#title').val().trim();
-        console.log(isbn);
-        console.log(title);        
         let checkISBN = /^[0-9]{13}$/;
         let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s\/?.,:|\)*~!^\-_+@\#$%&\=\(]{1,}$/;
         const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
@@ -174,6 +172,18 @@
           ev.preventDefault();
           return;
         }
+        $.ajax({
+          method: 'get',
+          url: '/admin/checkBook.do',
+          data: 'isbn=' + isbn,
+          success: (resData) => {
+            if(resData.checkResult === true) {
+              alert('이미 등록된 ISBN입니다. 확인해주세요.');
+            } else {
+              $('.frm_add_book').submit();
+            }
+          }
+        })
       })
     }
     
