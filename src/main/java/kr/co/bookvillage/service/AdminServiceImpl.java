@@ -936,6 +936,7 @@ public class AdminServiceImpl implements AdminService {
     return adminMapper.checkAddBook(request.getParameter("isbn"));
   }
   
+
   @Override
   public int inactiveBook(HttpServletRequest request) {
     return adminMapper.inactiveBook(request.getParameter("isbn"));
@@ -946,4 +947,5 @@ public class AdminServiceImpl implements AdminService {
     return adminMapper.activeBook(request.getParameter("isbn"));
   }
   
+
 }
