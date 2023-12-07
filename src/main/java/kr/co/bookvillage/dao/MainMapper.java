@@ -13,8 +13,17 @@ import kr.co.bookvillage.dto.NoticeDto;
 public interface MainMapper {
   
   public List<BookDto> reviewTop3List();
+  
   public List<BookDto> searchBookList(Map<String, Object> map);
   public List<NoticeDto> searchNoticeList(Map<String, Object> map);
   public List<FacilityDto> searchFacilityList(Map<String, Object> map);
+  
+  
+  public List<FacilityDto> searchFacilityList();
+  
+  
+  
+  public List<BookDto> getBook(Map<String, Object> map);
+
   
 }

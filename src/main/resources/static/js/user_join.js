@@ -76,6 +76,7 @@ const fnCheckEmail = () => {
             emailPassed = $('#code').val() === resData.code;
             if(emailPassed){
               alert('이메일이 인증되었습니다.');
+
             } else {
               alert('이메일 인증이 실패했습니다.');
             }

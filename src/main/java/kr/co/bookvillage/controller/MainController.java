@@ -80,14 +80,25 @@ public class MainController {
   }
   
   
-  // 통합검색 - 책 검색
+  // 통합검색 
   @GetMapping("/searchBookMain.do")
   public String searchBookMain(HttpServletRequest request, Model model) {
     mainService.getSearList(request, model);
-    
+    model.addAttribute("query", request.getParameter("query"));
+
     return "main/mainSearch";
   }
   
+//  @ResponseBody
+//  @GetMapping(value = "/searchFacMain.do", produces = "application/json")
+//    public Map<String, Object> searchFacMain(HttpServletRequest request, Model model){
+//      List<FacilityDto> facList = mainService.getSearchFacility(request, model);
+//      model.addAttribute("facList", facList);
+//      return Map.of("facList", facList == null ? "" : facList);
+//  }
   
   
+    
+    
+    
 }

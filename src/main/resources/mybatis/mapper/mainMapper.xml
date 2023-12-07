@@ -6,7 +6,33 @@
 
 <mapper namespace="kr.co.bookvillage.dao.MainMapper">
 
-
+  <!-- 시설 Map -->
+  <resultMap type="AttachFacDto" id="AttachFacMap">
+    <id column="FAC_ATTACH_NO"             property="facAttachNo" />
+    <result column="FAC_PATH"              property="facPath" />
+    <result column="FAC_ORIGINAL_FILENAME" property="facOriginalFilename" />
+    <result column="FAC_FILESYSTEM_NAME"   property="facFilesystemName" />
+    <result column="FAC_HAS_THUMBNAIL"     property="facHasThumbnail" />
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO"          property="facNo" />
+      <result column="FAC_NAME"    property="facName" />
+      <result column="FAC_CONTENT" property="facContent" />
+    </association>
+  </resultMap> 
+  
+  
+    <resultMap id="BookMap"           type="kr.co.bookvillage.dto.BookDto">
+    <id      column="ISBN"          property="isbn" />
+    <result  column="TITLE"         property="title" />
+    <result  column="COVER"         property="cover" />
+    <result  column="AUTHOR"        property="author" />
+    <result  column="PUBLISHER"     property="publisher" />
+    <result  column="PUBDATE"       property="pubdate" />
+    <result  column="DESCRIPTION"   property="description" />
+    <result  column="STATUS"        property="status" />
+    <result  column="CATEGORY_NAME" property="categoryName" />
+    <result  column="CATEGORY_ID"   property="categoryId" />
+  </resultMap>
   
   <select id="reviewTop3List">
     SELECT B.ISBN, B.TITLE, B.COVER, B.AUTHOR, B.PUBLISHER, B.PUBDATE, B.STATUS, S.REVIEW_DATE, S.STAR
@@ -45,7 +71,7 @@
       ) WHERE RN BETWEEN 1 AND 10
   </select>
   
-  <select id="searchFacilityList" >
+ <select id="searchFacilityList" resultMap="AttachFacMap">
        SELECT *
         FROM (
             SELECT 
@@ -65,6 +91,37 @@
         WHERE RN BETWEEN 1 AND 10
 
   </select>
+  
+  
+   <!-- 책 검색 결과 조회 및 정렬 -->
+  <select id="getBook" parameterType="map" resultMap="BookMap">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY 
+                                       <choose>
+                                        <when test="sortType == 'title'">TITLE ASC</when>
+                                        <when test="sortType == 'author'">AUTHOR ASC</when>
+                                        <when test="sortType == 'publisher'">PUBLISHER ASC</when>
+                                        <when test="sortType == 'pubDate'">PUBDATE ASC</when>
+                                        <otherwise>PUBDATE DESC</otherwise>
+                                       </choose> 
+                       ) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+              FROM BOOK 
+             WHERE 
+              <choose>
+                <when test="ss == 'total'">
+                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'title'">
+                  TITLE LIKE '%' || #{st} || '%'
+                </when>
+                <when test="ss == 'author'">
+                  AUTHOR LIKE '%' || #{st} || '%'
+                </when>
+              </choose>)
+     WHERE RN BETWEEN #{begin} AND #{end}        
+  </select>
+  
+  
 
 
   

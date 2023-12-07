@@ -48,15 +48,25 @@ public class MainServiceImpl implements MainService {
 
       List<BookDto> bookList = mainMapper.searchBookList(map);
       List<NoticeDto> noticeList = mainMapper.searchNoticeList(map);
-      List<FacilityDto> facilityList = mainMapper.searchFacilityList(map);
+      List<FacilityDto> facList = mainMapper.searchFacilityList(map);
 
       model.addAttribute("bookList",bookList);
       model.addAttribute("noticeList", noticeList);
-      model.addAttribute("facilityList", facilityList);
-
+      model.addAttribute("facList", facList);
       
-
+      
     }
+  
+  @Override
+  public List<FacilityDto> getSearchFacility(HttpServletRequest request, Model model) {
+    
+    String query = request.getParameter("query");
+    
+    Map<String, Object> map = new HashMap<>();
+    map.put("query", query);
+    
+    return mainMapper.searchFacilityList();
+  }
   
 
   

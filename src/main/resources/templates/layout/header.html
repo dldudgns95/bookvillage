@@ -95,7 +95,7 @@
       </th:block>
       <th:block th:if="${session.user != null}">
         <ul class="ico_user_group">
-          <li th:text="|${session.user.name}님 환영합니다|"></li>
+        <a href="http://localhost:8080/mypage/booklist.do"><li  th:text="|${session.user.name}님 환영합니다|"></li></a>
           <li><a th:href="@{/user/logout.do}"><i class="fa-solid fa-arrow-left"></i> 로그아웃</a></li>
           <th:block th:if="${session.user.auth == 9}">
             <li><a th:href="@{/admin/main.do}"><i class="fa-solid fa-lock"></i> 관리자</a></li>  
@@ -110,7 +110,7 @@
         <li><a th:href="@{/book/search.do}">자료검색</a></li>
         <li><a th:href="@{/mypage/booklist.do}">나만의 도서관</a></li>
         <li><a th:href="@{/support/list.do}">고객센터</a></li>
-        <li><a th:href="@{/apply/faclist.do}">시설신청</a></li>
+        <li><a th:href="@{/apply/faclist.do}">희망도서/시설신청</a></li>
       </ul>
     </div>
 

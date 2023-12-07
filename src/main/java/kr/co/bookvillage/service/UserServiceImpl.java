@@ -553,7 +553,7 @@ public class UserServiceImpl implements UserService {
    
    return user;
  }
-  
+  // 카카오 로그인
   @Override
   public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
       throws Exception {

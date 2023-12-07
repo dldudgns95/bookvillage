@@ -231,7 +231,7 @@
         contentType: 'application/json',
         success: function (response) {
             response.book.forEach(function (book) {
-                var truncatedTitle = book.title.substring(0, 20) + (book.title.length > 20 ? '...' : '');
+                var truncatedTitle = book.title.substring(0, 15) + (book.title.length > 15 ? '...' : '');
                 var statusText = book.status === 1 ? '대출 가능' : '대출 중';
 
                 // 이미지를 동적으로 추가
@@ -274,7 +274,7 @@
         contentType: 'application/json',
         success: function (response) { 
             response.review3.forEach(function (review3) {
-                var truncatedTitle = review3.title.substring(0, 20) + (review3.title.length > 20 ? '...' : '');
+                var truncatedTitle = review3.title.substring(0, 15) + (review3.title.length > 15 ? '...' : '');
                 var statusText = review3.status === 1 ? '대출 가능' : '대출 중';
 
                 // 이미지를 동적으로 추가
