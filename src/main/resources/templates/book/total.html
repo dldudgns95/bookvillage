@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('소장자료 검색')}"></head>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+      <nav class="breadcrumb">
+        <ul class="b_menu">
+          <li class="home">
+            <span class="home_ico">
+              <em class="blind"><i class="fa-solid fa-house"></i></em>
+            </span>
+          </li>
+          <li class>
+            <a href="#none">자료검색</a>
+            <div class="dep_list" style="display: none;">
+              <ul>
+                <li class>
+                  <a href="/book/search.do">자료검색</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">나만의 도서관</a>
+                </li>
+                <li class>
+                  <a href="/support/notice.do">고객센터</a>
+                </li>
+                <li class>
+                  <a href="/mypage/list.do">시설안내</a>
+                </li>
+                <li class>
+                  <a href="/user/login.form">로그인</a>
+                </li>
+                <li class>
+                  <a href="/user/agree.form">회원가입</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li>
+            <strong class="current"></strong>
+          </li>
+        </ul>
+      </nav>
+      
+<!-- body -->      
+    <div class="wrap wrap_flex">
+      <div class="column-2">
+        <div class="book_side_bar">
+          <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">자료 검색</h3>
+          <ul id="book_side_list">
+            <li><a th:href="@{/book/search.do}">자료 검색</a></li>
+            <li><a th:href="@{/book/total.do}">전체 도서</a></li>
+            <li><a th:href="@{/book/recommand.do}">추천 도서</a></li>
+          </ul>      
+        </div>        
+      </div>
+      
+      <div class="column-8">
+        <div class="search_menu">
+          <div class="search_cnt">
+           총 <span class="search_cnt_cnt"> '[[${totalCount}]]' </span> 건
+          </div>
+        </div>
+        
+       
+        </div>
+
+      </div>
+
+        
+      </div>
+      
+      
+      
+    </div>
+
+    <script th:src="@{/js/bread.js}"></script>
+    <script th:src="@{/js/book.js}"></script>
+
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>

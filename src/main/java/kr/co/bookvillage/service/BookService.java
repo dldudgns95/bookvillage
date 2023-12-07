@@ -1,5 +1,7 @@
 package kr.co.bookvillage.service;
 
+import java.sql.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ public interface BookService {
   // 별점, 한줄평
   public int insertScore(ScoreDto scoreDto);
   public int checkScore(ScoreDto scoreDto);
+  public List<ScoreDto> cntStar(String isbn);
   public void getScoreList(String isbn, Model model);
   public void getStarAvg(String isbn,Model model);
   public void deleteScore(ScoreDto scoreDto);
