@@ -60,37 +60,37 @@
       <form enctype="multipart/form-data" method="post" th:action="@{/admin/editBook.do}">
         <div class="mb-3 row">
           <label for="isbn" class="col-sm-2 col-form-label">ISBN</label>
-          <div class="col-sm-5">
+          <div class="col-sm-9">
             <input type="text" readonly class="form-control" id="isbn" name="isbn" th:value="${book.isbn}">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="title" class="col-sm-2 col-form-label">책 제목</label>
-          <div class="col-sm-5">
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="title" name="title" th:value="${book.title}">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="author" class="col-sm-2 col-form-label">저자</label>
-          <div class="col-sm-5">
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="author" name="author" th:value="${book.author}">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
-          <div class="col-sm-5">
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="publisher" name="publisher" th:value="${book.publisher}">
           </div>
         </div>
         <div class="mb-3 row">
-          <label for="pubdate" class="col-sm-2 col-form-label">출간일(EX : 2023/01/01)</label>
-          <div class="col-sm-5">
+          <label for="pubdate" class="col-sm-2 col-form-label">출간일(EX:2023/01/01)</label>
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="pubdate" name="pubdate" th:value="${book.pubdate}">
           </div>
         </div>
         <div class="mb-3 row">
           <label for="categoryName" class="col-sm-2 col-form-label">카테고리</label>
-          <div class="col-sm-5">
+          <div class="col-sm-9">
             <input type="text" class="form-control" id="categoryName" name="categoryName" th:value="${book.categoryName}">
           </div>
         </div>
