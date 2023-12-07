@@ -37,7 +37,7 @@
         <ul id="side_list">
           <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
 		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+	      <li style="margin:20px"><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
         </ul>
       </div>
       <div class="child2">
@@ -79,6 +79,7 @@
       
    </script>
 </div>
+  <div th:replace="~{/layout/footer::footer}"></div>
 
 </body>
 </html>

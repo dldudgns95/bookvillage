@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.QnaMapper">
+<insert id="insertAsk" parameterType="QnaDto">
+    INSERT INTO QNA_ASK (
+        ASK_NO
+      , USER_NO
+      , ASK_TITLE
+      , ASK_CONTENT
+      , ASK_DATE
+      , ASK_STATE
+    ) VALUES (
+        QNA_ASK_SEQ.NEXTVAL
+      , #{userDto.userNo}
+      , #{askTitle}
+      , #{askContent}
+   	  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
+      , #{askState}
+    )
+  </insert>
+<insert id="insertAttach" parameterType="AttachAskDto">
+    INSERT INTO ATTACH_ASK (
+        ASK_ATTACH_NO
+      , ASK_PATH
+      , ASK_ORIGINAL_FILENAME
+      , ASK_FILESYSTEM_NAME
+      , ASK_DOWNLOAD_COUNT
+      , ASK_HAS_THUMBNAIL
+      , ASK_NO      
+    ) VALUES (
+        ATTACH_ASK_SEQ.NEXTVAL
+      , #{askPath}
+      , #{askOriginalFilename}
+      , #{askFilesystemName}
+      , #{askDownloadCount}
+      , #{askHasThumbnail}
+      , QNA_ASK_SEQ.CURRVAL
+    )
+</insert> 
+<!-- 공지사항 리스트 가져오기 -->
+  <select id="getAskCount" resultType="int">
+    SELECT COUNT(*)
+      FROM QNA_ASK
+  </select>
+ 
+
+</mapper>
