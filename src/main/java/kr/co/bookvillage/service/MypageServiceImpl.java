@@ -61,7 +61,7 @@ public class MypageServiceImpl implements MypageService {
         .userNo(userNo)
         .build();
     
- // 휴대전화번호 중복 체크
+    // 휴대전화번호 중복 체크(중복데이터가 있으면 1)
     int mobileCount = mypageMapper.getMobileCheck(user.getMobile());
     if (mobileCount > 0) {
         // 중복된 휴대전화번호가 있을 경우 처리
