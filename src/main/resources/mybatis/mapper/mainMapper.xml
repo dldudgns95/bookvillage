@@ -8,7 +8,7 @@
 
 
   
-  <select id="reviewTop3List" >
+  <select id="reviewTop3List">
     SELECT B.ISBN, B.TITLE, B.COVER, B.AUTHOR, B.PUBLISHER, B.PUBDATE, B.STATUS, S.REVIEW_DATE, S.STAR
       FROM BOOK B INNER JOIN SCORE S 
         ON B.ISBN = S.ISBN
@@ -17,6 +17,56 @@
     FETCH FIRST 10 ROWS ONLY
   </select>
   
+  
+  <select id="searchBookList" parameterType="BookDto">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+    FROM (
+      SELECT ROW_NUMBER() OVER(ORDER BY TITLE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+      WHERE 
+        (
+          AUTHOR LIKE '%' || #{query} || '%'
+          OR TITLE LIKE '%' || #{query} || '%' 
+          OR PUBLISHER LIKE '%' || #{query} || '%'
+        )
+    ) WHERE RN BETWEEN 1 AND 10
+  </select>
+
+
+  <select id="searchNoticeList" parameterType="NoticeDto">
+    SELECT NT_NO, NT_TITLE, NT_CONTENT, NT_DATE
+      FROM (
+        SELECT ROW_NUMBER() OVER(ORDER BY NT_TITLE) AS RN, NT_NO, NT_TITLE, NT_CONTENT, NT_DATE
+          FROM NOTICE
+         WHERE(
+             NT_TITLE LIKE '%' || #{query} || '%'
+          OR NT_CONTENT LIKE '%' || #{query} || '%'
+         )
+      ) WHERE RN BETWEEN 1 AND 10
+  </select>
+  
+  <select id="searchFacilityList" >
+       SELECT *
+        FROM (
+            SELECT 
+                F.FAC_NO, 
+                F.FAC_NAME, 
+                F.FAC_CONTENT, 
+                A.FAC_ATTACH_NO, 
+                A.FAC_PATH, 
+                A.FAC_ORIGINAL_FILENAME, 
+                A.FAC_FILESYSTEM_NAME, 
+                A.FAC_HAS_THUMBNAIL,
+                ROW_NUMBER() OVER (ORDER BY F.FAC_NO DESC) AS RN
+            FROM FACILITY F
+            INNER JOIN ATTACH_FAC A ON F.FAC_NO = A.FAC_NO
+            WHERE F.FAC_NAME LIKE '%' || #{query} || '%'
+        )
+        WHERE RN BETWEEN 1 AND 10
+
+  </select>
+
+
   
   
 </mapper>

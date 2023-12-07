@@ -103,7 +103,7 @@
       <div class="main_notice_list_box1">
 
         <div class="table-responsive notice_list">
-          <h3 class="title2">공지사항</h3>
+          <h3 class="title2">공지사항 </h3><button type="button" id="btn_ntGo" class="btn btn-outline-secondary btn-sm">더보기</button>
           
           <table  class="table align-middle">
             <thead>
@@ -125,7 +125,7 @@
       <div class="main_notice_list_box2">
         
         <div class="table-responsive notice_list">
-            <h3 class="title2">FAQ</h3>
+            <h3 class="title2">FAQ</h3><button type="button" id="btn_faqGo" class="btn btn-outline-secondary btn-sm">더보기</button>
             
             <table class="table align-middle">
                 <thead>
@@ -164,7 +164,7 @@
 
     <!-- 평점 슬라이드 -->
   <div class="reviewBookList"> 
-    <div class="title2">리뷰 TOP.10 </div>
+    <div class="title2">리뷰 TOP 10 </div>
 
     
         <div class="swiper-container swiper-container3">
@@ -181,7 +181,7 @@
 
   <!-- 시설신청하기 -->
   <div class="reviewBookList"> 
-    <div class="title2">시설신청하기  <button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm">더보기</button></div>
+    <div class="title2">시설신청하기</div><button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm">더보기</button>
    
    
    <div class="swiper-container swiper-container4">
@@ -288,6 +288,18 @@
     });
 });
 
+ // 공지사항 더보기
+ $(document).ready(function(){
+   $('#btn_ntGo').on('click', function(){
+     window.location.href='http://localhost:8080/support/list.do';
+   })
+ })
+ // FAQ 더보기
+ $(document).ready(function(){
+   $('#btn_faqGo').on('click', function(){
+     window.location.href='http://localhost:8080/support/faqlist.do';
+   })
+ })
 
 
  // 시설신청 더보기 누르면 신청 페이지로 이동
@@ -307,7 +319,7 @@
         spaceBetween: 4,
         // centeredSlides: true,
         direction: 'horizontal',
-        loop: false,
+        loop: true,
         pagination: {
             el: '.swiper-pagination',
         },
@@ -327,22 +339,16 @@
         success: function (response) {
             response.facList.forEach(function (facList) {
                 // var truncatedTitle = facList.facName.substring(0, 20) + (facList.facName.length > 20 ? '...' : '');
-              //  var statusText = facList.status === 1 ? '대출 가능' : '대출 중';
+              var statusText = facList.status === 1  ? '예약불가' : '예약가능';
               var firstFacName = response.facList[0].facilityDto.facName;
 
-        // facList 배열을 순회하면서 각 facName 값을 추출
         response.facList.forEach(function (facList) {
             var facName = facList.facilityDto.facName;
-            console.log(facName);
-            
-            // 여기에서 facName을 이용하여 필요한 작업 수행
-       
+// var facImage = facList.facFilesystemName !== null ? `${facList.facPath}/${facList.facFilesystemName}` : 'ready_img.jpg';
 
+//fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facImage}"><br>${facName}<br></div>`);
 
-                // 이미지를 동적으로 추가
-                //<img class="modal_img" src="' + f.facPath + '/' + f.facFilesystemName + '">
-                //fac.appendSlide(`<div class="swiper-slide swiper-slide1"><a href="/book/search/detail?isbn=${facList.isbn}"><img class="sliserImg" src="${facList.facFilesystemName}" alt="${facList.facName}"><br>${facName}<br>${statusText}</a></div>`);
-            fac.appendSlide(`<div class="swiper-slide swiper-slide"><img class="facImg" src="${facList.facPath}/${facList.facFilesystemName}"><br>${facName}</div>`);
+            fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facList.facPath}/${facList.facFilesystemName}"><br>${facName}<br></div>`);
             });
  });
         },

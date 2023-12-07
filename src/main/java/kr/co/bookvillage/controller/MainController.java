@@ -3,6 +3,8 @@ package kr.co.bookvillage.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,5 +78,16 @@ public class MainController {
     return Map.of("facList", facList == null ? "" : facList);
     
   }
+  
+  
+  // 통합검색 - 책 검색
+  @GetMapping("/searchBookMain.do")
+  public String searchBookMain(HttpServletRequest request, Model model) {
+    mainService.getSearList(request, model);
+    
+    return "main/mainSearch";
+  }
+  
+  
   
 }

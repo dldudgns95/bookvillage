@@ -28,6 +28,11 @@
 .sliserImg{
   width: 200px;
   height: 270px;
+  margin-bottom: 5px;
+}
+
+.facImg{
+  margin-bottom: 5px;
 }
 
 .newBookList{
@@ -69,6 +74,9 @@
   height: 300px;
 }
 
+.swiper-slide4{
+  text-align: center;
+}
 
 
 

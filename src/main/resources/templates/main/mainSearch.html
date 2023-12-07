@@ -7,6 +7,30 @@
 
 
 <style>
+.searchResult{
+  margin:30px;
+}
+.bookSearchMain_wrap{
+  display: flex;
+}
+
+.bookSearchMain{
+  display: inline-block;
+}
+
+
+.bookSearchMainTitle{
+  margin: 5px;
+}
+.swiper-containerFac,
+.swiper-containerBookList{
+  overflow: hidden;
+  height: 100%;
+}
+.facImg{
+  margin:5px;
+}
+
 
 
 </style>
@@ -15,13 +39,70 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
+   <div class="main_wrap">
     
-    <div>
-      <div class="title2" style="text-align: center;">" "에 대한 검색 결과</div>
-      <c:if test="{empty}"
+    <div class="searchResult">
+        <div class="title2" style="text-align: center;"  th:text="|'${query}'에 대한 검색결과는 없습니다.|"></div>
+
         
-    </div>
+        <div class="title2 bookSearchMain_wrap">소장도서</div>
+        
+          <div class="bookSearchMain" th:each="book : ${bookList}" >
+              <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
+                  <img th:src="${book.cover}" /><br>
+                  <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 15 ? #strings.substring(book.title, 0, 15) + '...' : book.title + '<br>' + (book.status == 1 ? '대출 가능' : '대출 중')}"></div>
+              </a>
+          </div>
+        
+        
+        
+        <hr>
+        
+       
+    <!-- 첫 번째 박스 - 공지사항 목록 -->
+      <div class="main_notice_list_box1">
+
+        <div class="table-responsive notice_list">
+          <h3 class="title2">공지사항</h3>
+          
+          <table  class="table align-middle" th:each="nt:${noticeList}">
+            <thead>
+              <tr>
+                <td>순번</td>
+                <td>제목</td>
+                <td>작성날짜</td>
+              </tr>              
+            </thead>
+            <tbody>
+
+              <tr>
+                <td th:text="${nt.ntNo}"></td>
+                <td>
+                   <a th:href="@{/support/detail.do(ntNo=${nt.ntNo})}" th:text="${nt.ntTitle}"></a>
+                </td>
+                <td th:text="${nt.ntDate}"></td>
+            </tr>
+              </tr>
+            </tbody>
+          </table>
+          
+        </div>
+
+       </div>
+
+        <hr>
+
+
+         <div class="title2 bookSearchMain_wrap">시설</div>
+
+        
+            <div class="bookSearchMain" th:each="fac : ${facilityList}">
+                <div th:text="${fac.facName}"></div>
+            </div>
+
+
+
+        
 
  
 
@@ -29,14 +110,14 @@
 
 
     
-    
-    
-    
-  </div>
   
   
   <script>
+ 
     
+ 
+
+
   
 </script>
   <div th:replace="~{/layout/footer::footer}"></div>
