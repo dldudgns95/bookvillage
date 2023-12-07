@@ -54,7 +54,7 @@
              WHERE 
               <choose>
                 <when test="ss == 'total'">
-                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
+                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%' OR PUBLISHER LIKE '%' || #{st} || '%' 
                 </when>
                 <when test="ss == 'title'">
                   TITLE LIKE '%' || #{st} || '%'
