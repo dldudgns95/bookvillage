@@ -57,11 +57,11 @@
         <h1>도서 수정하기</h1>
       </div>
       <hr>
-      <form enctype="multipart/form-data" method="post" th:action="@{/admin/editBook.do}">
+      <form class="frm_edit_book" enctype="multipart/form-data" method="post" th:action="@{/admin/editBook.do}">
         <div class="mb-3 row">
           <label for="isbn" class="col-sm-2 col-form-label">ISBN</label>
           <div class="col-sm-9">
-            <input type="text" readonly class="form-control" id="isbn" name="isbn" th:value="${book.isbn}">
+            <input type="text" class="form-control" id="isbn" name="isbn" th:value="${book.isbn}">
           </div>
         </div>
         <div class="mb-3 row">
@@ -107,7 +107,7 @@
           <img th:src="@{${book.cover}}">
         </div>
         <input type="hidden" name="cover" th:value="${book.cover}">
-        <button type="submit" class="btn btn-primary" id="btn_add">도서 수정완료</button>
+        <button type="button" class="btn btn-primary" id="btn_edit">도서 수정완료</button>
       </form>
     </div>
   </div>
@@ -116,11 +116,87 @@
     
     const fnDescription = () => {
       let description = /*[[${book.description}]]*/ null;
-      description = description.replace(/<br\s*[\/]?>/gi, "\n");
+      if(description !== null) {
+        description = description.replace(/<br\s*[\/]?>/gi, "\n");
+      }
       $('#description').append(description);
     }
     
+    const fnCheckReg = () => {
+      $('#btn_edit').click((ev) => {
+        let isbn = $('#isbn').val().trim();
+        let title = $('#title').val().trim();
+        let checkISBN = /^[0-9]{13}$/;
+        let checkTitle = /^[a-zA-Z0-9가-힣一-龥]{1}[a-zA-Z0-9가-힣一-龥\s\/?.,:|\)*~!^\-_+@\#$%&\=\(]{1,}$/;
+        const reg = /[\{\}\[\]\/?.,;:|\)*~`!^\-_+<>@\#$%&\\\=\(\'\"]/g;
+        const checkAuthor = /[\{\}\[\]\/?.;:|*~`!^\-_+<>@\#$%&\\\=\'\"]/g;
+        const checkPublisher = /[\{\}\[\]\/?.,;:|*~`!^\-_+<>@\#$%&\\\=\'\"]/g;
+        const checkPubdate = /[\{\}\[\]/?.,;:|\)*~`!^_+<>@\#$%&\\\=\(\'\"]/g;
+        const checkDescription = /[\{\}\[\]\;:|*`^\-_\\\\=]/g;
+        const checkCategoryName = /[\{\}\[\]?.,;:|\)*~`!^\-_+<@\#$%&\\\=\(\'\"]/g;
+        if(isbn === '') {
+          alert('ISBN을 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if(!checkISBN.test(isbn)) {
+          alert('ISBN을 정확히 입력해주세요.(숫자 13자)');
+          ev.preventDefault();
+          return;
+        }
+        if(title === '') {
+          alert('책 제목을 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if(!checkTitle.test(title)) {
+          alert('책 제목을 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(checkAuthor.test($('#author').val().trim())) {
+          alert('저자에 특수문자가 포함되어 있습니다. 확인해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(checkPublisher.test($('#publisher').val().trim())) {
+          alert('출판사에 특수문자가 포함되어 있습니다. 확인해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(checkPubdate.test($('#pubdate').val().trim())) {
+          alert('출간일에 특수문자가 포함되어 있습니다. 확인해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(checkDescription.test($('#description').val().trim())) {
+          alert('책 소개에 특수문자가 포함되어 있습니다. 확인해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(checkCategoryName.test($('#categoryName').val().trim())) {
+          alert('카테고리명에 특수문자가 포함되어 있습니다. 확인해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        
+        if(!confirm('해당 도서를 등록하시겠습니까?')) {
+          ev.preventDefault();
+          return;
+        }
+        
+        $('.frm_edit_book').submit();
+        
+      })
+    }
+    
     fnDescription();
+    fnCheckReg();
     
   </script>
   
