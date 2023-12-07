@@ -79,7 +79,7 @@
                 <form method="post" id="frm_btn">
                 <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                 <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-                <button type="button" id="btn_cancleFac" class="btn btn-success">신청취소</button>
+                <button type="button" id="btn_cancleFac" class="btn btn-success btn-sm">신청취소</button>
                 </form>
               </td>
               <td th:if="${facApply.facStatus != 0}">

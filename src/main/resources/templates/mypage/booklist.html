@@ -63,7 +63,6 @@
       <div>
         <h4>이용자 대출상태</h4>
         <ul style="text-align: center;">         
-          <li th:text="|이용자 이름:${session.user.name}|"></li>
           <th:block th:if="${session.user.status == 0}">
             <li th:text="|회원상태:대출불가|"></li>
           </th:block>
