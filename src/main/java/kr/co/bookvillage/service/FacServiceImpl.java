@@ -41,83 +41,6 @@ public class FacServiceImpl implements FacService {
 
 
   @Override
-  public void addFacility(MultipartHttpServletRequest multiRequest) throws Exception {
-    
-    String facName = multiRequest.getParameter("facName");
-    String facContent = multiRequest.getParameter("facContent");
-    int checkStatus = Integer.parseInt(multiRequest.getParameter("checkStatus"));
-    System.out.println("checkStatus : " + checkStatus);
-    FacilityDto facility = FacilityDto.builder()
-                                      .facName(facName)
-                                      .facContent(facContent)
-                                      .build();
-    int addResult = facMapper.addFacility(facility);
-    
-    List<MultipartFile> files = multiRequest.getFiles("files");
-    
-    int attachCount;
-    if(files.get(0).getSize() == 0) {
-      attachCount = 1;
-    } else {
-      attachCount = 0;
-    }
-    
-    for(MultipartFile multipartFile : files) {
-      if(multipartFile != null && !multipartFile.isEmpty()) {
-        String path = "";
-        if(checkStatus == 0) {
-          path = adminFileUtils.getFacPath();
-        } else if(checkStatus == 1) {
-          path = adminFileUtils.getFacMacImagePath();
-        }
-        File dir = new File(path);
-        if(!dir.exists()) {
-          dir.mkdirs();
-        }
-        
-        String facOriginalFilename = multipartFile.getOriginalFilename();
-        String facFilesystemName = adminFileUtils.getFilesystemName(facOriginalFilename);
-        
-        System.out.println("path : " + path);
-        System.out.println("facOriginalFilename : " +facOriginalFilename);
-        System.out.println("facFilesystemName : " +facFilesystemName);
-        
-        String url = path + "/" + facFilesystemName;
-        
-        Path paths = Paths.get(url).toAbsolutePath();
-        
-        File file = new File(dir, facFilesystemName);
-        
-        System.out.println("file : " + file);
-        
-          //multipartFile.transferTo(file); // 이거 안됨
-          multipartFile.transferTo(paths.toFile());
-        
-      String contentType = Files.probeContentType(paths); // 이미지의 Content-Type : image/jpeg, image/png 등 image로 시작한다.
-      int hasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
-      
-      // 썸네일이 있으면 원본파일 썸네일로 만들기
-      if(hasThumbnail == 1) {
-        File thumbnail = new File(dir, "s_" + facFilesystemName); // small 이미지를 의미하는 s_를 덧붙임
-        Thumbnails.of(file)
-                  .size(100, 100)       // 가로 100px, 세로 100px
-                  .toFile(thumbnail);
-      }
-      
-      AttachFacDto attachFac = AttachFacDto.builder()
-                                 .facPath(path)
-                                 .facOriginalFilename(facOriginalFilename)
-                                 .facFilesystemName(facFilesystemName)
-                                 .facHasThumbnail(0)
-                                 .build();
-      System.out.println("attachFac : " + attachFac);
-      attachCount += facMapper.addFacImage(attachFac);
-        
-      }
-    }
-  }
-  
-  @Override
   public Map<String, Object> getFacTotalList(HttpServletRequest request) {
     
     String facStart = request.getParameter("facStart");
@@ -154,7 +77,7 @@ public class FacServiceImpl implements FacService {
     model.addAttribute("facApplyList", facMapper.getFacApplyList());
   }
   @Override
-	public int addbook(HttpServletRequest request) {
+  public int addbook(HttpServletRequest request) {
 	  // BLOG_T에 추가할 데이터
 	  String bookName = request.getParameter("bookName");
 	    String author = request.getParameter("author");
@@ -175,6 +98,10 @@ public class FacServiceImpl implements FacService {
 	    return addResult;
 	}
   
-  
+  @Override
+  public void getFacList(Model model) {
+   model.addAttribute("facList", facMapper.getFacList());
+		
+	}
   
 }

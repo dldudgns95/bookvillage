@@ -32,16 +32,12 @@
 </style>
 <div th:replace="~{/layout/header::header}"></div>
 
-<body>
-
-<div class="parent">
-    <div>
         <div class="side_bar">
      	 <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>
            <ul id="side_list">
                 <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
                 <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-                <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+	            <li style="margin:20px"><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
             </ul>
         </div>
         <div class="child2">
@@ -108,8 +104,6 @@
             fnAddResult();
             fnRemoveResult();
         </script>
-    </div>
-</div>
 
 </body>
 </html>

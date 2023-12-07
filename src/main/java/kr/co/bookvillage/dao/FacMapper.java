@@ -11,9 +11,7 @@ import kr.co.bookvillage.dto.FacilityDto;
 
 @Mapper
 public interface FacMapper {
-	public int addFacility(FacilityDto facilityDto);
-	public int addFacImage(AttachFacDto attachFacDto);
-	public List<FacilityDto> getFacList();
+	public List<AttachFacDto> getFacList();
 	public List<AttachFacDto> availableFacList(String facStart);
 	public List<AttachFacDto> unavailableFacList(String facStart);
 	public int addFacApply(Map<String, Object> map);
