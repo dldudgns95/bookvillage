@@ -55,7 +55,7 @@
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/d7b7baec-edc7-48b2-81d3-fdb057ff8a99)
 
 ### 도서 상세 
-: 도서 상세 정보를 조회하고, 관심도서 등록, 대출 신청, 한줄평 등록을 수행할 수 있으며, 평점 분포를 조회하고 최다 추천 한줄평을 확인할 수 있습니다.
+: 도서 상세 정보를 조회하고, 관심도서 등록, 대출 신청, 한줄평 등록을 수행할 수 있으며, 평점 분포 및 최다 추천 한줄평을 확인할 수 있습니다.
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/3c7a0557-dc10-4217-b370-3456dfaa8ff4)
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/3cc0c26c-9ece-4c3e-8094-0e48a097ea8e)
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/ab6717e6-1698-4e88-9d10-3aef73c2afb7)
@@ -89,14 +89,21 @@
 : 희망도서를 신청받으면 알라딘 API를 통해 도서 추가
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/e4e93d78-917f-4458-8c76-90cf77e5e7f4)
 
-### 도서 관리
+#### 도서 관리
 : 도서 전체 내역 조회 및 관리, 알라딘 API를 통해 도서를 일괄 업데이트
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/439df0bb-1ad3-4e32-ab06-20da80a0ed54)
 
-### 도서 대출
+#### 도서 대출
 : 대출 신청에 대한 처리
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/9a44c95a-a370-4822-a2e9-e9a92f0b7d68)
 
+### 시설 신청
+: 희망하는 날짜에 시설 이용을 신청할 수 있습니다
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/e13e165b-2ebc-4b44-a5a5-ef694d6949e2)
+
+### 희망도서 신청
+: 희망도서를 신청할 수 있습니다
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/4a1f48cf-24e3-4f86-8445-d338f677e4a7)
 
 
 
