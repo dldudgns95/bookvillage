@@ -106,8 +106,8 @@
         <i class="fa-solid fa-user-large"></i> 회원관리
       </a>
       <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
-      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
-      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
       <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서등록</a>
       <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
       <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
@@ -128,7 +128,7 @@
         </div>
         <div class="mb-3">
           <label for="formFile" class="form-label">이미지 파일 선택</label>
-          <input class="form-control" type="file" id="files" name="files">
+          <input class="form-control" type="file" id="files" name="files" accept="image/jpeg,image/gif,image/png" onchange='chk_file_type(this)'>
         </div>
         <div>
           <input type="hidden" id="checkStatus" name="checkStatus" value="0">
@@ -168,8 +168,19 @@
         })
       }
       
-      fnCheckFac();
+      function chk_file_type(obj) {
+        var file_kind = obj.value.lastIndexOf('.');
+        var file_name = obj.value.substring(file_kind+1,obj.length);
+        var file_type = file_name.toLowerCase();
+        
+        if(!(file_type=='jpg'||file_type=='gif'||file_type=='png'||file_type=='jpeg')){
+          alert('이미지 파일만 선택할 수 있습니다.');
+          $('#files').val('');
+          return false;
+        }
+      }
       
+      fnCheckFac();
     </script>
 
   </div>

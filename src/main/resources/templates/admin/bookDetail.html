@@ -90,6 +90,10 @@
     width: 50px;
   }
   
+  .admin_contents img {
+    width: 200px;
+  }
+  
 
   
 </style>
@@ -115,7 +119,8 @@
     <div class="admin_contents">
       <div class="flex_admin">
         <div>
-          <img th:src="${book.cover}">
+          <img th:if="${book.cover != null || book.cover != ''}" th:src="${book.cover}">
+          <img th:if="${book.cover == null || book.cover == ''}" src="http://localhost:8080/image/book.png">
         </div>
         <div class="admin_contents align_center">
           <h4 th:text="${book.title}"></h4>

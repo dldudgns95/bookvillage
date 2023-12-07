@@ -67,7 +67,7 @@
     </association>
   </resultMap>
   
-  <!-- 책 넣기 -->
+  <!-- 책 API로 넣기 -->
   <insert id="insertBook" parameterType="bookDto">
     INSERT INTO BOOK(
       ISBN
@@ -93,6 +93,43 @@
     , #{categoryId}
     )
   </insert>
+  
+  <!-- 책 직접 넣기 -->
+  <insert id="insertDirectBook" parameterType="bookDto">
+    INSERT INTO BOOK(
+      ISBN
+    , TITLE
+    , COVER
+    , AUTHOR
+    , PUBLISHER
+    , PUBDATE
+    , DESCRIPTION
+    , STATUS
+    , CATEGORY_NAME
+    ) VALUES(
+      #{isbn}
+    , #{title}
+    , #{cover}
+    , #{author}
+    , #{publisher}
+    , #{pubdate}
+    , #{description}
+    , 1
+    , #{categoryName}
+    )
+  </insert>
+  
+  <update id="editBook" parameterType="bookDto">
+    UPDATE BOOK
+       SET TITLE = #{title}
+         , COVER = #{cover}
+         , AUTHOR = #{author}
+         , PUBLISHER = #{publisher}
+         , PUBDATE = #{pubdate}
+         , DESCRIPTION = #{description}
+         , CATEGORY_NAME = #{categoryName}
+     WHERE ISBN = #{isbn}
+  </update>
   
   <!-- 총 유저수 카운트-->
   <select id="userTotalCount" resultType="int">
