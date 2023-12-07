@@ -61,19 +61,41 @@
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/ab6717e6-1698-4e88-9d10-3aef73c2afb7)
 
 ### 마이페이지
-: 대출 신청 내역을 조회, 취하고 
-![image](https://github.com/dldudgns95/bookvillage/assets/93424265/5a2eff3d-ae94-4f01-9f6d-8de0386c3763)
+: 대출조회, 회원정보 조회, 관심도서 조회, 도서 후기 조회, 시설 이용 신청 내역 조회, 희망 도서 신청 내역 조회 등이 가능합니다.
+#### 대출 조회
+: 대출 신청 내역 조회, 반납 기한 연장이 가능하고 대출신청을 취소할 수 있습니다.
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/a8a5ac34-0a4f-4594-81ec-0a97cfb8e7ad)
+
+#### 회원정보
+: 회원정보를 확인 및 수정할 수 있으며 비밀번호를 바꿀 수 있습니다.
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/47bcb5b3-b23e-42bd-9684-c7e2e4052095)
+
+#### 관심도서
+: 관심도서 내역을 확인하고 취소할 수 있습니다.
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/2345ceb2-5f2d-4d63-bdb1-69f654df9ebc)
 
 ### 관리자
 : 회원관리, 희망도서, 시설관리, 시설신청, 도서등록, 도서관리, 도서대출, 도서반납 등의 관리 작업을 수행할 수 있습니다.
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/8bbbfdce-cdb2-4171-ba0b-5d759e3368cd)
+
 #### 회원 관리
-: 회원별 회원 정보를 조회할 수 있고 대출 신청이 오면 승인 처리 및 대출 가능 상태(연체,가능)를 조정 수 있습니다. 또한 시설 이용 신청을 승인하거나 희망 도서 신청 내역을 조회할 수도 있습니다.  
+: 회원 목록 조회, 회원별 회원 정보 조회, 대출 신청이 오면 승인 처리 및 대출 가능 상태(연체,가능)를 조정, 시설 이용 신청 승인, 희망 도서 신청 내역을 조회  
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/d90cec0b-88f6-46ad-9cdf-6719ec108af9)
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/ce254ead-9211-4e4d-8268-fb609283d240)
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/a05ccfdf-1668-4d2f-a386-b12f443d57c4)
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/fdad4541-b38e-46be-9423-c5b5ccc433f8)
 
+#### 희망 도서
+: 희망도서를 신청받으면 알라딘 API를 통해 도서 추가
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/e4e93d78-917f-4458-8c76-90cf77e5e7f4)
+
+### 도서 관리
+: 도서 전체 내역 조회 및 관리, 알라딘 API를 통해 도서를 일괄 업데이트
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/439df0bb-1ad3-4e32-ab06-20da80a0ed54)
+
+### 도서 대출
+: 대출 신청에 대한 처리
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/9a44c95a-a370-4822-a2e9-e9a92f0b7d68)
 
 
 
