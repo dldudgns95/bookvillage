@@ -32,21 +32,6 @@ public class NoticeController {
 	private final FaqService faqService;
 	private final QnaService qnaService;
 	
-	@GetMapping("/qnalist.do")
-	public String qnalist() {
-		return "support/qnalist";
-	}
-	
-	@GetMapping("/askwrite.form")
-	public String askwrite( ) {
-		return "support/askwrite";
-	}
-	@PostMapping("/askadd.do")
-	 public String askadd(MultipartHttpServletRequest multipartRequest) throws Exception {
-		System.out.println("askAdd.do::controller");
-		qnaService.addAsk(multipartRequest);
-		return "redirect:/support/qnalist.do";
-	}
 	
      @GetMapping("/noticeSearch.do")
 	 public String noticeSearch(HttpServletRequest request, Model model) {
@@ -133,13 +118,18 @@ public class NoticeController {
 	    return "redirect:/support/list.do";
 	  }
 
+	@GetMapping("/faqSearch.do")
+		 public String faqSearch(HttpServletRequest request, Model model) {
+		    faqService.getSearchFaqList(request, model);
+		    return "support/faqlist"; 
+	}
+	
     @GetMapping("/faqlist.do")
-    public String faqlist(Model model) {
-    	List<FaqDto> faqList = faqService.getFaqList();
-    	model.addAttribute("faqList", faqList);
-    	return "support/faqlist";
+    public String faqlist(HttpServletRequest request, Model model) {
+      faqService.loadFaqList(request, model);
+      return "support/faqlist";
     }
-
+    
 	@GetMapping("/faqwrite.form")
 	public String faqwrite() {
 		return "support/faqwrite";
