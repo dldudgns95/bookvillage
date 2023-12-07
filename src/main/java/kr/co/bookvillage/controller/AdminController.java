@@ -305,6 +305,21 @@ public class AdminController {
     return Map.of("checkResult", adminService.checkBook(request));
   }
   
+<<<<<<< HEAD
+=======
+  @PostMapping("/inactiveBook.do")
+  public String inactiveBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("inactiveResult", adminService.inactiveBook(request));
+    return "redirect:/admin/bookDetail.do?isbn=" + request.getParameter("isbn");
+  }
+  
+  @PostMapping("/activeBook.do")
+  public String activeBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("activeResult", adminService.activeBook(request));
+    return "redirect:/admin/bookDetail.do?isbn=" + request.getParameter("isbn");
+  }
+  
+>>>>>>> main
   // 임시
   @GetMapping("/temp.do")
   public String temp() {
