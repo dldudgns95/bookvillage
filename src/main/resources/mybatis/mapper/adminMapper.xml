@@ -102,7 +102,9 @@
     , COVER
     , AUTHOR
     , PUBLISHER
+    <if test="pubdate != null">
     , PUBDATE
+    </if>
     , DESCRIPTION
     , STATUS
     , CATEGORY_NAME
@@ -112,7 +114,9 @@
     , #{cover}
     , #{author}
     , #{publisher}
+    <if test="pubdate != null">
     , #{pubdate}
+    </if>
     , #{description}
     , 1
     , #{categoryName}

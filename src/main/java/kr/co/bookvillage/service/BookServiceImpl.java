@@ -169,6 +169,10 @@ public class BookServiceImpl implements BookService {
     return bookMapper.checkBookCOStatus(userNo);
   }
   @Override
+  public Integer checkUserStatus(int userNo) {
+    return bookMapper.checkUserStatus(userNo);
+  }
+  @Override
   public void updateCheckout(BookDto bookDto) {
     bookMapper.insertCheckoutStatus(bookDto);    
   }
