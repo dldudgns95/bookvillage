@@ -49,35 +49,10 @@
       
     <div class="wrap search_wrap">     
       
-      <h3 class="title">소장자료 검색</h3>
+      <h3 class="title">추천 도서</h3>
     
-      <div class="search_area">
-        <form id="search" name="search" action="search/result" method="get">
-          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
-          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
-   <!--   <input type="hidden" name="pageNum" value="1">
-          <input type="hidden" name="pageSize" value="10">  -->
-          <div class="search_select">
-            <select name="ss" id="ss" class="btn btn-outline-secondary">
-              <option value="total" selected>전체</option>
-              <option value="title">제목</option>
-              <option value="author">저자</option>
-            </select>
-          </div>
-          <div class="search_text">
-            <input type="text" id="st" name="st" placeholder="검색어를 입력하세요."> 
-          </div>
-          <input type="hidden" name="sortType" />
-          <div class="search_btn">
-            <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
-          </div>
-        </form>
-        <div class="PopularWord">
-        </div>
-      </div>
-      
       <div class="list_area">
-        <h5> <img src="/image/logo_noname.png" width="60px" /> 추천 도서 </h5>  
+        <h5> <img src="/image/logo_noname.png" width="60px" /> 이 달의 추천 도서 </h5>  
         <div class="recommendContents">
           <div class="bookLi_container">
             <div class="bookLi" th:each="book : ${recoBookList}">
@@ -89,7 +64,7 @@
           </div>
         </div>
         
-        <h5> <img src="/image/logo_noname.png" width="60px"> 신간 도서 </h5>
+        <h5> <img src="/image/logo_noname.png" width="60px"> 베스트 셀러 </h5>
         <div class="bookLi_container">
           <div class="bookLi" th:each="book : ${newBookList}">
             <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">

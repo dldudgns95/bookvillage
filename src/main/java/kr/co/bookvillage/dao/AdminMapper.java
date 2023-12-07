@@ -13,6 +13,8 @@ import kr.co.bookvillage.dto.UserDto;
 
 public interface AdminMapper {
   public int insertBook(BookDto bookDto);
+  public int insertDirectBook(BookDto bookDto);
+  public int editBook(BookDto bookDto);
   public int userTotalCount();
   public List<UserDto> getUserList(Map<String, Object> map);
   public UserDto getUserDetail(int userNo);
@@ -59,4 +61,7 @@ public interface AdminMapper {
   public int refuseFacApply(int facApplyNo);
   public int deleteFac(int facNo);
   public int deleteBook(String isbn);
+  public AttachFacDto getFacDetail(int facNo);
+  public int editFacility(FacilityDto facilityDto);
+  public int editAttachFac(AttachFacDto attachFacDto);
 }

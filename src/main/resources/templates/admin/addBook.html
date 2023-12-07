@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+
+<style>
+  .flex_admin {
+    display: flex;
+    padding-top: 10px;
+  }
+  
+  .admin_contents {
+    margin-left: 100px;
+    width:700px;
+  }
+  .tfoot_center {
+    text-align: center; 
+  }
+  
+  .search_select {
+    max-width: 150px;
+  }
+  .btn-outline-secondary {
+    --bs-btn-hover-bg: #e9ecef;
+  }
+  
+  .table td {
+    text-align: center;
+  }
+  
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="flex_admin">
+    <div class="list-group">
+      <a th:href="@{/admin/userList.do}" class="list-group-item list-group-item-action">
+        <i class="fa-solid fa-user-large"></i> 회원관리
+      </a>
+      <a th:href="@{/admin/bookApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book-bookmark"></i> 희망도서</a>
+      <a th:href="@{/admin/facList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설관리</a>
+      <a th:href="@{/admin/facApplyList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-house"></i> 시설신청</a>
+      <a th:href="@{/admin/addBookList.do}" class="list-group-item list-group-item-action active" aria-current="true"><i class="fa-solid fa-book"></i> 도서등록</a>
+      <a th:href="@{/admin/bookList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서관리</a>
+      <a th:href="@{/admin/bookCheckoutList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-book"></i> 도서대출</a>
+      <a th:href="@{/admin/bookCheckoutReturnList.do}" class="list-group-item list-group-item-action"><i class="fa-solid fa-clipboard-question"></i> 도서반납</a>
+    </div>
+    
+    <div class="admin_contents">
+      <div>
+        <h1>책 등록하기</h1>
+      </div>
+      <hr>
+      <form enctype="multipart/form-data" method="post" th:action="@{/admin/bookDirectAdd.do}">
+        <div class="mb-3 row">
+          <label for="isbn" class="col-sm-2 col-form-label">ISBN</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="isbn" name="isbn">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="title" class="col-sm-2 col-form-label">책 제목</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="title" name="title">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="author" class="col-sm-2 col-form-label">저자</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="author" name="author">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="publisher" class="col-sm-2 col-form-label">출판사</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="publisher" name="publisher">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="pubdate" class="col-sm-2 col-form-label">출간일(EX : 2023/01/01)</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="pubdate" name="pubdate">
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="categoryName" class="col-sm-2 col-form-label">카테고리</label>
+          <div class="col-sm-5">
+            <input type="text" class="form-control" id="categoryName" name="categoryName">
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="description" class="form-label">책 소개</label>
+          <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">이미지 파일 선택</label>
+          <input class="form-control" type="file" id="files" name="files" accept="image/jpeg,image/gif,image/png" onchange='chk_file_type(this)'>
+        </div>
+        <button type="submit" class="btn btn-primary" id="btn_add">도서 등록완료</button>
+      </form>
+    </div>
+  </div>
+  
+  <script th:inline="javascript">
+    
+    
+  </script>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+
+</body>
+</html>

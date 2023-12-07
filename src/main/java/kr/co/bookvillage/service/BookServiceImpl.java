@@ -1,5 +1,6 @@
 package kr.co.bookvillage.service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,12 +42,14 @@ public class BookServiceImpl implements BookService {
   
   // 신간 도서
   @Override
+  @Transactional(readOnly=true)
   public void getNewBook(Model model) {
     List<BookDto> newBookList = bookMapper.getNewBook();
     model.addAttribute("newBookList",newBookList);
   }
   // 추천 도서
   @Override
+  @Transactional(readOnly=true)
   public void getRecoBook(Model model) {
     List<BookDto> recoBookList = bookMapper.getRecoBook();
     model.addAttribute("recoBookList",recoBookList);
@@ -54,6 +57,7 @@ public class BookServiceImpl implements BookService {
   
   // 책 검색 & 정렬
   @Override
+  @Transactional(readOnly=true)
   public void searchBook(BookSearchDto bookSearchDto, HttpServletRequest request, Model model) {
     
     //페이징
@@ -77,6 +81,7 @@ public class BookServiceImpl implements BookService {
   
   // 책 상세
   @Override
+  @Transactional(readOnly=true)
   public void getBookDetail(String isbn, Model model) {
     List<BookDto> bookDetailList = bookMapper.getBookDetail(isbn);
     model.addAttribute("bookDetailList", bookDetailList);
@@ -91,18 +96,29 @@ public class BookServiceImpl implements BookService {
   
   // 한줄평 목록 가져오기
   @Override
+  @Transactional(readOnly=true)
   public void getScoreList(String isbn, Model model) {
     List<ScoreDto> scoreList = scoreMapper.getScoreList(isbn);
     model.addAttribute("scoreList", scoreList);
   }
   
+  // 그래프 그리기 위해서 책마다 별점 분포 체크 
   @Override
+  @Transactional(readOnly=true)
+  public List<ScoreDto> cntStar(String isbn) {
+    return scoreMapper.cntStar(isbn);
+  }
+  
+  // 한줄평 이전 등록 여부 체크
+  @Override
+  @Transactional(readOnly=true)
   public int checkScore(ScoreDto scoreDto) {
     return scoreMapper.checkScore(scoreDto);
   }
   
   // 베스트 리뷰
   @Override
+  @Transactional(readOnly=true)
   public void bestReview(String isbn, Model model) {
     List<ScoreDto> bestReview = scoreMapper.bestReview(isbn);
     model.addAttribute("bestReview", bestReview);    
@@ -148,6 +164,7 @@ public class BookServiceImpl implements BookService {
   
   // 대출 처리
   @Override
+  @Transactional(readOnly=true)
   public int checkBookCOStatus(int userNo) {
     return bookMapper.checkBookCOStatus(userNo);
   }
@@ -161,7 +178,7 @@ public class BookServiceImpl implements BookService {
   }
   
   
-  // 카테고리 추출
+  // 카테고리 추출 --구현x
   @Override
   public void categoryParser(BookDto bookDto) {
     
@@ -187,4 +204,5 @@ public class BookServiceImpl implements BookService {
       System.out.println(category);
     }
   }
+  
 }

@@ -264,6 +264,41 @@ public class AdminController {
     return "redirect:/admin/userDetail.do?userNo=" + request.getParameter("userNo");
   }
   
+  @GetMapping("/facEdit.form")
+  public String facEditForm(HttpServletRequest request, Model model) {
+    model.addAttribute("facApply", adminService.getFacDetail(request));
+    return "admin/facEdit";
+  }
+  
+  @PostMapping("/facEdit.do")
+  public String facEdit(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("editResult", adminService.editFacility(multiRequest));
+    return "redirect:/admin/facList.do";
+  }
+  
+  @GetMapping("/addBook.form")
+  public String addBookForm() {
+    return "admin/addBook";
+  }
+  
+  @PostMapping("/bookDirectAdd.do")
+  public String bookDirectAdd(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("insertResult", adminService.addDirectBook(multiRequest));
+    return "redirect:/admin/addBookList.do";
+  }
+  
+  @GetMapping("/bookEdit.form")
+  public String bookEditForm(HttpServletRequest request, Model model) {
+    adminService.getBookDetail(request, model);
+    return "admin/editBook";
+  }
+  
+  @PostMapping("/editBook.do")
+  public String editBook(MultipartHttpServletRequest multiRequest, RedirectAttributes redirectAttributes) throws Exception {
+    redirectAttributes.addFlashAttribute("editResult", adminService.editBook(multiRequest));
+    return "redirect:/admin/bookDetail.do?isbn=" + multiRequest.getParameter("isbn");
+  }
+  
   // 임시
   @GetMapping("/temp.do")
   public String temp() {

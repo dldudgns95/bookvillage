@@ -67,7 +67,7 @@
     </association>
   </resultMap>
   
-  <!-- 책 넣기 -->
+  <!-- 책 API로 넣기 -->
   <insert id="insertBook" parameterType="bookDto">
     INSERT INTO BOOK(
       ISBN
@@ -94,6 +94,43 @@
     )
   </insert>
   
+  <!-- 책 직접 넣기 -->
+  <insert id="insertDirectBook" parameterType="bookDto">
+    INSERT INTO BOOK(
+      ISBN
+    , TITLE
+    , COVER
+    , AUTHOR
+    , PUBLISHER
+    , PUBDATE
+    , DESCRIPTION
+    , STATUS
+    , CATEGORY_NAME
+    ) VALUES(
+      #{isbn}
+    , #{title}
+    , #{cover}
+    , #{author}
+    , #{publisher}
+    , #{pubdate}
+    , #{description}
+    , 1
+    , #{categoryName}
+    )
+  </insert>
+  
+  <update id="editBook" parameterType="bookDto">
+    UPDATE BOOK
+       SET TITLE = #{title}
+         , COVER = #{cover}
+         , AUTHOR = #{author}
+         , PUBLISHER = #{publisher}
+         , PUBDATE = #{pubdate}
+         , DESCRIPTION = #{description}
+         , CATEGORY_NAME = #{categoryName}
+     WHERE ISBN = #{isbn}
+  </update>
+  
   <!-- 총 유저수 카운트-->
   <select id="userTotalCount" resultType="int">
     SELECT COUNT(*)
@@ -102,8 +139,8 @@
   
   <!-- 유저 목록 가져오기-->
   <select id="getUserList" parameterType="Map" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO ASC) AS RN, USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY USER_NO ASC) AS RN, USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
               FROM USER_T)
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
@@ -111,7 +148,7 @@
   
   <!-- 유저 상세 정보 가져오기-->
   <select id="getUserDetail" parameterType="int" resultType="UserDto">
-    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS
+    SELECT USER_NO, EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH, PW_MODIFIED_DATE, JOINED_DATE, STATUS, BOOKCOUNT
       FROM USER_T
      WHERE USER_NO = #{userNo}
   </select>
@@ -557,6 +594,30 @@
      WHERE ISBN = #{isbn}
   </delete>
   
+  <!-- 시설 수정을 위한 시설 상세 정보 -->
+  <select id="getFacDetail" parameterType="int" resultMap="AttachFacMap">
+    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
+      FROM ATTACH_FAC AF INNER JOIN FACILITY F
+        ON AF.FAC_NO = F.FAC_NO
+       AND F.FAC_NO = #{facNo}
+  </select>
   
+  <!-- 시설 수정 업데이트 -->
+  <update id="editFacility" parameterType="FacilityDto">
+    UPDATE FACILITY
+       SET FAC_NAME = #{facName}
+         , FAC_CONTENT = #{facContent}
+     WHERE FAC_NO = #{facNo}
+  </update>
+  
+  <!-- 시설 이미지 업데이트 -->
+  <update id="editAttachFac" parameterType="AttachFacDto">
+    UPDATE ATTACH_FAC
+       SET FAC_PATH = #{facPath}
+         , FAC_ORIGINAL_FILENAME = #{facOriginalFilename}
+         , FAC_FILESYSTEM_NAME = #{facFilesystemName}
+         , FAC_HAS_THUMBNAIL = #{facHasThumbnail}
+     WHERE FAC_ATTACH_NO = #{facAttachNo}
+  </update>
   
 </mapper>

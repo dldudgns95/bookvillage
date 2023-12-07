@@ -42,8 +42,8 @@ function saveReview() {
     return false; // 이벤트 막기
    }
    
-   const checkWish = document.getElementById('checkWish').value;
-   if (checkWish !== 0) {
+   const checkScore = document.getElementById('checkScore').value;
+   if (checkScore != 0) {
      alert("이미 한줄평을 등록했습니다. 도서 당 하나만 등록 가능합니다");
      return false; // 이벤트 막기
    }
@@ -234,4 +234,3 @@ $(document).ready(function() {
     }
   })
 });
-

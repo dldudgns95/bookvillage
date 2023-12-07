@@ -21,8 +21,9 @@
     width: 800px;
     height: 500px;
     display: inline-block;
-    text-align: center; 
+    text-align: center;
     margin-left: 320px;
+    padding-top: 30px;
   }
   
     .table_title {
@@ -79,13 +80,14 @@
             <td>대출일자</td>
             <td>반납예정일</td>
             <td>대출상태</td>
+            <td>대출신청취소</td>
             <td>반납연기</td>
           </tr>
         </thead>
         <!--/* 접속유저의 도서대출내역 list 출력(for문) */-->
        <tbody>
          <tr th:if="${#lists.isEmpty(bookList)}">
-           <td colspan="6">대출내역이없습니다.</td>
+           <td colspan="7">대출내역이없습니다.</td>
           </tr>
           <th:block th:if="${not #lists.isEmpty(bookList)}">
             <th:block th:each="book : ${bookList}">
@@ -95,25 +97,34 @@
                 <td th:text="${book.checkoutDate}"></td>
                 <td th:text="${book.dueDate}"></td>
                 <td>
-                  <th:block th:if="${book.status == 0}">
-                    대출요청
-                  </th:block>
-                  <th:block th:if="${book.status == 1}">
-                    대출중
-                  </th:block>
-                  <th:block th:if="${book.status == 2}">
-                    반납완료
-                  </th:block>
+                  <span th:if="${book.status == 0}">대출요청</span>
+                  <span th:if="${book.status == 1}">대출중</span>
+                  <span th:if="${book.status == 2}">반납완료</span>
                 </td>
-                <td th:if="${book.status == 1}">
-                  <form method="get" th:action="@{/mypage/delayBookCheckout.do}">
-                  <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
-                  <button type="submit" id="btn_delay" class="btn btn-success">연기신청</button>
-                  </form>
-                </td>  
-                <td th:if="${book.status != 1}">
-                  
-                </td>           
+                <td>
+                  <th:block th:if="${book.status == 0}">
+                    <form method="get" th:action="@{/mypage/cancleCheckout.do}" id="frm_cancle">
+                      <input type="hidden" id="isbn" name="isbn" th:value="${book.bookDto != null ? book.bookDto.isbn : ''}">
+                      <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
+                      <input type="hidden" id="userNo" name="userNo" th:value="${session.user.userNo}">
+                      <button type="submit" id="btn_cancle" class="btn btn-success">신청취소</button>
+                    </form>
+                  </th:block>
+                  <th:block th:if="${book.status != 0}">
+                    
+                  </th:block>
+                </td>              
+                <td>
+                  <th:block th:if="${book.status == 1}">
+                     <form method="get" th:action="@{/mypage/delayBookCheckout.do}" id="frm_delay">
+                     <input type="hidden" id="checkoutNo" name="checkoutNo" th:value="${book.checkoutNo}">
+                     <button type="submit" id="btn_delay" class="btn btn-success">연기신청</button>
+                     </form>
+                  </th:block> 
+                  <th:block th:if="${book.status != 1}">
+                                    
+                  </th:block>
+                 </td>           
               </tr>            
              </th:block>
           </th:block>
@@ -121,7 +132,7 @@
         <!--/* 페이징 */-->
         <tfoot th:if="${not #lists.isEmpty(bookList)}">
           <tr>
-            <td  colspan="6" th:utext="${paging}"></td>
+            <td  colspan="7" th:utext="${paging}"></td>
           </tr>
         </tfoot>
       </table>
@@ -135,8 +146,8 @@
  </div>
   <div th:replace="~{/layout/footer::footer}"></div>
   
-  <script th:inline="javascript">
-    
+ <script th:inline="javascript">
+  
     const fnDelayCheckout = () => {
         let delayResult = /*[[${delayResult}]]*/ null;
         if(delayResult !== null) {
@@ -149,8 +160,21 @@
         } 
     }
     
+    const fnCancleCheckcout = () => {
+      let deleteResult = /*[[${deleteResult}]]*/ null;
+      if(deleteResult !== null) {
+        if(deleteResult === 1) {
+          alert('대출취소신청이 완료되었습니다.');
+        } else {
+          alert('대출취소신청이 완료되지않았습니다.');
+          return;
+        }
+      }
+    }
+    
     fnDelayCheckout();
-  </script>
+    fnCancleCheckcout();
+</script>
   
 </body>
 </html>

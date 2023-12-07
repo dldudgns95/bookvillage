@@ -115,11 +115,11 @@
     </div>
     
     <div class="admin_contents">
-      <form class="frm_fac_write" method="post" th:action="@{/admin/facAdd.do}" enctype="multipart/form-data">
+      <form class="frm_fac_edit" method="post" th:action="@{/admin/facEdit.do}" enctype="multipart/form-data">
         <div class="mb-3 row">
           <label for="facName" class="col-sm-2 col-form-label">시설명</label>
           <div class="col-sm-10">
-            <input type="text" class="form-control" id="facName" name="facName" placeholder="시설명을 입력해주세요.">
+            <input type="text" class="form-control" id="facName" name="facName" th:value="@{${facApply.facilityDto.facName}}" placeholder="시설명을 입력해주세요.">
           </div>
         </div>
         <div class="mb-3">
@@ -127,24 +127,37 @@
           <textarea class="form-control" id="facContent" name="facContent" rows="3"></textarea>
         </div>
         <div class="mb-3">
-          <label for="formFile" class="form-label">이미지 파일 선택</label>
+          <label for="formFile" class="form-label">이미지 파일 선택(이미지 파일을 선택하시면 자동으로 변경됩니다.)</label>
           <input class="form-control" type="file" id="files" name="files" accept="image/jpeg,image/gif,image/png" onchange='chk_file_type(this)'>
         </div>
         <div>
+          <div><span>현재 이미지 파일</span></div>
+          <img th:src="@{|${facApply.facPath}/s_${facApply.facFilesystemName}|}">
+          <span th:text="@{${facApply.facOriginalFilename}}"></span>
+        </div>
+        <div>
           <input type="hidden" id="checkStatus" name="checkStatus" value="0">
-          <button type="submit" class="btn btn-primary" id="btn_write_mac">(맥)시설 등록완료</button>
-          <button type="submit" class="btn btn-primary" id="btn_write">시설 등록완료</button>
+          <input type="hidden" name="facNo" th:value="@{${facApply.facilityDto.facNo}}">
+          <input type="hidden" name="facAttachNo" th:value="@{${facApply.facAttachNo}}">
+          <button type="submit" class="btn btn-primary" id="btn_edit_mac">(맥)시설 수정완료</button>
+          <button type="submit" class="btn btn-primary" id="btn_edit">시설 수정완료</button>
         </div>
       </form>
     </div>
     
-    <script>
+    <script th:inline="javascript">
+      
+      const fnContent = () => {
+        let content = /*[[${facApply.facilityDto.facContent}]]*/ null;
+        content = content.replace(/<br\s*[\/]?>/gi, "\n");
+        $('#facContent').append(content);
+      }
       
       const fnCheckFac = () => {
-        $('#btn_write_mac').click((ev) => {
+        $('#btn_edit_mac').click((ev) => {
           $(ev.target).prev().val(1);
         })
-        $('.frm_fac_write').submit((ev) => {
+        $('.frm_fac_edit').submit((ev) => {
          
           if($('#facName').val() === '') {
             alert('시설명을 입력해주세요.');
@@ -156,12 +169,7 @@
             ev.preventDefault();
             return;
           }
-          if($('#files').val() === '') {
-            alert('파일 이미지를 선택해주세요.');
-            ev.preventDefault();
-            return;
-          }
-          if(!confirm('시설을 등록하시겠습니까?')) {
+          if(!confirm('시설을 수정하시겠습니까?')) {
             ev.preventDefault();
             return;
           }
@@ -180,7 +188,9 @@
         }
       }
       
+      fnContent();
       fnCheckFac();
+      
     </script>
 
   </div>
