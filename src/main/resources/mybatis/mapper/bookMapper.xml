@@ -123,4 +123,11 @@
        AND STATUS IN (0, 1)
   </select>
 
+  <select id="checkUserStatus" parameterType="int" resultType="int">
+    SELECT STATUS
+      FROM USER_T
+     WHERE USER_NO = #{userNo}   
+  </select>
+  
+  
 </mapper>

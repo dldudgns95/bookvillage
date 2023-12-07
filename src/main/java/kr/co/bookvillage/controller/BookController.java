@@ -76,6 +76,8 @@ public class BookController {
     //대출
     int checkBookCkCnt = bookService.checkBookCOStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
     model.addAttribute("checkBookCkCnt", checkBookCkCnt);
+    int checkUserStatus = bookService.checkUserStatus(wishDto.getUserNo()); //userNo 가져와야하는데 있는것 중 해결하려고 wishDto 고른거
+    model.addAttribute("checkUserStatus", checkUserStatus);
     return "book/detail";
   }
   
