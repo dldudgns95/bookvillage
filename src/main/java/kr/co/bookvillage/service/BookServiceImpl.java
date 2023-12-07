@@ -169,7 +169,7 @@ public class BookServiceImpl implements BookService {
     return bookMapper.checkBookCOStatus(userNo);
   }
   @Override
-  public int checkUserStatus(int userNo) {
+  public Integer checkUserStatus(int userNo) {
     return bookMapper.checkUserStatus(userNo);
   }
   @Override

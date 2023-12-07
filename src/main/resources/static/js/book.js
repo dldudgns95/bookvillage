@@ -182,8 +182,10 @@ $(document).ready(function() {
           alert('대출이 불가능합니다. 대출 권수를 초과하셨습니다.');
           return false;
       }
-      if (checkUserStatus === 0) {
-          alert('대출이 불가능합니다. 현재 연체 상태 입니다..');
+      var checkUserStatus = $("input[name='checkUserStatus']").val(); 
+      console.log('0이면 연체 :'+ checkUserStatus);
+      if (checkUserStatus == 0) {
+          alert('대출이 불가능합니다. 현재 연체 상태입니다..');
           return false;
       }
       

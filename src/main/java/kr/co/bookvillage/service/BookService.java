@@ -45,7 +45,7 @@ public interface BookService {
   
   // 대출
   public int checkBookCOStatus(int userNo); //회원의 대출 가능 여부 체크 (대출 신청 책 5권 이하)
-  public int checkUserStatus(int userNo); //회원의 대출 가능 여부 체크 (회원 상태가 대출 가능 상태)
+  public Integer checkUserStatus(int userNo); //회원의 대출 가능 여부 체크 (회원 상태가 대출 가능 상태)
   public void updateCheckout(BookDto bookDto);
   public void updateBook(BookDto bookDto);
 
