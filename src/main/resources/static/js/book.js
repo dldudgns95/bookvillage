@@ -2,8 +2,8 @@
 
 //검색어(st) 없으면 검색 막기
 $(document).ready(function() {
-            $('#search').submit(function(event) {
-                var searchInputValue = $('#st').val().trim();
+            $('#search_main').submit(function(event) {
+                var searchInputValue = $('#st_main').val().trim();
                 if (!searchInputValue) {
                     event.preventDefault();
                     alert('검색어를 입력하세요.');
