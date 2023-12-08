@@ -36,7 +36,11 @@
   height: 250px;
 }
 .bookSearchMainImg{
+<<<<<<< HEAD
   width: 200px;
+=======
+  width: 180px;
+>>>>>>> main
   height: 230px;
   justify-content:space-between;
 }
@@ -61,6 +65,7 @@
   .facP{
     text-align: center;
   }
+<<<<<<< HEAD
   
 .title2,
 .btn_gray{
@@ -73,6 +78,8 @@
 .title{
   text-align: center;
 }
+=======
+>>>>>>> main
 
 
 </style>
@@ -85,11 +92,18 @@
 <div class="main_wrap">
     <!-- 검색 결과가 있는 경우 -->
     <div class="searchResult" th:if="${query != null and not #strings.isEmpty(query)}">
+<<<<<<< HEAD
         <div class="title" style="text-align: center;" th:text="|'${query}'에 대한 검색결과입니다.|"></div>
 
 
         <!-- 소장도서 목록 -->
       <div class="btbt"> 
+=======
+        <div class="title2" style="text-align: center;" th:text="|'${query}'에 대한 검색결과입니다.|"></div>
+
+
+        <!-- 소장도서 목록 -->
+>>>>>>> main
         <div class="title2 bookSearchMain_wrap">소장도서</div>
         
         <!-- 더보기 검색 -->
@@ -103,9 +117,15 @@
           </div>
           <input type="hidden" name="sortType" />
           <div class="search_btn">
+<<<<<<< HEAD
             <input type="submit" value="더보기" title="더보기" class="btn btn-outline-secondary btn-sm btn_gray">
           </div>        
         </div> 
+=======
+            <input type="submit" value="더보기" title="더보기" class="btn btn-outline-secondary btn-sm">
+          </div>        
+        
+>>>>>>> main
         
        <div class="bookSearchMain">
         <div class="bookSearchEach" th:each="book : ${bookList}">
@@ -122,7 +142,11 @@
         <div class="main_notice_list_box1">
             <div class="table-responsive notice_list">
                 <h3 class="title2">공지사항</h3>
+<<<<<<< HEAD
                 <button type="button" id="btn_ntGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
+=======
+                <button type="button" id="btn_ntGo" class="btn btn-outline-secondary btn-sm">더보기</button>
+>>>>>>> main
 
                 <table class="table align-middle">
                     <thead>
@@ -155,7 +179,11 @@
 
             <!-- 시설 목록 -->
             <div class="title2 bookSearchMain_wrap">시설</div>
+<<<<<<< HEAD
             <button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
+=======
+            <button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm">더보기</button>
+>>>>>>> main
 
             <table>
                 <thead>
@@ -181,13 +209,20 @@
 
     <!-- 검색 결과가 없는 경우 -->
     <div class="searchResult" th:unless="${query != null and not #strings.isEmpty(query)}">
+<<<<<<< HEAD
         <div class="title" style="text-align: center;" th:text="'검색어가 없습니다.'" ></div>
+=======
+        <div class="title2" style="text-align: center;" th:text="'검색어가 없습니다.'" ></div>
+>>>>>>> main
         <div class="" style="text-align: center;" th:text="'검색어를 입력해주세요.'" ></div>
     </div>
 </div>
 
+<<<<<<< HEAD
     <a href="#" class="btn btn-outline-secondary" style="position: fixed; bottom: 30px; right: 30px;"><i class="fa-solid fa-arrow-up"></i></a>
 
+=======
+>>>>>>> main
   
   <script>
     
