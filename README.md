@@ -21,25 +21,8 @@
   - HTML
   - CSS
   - JavaScript
-  - JQuery
+  - JQ서
 
-- Back
-  - JAVA
-  - Spring Boot
-  - Mybatis
- 
-- DB
-  - Oracle DB
-
-- API
-  -보</td>
-  </tr>
-  <tr>
-    <td>내용</td>
-    <td>내용</td>
-    <td>내용</td>
-  </tr>
-</table>
 
 
 	하위	기능명	기능 설명	우선순위	비고
