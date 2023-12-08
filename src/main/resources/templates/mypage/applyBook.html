@@ -103,8 +103,8 @@
                   <input type="hidden" name="bookName" th:value="${applyBook.bookName}">
                   <input type="hidden" name="author" th:value="${applyBook.author}">
                   <input type="hidden" name="publisher" th:value="${applyBook.publisher}">
-                  <button type="button" id="btn_modifyApply" class="btn btn-outline-success btn-sm">수정</button>
-                  <button type="button" id="btn_cancleApply" class="btn btn-success btn-sm">신청취소</button>
+                  <button type="button" class="btn btn-outline-success btn-sm btn_modifyApply">수정</button>
+                  <button type="button" class="btn btn-success btn-sm btn_cancleApply">신청취소</button>
                 </form>
               </th:block>
               <th:block th:if="${applyBook.status == 1}">
@@ -127,44 +127,39 @@
   
   <script th:inline="javascript">
     
-    var frmBtn = $('#frm_btn');
-    
-    const fnEditApplyBook = () => {
-      $('#btn_modifyApply').click(() => {
-        frmBtn.attr('action', '/mypage/applyBookEdit.form');
-        frmBtn.submit();
-      })
-    }
-    
-    const fnCancleBookApply = () => {
-      $(document).on('click', '#btn_cancleApply', (ev) => {
-        var applyNoValue = $('input[name="applyNo"]').val();
-        if(!confirm('희망도서신청을 취소할까요?')){
-          return;
-        }        
-        $.ajax({
-          type: 'post',
-          url: '/mypage/deleteApply.do',
-          data: {
-            applyNo: applyNoValue
-          },
-          success: function(resData) {
-            if(resData.removeResult === 1) {
-              alert('희망도서신청이 취소되었습니다');
-              location.reload();
-            } else {
-              alert('희망도서신청 취소가 불가능합니다.');
-              return;
-            }
+  $(document).ready(function() {
+    // 수정 버튼에 대한 이벤트 처리
+    $('.btn_modifyApply').on('click', function() {
+      var frmBtn = $(this).closest('form');
+      frmBtn.attr('action', '/mypage/applyBookEdit.form');
+      frmBtn.submit();
+    });
+
+    // 취소 버튼에 대한 이벤트 처리
+    $(document).on('click', '.btn_cancleApply', function() {
+      var applyNoValue = $(this).closest('form').find('input[name="applyNo"]').val();
+      if (!confirm('희망도서신청을 취소할까요?')) {
+        return;
+      }
+      $.ajax({
+        type: 'post',
+        url: '/mypage/deleteApply.do',
+        data: {
+          applyNo: applyNoValue
+        },
+        success: function(resData) {
+          if (resData.removeResult === 1) {
+            alert('희망도서신청이 취소되었습니다');
+            location.reload();
+          } else {
+            alert('희망도서신청 취소가 불가능합니다.');
+            return;
           }
-        })
-      })
-    }
-    
-    
-    fnEditApplyBook();
-    fnCancleBookApply();
-  </script>
+        }
+      });
+    });
+  });
+</script>
   
 </body>
 </html>
