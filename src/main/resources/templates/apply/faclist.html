@@ -15,9 +15,13 @@
     position: fixed;
   }
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
   div.child1{
     width: 800px;
     justify-content: center;
@@ -42,11 +46,7 @@
       font-size: 15px;
 	  
   }
-  div.btn{
-	margin-left: 300px;  
-	  
-  }   
-
+ 
   
   /* 캘린더 크기 조절 */
   #calendar {
@@ -71,18 +71,13 @@
      <div class="side_bar">
 	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">시설이용신청</h3>
         <ul id="side_list">
-          <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
-		  <li style="margin:20px"><a th:href="@{/apply/bookapply.do}">희망도서신청</a></li>
+          <li><a th:href="@{/apply/fac.do}">시설이용신청</a></li>			
+		  <li><a th:href="@{/apply/wishbook.do}">희망도서신청</a></li>
         </ul>
       </div>
 	  <div class="child1">
      	<h5>시설이용신청</h5>
      	<h6>희망하시는 날짜를 선택해주세요</h6>
-      </div>
-      <div class="btn">
-		<th:block th:if="${session.user != null and session.user.auth == 9}">
-        <a th:href="@{/admin/facWrite.form}"><button type="button" class="btn btn-secondary">시설 등록하기</button></a>
-    	</th:block>
       </div>
 	  <div class="child2">
 	    <div id='calendar'></div>

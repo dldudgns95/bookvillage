@@ -1,6 +1,10 @@
-/*
 package kr.co.bookvillage.service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -8,31 +12,25 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import kr.co.bookvillage.dao.QnaMapper;
+import kr.co.bookvillage.dto.AttachAskDto;
+import kr.co.bookvillage.dto.QnaDto;
+import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.MyFileUtils;
+import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
+import net.coobird.thumbnailator.Thumbnails;
 
 @Transactional
 @RequiredArgsConstructor
 @Service
-public interface QnaServiceImpl extends QnaService {
+public class QnaServiceImpl implements QnaService {
+	private QnaMapper qnaMapper;
+	private final MyFileUtils myFileUtils;
+	private final MyPageUtils myPageUtils;	
 	
-	//private final QnaMapper qnaMapper;
-	//private final MyPageUtils myPageUtils;
 	
-	// 목록보기 + 페이징
-	@Transactional(readOnly=true)
-	@Override
-	public void loadQnaList(HttpServletRequest request, Model model) {
-		// 보낼게 많아서 서비스에서 모델처리
-		// 페이지 정보 
-		Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
-	    int page = Integer.parseInt(opt.orElse("1"));  // 페이지 번호가 전달되지 않았을때 1로 전달
-	    int total = qnaMapper.getQnaCount();  // 게시글의 개수 구하기
-	    int display = 3;
-	    
-	    myPageUtils.setPaging(page, total, display);
-	    
-	    Map<String, Object> map = Map.of("begin",my)
-	}
- */
+}

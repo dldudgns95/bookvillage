@@ -445,8 +445,14 @@ INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, ST
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
+commit;
+=======
+>>>>>>> main
+=======
 >>>>>>> main
 commit;
 
@@ -456,3 +462,4 @@ SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_
             ON B.USER_NO = U.USER_NO
          WHERE B.USER_NO = 1) A
  WHERE A.RN BETWEEN 1 AND 10;
+>>>>>>> main

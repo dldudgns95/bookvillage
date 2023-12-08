@@ -27,7 +27,10 @@ public class MyFileUtils {
     LocalDate today = LocalDate.now();
     return "/Users/seoga-eul/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
-  
+  public String getNoticeWindowPath() {
+	    LocalDate today = LocalDate.now();
+    return "/support/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+  }
   // 임시 파일이 저장될 경로 반환하기 (zip 파일)
   public String getTempPath() {
     return "/Users/seoga-eul/temp";

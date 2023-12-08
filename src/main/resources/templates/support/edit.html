@@ -11,10 +11,14 @@
     position: fixed;
   }
   
-    #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
 	div.child2{
 		width: 800px;
 	    height: 500px;
@@ -34,11 +38,11 @@
     <div>
         <div class="side_bar">
      	 <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
-           <ul id="side_list">
-                <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-                <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-                <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
-            </ul>
+		   <ul id="side_list">
+		          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
+				  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+			      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+		        </ul>
         </div>
       <div class="child2">
 	  <h5 style="text-align: center;">공지사항 수정하기</h5>	  
@@ -59,30 +63,27 @@
         </div>
         
         <!-- 첨부 추가 -->
-        <th:block th:if="${session.user != null and session.user.auth == 9}">
             <h5>신규 첨부</h5>
             <div class="input-group">
               <input type="file" name="files" id="files"  class="form-control" multiple>
               <button class="btn btn-outline-secondary" type="button" id="btn_add_attach">첨부추가하기</button>
             </div>
-            <div class="attached_list mt-3" id="attached_list"></div>
-        </th:block>
-        
+            <div class="attached_list mt-3" id="attached_list"></div>        
         <hr>
     
         <!-- 첨부 목록에서 삭제 -->
         <h5>기존 첨부 목록</h5>
         <div id="attach_list"></div>
 
-        <th:block th:if="${session.user != null and session.user.auth == 9}">
             <div>
               <a th:href="@{/support/detail.do(ntNo=${notice.ntNo})}">
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
               <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-              <button type="submit" id="btn_modify" class="btn btn-success">수정하기</button>
-            </div>
-          </th:block>
+        	  <input type="hidden" id="checkStatus" name="checkStatus" value="0">
+  			  <button type="submit" class="btn btn-success" id="btn_write_mac">(맥)작성완료</button>
+        	  <button type="submit" class="btn btn-success" id="btn_write">작성완료</button>
+           </div>
 
       </form>
     </div>
@@ -166,12 +167,7 @@
                 str += '<img src="' + attach.ntPath + '/s_' + attach.ntFilesystemName + '"  width="50">';
               }
               str += '<span style="margin: 0 10px;">' + attach.ntOriginalFilename + '</span>';
-              let user = /*[[${session.user}]]*/ null;
-              if(user !== null){
-                if(session.user.auth == 9){            
-                  str += '<a data-attach_nt_no="' + attach.attachNtNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
-                }
-              }
+              str += '<a data-attach_nt_no="' + attach.attachNtNo + '"><i class="fa-regular fa-circle-xmark ico_remove_attach"></i></a>';
               str += '</div>';
               $('#attach_list').append(str);
             })
@@ -204,6 +200,9 @@
       }
       
       const fnModifyAttach = () => {
+		 $('#btn_write_mac').click((ev) => {
+          $(ev.target).prev().val(1);
+          })		  
     	  $('#frm_notice_edit').submit((ev) => {
           if($('#ntTitle').val() === ''){
             alert('제목은 반드시 입력해야 합니다.');
@@ -228,6 +227,7 @@
 		</script>  
       </div>
    </div>
-  
+    <div th:replace="~{/layout/footer::footer}"></div>
+
 </body>
 </html>

@@ -23,7 +23,7 @@ public interface AdminMapper {
   public List<UserDto> getSearchUserList(Map<String, Object> map);
   public int bookTotalCount();
   public List<BookDto> getBookList(Map<String, Object> map);
-  public BookDto getBookDetail(long isbn);
+  public BookDto getBookDetail(String isbn);
   public int bookSearchCount(Map<String, Object> map);
   public List<UserDto> getSearchBookList(Map<String, Object> map);
   public int addFacility(FacilityDto facilityDto);
@@ -48,7 +48,7 @@ public interface AdminMapper {
   public List<BookCheckoutDto> getBookCheckoutReturnSearchList(Map<String, Object> map);
   public int approvalBookCheckout(int checkoutNo);
   public int approvalBookCheckoutReturn(int checkoutNo);
-  public int activeBook(long isbn);
+  public int activeBook(String isbn);
   public int minusBookCount(int userNo);
   public int updateActiveUser(int userNo);
   public int updateInactiveUser(int userNo);
@@ -64,4 +64,6 @@ public interface AdminMapper {
   public AttachFacDto getFacDetail(int facNo);
   public int editFacility(FacilityDto facilityDto);
   public int editAttachFac(AttachFacDto attachFacDto);
+  public int inactiveBook(String isbn);
+  public BookCheckoutDto getBookCheckoutByISBN(String isbn);
 }

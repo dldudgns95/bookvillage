@@ -1,21 +1,25 @@
 <!DOCTYPE html>
-<h lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{/layout/header::head('새 공지사항 작성하기')}"></head>
 
 <style>
-  .side_bar {
+.side_bar {
     width: 200px;
     display: inline-block;
     text-align: center;
     margin-top: 30px;
     position: fixed;
   }
-  #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
-  }
   
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
   div.child2{
     width: 800px;
     height: 500px;
@@ -24,17 +28,17 @@
   }
 </style>
 
-  <div th:replace="~{/layout/header::header}"></div>
  <body>
+  <div th:replace="~{/layout/header::header}"></div>
 
   <div class="parent">
     <div>
       <div class="side_bar">
       <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>		  
-        <ul>
-          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-      	  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-      	  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+         <ul id="side_list">
+          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
+		  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+	      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
         </ul>
       </div>
       <div class="child2">
@@ -60,32 +64,42 @@
       	  <a th:href="@{/support/list.do}">
             <button class="btn btn-secondary" type="button">작성취소</button>
           </a> 
-          <button type="submit" class="btn btn-success">작성완료</button>
-          </div>
+          <input type="hidden" id="checkStatus" name="checkStatus" value="0">
+  		  <button type="submit" class="btn btn-success" id="btn_write_mac">(맥)작성완료</button>
+          <button type="submit" class="btn btn-success" id="btn_write">작성완료</button>
+        </div>          
       </form> 
       </div> 
    </div>
    </div>
    <script th:inline="javascript">
-      $('.frm_notice_add').submit((ev) => {
-
-        if($('#ntTitle').val() === '') {
-          alert('공지사항 제목을 입력해주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if($('#ntContent').val() === ''){
-          alert('공지사항 내용을 적어주세요.');
-          ev.preventDefault();
-          return;
-        }
-        if(!confirm('공지사항을 등록하시겠습니까?')) {
-          ev.preventDefault();
-          return;
+	  const fnNoticeAdd = () => { 
+        $('#btn_write_mac').click((ev) => {
+          $(ev.target).prev().val(1);
+        })		  
+        
+      	$('.frm_notice_add').submit((ev) => {
+			  
+	        if($('#ntTitle').val() === '') {
+	          alert('공지사항 제목을 입력해주세요.');
+	          ev.preventDefault();
+	          return;
+	        }
+	        if($('#ntContent').val() === ''){
+	          alert('공지사항 내용을 적어주세요.');
+	          ev.preventDefault();
+	          return;
+	        }
+	        if(!confirm('공지사항을 등록하시겠습니까?')) {
+	          ev.preventDefault();
+	          return;
         }
       })   
-      
+      }
+      fnNoticeAdd();
    </script>
-</div>
+   </div>
+  <div th:replace="~{/layout/footer::footer}"></div>
+
 </body>
 </html>

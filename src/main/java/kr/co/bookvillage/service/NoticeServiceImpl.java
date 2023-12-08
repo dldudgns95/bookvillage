@@ -15,6 +15,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -31,6 +32,7 @@ import kr.co.bookvillage.dao.NoticeMapper;
 import kr.co.bookvillage.dto.AttachNtDto;
 import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.MyFileUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
@@ -44,14 +46,39 @@ public class NoticeServiceImpl implements NoticeService {
   private final NoticeMapper noticeMapper;
   private final MyFileUtils myFileUtils;
   private final MyPageUtils myPageUtils;
+  private final AdminPageUtils adminPageUtils;
+
+  @Override
+  public void getSearchNoticeList(HttpServletRequest request, Model model) {
+	  String column = request.getParameter("column");
+	  String query = request.getParameter("query");
+	  Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+	    int page = Integer.parseInt(opt.orElse("1"));
+	    int total = noticeMapper.noticeSearchCount(Map.of("column", column, "query", query));
+	    int display = 10;
+	    
+	    adminPageUtils.setPaging(page, total, display);
+	    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+	                                   , "end", adminPageUtils.getEnd()
+	                                   , "column", column
+	                                   , "query", query);
+	    
+	    model.addAttribute("noticeList", noticeMapper.getSearchNoticeList(map));
+	    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/support/noticeSearch.do", "column=" + column + "&query=" + query));
+	    model.addAttribute("beginNo", total - (page - 1) * display);
+	    model.addAttribute("totalCount", total);
+	  
+  }
   
   @Override
-  public void addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
+  public int addNotice(MultipartHttpServletRequest multipartRequest) throws Exception {
     
+	HttpSession session = multipartRequest.getSession();
+	int userNo = ((UserDto)session.getAttribute("user")).getUserNo();
+	  
     String ntTitle = multipartRequest.getParameter("ntTitle");
     String ntContent = multipartRequest.getParameter("ntContent");
-    
-    int userNo = Integer.parseInt(multipartRequest.getParameter("userNo"));
+    int checkStatus = Integer.parseInt(multipartRequest.getParameter("checkStatus"));
     
     NoticeDto notice = NoticeDto.builder()
                         .ntTitle(ntTitle)
@@ -65,9 +92,6 @@ public class NoticeServiceImpl implements NoticeService {
     
     List<MultipartFile> files = multipartRequest.getFiles("files");
     
-    // 첨부 없을 때 : [MultipartFile[field="files", filename=, contentType=application/octet-stream, size=0]]
-    // 첨부 1개     : [MultipartFile[field="files", filename="animal1.jpg", contentType=image/jpeg, size=123456]]
-    
     int attachCount;
     if(files.get(0).getSize() == 0) {
       attachCount = 1;
@@ -76,10 +100,14 @@ public class NoticeServiceImpl implements NoticeService {
     }
     
     for(MultipartFile multipartFile : files) {
-      
       if(multipartFile != null && !multipartFile.isEmpty()) {
+        String path = "";
+        if(checkStatus == 0) {
+           path = myFileUtils.getNoticeWindowPath();		
+          } else if(checkStatus == 1) {
+           path = myFileUtils.getNoticePath();
+          }   
         
-        String path = myFileUtils.getNoticePath();
         File dir = new File(path);
         if(!dir.exists()) {
           dir.mkdirs();
@@ -121,42 +149,33 @@ public class NoticeServiceImpl implements NoticeService {
         System.out.println("attachNt: " + attachNt);
         attachCount += noticeMapper.insertAttach(attachNt);
         
-      }  // if
+      }  
       
-    }  // for
+    }
+    return addResult;
         
   }
   
+
   @Transactional(readOnly=true)
   @Override
-  public Map<String, Object> getNoticeList(HttpServletRequest request) {
-    
+  public void loadNoticeList(HttpServletRequest request, Model model) {
+  
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     int total = noticeMapper.getNoticeCount();
-    int display = 9;
+    int display = 10;
     
-    myPageUtils.setPaging(page, total, display);
+    adminPageUtils.setPaging(page, total, display);
     
-    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                   , "end", myPageUtils.getEnd());
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd());
     
     List<NoticeDto> noticeList = noticeMapper.getNoticeList(map);
     
-    return Map.of("noticeList",noticeList
-                , "totalPage", myPageUtils.getTotalPage());
-    
-  }
-  
-  @Transactional(readOnly=true)
-  @Override
-  public void loadNotice(HttpServletRequest request, Model model) {
-    
-    Optional<String> opt = Optional.ofNullable(request.getParameter("ntNo"));
-    int ntNo = Integer.parseInt(opt.orElse("0"));
-    
-    model.addAttribute("notice", noticeMapper.getNotice(ntNo));
-    model.addAttribute("attachList", noticeMapper.getAttachList(ntNo));
+    model.addAttribute("noticeList", noticeList);
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/support/list.do"));
+    model.addAttribute("beginNo", total - (page - 1) * display);
     
   }
   
@@ -209,7 +228,18 @@ public class NoticeServiceImpl implements NoticeService {
     return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
     
   }
-  
+  @Transactional(readOnly=true)
+  @Override
+  public void loadNotice(HttpServletRequest request, Model model) {
+    
+    Optional<String> opt = Optional.ofNullable(request.getParameter("ntNo"));
+    int uploadNo = Integer.parseInt(opt.orElse("0"));
+    
+    model.addAttribute("notice", noticeMapper.getNotice(uploadNo));
+    model.addAttribute("attachList", noticeMapper.getAttachList(uploadNo));
+    
+  }
+    
   @Override
   public ResponseEntity<Resource> downloadAll(HttpServletRequest request) {
     
@@ -317,11 +347,11 @@ public class NoticeServiceImpl implements NoticeService {
   @Override
   public Map<String, Object> removeAttach(HttpServletRequest request) {
     
-    Optional<String> opt = Optional.ofNullable(request.getParameter("attachNo"));
-    int attachNo = Integer.parseInt(opt.orElse("0"));
+    Optional<String> opt = Optional.ofNullable(request.getParameter("attachNtNo"));
+    int attachNtNo = Integer.parseInt(opt.orElse("0"));
     
     // 파일 삭제
-    AttachNtDto  attach = noticeMapper.getAttach(attachNo);
+    AttachNtDto  attach = noticeMapper.getAttach(attachNtNo);
     File file = new File(attach.getNtPath(), attach.getNtFilesystemName());
     if(file.exists()) {
       file.delete();
@@ -336,7 +366,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
     
     // ATTACH_T 삭제
-    int removeResult = noticeMapper.deleteAttach(attachNo);
+    int removeResult = noticeMapper.deleteAttach(attachNtNo);
     
     return Map.of("removeResult", removeResult);
     
@@ -346,6 +376,8 @@ public class NoticeServiceImpl implements NoticeService {
   public Map<String, Object> addAttach(MultipartHttpServletRequest multipartRequest) throws Exception {
     
     List<MultipartFile> files =  multipartRequest.getFiles("files");
+    int ntNo = Integer.parseInt(multipartRequest.getParameter("ntNo"));
+    int checkStatus = Integer.parseInt(multipartRequest.getParameter("checkStatus"));
     
     int attachCount;
     if(files.get(0).getSize() == 0) {
@@ -354,10 +386,16 @@ public class NoticeServiceImpl implements NoticeService {
       attachCount = 0;
     }
     
-    for(MultipartFile multipartFile : files) {
-      
-      if(multipartFile != null && !multipartFile.isEmpty()) {
-        String path = myFileUtils.getNoticePath();
+       for(MultipartFile multipartFile : files) {
+    	if(multipartFile != null && !multipartFile.isEmpty()) {
+            
+    	String path = "";
+        	if(checkStatus == 0) {
+        		path = myFileUtils.getNoticeWindowPath();		
+          } else if(checkStatus == 1) {
+        	  	path = myFileUtils.getNoticePath();
+          }   
+        
         File dir = new File(path);
         if(!dir.exists()) {
           dir.mkdirs();
@@ -389,9 +427,10 @@ public class NoticeServiceImpl implements NoticeService {
                             .ntOriginalFilename(ntOriginalFilename)
                             .ntFilesystemName(ntFilesystemName)
                             .ntHasThumbnail(ntHasThumbnail)
+                            .ntNo(ntNo)
                             .build();
         
-        attachCount += noticeMapper.insertAttach(attach);
+        attachCount += noticeMapper.modifyAttach(attach);
         
       }  // if
       

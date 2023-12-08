@@ -12,11 +12,14 @@
     position: fixed;
   }
   
-    #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
-  
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
   div.child2{
     width: 800px;
     display: inline-block;
@@ -27,38 +30,81 @@
 	margin-left: 300px;  
 	  
   }    
-  
+   div.search{
+	text-align: center; 
+	margin-left: 200px;
+	width: 900px;  
+	  
+  }  
 </style>
   <div th:replace="~{/layout/header::header}"></div>
 
 <body>
-
-  <div class="parent">
-    <div>
-      <div class="side_bar">
-      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
-        <ul id="side_list">
-          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-      	  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-          <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
-        </ul>
-      </div>
-		<div class="child2">
+  <div class="side_bar">
+	      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
+	   		<ul id="side_list">
+	          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
+			  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+		      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	        </ul>
+  </div>
+  <div class="child2">
 		   <h5 style="text-align: center;">공지사항</h5>
-		</div>   
-		<div class="btn">
+  </div>   
+  <div class="btn">
         <!-- 관리자로 로그인 한 경우 -->
         <th:block th:if="${session.user != null and session.user.auth == 9}">
         <a th:href="@{/support/write.form}">
             <button type="button" class="btn btn-secondary">새 공지 작성하기</button>
-          </a>       
+        </a>       
         </th:block> 
-        </div>
+  </div>
       <div class="child2"> 
-       <div id="notice_list" class="notice_list"></div>
-      </div>
+                <div class="search">
+                  <form id="frm_search" method="get" th:action="@{/support/noticeSearch.do}">
+                    <div class="input-group w-50 p-3">
+                      <select class="form-select search_select" id="inputGroupSelect01" name="column" aria-label="Example select with button addon">
+                        <option value="NT_TITLE" selected>제목</option>
+                        <option value="NT_CONTENT">내용</option>
+                      </select>
+                      <input type="text" class="form-control serach_text" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1">
+                      <button class="btn btn-outline-secondary" type="submit" id="btn_search">
+                        <i class="fa-solid fa-magnifying-glass white"></i>
+                      </button>
+                    </div>
+                  </form> 
+                 </div>           
+				<table class="table align-middle">
+				                <thead>
+				                <tr>
+				                    <td>순번</td>
+				                    <td>제목</td>
+				                    <td>내용</td>
+				                    <td>작성일</td>
+				                </tr>
+				                </thead>
+								<tbody>
+							        <!-- th:each로 noticeList 반복 -->
+							        <tr th:each="n,vs:${noticeList}">
+							            <!-- 각각의 데이터를 출력 -->
+               						    <td th:text="${beginNo - vs.index}"></td>
+							            <td>
+											<a th:href="@{/support/detail.do(ntNo=${n.ntNo})}" th:utext="${#strings.length(n.ntTitle) > 10 ? #strings.substring(n.ntTitle, 0, 10) + '...' : n.ntTitle}"></a>
+										</td>
+										<td th:utext="${#strings.length(n.ntContent) > 6 ? #strings.substring(n.ntContent, 0, 6) + '...' : n.ntContent}"></td>
+							            <td th:text="${n.ntDate}"></td>
+							        </tr>
+							    </tbody>
+							   <tfoot th:if="${not #lists.isEmpty(noticeList)}">
+						            <tr>
+						              <td colspan="5" th:utext="${paging}"></td>
+						            </tr>
+        					   </tfoot>
+				</table>				
 
-           <script th:inline="javascript">
+
+    	 </div>
+   <script th:inline="javascript">
   // 전역 변수
     
       // 전역 변수
@@ -86,11 +132,11 @@
                 str += '<td><a href="/support/detail.do?ntNo='+ notice.ntNo + '">' + truncatedTitle + '</a></td>';
                 str += '<td>' + truncatedContent + '</td>';                
                 str += '<td>' + notice.ntDate + '</td></tr>';
-                
+
             });
+            str += '</tbody><tfoot th:if="${not #lists.isEmpty(noticeList)}"><tr><td th:utext="${paging}"></td></tr></tfoot></table></div>';
             // 여기서 순서를 바꾸어서 #notice_list에 먼저 추가하도록 수정했습니다.
             $('#notice_list').append(str);
-            str += '</tbody></table></div>';
         }
     });
 }
@@ -100,40 +146,12 @@
         })
       }
     
-      const fnScroll = () => {
-        
-        var timerId;  // 최초 undefined 상태
-        
-        $(window).on('scroll', () => {
-          
-          if(timerId){  // timerId가 undefined이면 false로 인식, timerId가 값을 가지면 true로 인식
-            clearTimeout(timerId);
-          }
-          
-          timerId = setTimeout(() => {  // setTimeout 실행 전에는 timerId가 undefined 상태, setTimeout이 한 번이라도 동작하면 timerId가 값을 가짐
-            
-            let scrollTop = $(window).scrollTop();     // 스크롤바 위치(스크롤 된 길이)
-            let windowHeight = $(window).height();     // 화면 전체 크기
-            let documentHeight = $(document).height(); // 문서 전체 크기
-            
-            if((scrollTop + windowHeight + 100) >= documentHeight) {  // 스크롤이 바닥에 닿기 100px 전에 true가 됨
-              if(page > totalPage){  // 마지막 페이지를 보여준 이후에 true가 됨
-                return;              // 마지막 페이지를 보여준 이후에는 아래 코드를 수행하지 말 것 
-              }
-              page++;
-              fnGetNoticeList();
-            }
-            
-          }, 200);  // 200밀리초(0.2초) 후 동작(시간은 임의로 조정 가능함)
-          
-        })
-        
-      }
+     
       
       const fnAddResult = () => {
         let addResult = /*[[${addResult}]]*/ null;
         if(addResult !== null){
-          if(addResult === true){
+          if(addResult === 1){
             alert('공지사항이 업로드 되었습니다.');
             $('#notice_list').empty();
           } else {
@@ -153,15 +171,36 @@
           }
         }
       }
-      
-      fnGetNoticeList();
+  const fnNoticeSearch = () => {
+      $('#frm_search').submit((ev) => {
+        let query = $('.serach_text').val().trim();
+        let checkTitle = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+        let checkContent = /^[a-zA-Z0-9가-힣]{1}[a-zA-Z0-9가-힣\s ]{1,}$/;
+        if(query === '') {
+          alert('검색어를 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        if($('.search_select').val() === "NT_TITLE") {
+          if(!checkTitle.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+        if($('.search_select').val() === "NT_CONTENT") {
+          if(!checkContent.test(query)) {
+            alert('검색어를 정확히 입력해주세요(영어,숫자,한글로만 2자 이상)');
+            ev.preventDefault();
+            return;
+          }
+        }
+      })
+    }
+      fnNoticeSearch();    
       fnNoticeDetail();
-      fnScroll();
       fnAddResult();
       fnRemoveResult();
    </script>
 
-</div>
-
-</body>
 </html>

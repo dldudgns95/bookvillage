@@ -27,20 +27,9 @@ public class ApplyController {
   
   
   @GetMapping("/facApplyList.do")
-  public String facApplyList(HttpServletRequest request, Model model) {
+  public String facApply(HttpServletRequest request, Model model) {
     facService.getFacApplyList(request, model);
     return "apply/faclist";
-  }
-  
-  @GetMapping("/facWrite.form")
-  public String facWriteForm() {
-    return "admin/facWrite";
-  }
-  
-  @PostMapping("/facAdd.do")
-  public String facAdd(MultipartHttpServletRequest multiRequest) throws Exception {
-	  facService.addFacility(multiRequest);
-    return "redirect:/admin/facApplyList.do";
   }
   
   @ResponseBody
@@ -65,15 +54,25 @@ public class ApplyController {
   public String temp() {
     return "apply/faclist";
   }
+  
+  @GetMapping("/fac.do")
+  public String facList(Model model) {
+    facService.getFacList(model);
+    return "apply/fac";
+  } 
+    
+  @GetMapping("/wishbook.do")
+  public String wishbook() {
+    return "apply/wishbook";
+  }
   @GetMapping("/bookapply.do")
   public String bookapply() {
     return "apply/bookapply";
   }
-  
   @PostMapping("/bookapplyadd.do")
   public String addBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 	    int addResult = facService.addbook(request);
 	    redirectAttributes.addFlashAttribute("addResult", addResult);
-	    return "redirect:/mypage/applyBook.do";
+	    return "redirect:/apply/bookapply.do";
 	}
 }

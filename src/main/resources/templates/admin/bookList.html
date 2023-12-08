@@ -102,30 +102,8 @@
     </div>
     
     <div class="admin_contents">
-      <div class="admin_spacebetween">
-        <div>
-          <p>총 <span th:text="${totalCount}"></span>건의 도서가 검색되었습니다.</p>
-        </div>
-        <div class="flex_admin">
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="type" id="bookSearch" checked>
-            <label class="form-check-label" for="bookSearch">
-              도서 검색
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="type" id="applyBookSearch">
-            <label class="form-check-label" for="applyBookSearch">
-              희망도서 검색
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="radio" name="type" id="bookCheckoutSearch">
-            <label class="form-check-label" for="bookCheckoutSearch">
-              대출/반납 승인
-            </label>
-          </div>
-        </div>
+      <div>
+        <p>총 <span th:text="${totalCount}"></span>건의 도서가 검색되었습니다.</p>
       </div>
       <div>
         <table class="table">
@@ -183,12 +161,12 @@
         </table>
       </div>
       <div>
-        <form th:action="@{/admin/insertBooks.do}" method="get">
+        <form class="frm_update_book" th:action="@{/admin/insertBooks.do}" method="get">
           <select name="QueryType">
             <option value="ItemNewAll">신간 전체 리스트</option>
             <option value="Bestseller">베스트셀러</option>
           </select>
-          <button type="submit">도서업데이트</button>
+          <button type="submit" id="btn_update_book">도서업데이트</button>
         </form>
       </div>
     </div>
@@ -241,9 +219,17 @@
       }
     }    
     
+    const fnEditButton = () => {
+      $('.frm_update_book').submit((ev) => {
+        $('#btn_update_book').text('처리중');
+        $('#btn_update_book').prop('disabled', true);
+      })
+    }
+    
     fnBookCount();
     fnBookSearch(); 
     fnDeleteResult();
+    fnEditButton();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

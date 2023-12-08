@@ -12,10 +12,14 @@
     position: fixed;
   }
   
-    #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
 	div.child2{
 		width: 800px;
 	    height: 500px;
@@ -36,9 +40,9 @@
       <div class="side_bar">
 	    <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">FAQ</h3>
         <ul id="side_list">
-          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-		  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-		  <li style="margin:20px"><a th:href="@{/qna/list.do}">1:1문의</a></li>
+          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
+		  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+	      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
         </ul>
       </div>
       <div class="child2">
@@ -80,6 +84,7 @@
 		</script>  
       </div>
    </div>  
+  <div th:replace="~{/layout/footer::footer}"></div>
 
 </body>
 </html>

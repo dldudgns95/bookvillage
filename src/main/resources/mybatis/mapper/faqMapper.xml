@@ -23,12 +23,15 @@
     SELECT COUNT(*)
       FROM FAQ
   </select>
- 
-  <select id="getFaqList" parameterType="Map">
-	SELECT FAQ_NO,FAQ_TITLE, FAQ_CONTENT
-	  FROM FAQ
-  </select>
-  
+ <select id="getFaqList" parameterType="Map">
+  SELECT A.FAQ_NO, A.FAQ_TITLE, A.FAQ_CONTENT
+  FROM (
+    SELECT ROW_NUMBER() OVER(ORDER BY FAQ_NO DESC) AS RN,
+           FAQ.FAQ_NO, FAQ.FAQ_TITLE, FAQ.FAQ_CONTENT
+    FROM FAQ
+  ) A
+  WHERE A.RN BETWEEN #{begin} AND #{end}
+</select>
   <select id="getFaq" parameterType="int">
 	SELECT FAQ_NO, FAQ_TITLE, FAQ_CONTENT
 	  FROM FAQ
@@ -45,4 +48,17 @@
 	      , FAQ_CONTENT = #{faqContent}
 	    WHERE FAQ_NO = #{faqNo}
   </update>
+   <select id="faqSearchCount" parameterType="Map" resultType="int">
+    SELECT COUNT(*)
+      FROM FAQ
+     WHERE ${column} LIKE '%' || #{query} || '%'
+  </select>
+  
+  <select id="getSearchFaqList" parameterType="Map" resultType="FaqDto">
+	SELECT FAQ_NO, FAQ_TITLE, FAQ_CONTENT
+	  FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAQ_NO DESC) AS RN, FAQ_NO, FAQ_TITLE, FAQ_CONTENT
+              FROM FAQ
+             WHERE ${column} LIKE '%' || #{query} || '%')
+    WHERE RN BETWEEN #{begin} AND #{end}
+  </select> 
 </mapper>

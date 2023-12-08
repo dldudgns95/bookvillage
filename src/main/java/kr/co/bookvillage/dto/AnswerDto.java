@@ -11,14 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 @Builder
-public class QnaDto {
+public class AnswerDto {
 	
-
-	private int askNo;
+	private int ansNo;
 	private UserDto userDto;
-	private String askTitle;
-	private String askContent;
-	private Date askDate;
-	private int askState;
+	private String ansConent;
+	private String ansDate;
+	private QnaDto qnaDto;
 	
 }

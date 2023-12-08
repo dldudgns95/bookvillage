@@ -209,8 +209,9 @@ public class AdminServiceImpl implements AdminService {
   
   @Override
   public void getBookDetail(HttpServletRequest request, Model model) {
-    long isbn = Long.parseLong(request.getParameter("isbn")); // isbn은 int로는 값이 커서 불가능
+    String isbn = request.getParameter("isbn");
     model.addAttribute("book", adminMapper.getBookDetail(isbn));
+    model.addAttribute("bookCheckout", adminMapper.getBookCheckoutByISBN(isbn));
   }
   
   @Override
@@ -471,7 +472,7 @@ public class AdminServiceImpl implements AdminService {
     int checkoutNo = Integer.parseInt(request.getParameter("checkoutNo"));
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int status = Integer.parseInt(request.getParameter("status"));
-    long isbn = Long.parseLong(request.getParameter("isbn"));
+    String isbn = request.getParameter("isbn");
     int updateResult = adminMapper.approvalBookCheckoutReturn(checkoutNo);
     if(updateResult == 1) {
       if(status == 3) {
@@ -931,4 +932,21 @@ public class AdminServiceImpl implements AdminService {
     
   }
   
+  @Override
+  public boolean checkBook(HttpServletRequest request) {
+    return adminMapper.checkAddBook(request.getParameter("isbn"));
+  }
+  
+
+  @Override
+  public int inactiveBook(HttpServletRequest request) {
+    return adminMapper.inactiveBook(request.getParameter("isbn"));
+  }
+  
+  @Override
+  public int activeBook(HttpServletRequest request) {
+    return adminMapper.activeBook(request.getParameter("isbn"));
+  }
+  
+
 }

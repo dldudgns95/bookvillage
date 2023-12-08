@@ -55,20 +55,20 @@
 
   <div th:fragment="header" class="header_wrap">
     
+    
     <div class="logo"></div>
     
-    <div class="search_bar" >
-        <form id="search" name="search" action="/book/search/result" method="get">
-          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
-          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
-          <input type="hidden" name="ss" value="total" />
+    <div class="main_search_bar" >
+        <form id="search" name="search" action="/main/searchBookMain.do" method="get">
+          
           <div class="search_text">
-            <input type="text" style="width:300px;" id="st" name="st" placeholder="검색어를 입력하세요."> 
+            <input type="text" style="width:300px;" name="query" placeholder="검색어를 입력하세요." aria-label="Username" aria-describedby="basic-addon1"> 
+
+            <button type="submit" class="btn .btn-outline-* btn_mainSearch">
+              <i class="fa-solid fa-magnifying-glass white"></i>
+            </button>
           </div>
-          <input type="hidden" name="sortType" />
-          <div class="search_btn">
-            <input type="submit" value="검색" title="검색" class="btn btn-outline-secondary">
-          </div>
+          
         </form>   
     </div>
     
@@ -95,7 +95,7 @@
       </th:block>
       <th:block th:if="${session.user != null}">
         <ul class="ico_user_group">
-          <li th:text="|${session.user.name}님 환영합니다|"></li>
+        <a href="http://localhost:8080/mypage/booklist.do"><li  th:text="|${session.user.name}님 환영합니다|"></li></a>
           <li><a th:href="@{/user/logout.do}"><i class="fa-solid fa-arrow-left"></i> 로그아웃</a></li>
           <th:block th:if="${session.user.auth == 9}">
             <li><a th:href="@{/admin/main.do}"><i class="fa-solid fa-lock"></i> 관리자</a></li>  
@@ -110,7 +110,7 @@
         <li><a th:href="@{/book/search.do}">자료검색</a></li>
         <li><a th:href="@{/mypage/booklist.do}">나만의 도서관</a></li>
         <li><a th:href="@{/support/list.do}">고객센터</a></li>
-        <li><a th:href="@{/apply/faclist.do}">시설신청</a></li>
+        <li><a th:href="@{/apply/fac.do}">신청</a></li>
       </ul>
     </div>
 
