@@ -43,9 +43,11 @@
 ## 🛠 기능 정의서
 <table>
   <tr>
-    <th>제목</th>
-    <th>제목</th>
-    <th>제목</th>
+    <th>화면</th>
+    <th>하위</th>
+    <th>기능명</th>
+    <th>기능설명</th>
+    <th>비고</th>
   </tr>
   <tr>
     <td>내용</td>
