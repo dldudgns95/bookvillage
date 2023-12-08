@@ -235,6 +235,7 @@
 
 
 ## 🛠 ERD
+![책빌리지](https://github.com/dldudgns95/bookvillage/assets/93424265/10aec776-26a2-48e5-882a-d7f4737fe6b9)
 
 ## 🛠 UseCase
 ![제목 없는 다이어그램 drawio (2)](https://github.com/dldudgns95/bookvillage/assets/93424265/18d7213f-1add-4be5-a00a-980ff2478059)
