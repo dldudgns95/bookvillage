@@ -111,7 +111,8 @@
         <div class="bookSearchEach" th:each="book : ${bookList}">
             <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
                 <img class="bookSearchMainImg" th:src="${book.cover}" /><br>
-                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 25 ? #strings.substring(book.title, 0, 25) + '...' : book.title + '<br>' + (book.status == 1 ? '대출 가능' : '대출 중')}"></div>
+                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 20 ? #strings.substring(book.title, 0, 20) + '...' : book.title}"></div>
+                <div class="bookSearchMainTitle" th:utext="${(book.status == 1 ? '대출 가능' : '대출 불가')}"></div>
             </a>
         </div>
       </div>
