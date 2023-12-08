@@ -650,7 +650,7 @@
      WHERE ISBN IN (SELECT ISBN
                       FROM BOOK_CHECKOUT
                      WHERE STATUS = 0
-                       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) > 3)
+                       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) &gt; 3)
   </update>
   
   <!-- 대출신청 3일이상 지나면 자동으로 취소 -->
@@ -658,7 +658,7 @@
     UPDATE BOOK_CHECKOUT
        SET STATUS = 4
      WHERE STATUS = 0
-       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) > 3
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) &gt; 3
   </update>
   
   <!-- 반납예정일 지나면 연체로 변경 -->
@@ -666,7 +666,7 @@
     UPDATE BOOK_CHECKOUT
        SET STATUS = 3
      WHERE STATUS = 1
-       AND TO_DATE(SYSDATE, 'YY/MM/DD') > TRUNC(DUE_DATE)
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') &gt; TRUNC(DUE_DATE)
   </update>
   
   <!-- 연체인 회원들 대출 불가능하게 변경 -->
@@ -682,7 +682,7 @@
   <update id="updateFacApply">
     UPDATE FAC_APPLY
        SET FAC_STATUS = 2
-     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') > FAC_START;
+     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') &gt; FAC_START;
   </update>
   
   
