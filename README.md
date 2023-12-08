@@ -183,6 +183,7 @@
     </tr>
     <tr>
       <td rowspan="3">board(서가을,길수연)</td>
+      <td rowspan="3">고객센터</td>
       <td>1대1문의(길수연)</td>
       <td>로그인한 회원이 남기는 문의글</td>
     </tr>
@@ -196,6 +197,7 @@
     </tr>
     <tr>
       <td rowspan="2">apply(서가을,길수연)</td>
+      <td rowspan="2">신청</td>
       <td>희망도서신청(길수연)</td>
       <td>홈페이지에 없는 책을 신청</td>
     </tr>
