@@ -46,6 +46,10 @@
 : 이메일 인증을 활용한 회원가입
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/d49d9c8c-168a-49c6-a413-c5e17dc84f90)
 
+### 헤더 통합 검색
+: 헤더 검색으로 사이트 전체 통합 검색 (도서 자료, 게시판 글, 시설)
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/f2691f44-d43c-44c9-b6b9-c38f1d1d817d)
+
 ### 도서 검색 
 : 전체, 제목, 저자로 나눠 세부 검색. 랜덤 추천 도서
   ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/f7929752-b686-47ae-95ba-b12a82023509)
@@ -103,6 +107,11 @@
 ### 희망도서 신청
 : 희망도서 신청
 ![image](https://github.com/dldudgns95/bookvillage/assets/93424265/4a1f48cf-24e3-4f86-8445-d338f677e4a7)
+
+### 공지사항
+: 목록형, 사진 첨부 가능
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/3cba20f7-f888-46c9-a201-aa36e2eaa67b)
+![image](https://github.com/dldudgns95/bookvillage/assets/93424265/b95a020e-686b-42b8-943b-10e447700f17)
 
 
 
