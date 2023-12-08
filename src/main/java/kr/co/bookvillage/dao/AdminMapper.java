@@ -66,4 +66,9 @@ public interface AdminMapper {
   public int editAttachFac(AttachFacDto attachFacDto);
   public int inactiveBook(String isbn);
   public BookCheckoutDto getBookCheckoutByISBN(String isbn);
+  public int activeBookByBookCheckout();
+  public int cancleBookCheckout();
+  public int changeOverdue();
+  public int inactiveUserByBookCheckout();
+  public int updateFacApply();
 }

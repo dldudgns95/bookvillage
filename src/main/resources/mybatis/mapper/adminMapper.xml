@@ -330,6 +330,7 @@
       FROM BOOK_APPLY BA INNER JOIN USER_T U
         ON BA.USER_NO = U.USER_NO
      WHERE BA.USER_NO = #{userNo}
+     ORDER BY APPLY_NO DESC
   </select>
   
   <!-- 희망도서 상세 조회 -->
@@ -547,6 +548,7 @@
         ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
         ON FA.FAC_NO = F.FAC_NO
        AND FA.USER_NO = #{userNo}
+     ORDER BY FAC_START DESC
   </select>
   
   <!-- 등록된 책인지 확인 -->
@@ -641,9 +643,47 @@
                AND BC.STATUS NOT IN (2,4)
   </select>
   
+  <!-- 대출신청 3일이상 지난 책 대출 가능으로 변경 -->
+  <update id="activeBookByBookCheckout">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN IN (SELECT ISBN
+                      FROM BOOK_CHECKOUT
+                     WHERE STATUS = 0
+                       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) > 3)
+  </update>
   
+  <!-- 대출신청 3일이상 지나면 자동으로 취소 -->
+  <update id="cancleBookCheckout">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 4
+     WHERE STATUS = 0
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) > 3
+  </update>
   
+  <!-- 반납예정일 지나면 연체로 변경 -->
+  <update id="changeOverdue">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 3
+     WHERE STATUS = 1
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') > TRUNC(DUE_DATE)
+  </update>
   
+  <!-- 연체인 회원들 대출 불가능하게 변경 -->
+  <update id="inactiveUserByBookCheckout">
+    UPDATE USER_T
+       SET STATUS = 0
+     WHERE USER_NO IN (SELECT USER_NO
+                         FROM BOOK_CHECKOUT
+                        WHERE STATUS = 3);
+  </update>
+  
+  <!-- 시설 이용신청에서 시작날짜가 지나도 승인대기상태면 자동 거절 -->
+  <update id="updateFacApply">
+    UPDATE FAC_APPLY
+       SET FAC_STATUS = 2
+     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') > FAC_START;
+  </update>
   
   
   

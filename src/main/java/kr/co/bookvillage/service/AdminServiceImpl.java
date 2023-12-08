@@ -948,5 +948,22 @@ public class AdminServiceImpl implements AdminService {
     return adminMapper.activeBook(request.getParameter("isbn"));
   }
   
+  @Override
+  public void cancleBookCheckoutBatch() {
+    adminMapper.activeBookByBookCheckout();
+    adminMapper.cancleBookCheckout();
+  }
+  
+  @Override
+  public void changeOverdueBatch() {
+    adminMapper.changeOverdue();
+    adminMapper.inactiveUserByBookCheckout();
+  }
+  
+  @Override
+  public void updateFacApply() {
+    adminMapper.updateFacApply();
+  }
+  
 
 }

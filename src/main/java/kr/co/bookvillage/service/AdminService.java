@@ -49,5 +49,8 @@ public interface AdminService  {
   public boolean checkBook(HttpServletRequest request);
   public int inactiveBook(HttpServletRequest request);
   public int activeBook(HttpServletRequest request);
+  public void cancleBookCheckoutBatch();
+  public void changeOverdueBatch();
+  public void updateFacApply();
 
 }
