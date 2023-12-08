@@ -47,7 +47,7 @@
   <select id="searchBookList" parameterType="BookDto">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
     FROM (
-      SELECT ROW_NUMBER() OVER(ORDER BY TITLE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      SELECT ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK
       WHERE 
         (
@@ -93,33 +93,6 @@
   </select>
   
   
-   <!-- 책 검색 결과 조회 및 정렬 -->
-  <select id="getBook" parameterType="map" resultMap="BookMap">
-    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
-      FROM (SELECT ROW_NUMBER() OVER(ORDER BY 
-                                       <choose>
-                                        <when test="sortType == 'title'">TITLE ASC</when>
-                                        <when test="sortType == 'author'">AUTHOR ASC</when>
-                                        <when test="sortType == 'publisher'">PUBLISHER ASC</when>
-                                        <when test="sortType == 'pubDate'">PUBDATE ASC</when>
-                                        <otherwise>PUBDATE DESC</otherwise>
-                                       </choose> 
-                       ) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
-              FROM BOOK 
-             WHERE 
-              <choose>
-                <when test="ss == 'total'">
-                  TITLE LIKE '%' || #{st} || '%' OR AUTHOR LIKE '%' || #{st} || '%'
-                </when>
-                <when test="ss == 'title'">
-                  TITLE LIKE '%' || #{st} || '%'
-                </when>
-                <when test="ss == 'author'">
-                  AUTHOR LIKE '%' || #{st} || '%'
-                </when>
-              </choose>)
-     WHERE RN BETWEEN #{begin} AND #{end}        
-  </select>
   
   
 

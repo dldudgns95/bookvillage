@@ -36,7 +36,7 @@
   height: 250px;
 }
 .bookSearchMainImg{
-  width: 180px;
+  width: 200px;
   height: 230px;
   justify-content:space-between;
 }
@@ -78,7 +78,20 @@
 
         <!-- 소장도서 목록 -->
         <div class="title2 bookSearchMain_wrap">소장도서</div>
-        <div><button  type="button" id="btn_searhBookGo" class="btn btn-outline-secondary btn-sm moreBtn">더보기</button></div>
+        
+        <!-- 더보기 검색 -->
+        <form id="search" name="search" action="/book/search/result" method="get">
+          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
+          <input type="hidden" name="ss"     th:value="total" />
+
+          <div class="search_text">
+            <input type="hidden" id="st" name="st" th:value="${query}"> 
+          </div>
+          <input type="hidden" name="sortType" />
+          <div class="search_btn">
+            <input type="submit" value="더보기" title="더보기" class="btn btn-outline-secondary btn-sm">
+          </div>        
         
         
        <div class="bookSearchMain">
