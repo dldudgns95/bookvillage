@@ -347,6 +347,7 @@
         ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
         ON BC.ISBN = B.ISBN
      WHERE BC.USER_NO = #{userNo}
+     ORDER BY CHECKOUT_NO DESC
   </select>
   
   <!-- 대출 신청한 도서 수 카운트 -->

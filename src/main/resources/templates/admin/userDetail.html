@@ -141,26 +141,28 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">대출번호</th>
-                    <th scope="col">대출회원번호</th>
-                    <th scope="col">대출회원이름</th>
                     <th scope="col">대출도서ISBN</th>
                     <th scope="col">대출도서명</th>
-                    <th scope="col">대출현황</th>
+                    <th scope="col">대출<br>신청일</th>
+                    <th scope="col">대출<br>시작일</th>
+                    <th scope="col">반납<br>예정일</th>
+                    <th scope="col">대출<br>반납일</th>
+                    <th scope="col">대출<br>현황</th> 
                     <th scope="col"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <th:block th:if="${#lists.isEmpty(bookCheckoutList)}">
-                    <tr><td colspan="7">대출중인 도서가 없습니다.</td></tr>
+                    <tr><td colspan="8">대출중인 도서가 없습니다.</td></tr>
                   </th:block>
                   <th:block th:each="book,vs:${bookCheckoutList}">
                     <tr>
-                      <td scope="row" th:text="${book.checkoutNo}"></td>
-                      <td scope="row" th:text="${book.userDto.userNo}"></td>
-                      <td scope="row" th:text="${book.userDto.name}"></td>
                       <td scope="row" th:text="${book.bookDto.isbn}"></td>
                       <td scope="row" class="table_title" th:text="${book.bookDto.title}"></td>
+                      <td scope="row" th:text="${#dates.format(book.checkoutDate, 'yy/MM/dd')}"></td>
+                      <td scope="row" th:text="${#dates.format(book.startDate, 'yy/MM/dd')}"></td>
+                      <td scope="row" th:text="${#dates.format(book.dueDate, 'yy/MM/dd')}"></td>
+                      <td scope="row" th:text="${#dates.format(book.endDate, 'yy/MM/dd')}"></td>
                       <td scope="row">
                         <th:block th:if="${book.status == 0}">
                           대출신청
@@ -168,8 +170,14 @@
                         <th:block th:if="${book.status == 1}">
                           대출중
                         </th:block>
+                        <th:block th:if="${book.status == 2}">
+                          반납완료
+                        </th:block>
                         <th:block th:if="${book.status == 3}">
                           연체
+                        </th:block>
+                        <th:block th:if="${book.status == 4}">
+                          대출취소
                         </th:block>
                       </td>
                       <td scope="row">

@@ -6,6 +6,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import kr.co.bookvillage.interceptor.CheckAdminLoginInterceptor;
 import kr.co.bookvillage.interceptor.RequiredLoginInterceptor;
 import kr.co.bookvillage.interceptor.ShouldNotLoginInterceptor;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
   private final RequiredLoginInterceptor requiredLoginInterceptor;
   private final ShouldNotLoginInterceptor shouldNotLoginInterceptor;
+  private final CheckAdminLoginInterceptor checkAdminLoginInterceptor;
   
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
@@ -24,6 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addPathPatterns("/user/modifyPw.form");
     registry.addInterceptor(shouldNotLoginInterceptor)
       .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
+    registry.addInterceptor(checkAdminLoginInterceptor)
+    .addPathPatterns("/admin/**");
   }
   
   @Override
