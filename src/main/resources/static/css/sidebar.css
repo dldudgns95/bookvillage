@@ -5,11 +5,11 @@
 
   .side_bar {
     width: 200px;
-    display: inline-block;
+    height: 600px;    
     text-align: center;
-    margin-top: 30px;
-    position: fixed;
-    
+    margin-top: 30px;    
+    min-height: calc(100vh - 200px);
+    overflow-y: auto;
   }
   
   .side_bar li:hover {
