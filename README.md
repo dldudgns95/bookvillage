@@ -17,25 +17,34 @@
 ## ⚙️ 기술 스택
 
 - Front
-
+  - Thymeleaf
   - HTML
   - CSS
   - JavaScript
+  - JQuery
 
 - Back
-
   - JAVA
   - Spring Boot
-  - Oracle
+  - Mybatis
+ 
+- DB
+  - Oracle DB
 
 - API
   - KAKAO API
   - Naver API
   - Aladin API
+ 
+- tool
+  - Eclipse(Spring Tool Suite4)
+
 
 ## 🛠 기획
 - [기능 명세서]()
 - [ERD]()
+
+## 🧍 UseCase
 
 ## 구현 서비스
 ### 로그인 
