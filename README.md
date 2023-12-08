@@ -32,27 +32,7 @@
   - Oracle DB
 
 - API
-  - KAKAO API
-  - Naver API
-  - Aladin API
- 
-- tool
-  - Eclipse(Spring Tool Suite4)
-
-
-## 🛠 기능 정의서
-<table>
-  <tr>
-    <th>화면</th>
-    <th>하위</th>
-    <th>기능명</th>
-    <th>기능설명</th>
-    <th>비고</th>
-  </tr>
-  <tr>
-    <td colspan="7">common(장수진)</td>
-    <td>내용</td>
-    <td>내용</td>
+  -보</td>
   </tr>
   <tr>
     <td>내용</td>
