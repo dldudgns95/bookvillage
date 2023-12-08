@@ -102,7 +102,9 @@
     , COVER
     , AUTHOR
     , PUBLISHER
+    <if test="pubdate != null">
     , PUBDATE
+    </if>
     , DESCRIPTION
     , STATUS
     , CATEGORY_NAME
@@ -112,7 +114,9 @@
     , #{cover}
     , #{author}
     , #{publisher}
+    <if test="pubdate != null">
     , #{pubdate}
+    </if>
     , #{description}
     , 1
     , #{categoryName}
@@ -499,7 +503,7 @@
   </update>
   
   <!-- 반납 완료 시 해당 도서 상태 업데이트 -->
-  <update id="activeBook" parameterType="long">
+  <update id="activeBook" parameterType="String">
     UPDATE BOOK
        SET STATUS = 1
      WHERE ISBN = #{isbn}
@@ -619,5 +623,30 @@
          , FAC_HAS_THUMBNAIL = #{facHasThumbnail}
      WHERE FAC_ATTACH_NO = #{facAttachNo}
   </update>
+  
+  <!-- 도서 대출 불가능으로 업데이트 -->
+  <update id="inactiveBook" parameterType="String">
+    UPDATE BOOK
+       SET STATUS = 0
+     WHERE ISBN = #{isbn}
+  </update>
+  
+  <!-- 해당 도서의 대출 현황 표시 -->
+  <select id="getBookCheckoutByISBN" parameterType="String" resultMap="BookCheckoutMap">
+    SELECT CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
+              FROM BOOK_CHECKOUT BC INNER JOIN USER_T U
+                ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
+                ON BC.ISBN = B.ISBN
+             WHERE BC.ISBN = #{isbn}
+               AND BC.STATUS NOT IN (2,4)
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
   
 </mapper>

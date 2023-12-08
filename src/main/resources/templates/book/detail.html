@@ -120,6 +120,7 @@
                 <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}" />
                 <input type="hidden" name="isbn" th:value="${bookDetailList[0].isbn}" />
                 <input type="hidden" name="checkBookCkCnt" th:value="${checkBookCkCnt}" />
+                <input type="hidden" name="checkUserStatus" th:value="${checkUserStatus}" />
                 <input type="hidden" name="checkoutDate" id="checkoutDate" />
                 <button type="button" class="btn btn-outline-secondary">대출신청</button>
               </form>

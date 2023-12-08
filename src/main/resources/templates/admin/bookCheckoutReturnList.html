@@ -83,7 +83,7 @@
           </thead>
           <tbody>
             <th:block th:if="${#lists.isEmpty(bookCheckoutList)}">
-              <tr><td colspan="7">대출 신청중인 도서가 없습니다.</td></tr>
+              <tr><td colspan="7">대출중인 도서가 없습니다.</td></tr>
             </th:block>
             <th:block th:each="book,vs:${bookCheckoutList}">
               <tr>

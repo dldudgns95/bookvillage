@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.bookvillage.dto.AttachNtDto;
 import kr.co.bookvillage.dto.NoticeDto;
+import kr.co.bookvillage.dto.UserDto;
 
 @Mapper
 public interface NoticeMapper {
@@ -21,5 +22,7 @@ public interface NoticeMapper {
 	  public int deleteAttach(int attachNo);
 	  public int deleteNotice(int ntNo);
 	  public List<NoticeDto> getNoticeList(Map<String, Object> map);
+	  public List<UserDto> getSearchNoticeList(Map<String, Object> map);
+	  public int noticeSearchCount(Map<String, String> of);
 
 }

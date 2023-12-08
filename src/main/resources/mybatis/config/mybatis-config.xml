@@ -11,21 +11,24 @@
   </settings>
   
   <typeAliases>
-    <typeAlias alias="UserDto"                 type="kr.co.bookvillage.dto.UserDto"/>
-    <typeAlias alias="InactiveUserDto"         type="kr.co.bookvillage.dto.InactiveUserDto"/>
-    <typeAlias alias="AccessDto"               type="kr.co.bookvillage.dto.AccessDto"/>
-    <typeAlias alias="NoticeDto"                type="kr.co.bookvillage.dto.NoticeDto"/>
-    <typeAlias alias="AttachNtDto"             type="kr.co.bookvillage.dto.AttachNtDto"/>
-    <typeAlias alias="FaqDto"                  type="kr.co.bookvillage.dto.FaqDto"/>
-    <typeAlias alias="BookDto"                 type="kr.co.bookvillage.dto.BookDto"/>
-    <typeAlias alias="BookSearchDto"           type="kr.co.bookvillage.dto.BookSearchDto"/>
-    <typeAlias alias="ScoreDto"                type="kr.co.bookvillage.dto.ScoreDto"/>
-    <typeAlias alias="WishDto"                 type="kr.co.bookvillage.dto.WishDto"/>
-    <typeAlias alias="FacilityDto"           type="kr.co.bookvillage.dto.FacilityDto"/>
-    <typeAlias alias="AttachFacDto"           type="kr.co.bookvillage.dto.AttachFacDto"/>
-    <typeAlias alias="FacApplyDto"           type="kr.co.bookvillage.dto.FacApplyDto"/>
-    <typeAlias alias="BookApplyDto"           type="kr.co.bookvillage.dto.BookApplyDto"/>
+    <typeAlias alias="UserDto"                   type="kr.co.bookvillage.dto.UserDto"/>
+    <typeAlias alias="InactiveUserDto"           type="kr.co.bookvillage.dto.InactiveUserDto"/>
+    <typeAlias alias="AccessDto"                 type="kr.co.bookvillage.dto.AccessDto"/>
+    <typeAlias alias="NoticeDto"                 type="kr.co.bookvillage.dto.NoticeDto"/>
+    <typeAlias alias="AttachNtDto"               type="kr.co.bookvillage.dto.AttachNtDto"/>
+    <typeAlias alias="FaqDto"                    type="kr.co.bookvillage.dto.FaqDto"/>
+    <typeAlias alias="BookDto"                   type="kr.co.bookvillage.dto.BookDto"/>
+    <typeAlias alias="BookSearchDto"             type="kr.co.bookvillage.dto.BookSearchDto"/>
+    <typeAlias alias="ScoreDto"                  type="kr.co.bookvillage.dto.ScoreDto"/>
+    <typeAlias alias="WishDto"                   type="kr.co.bookvillage.dto.WishDto"/>
+    <typeAlias alias="FacilityDto"               type="kr.co.bookvillage.dto.FacilityDto"/>
+    <typeAlias alias="AttachFacDto"              type="kr.co.bookvillage.dto.AttachFacDto"/>
+    <typeAlias alias="FacApplyDto"               type="kr.co.bookvillage.dto.FacApplyDto"/>
+    <typeAlias alias="BookApplyDto"              type="kr.co.bookvillage.dto.BookApplyDto"/>
     <typeAlias alias="BookCheckoutDto"           type="kr.co.bookvillage.dto.BookCheckoutDto"/>
+    <typeAlias alias="QnaDto"          			 type="kr.co.bookvillage.dto.QnaDto"/>
+    <typeAlias alias="AnswerDto"          		 type="kr.co.bookvillage.dto.AnswerDto"/>
+    <typeAlias alias="AttachAskDto"          	 type="kr.co.bookvillage.dto.AttachAskDto"/>
   </typeAliases>
 
 </configuration>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('공지사항')}"></head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  
+    #side_list li {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  div.child2{
+    width: 800px;
+    display: inline-block;
+    text-align: center; 
+    margin-left: 320px;
+  }
+  div.btn{
+	margin-left: 300px;  
+	  
+  }    
+  
+</style>
+  <div th:replace="~{/layout/header::header}"></div>
+
+<body>
+  <div>
+  <div class="side_bar">
+	      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">1:1문의</h3>
+	        <ul id="side_list">
+	          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
+	      	  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+	          <li style="margin:20px"><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	        </ul>
+  </div>
+  <div class="child2">
+		   <h5 style="text-align: center;">1:1문의</h5>
+  </div>   
+  <div class="btn">
+        <!-- 관리자로 로그인 한 경우 -->
+        <th:block th:if="${session.user != null}">
+        <a th:href="@{/support/askwrite.form}">
+            <button type="button" class="btn btn-secondary">1:1문의하기</button>
+        </a>       
+        </th:block> 
+  </div>
+      <div class="child2"> 
+			<table class="table align-middle">
+                <thead>
+                <tr>
+                    <td>순번</td>
+                    <td>문의제목</td>
+                    <td>문의날짜</td> 
+                    <td>답변상태</td>                                                         
+                </tr>
+			    </thead>
+				<tbody>
+				    <th:block th:each="a : ${askList}">
+				        <tr>
+				            <td th:text="${a.askNo}"></td>
+				            <td>
+				                <a th:href="@{/support/askdetail.do(askNo=${a.askNo})}" th:text="${a.askTitle}"></a>
+				            </td>
+				            <td th:text="${a.askDate}"></td>
+				            <td>
+				                <span th:if="${a.askState == 0}">답변대기중</span>
+				                <span th:if="${a.askState == 1}">답변완료</span>
+				            </td>
+				        </tr>
+				    </th:block>
+				</tbody>
+            </table>
+       </div>
+  </div>
+   <script th:inline="javascript">
+			const fnAddResult = () => {
+                let addResult = /*[[${addResult}]]*/ null;
+                if (addResult !== null) {
+                    if (addResult === 1) {
+                        alert('FAQ가 등록되었습니다.');
+                        $('#faq_list').empty();
+                    } else {
+                        alert('FAQ 등록이 실패했습니다.');
+                    }
+                }
+            }
+            const fnRemoveResult = () => {
+                let removeResult = /*[[${removeResult}]]*/ null;
+                if (removeResult !== null) {
+                    if (removeResult === 1) {
+                        alert('FAQ가 삭제되었습니다.');
+                        $('#faq_list').empty();
+                    } else {
+                        alert('FAQ 삭제가 실패했습니다.');
+                    }
+                }
+            }
+            fnAddResult();
+            fnRemoveResult(); 
+   </script>
+
+</div>
+</html>
