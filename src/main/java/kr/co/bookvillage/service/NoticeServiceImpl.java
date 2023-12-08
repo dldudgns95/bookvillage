@@ -100,18 +100,18 @@ public class NoticeServiceImpl implements NoticeService {
     }
     
     for(MultipartFile multipartFile : files) {
-      if(multipartFile != null && !multipartFile.isEmpty()) {
-        String path = "";
-        if(checkStatus == 0) {
-           path = myFileUtils.getNoticeWindowPath();		
-          } else if(checkStatus == 1) {
-           path = myFileUtils.getNoticePath();
-          }   
-        
-        File dir = new File(path);
-        if(!dir.exists()) {
-          dir.mkdirs();
-        }
+        if(multipartFile != null && !multipartFile.isEmpty()) {
+          String path = "";
+          if(checkStatus == 0) {
+             path = myFileUtils.getNoticeWindowPath();		
+            } else if(checkStatus == 1) {
+             path = myFileUtils.getNoticePath();
+            }   
+          
+          File dir = new File(path);
+          if(!dir.exists()) {
+            dir.mkdirs();
+          }
         
         String ntOriginalFilename = multipartFile.getOriginalFilename();
         String ntFilesystemName = myFileUtils.getFilesystemName(ntOriginalFilename);
@@ -385,21 +385,19 @@ public class NoticeServiceImpl implements NoticeService {
     } else {
       attachCount = 0;
     }
-    
-       for(MultipartFile multipartFile : files) {
-    	if(multipartFile != null && !multipartFile.isEmpty()) {
-            
-    	String path = "";
-        	if(checkStatus == 0) {
-        		path = myFileUtils.getNoticeWindowPath();		
+
+    for(MultipartFile multipartFile : files) {
+        if(multipartFile != null && !multipartFile.isEmpty()) {
+          String path = "";
+          if(checkStatus == 0) {
+            path = myFileUtils.getNoticeWindowPath();
           } else if(checkStatus == 1) {
-        	  	path = myFileUtils.getNoticePath();
-          }   
-        
-        File dir = new File(path);
-        if(!dir.exists()) {
-          dir.mkdirs();
-        }
+            path = myFileUtils.getNoticePath();
+          }
+          File dir = new File(path);
+          if(!dir.exists()) {
+            dir.mkdirs();
+          }
         
         String ntOriginalFilename = multipartFile.getOriginalFilename();
         String ntFilesystemName = myFileUtils.getFilesystemName(ntOriginalFilename);
@@ -412,7 +410,7 @@ public class NoticeServiceImpl implements NoticeService {
         
         multipartFile.transferTo(paths.toFile());
         
-        String contentType = Files.probeContentType(file.toPath());  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
+        String contentType = Files.probeContentType(paths);  // 이미지의 Content-Type은 image/jpeg, image/png 등 image로 시작한다.
         int ntHasThumbnail = (contentType != null && contentType.startsWith("image")) ? 1 : 0;
         
         if(ntHasThumbnail == 1) {

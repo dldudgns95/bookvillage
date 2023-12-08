@@ -6,23 +6,29 @@
 <style>
   .side_bar {
     width: 200px;
-    display: inline-block;
+    height: 600px;    
     text-align: center;
-    margin-top: 30px;
-    position: fixed;
+    margin-top: 30px;    
+    min-height: calc(100vh - 200px);
+    overflow-y: auto;
+  }
+  
+  
+   .side_bar li:hover {
+    background-color:  #f0f0f0;
+    transition: .3s;
   }
   
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   
   .mypage {
     width: 800px;
     height: 500px;
     display: inline-block;
-    text-align: center;
-    margin-left: 320px;
+    text-align: center;   
     padding-top: 30px;
   }
   
@@ -45,8 +51,8 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
-    
+  <div class="main_wrap wrap_flex">
+    <div class="column-2">
     <div class="side_bar">
       <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
@@ -58,7 +64,9 @@
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
       </ul>    
     </div>
+    </div>
     <th:block th:if="${session.user != null}">
+    <div class="column-8">
     <div class="mypage">
       <h3>희망도서 신청목록</h3>
       <span style="font-size: 15px;">신청상태 : 신청중 - 관리자가 확인중입니다(수정/취소가능) / 신청완료 - 도서입고완료</span>
@@ -111,6 +119,7 @@
           </tr>
         </tfoot>
       </table>    
+    </div>
     </div>
   </div>
   
