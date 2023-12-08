@@ -12,9 +12,14 @@
     position: fixed;
   }
   
+    .side_bar li:hover {
+    background-color:  #f0f0f0;
+    transition: .3s;
+  }
+  
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   
   .mypage {
@@ -27,11 +32,11 @@
     padding-top: 30px;
   }
   
-    .table_title {
+    .table_title{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 500px;
+    width: 100px;
     height: 41px;
   }
   
@@ -39,6 +44,17 @@
     table-layout: fixed;
     width: 800px;
   }
+  
+  .fa-xmark {
+    cursor: pointer;
+  }
+  
+  .table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+  
   
 </style>
 
@@ -62,29 +78,34 @@
 
     <div class="mypage">
 
-      <h3>도서후기</h3>
-      <span style="font-size: 20px;">작성한 한줄평</span>
+      <h3>작성한 한줄평</h3>
       <table border="1" class="table table-hover" style="font-size: 15px;">
         <thead>
           <tr>
             <td>도서명</td>
             <td>한줄평</td>
             <td>작성일</td>
+            <td style="width: 40px;"></td>
           </tr>
         </thead>
         <tbody>
           <tr th:if="${#lists.isEmpty(reviewList)}">
             <td colspan="3">작성내역이없습니다.</td>
           </tr>
-          <th:block th:if="${not #lists.isEmpty(reviewList)}">
-            <th:block th:each="review : ${reviewList}">
-              <tr th:if="${session.user.userNo eq review.userNo}">
-                <td><a th:href="@{/book/search/detail(isbn=${review.isbn})}" th:text="${review.title}"></a></td>
-                <td th:text="${review.review}"></td>
-                <td th:text="${review.reviewDate}"></td>
-              </tr>          
+          <form method="post" id="frm_review">
+            <th:block th:if="${not #lists.isEmpty(reviewList)}">
+              <th:block th:each="review : ${reviewList}">
+                <tr th:if="${session.user.userNo eq review.userNo}">
+                  <td><a th:href="@{/book/search/detail(isbn=${review.isbn})}" th:text="${review.title}"></a></td>
+                  <td th:text="${review.review}"></td>
+                  <td th:text="${review.reviewDate}"></td>
+                  <input type="hidden" name="userNo" th:value="${session.user?.userNo != null ? session.user.userNo : 0}">
+                  <input type="hidden" name="isbn" th:value="${review.isbn}">
+                  <td style="width: 40px;"><i class="fa-solid fa-xmark"></i></td>
+                </tr>          
+              </th:block>
             </th:block>
-          </th:block>
+          </form>
         </tbody>
         <tfoot th:if="${not #lists.isEmpty(reviewList)}">
           <tr>
@@ -98,6 +119,37 @@
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>
+  
+  <script th:inline="javascript">
+    
+    $(document).ready(function(){
+      $('.fa-xmark').on('click', function(){
+        var isbn = $(this).closest('tr').find('input[name="isbn"]').val();
+        var userNo = $(this).closest('tr').find('input[name="userNo"]').val();
+        $.ajax({
+          type: 'post',
+          url: '/mypage/deleteReview.do',
+          data: {
+            isbn: isbn,
+            userNo: userNo
+          },
+          success: function(resData) {
+            if(confirm('한줄평을 삭제하시겠습니까?')){
+              if(resData.deleteResult === 1){
+                alert('한줄평이 삭제되었습니다.');
+                location.reload();
+              } else {
+                alert('한줄평이 삭제되지않았습니다.');
+              }
+            } else {
+              return;
+            }
+          }
+        })
+      })
+    })
+    
+  </script>
   
 </body>
 </html>

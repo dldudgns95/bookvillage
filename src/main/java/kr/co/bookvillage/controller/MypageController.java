@@ -162,5 +162,18 @@ public class MypageController {
     return result;
   }
   
+  // 한줄평 삭제
+  @ResponseBody
+  @PostMapping(value="/deleteReview.do", produces="application/json")
+  public Map<String, Object> deleteReview(@RequestParam(value="isbn", required=false, defaultValue="0") String isbn,
+                                          @RequestParam(value="userNo", required=false, defaultValue="0") int userNo){
+    Map<String, Object> result = new HashMap<>();
+    int deleteResult = mypageService.removeReview(isbn, userNo);
+    result.put("deleteResult", deleteResult);
+    
+    return result;
+        
+  }
+  
   
 }

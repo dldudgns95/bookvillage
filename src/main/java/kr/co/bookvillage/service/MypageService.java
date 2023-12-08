@@ -17,6 +17,7 @@ public interface MypageService {
   public void loadBookCheckoutList(HttpServletRequest request, Model model);
   public int delayBookCheckout(int checkoutNo);
   public void loadReviewList(HttpServletRequest request, Model model);
+  public int removeReview(String isbn, int userNo);
   public void loadWishBookList(HttpServletRequest request, Model model);
   public int cancleBookCheckout(HttpServletRequest request);
   public int removeWish(String isbn, int userNo);

@@ -160,6 +160,13 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <!-- 접속유저가 작성한 한줄평 삭제 -->
+  <delete id="deleteReview" parameterType="ScoreDto">
+    DELETE
+      FROM SCORE
+     WHERE ISBN = #{isbn} AND USER_NO = #{userNo}
+  </delete>
+  
   <!-- 접속유저의 관심도서 갯수 -->
   <select id="getWishCount" parameterType="int" resultType="int">
     SELECT COUNT(*)
