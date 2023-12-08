@@ -75,8 +75,7 @@
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="hidden" id="wishDate" name="wishDate" />
                               <button type="button" class="btn btn-outline-secondary wishBtn">                             
-                                <span th:if="${wishStatus == 1}">♥</span>
-                                <span th:if="${wishStatus != 0}">♡</span>                  
+                                <i class="fa-solid fa-plus"></i>              
                               </button>                            
                           </form>
                         </td>
