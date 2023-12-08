@@ -6,11 +6,13 @@
 <style>
   .side_bar {
     width: 200px;
+    height: 600px;
     display: inline-block;
     text-align: center;
     margin-top: 30px;
     position: fixed;
-    max-height: calc(100vh - 100px);
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
   }
   
   .side_bar li:hover {
@@ -44,6 +46,7 @@
     table-layout: fixed;
     width: 800px;
   }
+
 </style>
 
 <body>
@@ -169,14 +172,15 @@
     
     const fnCancleCheckcout = () => {
       let deleteResult = /*[[${deleteResult}]]*/ null;
-      if(deleteResult !== null) {
-        if(deleteResult === 1) {
-          alert('대출취소신청이 완료되었습니다.');
-        } else {
-          alert('대출취소신청이 완료되지않았습니다.');
-          return;
-        }
-      }
+        if(deleteResult !== null) {       
+            if(deleteResult === 1) {
+                alert('대출취소신청이 완료되었습니다.');                
+            } else {
+              alert('대출취소신청이 완료되지않았습니다.');
+              return;
+            }          
+        }       
+
     }
     
     fnDelayCheckout();
