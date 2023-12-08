@@ -196,7 +196,7 @@
   </select>
   
   <!-- 도서 상세 검색 -->
-  <select id="getBookDetail" parameterType="long" resultType="BookDto">
+  <select id="getBookDetail" parameterType="String" resultType="BookDto">
     SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
       FROM BOOK
      WHERE ISBN = #{isbn}
@@ -340,14 +340,13 @@
      WHERE APPLY_NO = #{applyNo}
   </select>
   
-  <!-- 해당 유저의 대출 목록 조회(반납완료는 제외) -->
+  <!-- 해당 유저의 대출 목록 조회 -->
   <select id="getUserBookCheckoutList" parameterType="int" resultMap="BookCheckoutMap">
     SELECT CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
       FROM BOOK_CHECKOUT BC INNER JOIN USER_T U
         ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
         ON BC.ISBN = B.ISBN
      WHERE BC.USER_NO = #{userNo}
-       AND BC.STATUS NOT IN (2)
   </select>
   
   <!-- 대출 신청한 도서 수 카운트 -->
@@ -417,14 +416,14 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 대출 신청한 도서 수 카운트 -->
+  <!-- 대출 + 연체중인 도서 수 카운트 -->
   <select id="bookCheckoutReturnCount" resultType="int">
     SELECT COUNT(*)
       FROM BOOK_CHECKOUT
      WHERE STATUS IN (1, 3)
   </select>
   
-  <!-- 대출 신청한 도서 목록 조회 -->
+  <!-- 대출 + 연체중인 도서 목록 조회 -->
   <select id="getBookCheckoutReturnList" parameterType="Map" resultMap="BookCheckoutMap">
     SELECT CHECKOUT_NO, STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, USER_NO, NAME, ISBN, TITLE
       FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO ASC) AS RN,CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
