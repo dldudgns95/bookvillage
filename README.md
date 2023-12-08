@@ -17,25 +17,36 @@
 ## ⚙️ 기술 스택
 
 - Front
-
+  - Thymeleaf
   - HTML
   - CSS
   - JavaScript
+  - JQuery
 
 - Back
-
   - JAVA
   - Spring Boot
-  - Oracle
+  - Mybatis
+
+- DB
+  - Oracle DB
 
 - API
   - KAKAO API
   - Naver API
   - Aladin API
 
-## 🛠 기획
-- [기능 명세서]()
-- [ERD]()
+- tool
+  - Eclipse(Spring Tool Suite4)
+
+
+## 🛠 기능 정의서
+
+## 🛠 ERD
+
+## 🛠 UseCase
+![제목 없는 다이어그램 drawio (2)](https://github.com/dldudgns95/bookvillage/assets/93424265/18d7213f-1add-4be5-a00a-980ff2478059)
+
 
 ## 구현 서비스
 ### 로그인 
