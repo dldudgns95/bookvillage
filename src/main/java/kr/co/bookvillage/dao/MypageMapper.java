@@ -16,6 +16,7 @@ import kr.co.bookvillage.dto.WishDto;
 @Mapper
 public interface MypageMapper {
   public UserDto getMypageUser(Map<String, Object> map);                         // 사용자정보 가져오기
+  public int getMobileCheck(String mobile);                                      // 휴대전화번호 중복확인
   public int updateUser(UserDto userDto);                                        // 사용자정보 수정
   public int updateUserPw(UserDto userDto);                                      // 비밀번호 수정
   public int getUserBookCheckoutCount(int userNo);                               // 대출내역 갯수
@@ -25,7 +26,7 @@ public interface MypageMapper {
   public List<ScoreDto> getReviewList(Map<String, Object> map);                  // 한줄평리스트
   public int getWishCount(int userNo);                                           // 관심도서갯수
   public List<WishDto> getWishBookList(Map<String, Object> map);                 // 관심도서리스트
-  public int cancleCheckout(int checkoutNo);                                     // 도서대출신청 취소(대출테이블에서삭제)
+  public int cancleCheckout(int checkoutNo);                                     // 도서대출신청 취소(대출상태를 대출취소로변경)
   public int updateBookStatus(BookDto book);                                     // 도서대출신청 취소(책의대출상태를 대출가능으로변경)
   public int minusBookCount(int userNo);                                         // 도서대출신청 취소(유저의대출권수변경)
   public int deleteWish(Map<String, Object> map);                                // 관심도서 삭제

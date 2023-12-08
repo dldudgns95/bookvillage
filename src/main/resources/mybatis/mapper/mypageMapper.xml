@@ -94,6 +94,13 @@
     </where>
   </select>
   
+  <!-- 휴대전화번호 중복확인 -->
+  <select id="getMobileCheck" parameterType="String" resultType="int">
+    SELECT COUNT(*)
+      FROM USER_T
+     WHERE MOBILE = #{mobile}
+  </select>
+  
   <!-- 유저정보 변경 -->
   <update id="updateUser" parameterType="UserDto">
     UPDATE USER_T
@@ -170,12 +177,12 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 대출신청취소 - 대출신청테이블에서 삭제 -->
-  <delete id="cancleCheckout" parameterType="int">
-    DELETE
-      FROM BOOK_CHECKOUT
-     WHERE STATUS = 0 AND CHECKOUT_NO = #{checkoutNo}
-  </delete>
+  <!-- 대출신청취소 - 대출신청상태를 취소로변경 -->
+  <update id="cancleCheckout" parameterType="int">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 4
+     WHERE CHECKOUT_NO = #{checkoutNo}
+  </update>
   
   <!-- 대출신청취소 - 책을 대출가능으로 업데이트 -->
   <update id="updateBookStatus" parameterType="BookDto">
@@ -258,6 +265,6 @@
      WHERE FAC_STATUS = 0 AND FAC_APPLY_NO = #{facApplyNo}
   </delete>
   
-  
+ 
 
 </mapper>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('책빌리지')}"></head>
+<head th:replace="~{/layout/header::head('희망도서신청내역')}"></head>
 
 <style>
   .side_bar {
@@ -95,8 +95,8 @@
                   <input type="hidden" name="bookName" th:value="${applyBook.bookName}">
                   <input type="hidden" name="author" th:value="${applyBook.author}">
                   <input type="hidden" name="publisher" th:value="${applyBook.publisher}">
-                  <button type="button" id="btn_modifyApply" class="btn btn-outline-success">수정</button>
-                  <button type="button" id="btn_cancleApply" class="btn btn-success">신청취소</button>
+                  <button type="button" id="btn_modifyApply" class="btn btn-outline-success btn-sm">수정</button>
+                  <button type="button" id="btn_cancleApply" class="btn btn-success btn-sm">신청취소</button>
                 </form>
               </th:block>
               <th:block th:if="${applyBook.status == 1}">
