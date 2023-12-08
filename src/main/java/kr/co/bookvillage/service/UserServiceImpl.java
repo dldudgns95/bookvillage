@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FaqDto;
@@ -552,7 +553,7 @@ public class UserServiceImpl implements UserService {
    
    return user;
  }
-  
+  // 카카오 로그인
   @Override
   public void kakaoLogin(HttpServletRequest request, HttpServletResponse response, UserDto kakaoProfile)
       throws Exception {
@@ -606,13 +607,18 @@ public class UserServiceImpl implements UserService {
     userMapper.deleteUserForInactive();
   }
   
+  
   @Override
   public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
     InactiveUserDto  inactiveUser = (InactiveUserDto)session.getAttribute("inactiveUser");
     String email = inactiveUser.getEmail();
+
+    System.out.println("삽입" + inactiveUser);
     
     int insertActiveUserResult = userMapper.insertActiveUser(email);
     int deleteInactiveUserResult = userMapper.deleteInactiveUser(email);
+    
+    
     
     try {
       response.setContentType("text/html; charset=UTF-8");

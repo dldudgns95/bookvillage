@@ -7,6 +7,72 @@
 
 
 <style>
+.searchResult{
+  margin:30px;
+}
+.bookSearchMain_wrap{
+  display: flex;
+  text-align: center;
+}
+
+.bookSearchMain{
+  display: inline-block;
+    justify-content: center;
+
+}
+
+
+.bookSearchMainTitle{
+  margin: 5px;
+}
+.swiper-containerFac,
+.swiper-containerBookList{
+  overflow: hidden;
+  height: 100%;
+}
+.searchFacImg{
+  margin:10px 5px;
+  width: 300px;
+  height: 250px;
+}
+.bookSearchMainImg{
+  width: 200px;
+  height: 230px;
+  justify-content:space-between;
+}
+
+
+  .bookSearchMain {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px; 
+  }
+
+  .bookSearchEach {
+    width: 170px;
+  }
+
+  .bookSearchMainImg {
+    width: 100%;
+    height: 260px;
+    object-fit: cover; 
+  }
+  .facP{
+    text-align: center;
+  }
+  
+.title2,
+.btn_gray{
+  display: inline-block;
+  margin-left: 10px;
+}
+.btbt{
+  display: flex;
+}
+.title{
+  text-align: center;
+}
 
 
 </style>
@@ -15,28 +81,139 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
-    
-    <div>
-      <div class="title2" style="text-align: center;">" "에 대한 검색 결과</div>
-      <c:if test="{empty}"
+  
+<div class="main_wrap">
+    <!-- 검색 결과가 있는 경우 -->
+    <div class="searchResult" th:if="${query != null and not #strings.isEmpty(query)}">
+        <div class="title" style="text-align: center;" th:text="|'${query}'에 대한 검색결과입니다.|"></div>
+
+
+        <!-- 소장도서 목록 -->
+      <div class="btbt"> 
+        <div class="title2 bookSearchMain_wrap">소장도서</div>
         
+        <!-- 더보기 검색 -->
+        <form id="search" name="search" action="/book/search/result" method="get">
+          <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
+          <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
+          <input type="hidden" name="ss"     th:value="total" />
+
+          <div class="search_text">
+            <input type="hidden" id="st" name="st" th:value="${query}"> 
+          </div>
+          <input type="hidden" name="sortType" />
+          <div class="search_btn">
+            <input type="submit" value="더보기" title="더보기" class="btn btn-outline-secondary btn-sm btn_gray">
+          </div>        
+        </div> 
+        
+       <div class="bookSearchMain">
+        <div class="bookSearchEach" th:each="book : ${bookList}">
+            <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
+                <img class="bookSearchMainImg" th:src="${book.cover}" /><br>
+                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 25 ? #strings.substring(book.title, 0, 25) + '...' : book.title + '<br>' + (book.status == 1 ? '대출 가능' : '대출 중')}"></div>
+            </a>
+        </div>
+      </div>
+      
+        <hr>
+
+        <!-- 공지사항 목록 -->
+        <div class="main_notice_list_box1">
+            <div class="table-responsive notice_list">
+                <h3 class="title2">공지사항</h3>
+                <button type="button" id="btn_ntGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
+
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <td>순번</td>
+                            <td>제목</td>
+                            <td>작성날짜</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      
+                    <th:block th:if="${#lists.isEmpty(noticeList)}">
+                        <tr>
+                            <td>검색된 공지가 없습니다.</td>
+                        </tr>
+                    </th:block>                      
+                      
+                        <tr th:each="nt:${noticeList}">
+                            <td th:text="${nt.ntNo}"></td>
+                            <td>
+                                <a th:href="@{/support/detail.do(ntNo=${nt.ntNo})}" th:text="${nt.ntTitle}"></a>
+                            </td>
+                            <td th:text="${nt.ntDate}"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <hr>
+
+            <!-- 시설 목록 -->
+            <div class="title2 bookSearchMain_wrap">시설</div>
+            <button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
+
+            <table>
+                <thead>
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(facList)}">
+                        <td colspan="2">검색된 시설이 없습니다.</td>
+                    </tr>
+                    <tr>
+                        <td th:each="fac,vs:${facList}">
+                            <img class="searchFacImg" th:src="@{|${fac.facPath}/${fac.facFilesystemName}|}" width="300">
+                            <p class="facP" th:text="${fac.facilityDto.facName}"></p>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                </tfoot>
+            </table>
+        </div>
     </div>
 
- 
+    <!-- 검색 결과가 없는 경우 -->
+    <div class="searchResult" th:unless="${query != null and not #strings.isEmpty(query)}">
+        <div class="title" style="text-align: center;" th:text="'검색어가 없습니다.'" ></div>
+        <div class="" style="text-align: center;" th:text="'검색어를 입력해주세요.'" ></div>
+    </div>
+</div>
 
-  </div>
 
-
-    
-    
-    
-    
-  </div>
-  
   
   <script>
     
+    // 도서 검색 이동  - 수정필요
+    
+  $(document).ready(function(){
+    $('#btn_searhBookGo').on('click', function(){
+      window.location.href='http://localhost:8080/book/search/result?userNo=10&ss=total&st=%EB%AC%B8%ED%99%94&sortType='
+    })
+  })
+ 
+     // 공지사항 더보기
+ $(document).ready(function(){
+   $('#btn_ntGo').on('click', function(){
+     window.location.href='http://localhost:8080/support/list.do';
+   })
+ })
+
+ // 시설신청 더보기 누르면 신청 페이지로 이동
+ $(document).ready(function(){
+   $('#btn_facGo').on('click', function(){
+     window.location.href = 'http://localhost:8080/apply/faclist.do';
+   })
+ })
+ 
+
+
   
 </script>
   <div th:replace="~{/layout/footer::footer}"></div>

@@ -51,13 +51,20 @@
   height: 270px;
   object-fit: contain;
 }
+
+.reviewBookList,
 .newBookList{
   margin: 10px;
   padding: 10px;
 }
-.sliserImg{
-  margin-bottom: 5px;
+
+
+.title2,
+.btn_gray{
+  display: inline-block;
+  margin-left: 10px;
 }
+
 
   
 </style>
@@ -103,7 +110,7 @@
       <div class="main_notice_list_box1">
 
         <div class="table-responsive notice_list">
-          <h3 class="title2">공지사항</h3>
+          <h3 class="title2 title_text">공지사항 </h3><button type="button" id="btn_ntGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
           
           <table  class="table align-middle">
             <thead>
@@ -125,7 +132,7 @@
       <div class="main_notice_list_box2">
         
         <div class="table-responsive notice_list">
-            <h3 class="title2">FAQ</h3>
+            <h3 class="title2">FAQ</h3><button type="button" id="btn_faqGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
             
             <table class="table align-middle">
                 <thead>
@@ -143,67 +150,223 @@
       
       
     </div>
-    
-   <!-- 신간도서 슬라이드  th:each="bookDetail:${bookDetailList}" -->
 
-   <div class="newBookList"> 
+
+
+
+    <!-- 신작 슬라이드 -->
+  <div class="newBookList"> 
     <div class="title2">신간 도서 목록</div>
-      
-      <div class="carousel-container">
-        <div class="owl-carousel" id="bookCarousel">
-      </div>
-    </div> 
-   </div>
+
+    
+        <div class="swiper-container swiper-container2">
+        <div class="swiper-wrapper second">
+        </div>
+        
+    
+        <div class="swiper-button-prev swiper-button-prev"></div> 
+        <div class="swiper-button-next swiper-button-next"></div> 
+    </div>
+  </div>
+
+    <!-- 평점 슬라이드 -->
+  <div class="reviewBookList"> 
+    <div class="title2">리뷰 TOP 10 </div>
+
+    
+        <div class="swiper-container swiper-container3">
+        <div class="swiper-wrapper thrid">
+        </div>
+        
+    
+        <div class="swiper-button-prev swiper-button-prev"></div> 
+        <div class="swiper-button-next swiper-button-next"></div> 
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- 시설신청하기 -->
+  <div class="reviewBookList"> 
+    <div class="title2">시설신청하기</div><button type="button" id="btn_facGo" class="btn btn-outline-secondary btn-sm btn_gray">더보기</button>
+   
+   
+   <div class="swiper-container swiper-container4">
+        <div class="swiper-wrapper four">
+        </div>
+        
+    
+        <div class="swiper-button-prev swiper-button-prev"></div> 
+        <div class="swiper-button-next swiper-button-next"></div> 
+    </div>
+   
+  </div>
+
+   
   
   <script>
     
-    // 보존,,,
-   $(document).ready(function() {
-    // Owl Carousel 초기화
-    $('.owl-carousel').owlCarousel({
-      items: 5, // 한 번에 표시되는 아이템 수
-      loop: true,
-      margin: 50,
-      autoplay: true,
-      autoplayTimeout: 2000,
-      autoplayHoverPause: true,
+ 
+    
+    
+
+  $(document).ready(function () {
+    var carousel = new Swiper('.swiper-container2', {
+        autoplay: {
+            delay: 2000,
+        },
+        slidesPerView: 5,
+        spaceBetween: 10,
+        direction: 'horizontal',
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
     });
-  });    
-  
-  
-  
-  //////// 이게 돌고 있따!!!!!!!
-  
-   $(document).ready(function () {
-  var carousel = $("#bookCarousel");
 
-  $.ajax({
-    type: 'GET',
-    url: '/main/bookImageList.do',
-    contentType: 'application/json',
-    success: function (response) {
-      response.book.forEach(function (book) {
-        var truncatedTitle = book.title.substring(0, 20) + (book.title.length > 20 ? '...' : '');
-        var statusText = book.status === 1 ? '대출 가능' : '대출 중';
+    $.ajax({
+        type: 'GET',
+        url: '/main/bookImageList.do',
+        contentType: 'application/json',
+        success: function (response) {
+            response.book.forEach(function (book) {
+                var truncatedTitle = book.title.substring(0, 15) + (book.title.length > 15 ? '...' : '');
+                var statusText = book.status === 1 ? '대출 가능' : '대출 중';
 
-        // 이미지를 동적으로 추가
-        carousel.owlCarousel('add', `<div><a href="/book/search/detail?isbn=${book.isbn}"><img class="sliserImg" src="${book.cover}" alt="${book.title}">${truncatedTitle}<br>${statusText}</a></div>`);
+                // 이미지를 동적으로 추가
+                carousel.appendSlide(`<div class="swiper-slide swiper-slide1"><a href="/book/search/detail?isbn=${book.isbn}"><img class="sliserImg" src="${book.cover}" alt="${book.title}"><br>${truncatedTitle}<br>${statusText}</a></div>`);
+            });
 
-          console.log('isbn '+ book.isbn )
-
-        // 추가한 아이템에 클릭 이벤트 등록
-        carousel.find('.owl-item').on('click', function () {
-          // 클릭된 아이템의 ISBN을 가져와서 상세 페이지로 이동
-          var isbn = $(this).find('img').attr('data-isbn');
-          window.location.href = '/book/search/detail?isbn=' +  book.isbn;
-        });
-      });
-    },
-    error: function (error) {
-      console.log('Error fetching book data: ' + error);
-    }
-  });
+        },
+        error: function (error) {
+            console.log('Error fetching book data: ' + error);
+        }
+    });
 });
+
+
+
+
+
+ $(document).ready(function () {
+    var thrid = new Swiper('.swiper-container3', {
+        autoplay: {
+            delay: 2000,
+        },
+        slidesPerView: 5,
+        spaceBetween: 10,
+        direction: 'horizontal',
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+ 
+    });
+
+    $.ajax({
+        type: 'get',
+        url: '/main/reviewTop3.do',
+        contentType: 'application/json',
+        success: function (response) { 
+            response.review3.forEach(function (review3) {
+                var truncatedTitle = review3.title.substring(0, 15) + (review3.title.length > 15 ? '...' : '');
+                var statusText = review3.status === 1 ? '대출 가능' : '대출 중';
+
+                // 이미지를 동적으로 추가
+                thrid.appendSlide(`<div class="swiper-slide swiper-slide3"><a href="/book/search/detail?isbn=${review3.isbn}"><img class="sliserImg" src="${review3.cover}" alt="${review3.title}"><br>${truncatedTitle}<br>${statusText}</a></div>`);
+            });
+
+        },
+        error: function (error) {
+            console.log('Error fetching book data: ' + error);
+        }
+    });
+});
+
+ // 공지사항 더보기
+ $(document).ready(function(){
+   $('#btn_ntGo').on('click', function(){
+     window.location.href='http://localhost:8080/support/list.do';
+   })
+ })
+ // FAQ 더보기
+ $(document).ready(function(){
+   $('#btn_faqGo').on('click', function(){
+     window.location.href='http://localhost:8080/support/faqlist.do';
+   })
+ })
+
+
+ // 시설신청 더보기 누르면 신청 페이지로 이동
+ $(document).ready(function(){
+   $('#btn_facGo').on('click', function(){
+     window.location.href = 'http://localhost:8080/apply/faclist.do';
+   })
+ })
+
+// 시설 신청 슬라이드 이미지
+ $(document).ready(function () {
+    var fac = new Swiper('.swiper-container4', {
+    //    autoplay: {
+    //        delay: 2000,
+    //    },
+        slidesPerView: 2,
+        spaceBetween: 4,
+        // centeredSlides: true,
+        direction: 'horizontal',
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: '/main/mainFac.do',
+        contentType: 'application/json',
+        success: function (response) {
+            response.facList.forEach(function (facList) {
+                // var truncatedTitle = facList.facName.substring(0, 20) + (facList.facName.length > 20 ? '...' : '');
+              var statusText = facList.status === 1  ? '예약불가' : '예약가능';
+              var firstFacName = response.facList[0].facilityDto.facName;
+
+        response.facList.forEach(function (facList) {
+            var facName = facList.facilityDto.facName;
+// var facImage = facList.facFilesystemName !== null ? `${facList.facPath}/${facList.facFilesystemName}` : 'ready_img.jpg';
+
+//fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facImage}"><br>${facName}<br></div>`);
+
+            fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facList.facPath}/${facList.facFilesystemName}"><br>${facName}<br></div>`);
+            });
+ });
+        },
+        error: function (error) {
+            console.log('Error fetching book data: ' + error);
+        }
+    });
+});
+
+
+
+
 
 
 </script>
