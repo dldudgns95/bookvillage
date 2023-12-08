@@ -8,57 +8,17 @@
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
-
-      <nav class="breadcrumb">
-        <ul class="b_menu">
-          <li class="home">
-            <span class="home_ico">
-              <em class="blind"><i class="fa-solid fa-house"></i></em>
-            </span>
-          </li>
-          <li class>
-            <a href="#none">자료검색</a>
-            <div class="dep_list" style="display: none;">
-              <ul>
-                <li class>
-                  <a href="/book/search.do">자료검색</a>
-                </li>
-                <li class>
-                  <a href="/mypage/list.do">나만의 도서관</a>
-                </li>
-                <li class>
-                  <a href="/support/notice.do">고객센터</a>
-                </li>
-                <li class>
-                  <a href="/apply/faclist.do">시설안내</a>
-                </li>
-                <li class>
-                  <a href="/user/login.form">로그인</a>
-                </li>
-                <li class>
-                  <a href="/user/agree.form">회원가입</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li>
-            <strong class="current"></strong>
-          </li>
-        </ul>
-      </nav>
       
     <div class="wrap search_wrap">     
       
       <h3 class="title">소장자료 검색</h3>
     
       <div class="search_area">
-        <form id="search" name="search" action="search/result" method="get">
+        <form id="search_main" name="search_main" action="search/result" method="get">
           <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
           <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
-   <!--   <input type="hidden" name="pageNum" value="1">
-          <input type="hidden" name="pageSize" value="10">  -->
           <div class="search_select">
-            <select name="ss" id="ss" class="btn btn-outline-secondary">
+            <select name="ss" id="ss_main" class="btn btn-outline-secondary">
               <option value="total" selected>전체</option>
               <option value="title">제목</option>
               <option value="author">저자</option>
@@ -66,7 +26,7 @@
             </select>
           </div>
           <div class="search_text">
-            <input type="text" id="st" name="st" placeholder="검색어를 입력하세요."> 
+            <input type="text" id="st_main" name="st" placeholder="검색어를 입력하세요."/>
           </div>
           <input type="hidden" name="sortType" />
           <div class="search_btn">
@@ -102,7 +62,6 @@
         
       </div>
 
-    <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
   
   </div>
