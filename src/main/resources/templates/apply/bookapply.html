@@ -13,11 +13,15 @@
     text-align: center;
     margin-top: 30px;
     position: fixed;
-  }
+  }  
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
   div.child1{
     width: 800px;
     justify-content: center;
@@ -52,10 +56,9 @@
 	 
      <div class="side_bar">
 	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">희망도서신청</h3>
-        <ul id="side_list">
-          <li style="margin:20px"><a th:href="@{/apply/faclist.do}">시설이용신청</a></li>
-          <li style="margin:20px"><a th:href="@{/apply/fac.do}">시설소개</a></li>          
-		  <li style="margin:20px"><a th:href="@{/apply/bookapply.do}">희망도서신청</a></li>
+         <ul id="side_list">
+          <li><a th:href="@{/apply/fac.do}">시설이용신청</a></li>			
+		  <li><a th:href="@{/apply/wishbook.do}">희망도서신청</a></li>
         </ul>
       </div>
 	  <div class="child1">

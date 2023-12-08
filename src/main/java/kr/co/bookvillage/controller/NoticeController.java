@@ -51,21 +51,17 @@ public class NoticeController {
 	}
 	
 	@PostMapping("/add.do")
-	 public String add(MultipartHttpServletRequest multipartRequest) throws Exception {
-		System.out.println("noticeAdd.do::controller");
-		noticeService.addNotice(multipartRequest);
-		return "redirect:/support/list.do";
+	public String add(MultipartHttpServletRequest multipartRequest, RedirectAttributes redirectAttributes) throws Exception {
+	    redirectAttributes.addFlashAttribute("addResult", noticeService.addNotice(multipartRequest));
+	    return "redirect:/support/list.do";
 	}
-	
 
 	
-	@GetMapping("/detail.do")
-	  public String detail(@RequestParam(value="ntNo", required=false, defaultValue="0") int ntNo
-              , Model model) {
-				NoticeDto notice = noticeService.getNotice(ntNo);
-				model.addAttribute("notice", notice);
-			return "support/detail";
-	}
+   @GetMapping("/detail.do")
+   public String detail(HttpServletRequest request, Model model) {
+	    noticeService.loadNotice(request, model);
+	    return "support/detail";
+    }
 	
 
 	@GetMapping("/download.do")
