@@ -12,6 +12,11 @@
     position: fixed;
   }
   
+  .side_bar li:hover {
+    background-color:  #f0f0f0;
+    transition: .3s;
+  }
+  
   #side_list li {
     margin-top: 10px;
     margin-bottom: 20px;
@@ -99,6 +104,8 @@
                   <span th:if="${book.status == 0}">대출요청</span>
                   <span th:if="${book.status == 1}">대출중</span>
                   <span th:if="${book.status == 2}">반납완료</span>
+                  <span th:if="${book.status == 3}">연체</span>
+                  <span th:if="${book.status == 4}">대출취소</span>
                 </td>
                 <td>
                   <th:block th:if="${book.status == 0}">

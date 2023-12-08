@@ -177,12 +177,12 @@
      WHERE A.RN BETWEEN #{begin} AND #{end}
   </select>
   
-  <!-- 대출신청취소 - 대출신청테이블에서 삭제 -->
-  <delete id="cancleCheckout" parameterType="int">
-    DELETE
-      FROM BOOK_CHECKOUT
-     WHERE STATUS = 0 AND CHECKOUT_NO = #{checkoutNo}
-  </delete>
+  <!-- 대출신청취소 - 대출신청상태를 취소로변경 -->
+  <update id="cancleCheckout" parameterType="int">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 4
+     WHERE CHECKOUT_NO = #{checkoutNo}
+  </update>
   
   <!-- 대출신청취소 - 책을 대출가능으로 업데이트 -->
   <update id="updateBookStatus" parameterType="BookDto">
