@@ -209,8 +209,9 @@ public class AdminServiceImpl implements AdminService {
   
   @Override
   public void getBookDetail(HttpServletRequest request, Model model) {
-    long isbn = Long.parseLong(request.getParameter("isbn")); // isbn은 int로는 값이 커서 불가능
+    String isbn = request.getParameter("isbn");
     model.addAttribute("book", adminMapper.getBookDetail(isbn));
+    model.addAttribute("bookCheckout", adminMapper.getBookCheckoutByISBN(isbn));
   }
   
   @Override
