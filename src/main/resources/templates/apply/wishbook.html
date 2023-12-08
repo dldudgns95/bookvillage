@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  
+<head th:replace="~{/layout/header::head('시설신청')}">
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>	
+</head>
+
+<style>
+  .side_bar {
+    width: 200px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 30px;
+    position: fixed;
+  }
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  }
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
+  div.child1{
+    width: 800px;
+    justify-content: center;
+    margin-left: 320px;
+    align-items: center;
+    text-align: center;
+    
+  }
+   div.child2{
+	
+	width: 800px;
+    margin-left: 320px;
+    justify-content: center;
+    margin-bottom: 30px;
+    
+  }
+  div.child3{
+	width: 800px;
+    justify-content: center;
+    margin-left: 320px;
+ 	display: flex;
+    
+  }
+	.child3 button {
+	  margin: 0 50px; /* 좌우 간격을 10px로 조절합니다. */
+	  width: 200px;
+	}  
+ 
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="parent">
+	 
+     <div class="side_bar">
+	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">희망도서신청</h3>
+        <ul id="side_list">
+          <li><a th:href="@{/apply/fac.do}">시설이용신청</a></li>			
+		  <li><a th:href="@{/apply/wishbook.do}">희망도서신청</a></li>
+        </ul>
+      </div>
+	  <div class="child1">
+     	<h5>희망도서신청 이용안내</h5>
+      </div>
+      <div class="child2">
+	  <h5>신청자격</h5>
+	  <span>도서관 회원만 신청이 가능합니다.</span>
+	  </div>
+	  <div class="child2">
+	  <h5>신청방법</h5>
+	  <span>책빌리지 홈페이지 로그인 -> 시설신청 -> 희망도서신청 클릭</span>
+	  </div>
+	  <div class="child2">
+	  <h5>희망도서 신청 메뉴</h5>
+	  <span>국내 신간정보를 검색하면서 희망도서 신청이 가능합니다.
+			희망도서 입력시  책제목, 저자 , 출판사 등을 정확하게 입력하시기 바랍니다.</span>
+	  <span style="color:red">도서정보가 부정확할 경우 구입이 지연 또는 구입불가 처리될 수도 있습니다.(도서정보는 인터넷 서점 등에서 검색 후 입력 가능)</span>		
+	  </div>
+	  <div class="child2">
+	  <h5>선정 제외 도서</h5>
+	  <span>국고가도서(5만원 이상), 외국도서, 3권을 초과하는 시리즈 또는 전집도서, 기타 다른 기준을 적용하기 어려운 도서
+		  <br>
+		  소장자료나 구입중 또는 정리중 도서, 신청 또는 주문중복도서
+	  </span>
+	  </div>	  
+	  <div class="child3">
+      <div> <a th:href="@{/apply/bookapply.do}"><button class="btn btn-secondary">새로운 희망도서 신청하기</button></a></div>  		  
+      <div> <a th:href="@{/mypage/applyBook.do}"><button class="btn btn-secondary">신청한 희망도서 보러가기</button></a></div>
+	  </div>
+
+
+  <script th:inline="javascript">
+    const fnSubmit = () => {
+    	  $('#frm_book_apply').submit((ev) => {
+    		  if($('#bookName').val() === ''){
+    			  alert('제목은 반드시 입력해야 합니다.');
+    			  $('#bookName').focus();
+    			  ev.preventDefault();
+    			  return;
+    		  }
+    		   alert('희망도서신청이 완료되었습니다.');
+    	  })
+      }
+      
+      fnSubmit();
+    
+   
+    
+  </script>
+    <div th:replace="~{/layout/footer::footer}"></div>
+
+
+</body>
+</html>

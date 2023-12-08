@@ -3,8 +3,100 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.co.bookvillage.dao.UserMapper">
+
+<mapper namespace="kr.co.bookvillage.dao.MainMapper">
+
+  <!-- 시설 Map -->
+  <resultMap type="AttachFacDto" id="AttachFacMap">
+    <id column="FAC_ATTACH_NO"             property="facAttachNo" />
+    <result column="FAC_PATH"              property="facPath" />
+    <result column="FAC_ORIGINAL_FILENAME" property="facOriginalFilename" />
+    <result column="FAC_FILESYSTEM_NAME"   property="facFilesystemName" />
+    <result column="FAC_HAS_THUMBNAIL"     property="facHasThumbnail" />
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO"          property="facNo" />
+      <result column="FAC_NAME"    property="facName" />
+      <result column="FAC_CONTENT" property="facContent" />
+    </association>
+  </resultMap> 
   
+  
+    <resultMap id="BookMap"           type="kr.co.bookvillage.dto.BookDto">
+    <id      column="ISBN"          property="isbn" />
+    <result  column="TITLE"         property="title" />
+    <result  column="COVER"         property="cover" />
+    <result  column="AUTHOR"        property="author" />
+    <result  column="PUBLISHER"     property="publisher" />
+    <result  column="PUBDATE"       property="pubdate" />
+    <result  column="DESCRIPTION"   property="description" />
+    <result  column="STATUS"        property="status" />
+    <result  column="CATEGORY_NAME" property="categoryName" />
+    <result  column="CATEGORY_ID"   property="categoryId" />
+  </resultMap>
+  
+  <select id="reviewTop3List">
+    SELECT B.ISBN, B.TITLE, B.COVER, B.AUTHOR, B.PUBLISHER, B.PUBDATE, B.STATUS, S.REVIEW_DATE, S.STAR
+      FROM BOOK B INNER JOIN SCORE S 
+        ON B.ISBN = S.ISBN
+    ORDER BY
+        (SELECT AVG(STAR) FROM SCORE WHERE ISBN = B.ISBN) DESC
+    FETCH FIRST 10 ROWS ONLY
+  </select>
+  
+  
+  <select id="searchBookList" parameterType="BookDto">
+    SELECT ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+    FROM (
+      SELECT ROW_NUMBER() OVER(ORDER BY PUBDATE DESC) AS RN, ISBN, TITLE, COVER, AUTHOR, PUBLISHER, PUBDATE, DESCRIPTION, STATUS, CATEGORY_NAME, CATEGORY_ID
+      FROM BOOK
+      WHERE 
+        (
+          AUTHOR LIKE '%' || #{query} || '%'
+          OR TITLE LIKE '%' || #{query} || '%' 
+          OR PUBLISHER LIKE '%' || #{query} || '%'
+        )
+    ) WHERE RN BETWEEN 1 AND 10
+  </select>
+
+
+  <select id="searchNoticeList" parameterType="NoticeDto">
+    SELECT NT_NO, NT_TITLE, NT_CONTENT, NT_DATE
+      FROM (
+        SELECT ROW_NUMBER() OVER(ORDER BY NT_TITLE) AS RN, NT_NO, NT_TITLE, NT_CONTENT, NT_DATE
+          FROM NOTICE
+         WHERE(
+             NT_TITLE LIKE '%' || #{query} || '%'
+          OR NT_CONTENT LIKE '%' || #{query} || '%'
+         )
+      ) WHERE RN BETWEEN 1 AND 10
+  </select>
+  
+ <select id="searchFacilityList" resultMap="AttachFacMap">
+       SELECT *
+        FROM (
+            SELECT 
+                F.FAC_NO, 
+                F.FAC_NAME, 
+                F.FAC_CONTENT, 
+                A.FAC_ATTACH_NO, 
+                A.FAC_PATH, 
+                A.FAC_ORIGINAL_FILENAME, 
+                A.FAC_FILESYSTEM_NAME, 
+                A.FAC_HAS_THUMBNAIL,
+                ROW_NUMBER() OVER (ORDER BY F.FAC_NO DESC) AS RN
+            FROM FACILITY F
+            INNER JOIN ATTACH_FAC A ON F.FAC_NO = A.FAC_NO
+            WHERE F.FAC_NAME LIKE '%' || #{query} || '%'
+        )
+        WHERE RN BETWEEN 1 AND 10
+
+  </select>
+  
+  
+  
+  
+
+
   
   
 </mapper>

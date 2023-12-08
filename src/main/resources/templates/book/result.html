@@ -8,44 +8,7 @@
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="main_wrap">
-      <nav class="breadcrumb">
-        <ul class="b_menu">
-          <li class="home">
-            <span class="home_ico">
-              <em class="blind"><i class="fa-solid fa-house"></i></em>
-            </span>
-          </li>
-          <li class>
-            <a href="#none">자료검색</a>
-            <div class="dep_list" style="display: none;">
-              <ul>
-                <li class>
-                  <a href="/book/search.do">자료검색</a>
-                </li>
-                <li class>
-                  <a href="/mypage/list.do">나만의 도서관</a>
-                </li>
-                <li class>
-                  <a href="/support/notice.do">고객센터</a>
-                </li>
-                <li class>
-                  <a href="/mypage/list.do">시설안내</a>
-                </li>
-                <li class>
-                  <a href="/user/login.form">로그인</a>
-                </li>
-                <li class>
-                  <a href="/user/agree.form">회원가입</a>
-                </li>
-              </ul>
-            </div>
-          </li>
-          <li>
-            <strong class="current"></strong>
-          </li>
-        </ul>
-      </nav>
-      
+
 <!-- body -->      
     <div class="wrap wrap_flex">
       <div class="column-2">
@@ -111,7 +74,10 @@
                             <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="hidden" id="wishDate" name="wishDate" />
-                            <button type="button" class="btn wishBtn "><i class="fa-solid fa-heart"></i> <i class="fa-solid fa-plus-minus"></i></button>
+                <button type="button" class="btn btn-outline-secondary wishBtn" >관심
+                  <span th:if="${checkWish == 1}">♥</span>
+                  <span th:if="${checkWish == 0}">♡</span>                  
+                </button>                            
                           </form>
                         </td>
                         <td>
@@ -141,14 +107,12 @@
 
       </div>
 
-        
       </div>
       
       
       
     </div>
 
-    <script th:src="@{/js/bread.js}"></script>
     <script th:src="@{/js/book.js}"></script>
 
   </div>

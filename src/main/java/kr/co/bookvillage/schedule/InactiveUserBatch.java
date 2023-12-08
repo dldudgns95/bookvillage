@@ -13,11 +13,10 @@ public class InactiveUserBatch {
   private final UserService userService;
   
   
-  @Scheduled(cron = "0 0 0 * * *")  // 자정
+  @Scheduled(cron="0 27 16 * * *")  
   public void execute() {
     
     userService.inactiveUserBatch();
-
     
   }
   

@@ -8,6 +8,8 @@
   const firstSwiper = new Swiper('.swiper.first', {
     autoplay: {
     delay: 4000,
+        slidesPerView : 1, // 한 슬라이드에 보여줄 갯수
+
     },
     direction: 'horizontal',
     loop: true,
@@ -24,32 +26,6 @@
   });
 });
 
-// 도서 목록 슬라이드
-    document.addEventListener('DOMContentLoaded', function () {
-  const secondSwiper  = new Swiper('.swiper.second', {
-    spaceBetween: 10,    // 슬라이드 사이 여백
-    slidesPerView : 5, // 한 슬라이드에 보여줄 갯수
-    autoHeight : true,  // 현재 활성 슬라이드높이 맞게 높이조정
-    autoWidth: true,
-    a11y : false, // 접근성 매개변수(접근성 관련 대체 텍스트 설정이 가능) 
-
-    autoplay: {
-      delay: 3500,
-    },
-    direction: 'horizontal',
-    loop: true,
-    pagination: {
-      el: '.swiper-pagination',
-    },
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    scrollbar: {
-      el: '.swiper-scrollbar',
-    },
-  });
-});
 
 
 

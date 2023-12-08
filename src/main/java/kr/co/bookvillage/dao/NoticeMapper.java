@@ -24,5 +24,6 @@ public interface NoticeMapper {
 	  public List<NoticeDto> getNoticeList(Map<String, Object> map);
 	  public List<UserDto> getSearchNoticeList(Map<String, Object> map);
 	  public int noticeSearchCount(Map<String, String> of);
+	  public int modifyAttach(AttachNtDto attach);
 
 }

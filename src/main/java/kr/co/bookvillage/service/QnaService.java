@@ -8,6 +8,5 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 public interface QnaService {
 
-	public void addAsk(MultipartHttpServletRequest multipartRequest) throws Exception;
-	public Map<String, Object> getQnaList(HttpServletRequest request);
+
 }

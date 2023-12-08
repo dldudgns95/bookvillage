@@ -61,11 +61,14 @@ public class ApplyController {
     return "apply/fac";
   } 
     
+  @GetMapping("/wishbook.do")
+  public String wishbook() {
+    return "apply/wishbook";
+  }
   @GetMapping("/bookapply.do")
   public String bookapply() {
     return "apply/bookapply";
   }
-  
   @PostMapping("/bookapplyadd.do")
   public String addBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 	    int addResult = facService.addbook(request);
