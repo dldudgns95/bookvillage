@@ -68,8 +68,6 @@ function saveReview() {
 }
 
 //관심도서
-
-
 // result에서 관심도서 추가
 $(document).ready(function() {
     function refresh(){
