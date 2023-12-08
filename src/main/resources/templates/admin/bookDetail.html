@@ -145,6 +145,47 @@
           </div>
         </div>
       </div>
+      <hr>
+      <div>
+        <h2>해당 도서의 대출 현황</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">회원번호</th>
+              <th scope="col">회원이름</th>
+              <th scope="col">상태</th>
+              <th scope="col">신청날짜</th>
+              <th scope="col">대출시작날짜</th>
+              <th scope="col">반납예정일</th>
+            </tr>
+          </thead>
+          <tbody>
+            <th:block th:if="${#lists.isEmpty(bookCheckout)}">
+              <tr><td colspan="6">대출 중인 책이 아닙니다.</td></tr>
+            </th:block>
+            <th:block th:each="checkout,vs:${bookCheckout}">
+              <tr>
+                <td scope="row" th:text="${checkout.userDto.userNo}"></td>
+                <td scope="row" th:text="${checkout.userDto.name}"></td>
+                <td scope="row">
+                  <th:block th:if="${checkout.status == 0}">
+                    대출신청
+                  </th:block>
+                  <th:block th:if="${checkout.status == 1}">
+                    대출중
+                  </th:block>
+                  <th:block th:if="${checkout.status == 2}">
+                    연체
+                  </th:block>
+                </td>
+                <td scope="row" th:text="${checkout.checkoutDate}"></td>
+                <td scope="row" th:text="${checkout.startDate}"></td>
+                <td scope="row" th:text="${checkout.dueDate}"></td>
+              </tr>
+            </th:block>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </div>
