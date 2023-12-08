@@ -87,8 +87,8 @@ public class MypageController {
   // 대출신청취소
   @GetMapping("/cancleCheckout.do")
   public String cancleCheckout(HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    int deleteResult = mypageService.cancleBookCheckout(request);
-    redirectAttributes.addFlashAttribute("deleteResult", deleteResult);
+    int updateResult = mypageService.cancleBookCheckout(request);
+    redirectAttributes.addFlashAttribute("updateResult", updateResult);
     return "redirect:/mypage/booklist.do";
   }
   

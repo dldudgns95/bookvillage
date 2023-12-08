@@ -44,6 +44,21 @@ const fnCheckMobile = () => {
     } else {
       $('#msg_mobile').text('휴대전화번호를 확인하세요.');       
     }
+    $.ajax({
+      type: 'post',
+      url: '/mypage/modify.do',
+      data: {mobile: ev.target.value},
+      dataType: 'json',
+      success: (resData) => {
+        if(resData.result > 0) {
+          $('#msg_mobile').text('이미 사용 중인 휴대전화번호입니다.');
+          mobilePassed = false;
+        } else {
+          $('#msg_mobile').text('');
+          mobilePassed = true;
+        }
+      }
+    })
   })
 }
 
