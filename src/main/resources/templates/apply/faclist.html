@@ -56,7 +56,7 @@
   }
   /* 모달 이미지 크기 조절 */  
   .facimg {
-    width: 300px;
+    width: 190px;
   }
    /* 캘린더 좌측 우측 아이콘 색상 */
   .fc-icon-chevron-right, .fc-icon-chevron-left {
@@ -94,85 +94,101 @@
 
   
   <script th:inline="javascript">
-    
-    
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView : 'dayGridMonth', // 초기 로드 될때 보이는 캘린더 화면(기본 설정: 달)
-        headerToolbar : { // 헤더에 표시할 툴 바
-          left : 'prev',
-          center : 'title',
-          right : 'next'
-        },
-        titleFormat : function(date) {
-          return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
-        },
-        //initialDate: '2021-07-15', // 초기 날짜 설정 (설정하지 않으면 오늘 날짜가 보인다.)
-        selectable : true, // 달력 일자 드래그 설정가능
-        droppable : true,
-        editable : false,
-        nowIndicator: true, // 현재 시간 마크
-        locale: 'ko', // 한국어 설정
-        dateClick: function(info) {  // 날짜 클릭이벤트 진행
-          let user = /*[[${session.user}]]*/ null;
-          if(user === null) {   // 로그인 여부 체크
-            if(confirm('로그인이 필요한 기능입니다. 로그인 하시겠습니까?')){
-              location.href='/user/login.form';
-              return; 
+ document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    headerToolbar: {
+      left: 'prev',
+      center: 'title',
+      right: 'next'
+    },
+    titleFormat: function(date) {
+      return date.date.year + '년 ' + (parseInt(date.date.month) + 1) + '월';
+    },
+    selectable: true,
+    droppable: true,
+    editable: false,
+    nowIndicator: true,
+    locale: 'ko',
+
+    dayCellDidMount: function(info) {
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      var todayFormat = year + '-' + month + '-' + day;
+
+      if (info.date <= today) {
+        info.el.style.backgroundColor = '#D3D3D3';
+      }
+    },
+
+    dateClick: function(info) {
+      let user = /*[[${session.user}]]*/ null;
+      if (user === null) {
+        if (confirm('로그인이 필요한 기능입니다. 로그인 하시겠습니까?')) {
+          location.href = '/user/login.form';
+          return;
+        } else {
+          return;
+        }
+      }
+
+      var today = new Date();
+
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+
+      var todayFormat = year + '-' + month + '-' + day;
+      var clickDate = info.dateStr;
+
+      var cellEl = info.dayEl;
+
+      // 이미 회색으로 설정된 경우에만 파란색으로 변경
+      if (cellEl.style.backgroundColor !== 'rgb(211, 211, 211)') {
+        // 모든 날짜의 셀 엘리먼트 가져오기
+        var allCells = document.querySelectorAll('.fc-day');
+
+        // 모든 셀의 배경색 초기화
+        allCells.forEach(function(cell) {
+          if (cell.style.backgroundColor !== 'rgb(211, 211, 211)') {
+            cell.style.backgroundColor = '';
+          }
+        });
+
+        // 원하는 배경색으로 변경
+        cellEl.style.backgroundColor = '#87CEEB';
+
+        if (todayFormat >= clickDate) {
+          alert('당일 또는 이전 날짜는 조회하실 수 없습니다.');
+          document.querySelector('.child3').innerHTML = '';
+          return;
+        }
+
+        $.ajax({
+          method: 'post',
+          url: '/apply/checkFacApply.do',
+          data: {"userNo": user.userNo, "facStart": info.dateStr},
+          dataType: 'json',
+          success: (resData) => {
+            console.log(resData.checkResult);
+            if (resData.checkResult === true) {
+              alert(user.name + '님은 ' + info.dateStr + '일에 이용 신청하신 시설이 있습니다.\n같은 날에 2개의 시설은 이용이 불가합니다.');
+              document.querySelector('.child3').innerHTML = '';
+              return;
             } else {
-              return;            
-            }          
-          }
-          
-          var today = new Date();
-
-          var year = today.getFullYear();
-          var month = ('0' + (today.getMonth() + 1)).slice(-2);
-          var day = ('0' + today.getDate()).slice(-2);
-          
-          var todayFormat = year + '-' + month  + '-' + day;
-          var clickDate = info.dateStr;
-          // 모든 날짜의 셀 엘리먼트 가져오기
-          var allCells = document.querySelectorAll('.fc-day');
-
-            // 모든 셀의 배경색 초기화
-            allCells.forEach(function(cell) {
-                cell.style.backgroundColor = '';
-            });
-          var cellEl = info.dayEl;
-
-
-            // 원하는 배경색으로 변경
-	    	cellEl.style.backgroundColor = '#87CEEB';
-          
-          
-          if(todayFormat >= clickDate) {  // 당일 또는 이전날짜 클릭 시 조회 못하게 막음
-            alert('당일 또는 이전 날짜는 조회하실 수 없습니다.');
-            return;
-          }
-          
-          
-          $.ajax({  // 해당 유저가 클릭한 날짜에 이용신청 했는지 확인
-            method: 'post',
-            url: '/apply/checkFacApply.do',
-            data:{"userNo": user.userNo, "facStart": info.dateStr},
-            dataType: 'json',
-            success: (resData) => {
-              console.log(resData.checkResult);
-              if(resData.checkResult === true){
-                alert(user.name + '님은 ' + info.dateStr + '일에 이용 신청하신 시설이 있습니다.\n같은날에 2개의 시설은 이용이 불가합니다.');
-                return;
-              } else {
-                fnfaclist(info, user);
-              }
+              fnfaclist(info, user);
             }
-          })
-        },
+          }
+        });
+      }
+    },
+  });
 
-      });
-      calendar.render();
-    });
+  calendar.render();
+});
 	    
 	const fnfaclist = (info, user) => {
 	  let container = document.querySelector('.child3');

@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -463,5 +464,29 @@ public class NoticeServiceImpl implements NoticeService {
     return noticeMapper.deleteNotice(ntNo);
     
   }
-  
+  @Override
+	public void noticeImageBatch() {
+
+	  // 1. 어제 작성된 블로그의 이미지 목록 (DB)
+	    List<AttachNtDto> noticeImageList = noticeMapper.getNoticeImageInYesterday();
+	    
+	    // 2. List<BlogImageDto> -> List<Path> (Path는 경로+파일명으로 구성)
+	    List<Path> noticeImagePathList = noticeImageList.stream()
+	                                                .map(AttachNtDto -> new File(AttachNtDto.getNtPath(), AttachNtDto.getNtFilesystemName()).toPath())
+	                                                .collect(Collectors.toList());
+	    
+	    // 3. 어제 저장된 블로그 이미지 목록 (디렉토리)
+	    File dir = new File(myFileUtils.getNoticeImagePathInYesterday());
+	    
+	    // 4. 삭제할 File 객체들
+	    File[] targets = dir.listFiles(file -> !noticeImagePathList.contains(file.toPath()));
+
+	    // 5. 삭제
+	    if(targets != null && targets.length != 0) {
+	      for(File target : targets) {
+	        target.delete();
+	      }
+	    }
+	    
+	}
 }
