@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.bookvillage.dao.CommentMapper">
+  
+  
+  <resultMap id="AskMap" type="AskDto">
+    <id     column="ASK_NO"        property="askNo" />
+    <result column="ASK_TITLE"     property="askTitle"/>
+    <result column="ASK_CONTENT"     property="askContent"/>
+    <result column="HIT"           property="hit"/>
+    <result column="CREATED_DATE"  property="createdDate"/>
+    <result column="MODIFIED_DATE" property="modifiedDate"/>
+      <association javaType="UserDto"  property="userDto" >
+        <id   column="UserDto"         property="userDto"/>
+        <result column="USER_NO"       property="userNo" />
+        <result column="EMAIL"         property="email" />
+        <result column="PW"            property="pw" />
+        <result column="NAME"          property="name" />
+        <result column="MOBILE"        property="mobile" />
+        <result column="GENDER"        property="gender" />
+        <result column="AGREE"         property="agree" />
+        <result column="STATE"         property="state" />
+        <result column="AUTH"          property="auth" />
+        <result column="PW_MODIFIED_DATE" property="pwModifiedDate" />
+        <result column="JOINED_DATE"      property="joinedDate" />
+        <result column="INACTICE_DATE"    property="inactiveDate" />
+        <result column="STATUS"           property="status" />
+        <result column="BOOKCOUNT"        property="bookcount" />
+      </association>
+  </resultMap>
+  
+  
+  <resultMap id="AnsMap" type="AnswerDto">
+    <id column="ANS_NO" property="askNo" />
+    <result column="ASK_CONTENT"    property="askContent" />
+    <result column="ASK_NO"         property="askNo" />
+    <result column="CREATED_DATE"   property="createdDate" />
+    <result column="STATUS"         property="status" />
+    <result column="DEPTH"          property="depth" />
+    <result column="GROUP_NO"       property="groupNo" />
+      <association javaType="UserDto" property="userDto">
+        <id column="USER_NO"          property="userNo"/>
+        <result column="NAME"         property="name" />
+      </association>
+  </resultMap>
+  
+    
+  <insert id="insertAsk" parameterType="AskDto">
+    <selectKey order="BEFORE" keyProperty="askNo" resultType="int">
+      SELECT ASK_SEQ.NEXTVAL
+        FROM DUAL
+    </selectKey>
+      INSERT INTO ASK(
+        ASK_NO
+         , ASK_TITLE
+         , ASK_CONTENT
+         , USER_NO
+         , CREATED_DATE
+         , MODIFIED_DATE
+        ) VALUES(
+             #{askNo}
+           , #{askTitle}
+           , #{askContent}
+           , #{userDto.userNo}
+           , SYSDATE
+           , SYSDATE
+          )
+  </insert>
+  
+  
+  <insert id="insertImg" parameterType="AskImageDto">
+     INSERT INTO ASK_IMAGE_T(
+        ASK_NO
+      , IMAGE_PATH
+      , FILESYSTEM_NAME
+        ) VALUES(
+            #{askNo}
+          , #{imagePath}
+          , #{filesystemName}
+           )
+  </insert>  
+  
+ <select id="getAskCount" resultType="int">
+      SELECT COUNT(*)
+        FROM ASK
+  </select>
+  
+  <select id="getAskList" parameterType="Map" resultMap="AskMap">
+      SELECT C.ASK_NO, C.ASK_TITLE, C.ASK_CONTENT, C.USER_NO, C.HIT, C.CREATED_DATE, C.MODIFIED_DATE, C.EMAIL
+      FROM (
+          SELECT ROW_NUMBER() OVER(ORDER BY A.ASK_NO DESC) AS RN, A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.USER_NO, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, U.EMAIL
+          FROM USER_T U INNER JOIN ASK A 
+              ON A.USER_NO = U.USER_NO
+      ) C
+      WHERE C.RN BETWEEN #{begin} AND #{end}
+  </select>
+
+  
+  <update id="updateHit" parameterType="int">
+    UPDATE ASK
+      SET HIT = HIT + 1
+    WHERE ASK_NO = #{askNo}
+  </update>
+  
+  <select id="getAsk" parameterType="int" resultMap="AskMap" >
+    SELECT A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, U.USER_NO, U.EMAIL, U.NAME 
+      FROM USER_T U, ASK A
+     WHERE U.USER_NO = A.USER_NO
+       AND A.ASK_NO = #{askNo}
+  </select>
+  
+  <update id="updateAsk" parameterType="AskDto">
+    UPDATE ASK
+       SET ASK_TITLE = #{askTitle}
+         , ASK_CONTENT = #{askContent}
+         , MODIFIED_DATE = SYSDATE
+     WHERE ASK_NO = #{askNo}
+  </update>
+  
+  <select id="getAskImgList" parameterType="int" resultType="AskImageDto">
+    SELECT ASK_NO, IMAGE_PATH, FILESYSTEM_NAME
+      FROM ASK_IMAGE_T
+     WHERE ASK_NO = #{askNo} 
+  </select>
+  
+  <delete id="deleteAskImage" parameterType="String">
+    DELETE 
+      FROM ASK_IMAGE_T
+     WHERE FILESYSTEM_NAME = #{filesystemName}
+  </delete>
+  
+  <delete id="deleteImageList" parameterType="int">
+    DELETE 
+      FROM ASK_IMAGE_T
+     WHERE ASK_NO = #{askNo}
+  </delete>
+  
+  <delete id="deleteAsk" parameterType="int">
+    DELETE
+      FROM ASK
+     WHERE ASK_NO = #{askNo}
+  </delete>
+  
+  
+  <insert id="insertAnswer" parameterType="AnswerDto">
+    INSERT INTO ANSWER(
+        ANS_NO
+      , ASK_CONTENT
+      , USER_NO
+      , ASK_NO
+      , CREATED_DATE
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+      ) VALUES(
+          ANSWER_SEQ.NEXTVAL
+        , #{askContent}
+        , #{userDto.userNo}
+        , #{askNo}
+        , SYSDATE
+        , 1
+        , 0
+        , ANSWER_SEQ.CURRVAL
+          )
+  </insert>
+  
+  <select id="getAnswerCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM ANSWER
+     WHERE ASK_NO = #{askNo}
+  </select>
+  
+  <select id="getAnsList" parameterType="Map" resultMap="AnsMap">
+       SELECT A.ANS_NO, A.ASK_CONTENT, A.ASK_NO, A.CREATED_DATE, A.STATUS, A.DEPTH, A.GROUP_NO, A.USER_NO, A.NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, DEPTH ASC, ANS_NO DESC) AS RN, C.ANS_NO, C.ASK_CONTENT, C.ASK_NO, C.CREATED_DATE, C.STATUS, C.DEPTH, C.GROUP_NO, U.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN ANSWER C
+                ON U.USER_NO = C.USER_NO
+             WHERE C.ASK_NO = #{askNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <insert id="insertAnsReply" parameterType="AnswerDto">
+      INSERT INTO ANSWER (
+        ANS_NO
+      , ASK_CONTENT
+      , USER_NO
+      , ASK_NO
+      , CREATED_DATE
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+    ) VALUES (
+        ANSWER_SEQ.NEXTVAL
+      , #{askContent}
+      , #{userDto.userNo}
+      , #{askNo}
+      , SYSDATE
+      , 1
+      , 1
+      , #{groupNo}
+    )
+  </insert>
+  
+  <update id="deleteAns" parameterType="int" >
+    UPDATE ANSWER
+      SET STATUS = 0
+    WHERE ANS_NO = #{asnNo}
+  </update>
+  
+ 
+  
+</mapper>

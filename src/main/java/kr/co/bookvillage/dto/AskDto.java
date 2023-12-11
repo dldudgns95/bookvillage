@@ -7,21 +7,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Builder
-public class AnswerDto {
+public class AskDto {
   
-  private int ansNo;
-  private String askContent;
-  private UserDto userDto; // int userNo
   private int askNo;
+  private String askTitle;
+  private String askContent;
+  private UserDto userDto; // int userNo;
+  private int hit;
   private Date createdDate;
-  private int status;
-  private int depth;
-  private int groupNo;
+  private Date modifiedDate;
   
-  
-
+ // private int userNo;
+ // private String name;
 }

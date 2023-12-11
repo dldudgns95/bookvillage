@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('QnA수정')}"></head>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="wrap wrap_9" th:object="${ask}">
+      
+      
+      <div class="title">문의글을 작성하세요.</div>
+      
+      <form id="frm_ask_add" method="post" th:action="@{/comment/addAsk.do}">
+        
+        <div>
+          <label for="askTitle">제목</label>
+          <input type="text" name="askTitle" id="askTitle" placeholder="제목을 입력하세요"  class="form-control">        
+        </div>
+        
+        <div>
+          <label for="askContent">내용</label>
+          <textarea name="askContent" id="askContent" style="display: none;"></textarea>
+          <div id="toolbar-container"></div>
+          <div id="ckeditor"></div>
+        </div>
+        
+        <div class="text-center my-3">
+          <button class="btn btn-primary" type="submit">작성완료</button>
+          <a th:href="@{/comment/commentList.do}">
+            <button type="button" class="btn btn-secondary">작성취소</button>
+          </a>
+          <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+        </div>
+        
+      </form>
+      
+    </div>
+    
+   </div>
+    
+    
+    
+    
+    
+    
+    
+  <script>
+    
+    
+    const fnCkeditor = () => {
+        DecoupledEditor
+          .create(document.getElementById('ckeditor'), {
+            ckfinder: {
+              // 이미지 업로드 경로
+              uploadUrl: '/comment/imageUpload.do'         
+            }
+          })
+          .then(editor => {
+            const toolbarContainer = document.getElementById('toolbar-container');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }    
+    
+      const fnAskAdd = () => {
+        $('#frm_ask_add').submit((ev) => {
+          if($('#askTitle').val() === ''){
+            alert('제목은 반드시 입력해야 합니다.');
+            ev.preventDefault();
+            return;
+          }
+          $('#askContent').val($('#ckeditor').html());
+        })
+      }
+    
+        fnCkeditor();
+        fnAskAdd();
+
+  </script>
+
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
