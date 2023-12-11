@@ -74,10 +74,9 @@
                             <input type="hidden" name="userNo" th:if="${session.user == null}" th:value="0" />
                             <input type="hidden" name="isbn" th:value="${book.isbn}" />
                             <input type="hidden" id="wishDate" name="wishDate" />
-                <button type="button" class="btn btn-outline-secondary wishBtn" >관심
-                  <span th:if="${checkWish == 1}">♥</span>
-                  <span th:if="${checkWish == 0}">♡</span>                  
-                </button>                            
+                              <button type="button" class="btn btn-outline-secondary wishBtn">                             
+                                <i class="fa-solid fa-plus"></i>              
+                              </button>                            
                           </form>
                         </td>
                         <td>
