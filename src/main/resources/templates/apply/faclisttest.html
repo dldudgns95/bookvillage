@@ -22,7 +22,13 @@
   background-color: #f0f0f0;
   transition: .3s;
 }
+  .parent {
+	      display: flex;
+
+    flex-direction: row; /* 가로로 배치되도록 설정 */
+  }
   div.child1{
+	margin-top: 30px;	  
     width: 800px;
     justify-content: center;
     margin-left: 320px;
@@ -31,42 +37,39 @@
     
   }
   div.child2{
-	width: 800px;
     display: flex;
     margin-left: 320px;
-    justify-content: left;
 
     
   }
   div.child3{
-	  display: flex;
-	  width: 200px;
-	  margin-top: 70px;
       margin-left: 20px;
       font-size: 15px;
-	  
+
   }
- 
-  
+  div.faclist{
+  	  border: 1px solid #ccc; /* 테두리 선 스타일 및 색상 지정 */
+ 	  padding: 10px; /* 테두리와 내용 사이의 간격 지정 */      
+  }
   /* 캘린더 크기 조절 */
   #calendar {
     width: 500px;
   }
   /* 모달 이미지 크기 조절 */  
-  .modal_img {
+  .facimg {
     width: 300px;
   }
    /* 캘린더 좌측 우측 아이콘 색상 */
   .fc-icon-chevron-right, .fc-icon-chevron-left {
     color: #ffffff;
   }
+
 </style>
 
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="parent">
 	 
      <div class="side_bar">
 	  <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">시설이용신청</h3>
@@ -74,30 +77,22 @@
           <li><a th:href="@{/apply/fac.do}">시설이용신청</a></li>			
 		  <li><a th:href="@{/apply/wishbook.do}">희망도서신청</a></li>
         </ul>
+      
       </div>
 	  <div class="child1">
      	<h5>시설이용신청</h5>
      	<h6>희망하시는 날짜를 선택해주세요</h6>
       </div>
+     <div class="parent">   
 	  <div class="child2">
 	    <div id='calendar'></div>
 	  </div>
-
-  </div>
-  
-  <div class="modal" id="myModal">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-        <!-- 모달 내용이 들어갈 자리 -->  
-        </div>
-      </div>
+ 	<div class="child3" id="child3">
+      <!-- 여기에 동적으로 생성된 내용이 표시됩니다. -->
     </div>
   </div>
+  
+
   
   <script th:inline="javascript">
     
@@ -139,6 +134,19 @@
           
           var todayFormat = year + '-' + month  + '-' + day;
           var clickDate = info.dateStr;
+          // 모든 날짜의 셀 엘리먼트 가져오기
+          var allCells = document.querySelectorAll('.fc-day');
+
+            // 모든 셀의 배경색 초기화
+            allCells.forEach(function(cell) {
+                cell.style.backgroundColor = '';
+            });
+          var cellEl = info.dayEl;
+
+
+            // 원하는 배경색으로 변경
+	    	cellEl.style.backgroundColor = '#00FF00';
+          
           
           if(todayFormat >= clickDate) {  // 당일 또는 이전날짜 클릭 시 조회 못하게 막음
             alert('당일 또는 이전 날짜는 조회하실 수 없습니다.');
@@ -157,7 +165,7 @@
                 alert(user.name + '님은 ' + info.dateStr + '일에 이용 신청하신 시설이 있습니다.\n같은날에 2개의 시설은 이용이 불가합니다.');
                 return;
               } else {
-                fmModalUpdate(info, user);
+                fnfaclist(info, user);
               }
             }
           })
@@ -166,65 +174,53 @@
       });
       calendar.render();
     });
-    
-   const fmModalUpdate = (info, user) => {
-     $('.modal-title').text(info.dateStr + "일자 시설 목록");
-     $.ajax({
-        method:'get',
-        url:"/apply/facTotalList.do",
-        data: 'facStart=' + info.dateStr,
-        dataType:'json',
-        success: function(resData) {
-          var modalContent = '';
-          if(resData.availableFacList.length > 0) {
-            modalContent += '<h2>이용 가능한 시설</h2>';
-            $.each(resData.availableFacList, (i, f) => {
-              modalContent += '<div class="flex_admin">';
-              modalContent += '  <div>';
-              modalContent += '    <img class="modal_img" src="' + f.facPath + '/' + f.facFilesystemName + '">';
-              modalContent += '  </div>';
-              modalContent += '  <div>';
-              modalContent += '    <div>';
-              modalContent += '      <div><h6>시설이름 : '+f.facilityDto.facName+'</h6></div>';
-              modalContent += '      <div><h6>시설설명 :'+f.facilityDto.facContent+'</h6></div>';
-              modalContent += '      <div>';
-              modalContent += '        <form class="frm_fac_apply" method="post" th:action="@{/apply/addFacApply.do}">';
-              modalContent += '          <input type="hidden" name="userNo" value="'+user.userNo+'">';
-              modalContent += '          <input type="hidden" name="facNo" value="'+f.facilityDto.facNo+'">';
-              modalContent += '          <input type="hidden" name="facStart" value="'+info.dateStr+'">';
-              modalContent += '          <input type="hidden" name="facName" value="'+f.facilityDto.facName+'">';
-              modalContent += '          <button type="button" class="btn btn-secondary btn_add_fac_apply">신청하기</button>';
-              modalContent += '        </form>';
-              modalContent += '      </div>';
-              modalContent += '    </div>';
-              modalContent += '  </div>';
-              modalContent += '</div>';
-            })
-          }
-          if(resData.unavailableFacList.length > 0) {
-            modalContent += '<h2>이용 불가능한 시설</h2>';
-            $.each(resData.unavailableFacList, (i, f) => {
-              modalContent += '<div class="flex_admin">';
-              modalContent += '  <div>';
-              modalContent += '    <img class="modal_img" src="' + f.facPath + '/' + f.facFilesystemName + '">';
-              modalContent += '  </div>';
-              modalContent += '  <div>';
-              modalContent += '    <div>';
-              modalContent += '      <div><h6>시설명 : '+f.facilityDto.facName+'</h6></div>';
-              modalContent += '      <div><h6>'+f.facilityDto.facContent+'</h6></div>';
-              modalContent += '    </div>';
-              modalContent += '  </div>';
-              modalContent += '</div>';
-            })
-          }
-          $(".modal-body").html(modalContent);
-        }
-      })
-      $("#myModal").modal("show");
-   }
-       
+	    
+	const fnfaclist = (info, user) => {
+	  let container = document.querySelector('.child3');
+	  $.ajax({
+	    method: 'get',
+	    url: "/apply/facTotalList.do",
+	    data: 'facStart=' + info.dateStr,
+	    dataType: 'json',
+	    success: function (resData) {
+	      var content = '';
+	      if (resData.availableFacList.length > 0) {
+	        content += '<h5>이용가능한시설</h5>'
+	        $.each(resData.availableFacList, (i, f) => {
+	          content += '<div class="faclist">';
+	          content += '<img class="facimg" src="' + f.facPath + '/' + f.facFilesystemName + '">';
+	          content += '	<div>';
+	          content += '  	<div><h6>시설이름 : ' + f.facilityDto.facName + '</h6></div>';
+	          content += '		<div><h6>시설설명 :' + f.facilityDto.facContent + '</h6></div>';
+	          content += '	</div>';
+              content += '        <form class="frm_fac_apply" method="post" th:action="@{/apply/addFacApply.do}">';
+              content += '          <input type="hidden" name="userNo" value="'+user.userNo+'">';
+              content += '          <input type="hidden" name="facNo" value="'+f.facilityDto.facNo+'">';
+              content += '          <input type="hidden" name="facStart" value="'+info.dateStr+'">';
+              content += '          <input type="hidden" name="facName" value="'+f.facilityDto.facName+'">';
+              content += '          <button type="button" class="btn btn-secondary btn_add_fac_apply">신청하기</button>';
+              content += '        </form>';	  
+              content += '</div>';
+	        })
+	      }
+	       if (resData.unavailableFacList.length > 0) {
+        content += '<h5>이용불가능한시설</h5>'
+        $.each(resData.unavailableFacList, (i, f) => {
+          content += '<div class="faclist">';
+              content += '    <img class="facimg" src="' + f.facPath + '/' + f.facFilesystemName + '">';
+              content += '    <div>';
+              content += '      <div><h6>시설명 : '+f.facilityDto.facName+'</h6></div>';
+              content += '      <div><h6>'+f.facilityDto.facContent+'</h6></div>';
+              content += '    </div>';
+          content += '</div>';
+        })
+      }
 
-   
+      container.innerHTML = content;
+    }
+  })
+}
+  
    const fnAddFacApply = () => {
      $(document).on('click', '.btn_add_fac_apply', (ev) => {
        let facName = $(ev.target).prev().val();
@@ -244,7 +240,6 @@
     		 window.location.replace('/apply/fac.do');
 
            }
-           $("#myModal").modal("hide");
          }
        })
        
@@ -252,7 +247,6 @@
    }
    
    fnAddFacApply();
-    
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
