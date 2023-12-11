@@ -55,6 +55,11 @@ public class ApplyController {
     return "apply/faclist";
   }
   
+  @GetMapping("/faclisttest.do")
+  public String faclisttest() {
+    return "apply/faclisttest";
+  }
+  
   @GetMapping("/fac.do")
   public String facList(Model model) {
     facService.getFacList(model);
@@ -73,6 +78,6 @@ public class ApplyController {
   public String addBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 	    int addResult = facService.addbook(request);
 	    redirectAttributes.addFlashAttribute("addResult", addResult);
-	    return "redirect:/apply/bookapply.do";
+	    return "redirect:/apply/wishbook.do";
 	}
 }
