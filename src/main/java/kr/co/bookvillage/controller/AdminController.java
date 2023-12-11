@@ -1,19 +1,27 @@
 package kr.co.bookvillage.controller;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.service.AdminService;
@@ -25,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class AdminController {
   
   private final AdminService adminService;
+  private final ObjectMapper objectMapper;
   
   @GetMapping("/main.do")
   public String mainList() {
@@ -315,6 +324,28 @@ public class AdminController {
   public String activeBook(HttpServletRequest request, RedirectAttributes redirectAttributes) {
     redirectAttributes.addFlashAttribute("activeResult", adminService.activeBook(request));
     return "redirect:/admin/bookDetail.do?isbn=" + request.getParameter("isbn");
+  }
+  
+  @PostMapping("/approveCheckBookCheckout.do")
+  public String approveCheckBookCheckout(@RequestParam("numbers") String numbersJson, RedirectAttributes redirectAttributes) throws IOException {
+    List<String> list = objectMapper.readValue(numbersJson, List.class);
+    redirectAttributes.addFlashAttribute("updateResult", adminService.approveBookCheckoutByNumbers(list));
+    // List<Integer> numbers = objectMapper.readValue(numbersJson, List.class);
+    // String str = StringUtils.join(numbers, ",");
+    return "redirect:/admin/bookCheckoutList.do";
+  }
+  
+  @PostMapping("/approveCheckBookCheckoutReturn.do")
+  public String approveCheckBookCheckoutReturn(@RequestParam("numbers") String numbersJson, RedirectAttributes redirectAttributes) throws IOException {
+    List<String> list = objectMapper.readValue(numbersJson, List.class);
+    redirectAttributes.addFlashAttribute("updateResult", adminService.approveBookCheckoutReturnByNumbers(list));
+    return "redirect:/admin/bookCheckoutReturnList.do";
+  }
+  
+  @ResponseBody
+  @PostMapping(value="ajaxBookCheckoutPaing.do", produces="application/json")
+  public Map<String, Object> ajaxBookCheckoutPaing(@RequestBody Map<String, Object> params){
+    return adminService.getAjaxBookCheckoutPaing(params);
   }
   
   // 임시

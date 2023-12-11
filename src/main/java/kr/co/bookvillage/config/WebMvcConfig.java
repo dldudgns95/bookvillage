@@ -30,8 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addInterceptor(checkAdminLoginInterceptor)
     .addPathPatterns("/admin/**")
     .addPathPatterns("/support/write.form", "/support/faqwrite.form");
-
-    
   }
   
   @Override
