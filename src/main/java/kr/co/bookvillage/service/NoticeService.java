@@ -26,6 +26,7 @@ public interface NoticeService {
 	public int removeNotice(int ntNo);
 	public void getSearchNoticeList(HttpServletRequest request, Model model);
 	public void loadNotice(HttpServletRequest request, Model model);
+	public void noticeImageBatch();
 
 }
  
