@@ -121,14 +121,20 @@ public class BookController {
   
   //관심도서 추가
   @PostMapping("/addWish.do")
-  public String addWish(@RequestBody WishDto wishDto) {
+  public String addWish(@RequestBody WishDto wishDto, Model model) {
     bookService.insertWish(wishDto);
+    int wishStatus = wishDto.getStatus();
+    System.out.println("여기추가"+wishStatus);
+    model.addAttribute("wishStatus",wishStatus);
     return "redirect:/book/search/detail?isbn=" + wishDto.getIsbn();
   }
   //관심도서 삭제
   @PostMapping("/deleteWish.do")
-  public String deleteWish(@RequestBody WishDto wishDto) {
+  public String deleteWish(@RequestBody WishDto wishDto, Model model) {
     bookService.deleteWish(wishDto);
+    int wishStatus = wishDto.getStatus();
+    System.out.println("여기삭제"+wishStatus);
+    model.addAttribute("wishStatus",wishStatus);
     return "redirect:/book/search/detail?isbn=" + wishDto.getIsbn();
   }
   

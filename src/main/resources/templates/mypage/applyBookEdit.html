@@ -27,7 +27,6 @@
     width: 800px;
     height: 500px;
     display: inline-block;
-    text-align: center;   
     padding-top: 30px;
   }
   
@@ -68,11 +67,11 @@
     <th:block th:if="${session.user != null}">
     <div class="column-8">
     <div class="mypage">   
-     <div class="child1">
+     <div class="child1" style="text-align: center;">
       <h5>희망도서신청수정</h5>
      </div>
      
-    <div class="child2">
+    <div class="child2" style="text-align: left;">
       <form id="frm_modify_book" method="post" th:action="@{/mypage/modifyApplyBook.form}">     
         
         <div class="mt-3">
