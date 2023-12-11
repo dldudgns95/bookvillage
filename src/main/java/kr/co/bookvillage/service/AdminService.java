@@ -3,7 +3,6 @@ package kr.co.bookvillage.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.ui.Model;
@@ -55,5 +54,6 @@ public interface AdminService  {
   public void updateFacApply();
   public int approveBookCheckoutByNumbers(List<String> list);
   public int approveBookCheckoutReturnByNumbers(List<String> list);
+  public Map<String, Object> getAjaxBookCheckoutPaing(Map<String, Object> params);
 
 }

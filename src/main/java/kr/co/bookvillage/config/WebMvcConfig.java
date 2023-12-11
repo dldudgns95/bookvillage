@@ -26,8 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addPathPatterns("/user/modifyPw.form", "/mypage/**");
     registry.addInterceptor(shouldNotLoginInterceptor)
       .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
-    registry.addInterceptor(checkAdminLoginInterceptor)
-    .addPathPatterns("/admin/**");
+    
   }
   
   @Override

@@ -37,7 +37,8 @@ public interface AdminMapper {
   public List<BookApplyDto> getBookApplyList(Map<String, Object> map);
   public List<BookApplyDto> getUserBookApplyList(int userNo);
   public BookApplyDto getBookApplyDetail(int applyNo);
-  public List<BookCheckoutDto> getUserBookCheckoutList(int userNo);
+  public int getUserBookCheckoutCount(int userNo);
+  public List<BookCheckoutDto> getUserBookCheckoutList(Map<String, Object> map);
   public int bookCheckoutCount();
   public List<BookCheckoutDto> getBookCheckoutList(Map<String, Object> map);
   public int bookCheckoutSearchCount(Map<String, Object> map);

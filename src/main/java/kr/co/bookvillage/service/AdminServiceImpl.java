@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dto.AttachFacDto;
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FacilityDto;
 import kr.co.bookvillage.util.AdminFileUtils;
@@ -154,8 +155,17 @@ public class AdminServiceImpl implements AdminService {
   public void getUserDetail(HttpServletRequest request, Model model) {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("paging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
-    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(map));
     model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
     model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
     model.addAttribute("checkResult", adminMapper.checkBookCheckout(userNo));
@@ -1000,6 +1010,21 @@ public class AdminServiceImpl implements AdminService {
       updateResult = adminMapper.minusBookCount(userNo);
     }
     return updateResult;
+  }
+  
+  @Override
+  public Map<String, Object> getAjaxBookCheckoutPaing(Map<String, Object> params) {
+    int page = (int)params.get("page");
+    int userNo = (int)params.get("userNo");
+    int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    List<BookCheckoutDto> list;
+    return Map.of("bookCheckoutList", adminMapper.getUserBookCheckoutList(map)
+                , "bookCheckoutPaging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
   }
   
 

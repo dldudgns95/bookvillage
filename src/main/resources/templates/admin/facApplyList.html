@@ -124,11 +124,11 @@
               <td scope="row" th:text="${facApply.facRegDate}"></td>
               <td scope="row" th:text="${facApply.facStart}"></td>
               <td scope="row" class="flex_admin">
-                <form th:action="@{/admin/approveFacApply.do}" method="post">
+                <form class="frm_approve" th:action="@{/admin/approveFacApply.do}" method="post">
                   <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                   <button type="submit" class="btn btn-primary">승인</button>
                 </form>
-                <form th:action="@{/admin/refuseFacApply.do}" method="post">
+                <form class="frm_refuse" th:action="@{/admin/refuseFacApply.do}" method="post">
                   <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                   <button type="submit" class="btn btn-primary">거절</button>
                 </form>
@@ -144,6 +144,24 @@
   </div>
   
   <script th:inline="javascript">
+    
+    const fnCheckApprove = () => {
+      $('.frm_approve').submit((ev) => {
+        if(!confirm('해당 시설의 이용신청을 승인하시겠습니까?')) {
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
+    
+    const fnCheckRefuse = () => {
+      $('.frm_refuse').submit((ev) => {
+        if(!confirm('해당 시설의 이용신청을 거절하시겠습니까?')) {
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
   
     const fnUpdateApproveResult = () => {
       let updateApproveResult = /*[[${updateApproveResult}]]*/ null;
@@ -167,6 +185,8 @@
       }
     }
     
+    fnCheckApprove();
+    fnCheckRefuse();
     fnUpdateApproveResult();
     fnUpdateRefuseResult();
   

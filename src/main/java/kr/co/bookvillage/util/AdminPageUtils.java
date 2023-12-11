@@ -151,20 +151,33 @@ public class AdminPageUtils {
     return sb.toString();
   }
 
-  public String getAjaxPaging() {
+  public String getAjaxPaging(String script) {
     
     StringBuilder sb = new StringBuilder();
     
-    sb.append("<div>");
+    sb.append("<div><nav aria-label=\"...\">");
+    sb.append("<ul class=\"pagination\">");
     
     // 이전 블록
+    /*
     if(beginPage == 1) {
       sb.append("<a>이전</a>");
     } else {
       sb.append("<a href=\"javascript:fnAjaxPaging(" + (beginPage-1) + ")\">이전</a>");
     }
+    */
+    if(beginPage == 1) {
+      sb.append("<li class=\"page-item disabled\">");
+      sb.append("<a class=\"page-link\" href=\"#\" tabindex=\"-1\" aria-disabled=\"true\">이전</a>");
+      sb.append("</li>");
+    } else {
+      sb.append("<li class=\"page-item\">");
+      sb.append("<a class=\"page-link\" href=\"javascript:"+script+"("+ (beginPage-1) + ")\" tabindex=\"-1\"\">이전</a>");
+      sb.append("</li>");
+    }
     
     // 페이지 번호
+    /*
     for(int p = beginPage; p <= endPage; p++) {
       if(p == page) {
         sb.append("<a>" + p + "</a>");
@@ -172,15 +185,32 @@ public class AdminPageUtils {
         sb.append("<a href=\"javascript:fnAjaxPaging(" + p + ")\">" + p + "</a>");
       }
     }
+    */
+    for(int p = beginPage; p <= endPage; p++) {
+      if(p == page) {
+        sb.append("<li class=\"page-item active\" aria-current=\"page\"><a class=\"page-link\" href=\"#\">"+p+"</a></li>");
+      } else {
+        sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\"javascript:"+script+"(" + p + ")\">" + p +"</a></li>");
+      }
+    }
     
     // 다음 블록
+    /*
     if(endPage == totalPage) {
       sb.append("<a>다음</a>");
     } else {
       sb.append("<a href=\"javascript:fnAjaxPaging(" + (endPage+1) + ")\">다음</a>");
     }
+    */
+    if(endPage == totalPage) {
+      sb.append("<li class=\"page-item disabled\"><a class=\"page-link\" href=\"#\" aria-disabled=\"true\">다음</a></li>");
+    } else {
+      sb.append("<li class=\"page-item\"><a class=\"page-link\" href=\"javascript:"+script+"(" + (endPage+1) + ")\">다음</a></li>");
+      
+    }
     
-    sb.append("</div>");
+    //sb.append("</div>");
+    sb.append("</ul></nav></div>");
     
     return sb.toString();
     
