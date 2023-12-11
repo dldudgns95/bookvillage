@@ -27,14 +27,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addPathPatterns("/apply/bookapply.do", "/apply/faclist.do");
     registry.addInterceptor(shouldNotLoginInterceptor)
       .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
-<<<<<<< HEAD
-=======
     registry.addInterceptor(checkAdminLoginInterceptor)
     .addPathPatterns("/admin/**")
     .addPathPatterns("/support/write.form", "/support/faqwrite.form");
-
->>>>>>> main
-    
   }
   
   @Override

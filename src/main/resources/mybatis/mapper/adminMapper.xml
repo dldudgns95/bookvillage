@@ -725,5 +725,13 @@
      WHERE ISBN IN (${isbn})
   </update>
   
+  <!-- 회원 삭제 중 해당 유저의 대출신청중인 도서 확인 -->
+  <select id="checkBookCheckoutByUser" parameterType="int" resultType="String">
+    SELECT ISBN
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+       AND STATUS = 0
+  </select>
+  
   
 </mapper>

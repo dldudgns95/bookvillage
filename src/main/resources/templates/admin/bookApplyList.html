@@ -63,7 +63,7 @@
           </thead>
           <tbody>
             <th:block th:if="${#lists.isEmpty(bookApplyList)}">
-              <tr><td colspan="7">검색된 회원이 없습니다.</td></tr>
+              <tr><td colspan="7">희망도서 신청이 현재 없습니다.</td></tr>
             </th:block>
             <th:block th:each="book,vs:${bookApplyList}">
               <tr>

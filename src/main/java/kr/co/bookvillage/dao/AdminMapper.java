@@ -76,4 +76,5 @@ public interface AdminMapper {
   public int approveBookCheckoutByNumbers(String numbers);
   public int approveBookCheckoutReturnByNumbers(String numbers);
   public int activeBooks(String isbn);
+  public List<String> checkBookCheckoutByUser(int userNo); 
 }

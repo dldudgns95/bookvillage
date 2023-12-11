@@ -175,6 +175,11 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public int deleteUser(HttpServletRequest request) {
     int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int updateResult = 0;
+    List<String> isbn = adminMapper.checkBookCheckoutByUser(userNo);
+    if(!isbn.isEmpty()) {
+      updateResult = adminMapper.activeBooks(StringUtils.join(isbn, ","));
+    }
     return adminMapper.deleteUser(userNo);
   }
   
