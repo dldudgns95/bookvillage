@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -157,6 +158,7 @@ public class AdminServiceImpl implements AdminService {
     model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
     model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
     model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
+    model.addAttribute("checkResult", adminMapper.checkBookCheckout(userNo));
     
   }
   
@@ -963,6 +965,41 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public void updateFacApply() {
     adminMapper.updateFacApply();
+  }
+  
+  @Override
+  public int approveBookCheckoutByNumbers(List<String> list) {
+    List<Integer> numbers = new ArrayList<>();
+    List<Integer> usersNo = new ArrayList<>();
+    for(String str : list) {
+      String[] number = str.split(",");
+      numbers.add(Integer.parseInt(number[0]));
+      usersNo.add(Integer.parseInt(number[1]));
+    }
+    int updateResult = adminMapper.approveBookCheckoutByNumbers(StringUtils.join(numbers, ","));
+    for(int userNo : usersNo) {
+      updateResult = adminMapper.addUserBookCount(userNo);
+    }
+    return updateResult;
+  }
+  
+  @Override
+  public int approveBookCheckoutReturnByNumbers(List<String> list) {
+    List<Integer> numbers = new ArrayList<>();
+    List<Integer> usersNo = new ArrayList<>();
+    List<String> isbn = new ArrayList<>();
+    for(String str : list) {
+      String[] number = str.split(",");
+      numbers.add(Integer.parseInt(number[0]));
+      usersNo.add(Integer.parseInt(number[1]));
+      isbn.add(number[2]);
+    }
+    int updateResult = adminMapper.approveBookCheckoutReturnByNumbers(StringUtils.join(numbers, ","));
+    updateResult = adminMapper.activeBooks(StringUtils.join(isbn, ","));
+    for(int userNo : usersNo) {
+      updateResult = adminMapper.minusBookCount(userNo);
+    }
+    return updateResult;
   }
   
 

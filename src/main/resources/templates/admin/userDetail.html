@@ -395,6 +395,11 @@
     
     const fnUserDelete = () => {
       $('.btn_delete').click(() => {
+        let checkResult = /*[[${checkResult}]]*/ null;
+        if(checkResult == true) {
+          alert('대출중인 책이 존재하여 탈퇴가 불가능합니다.');
+          return;
+        }
         if(confirm('해당 유저를 탈퇴시키겠습니까?')){
           $('.frm_user').attr('action', '/admin/userDelete.do');
           $('.frm_user').attr('method', 'post');

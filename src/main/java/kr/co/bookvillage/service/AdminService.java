@@ -1,5 +1,6 @@
 package kr.co.bookvillage.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServlet;
@@ -52,5 +53,7 @@ public interface AdminService  {
   public void cancleBookCheckoutBatch();
   public void changeOverdueBatch();
   public void updateFacApply();
+  public int approveBookCheckoutByNumbers(List<String> list);
+  public int approveBookCheckoutReturnByNumbers(List<String> list);
 
 }

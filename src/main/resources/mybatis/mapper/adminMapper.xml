@@ -642,6 +642,14 @@
              WHERE BC.ISBN = #{isbn}
                AND BC.STATUS NOT IN (2,4)
   </select>
+  <!-- 대출중인 책이 있는지 확인 -->
+  <select id="checkBookCheckout" parameterType="int" resultType="boolean">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+       AND STATUS = 1
+  </select>
+  
   
   <!-- 대출신청 3일이상 지난 책 대출 가능으로 변경 -->
   <update id="activeBookByBookCheckout">
@@ -675,18 +683,40 @@
        SET STATUS = 0
      WHERE USER_NO IN (SELECT USER_NO
                          FROM BOOK_CHECKOUT
-                        WHERE STATUS = 3);
+                        WHERE STATUS = 3)
   </update>
   
   <!-- 시설 이용신청에서 시작날짜가 지나도 승인대기상태면 자동 거절 -->
   <update id="updateFacApply">
     UPDATE FAC_APPLY
        SET FAC_STATUS = 2
-     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') &gt; FAC_START;
+     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') &gt; FAC_START
   </update>
   
+  <!-- 선택된 도서들 대출 신청 승인 업데이트 -->
+  <update id="approveBookCheckoutByNumbers" parameterType="String">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 1
+         , START_DATE = SYSDATE
+         , DUE_DATE = SYSDATE + 7
+         , DELAY = 0
+     WHERE CHECKOUT_NO IN (${numbers})
+  </update>
   
+  <!-- 선택된 도서들 대출 반납 승인 업데이트 -->
+  <update id="approveBookCheckoutReturnByNumbers" parameterType="String">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 2
+         , END_DATE = SYSDATE
+     WHERE CHECKOUT_NO IN (${numbers})
+  </update>
   
+  <!-- 선택된 도서들 반납 완료 시 도서 상태 업데이트 -->
+  <update id="activeBooks" parameterType="String">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN IN (${isbn})
+  </update>
   
   
 </mapper>
