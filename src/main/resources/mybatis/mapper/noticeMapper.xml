@@ -155,6 +155,13 @@
       FROM NOTICE
      WHERE NT_NO = #{ntNo}
   </delete>
+  
+  <select id="getNoticeImageInYesterday" resultType="AttachNtDto">
+  SELECT NT_NO, NT_PATH, NT_FILESYSTEM_NAME
+    FROM ATTACH_NT
+   WHERE NT_PATH = '/notice/' || TO_CHAR(SYSDATE - 1, 'YYYY/MM/DD')
+  </select>
+  
   <select id="noticeSearchCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM NOTICE
