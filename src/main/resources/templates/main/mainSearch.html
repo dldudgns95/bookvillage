@@ -13,6 +13,7 @@
 .bookSearchMain_wrap{
   display: flex;
   text-align: center;
+  margin: 0px;
 }
 
 .bookSearchMain{
@@ -23,7 +24,7 @@
 
 
 .bookSearchMainTitle{
-  margin: 5px;
+  margin: px;
 }
 .swiper-containerFac,
 .swiper-containerBookList{
@@ -73,6 +74,10 @@
 .title{
   text-align: center;
 }
+.searchP{
+  margin-left: 5px;
+}
+
 
 
 </style>
@@ -92,6 +97,7 @@
       <div class="btbt"> 
         <div class="title2 bookSearchMain_wrap">소장도서</div>
         
+        
         <!-- 더보기 검색 -->
         <form id="search" name="search" action="/book/search/result" method="get">
           <input type="hidden" name="userNo" th:if="${session.user != null}" th:value="${session.user.userNo}" />
@@ -106,12 +112,19 @@
             <input type="submit" value="더보기" title="더보기" class="btn btn-outline-secondary btn-sm btn_gray">
           </div>        
         </div> 
+          <div class="searchP"><p>도서 제목, 저자, 출판사 통합 검색 결과입니다.</p></div>
         
        <div class="bookSearchMain">
         <div class="bookSearchEach" th:each="book : ${bookList}">
             <a th:href="@{/book/search/detail(userNo=${session.user?.userNo != null ? session.user.userNo : 0}, isbn=${book.isbn})}">
                 <img class="bookSearchMainImg" th:src="${book.cover}" /><br>
-                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 25 ? #strings.substring(book.title, 0, 25) + '...' : book.title + '<br>' + (book.status == 1 ? '대출 가능' : '대출 중')}"></div>
+<<<<<<< HEAD
+                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 25 ? #strings.substring(book.title, 0, 25) + '...' : book.title }"></div>
+                <div th:utext="${(book.status == 1 ? '대출 가능' : '대출 중')}"></div>
+=======
+                <div class="bookSearchMainTitle" th:utext="${#strings.length(book.title) > 20 ? #strings.substring(book.title, 0, 20) + '...' : book.title}"></div>
+                <div class="bookSearchMainTitle" th:utext="${(book.status == 1 ? '대출 가능' : '대출 불가')}"></div>
+>>>>>>> sujin
             </a>
         </div>
       </div>
@@ -137,6 +150,8 @@
                     <th:block th:if="${#lists.isEmpty(noticeList)}">
                         <tr>
                             <td>검색된 공지가 없습니다.</td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     </th:block>                      
                       

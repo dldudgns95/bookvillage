@@ -24,6 +24,21 @@
       <result     column="LOGIN_DATE"  property="loginDate" />
     </association>
   </resultMap>
+
+  <!-- 시설 Map -->
+  <resultMap type="AttachFacDto" id="AttachFacMap">
+    <id column="FAC_ATTACH_NO"             property="facAttachNo" />
+    <result column="FAC_PATH"              property="facPath" />
+    <result column="FAC_ORIGINAL_FILENAME" property="facOriginalFilename" />
+    <result column="FAC_FILESYSTEM_NAME"   property="facFilesystemName" />
+    <result column="FAC_HAS_THUMBNAIL"     property="facHasThumbnail" />
+    <association javaType="FacilityDto" property="facilityDto">
+      <id column="FAC_NO"          property="facNo" />
+      <result column="FAC_NAME"    property="facName" />
+      <result column="FAC_CONTENT" property="facContent" />
+    </association>
+  </resultMap>   
+  
   
   
 
@@ -244,10 +259,8 @@
          SELECT USER_NO, U.EMAIL, PW, NAME, MOBILE, GENDER, AGREE, STATE, AUTH,PW_MODIFIED_DATE, JOINED_DATE, SYSDATE, STATUS, BOOKCOUNT
            FROM USER_T U LEFT OUTER JOIN ACCESS_T A
              ON U.EMAIL = A.EMAIL
-           WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12
-              OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12)
-           
-    );
+           WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) &gt; 11
+              OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) &gt; 11))
   </insert>
   
   
@@ -257,12 +270,17 @@
      WHERE EMAIL IN(SELECT U.EMAIL
                       FROM USER_T U LEFT OUTER JOIN ACCESS_T A
                         ON U.EMAIL = A.EMAIL
-                     WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12
-                        OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) >= 12))
+                     WHERE MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) &gt; 11
+                        OR (LOGIN_DATE IS NULL AND MONTHS_BETWEEN(SYSDATE, LOGIN_DATE) &gt; 11))
   </delete>
   
 
-  
+  <!-- 전체 시설 조회 -->
+  <select id="getFacList" resultMap="AttachFacMap">
+    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
+      FROM ATTACH_FAC AF INNER JOIN FACILITY F
+        ON AF.FAC_NO = F.FAC_NO
+  </select>  
   
   
 </mapper>

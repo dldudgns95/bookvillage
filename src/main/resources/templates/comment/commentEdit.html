@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{/layout/header::head('QnA수정')}"></head>
+
+
+<style>
+  .blind {
+    display: none;
+  }
+  .ico_remove_comment {
+    cursor: pointer;
+  }
+</style>
+
+<body>
+  
+  <div th:replace="~{/layout/header::header}"></div>
+  
+  <div class="main_wrap">
+    
+    <div class="wrap wrap_9" th:object="${ask}">
+      
+      
+      <div class="title">문의글을 수정하세요.</div>
+      
+      <form id="frm_ask_modify" method="post" th:action="@{/comment/commentModifyAsk.do}">
+        
+        <div>
+          <label for="askTitle">제목</label>
+          <input type="text" name="askTitle" id="askTitle"  class="form-control" th:field="*{askTitle}">        
+        </div>
+        
+        <div>
+          <label for="askContent">내용</label>
+          <textarea name="askContent" id="askContent" style="display: none;"></textarea>
+          <div id="toolbar-container"></div>
+          <div id="ckeditor" th:utext="*{askContent}"></div>
+        </div>
+        
+        <div class="text-center my-3">
+          <input type="hidden" name="askNo" th:field="*{askNo}">
+          <button class="btn btn-primary" type="submit">수정완료</button>
+          <a th:href="@{/comment/commentDetail.do(askNo=*{askNo})}">
+            <button type="button" class="btn btn-secondary">이전페이지로 돌아가기</button>
+          </a>
+        </div>
+        
+      </form>
+      
+    </div>
+    
+   </div>
+    
+    
+    
+    
+    
+    
+    
+  <script>
+    
+    
+    const fnCkeditor = () => {
+        DecoupledEditor
+          .create(document.getElementById('ckeditor'), {
+            ckfinder: {
+              // 이미지 업로드 경로
+              uploadUrl: '/comment/imageUpload.do'         
+            }
+          })
+          .then(editor => {
+            const toolbarContainer = document.getElementById('toolbar-container');
+            toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }    
+    
+    $(document).ready(function(){
+      $('#frm_ask_modify').submit(function(ev) {
+        if($('#askTitle').val() == ''){
+          alert('제목을 입력해주세요.');
+          ev.preventDefault();
+          return;
+        }
+        $('#askContent').val($('#ckeditor').html());
+      })
+    })
+    
+        fnCkeditor();
+
+
+  </script>
+
+  </div>
+  
+  <div th:replace="~{/layout/footer::footer}"></div>
+  
+</body>
+</html>
