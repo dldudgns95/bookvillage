@@ -2,11 +2,17 @@ package kr.co.bookvillage.service;
 
 import java.io.File;
 import java.util.ArrayList;
+<<<<<<< HEAD
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collector;
+=======
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+>>>>>>> sujin
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -222,14 +228,26 @@ public class CommentServiceImpl implements CommentService {
     return commentMapper.deleteAsk(askNo);
   }
   
+<<<<<<< HEAD
   @Override
   public Map<String, Object> addAns(HttpServletRequest request) {
 
     String askContent = request.getParameter("askContent");
+=======
+  
+  
+  // 댓글 삽입 + 답변 완료
+  @Transactional
+  @Override
+  public Map<String, Object> addtAnswer(HttpServletRequest request) {
+    
+    String ansContent = request.getParameter("ansContent");
+>>>>>>> sujin
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int askNo = Integer.parseInt(request.getParameter("askNo"));
     
     AnswerDto ans = AnswerDto.builder()
+<<<<<<< HEAD
                       .askContent(askContent)
                       .userDto(UserDto.builder()
                           .userNo(userNo)
@@ -302,6 +320,22 @@ public class CommentServiceImpl implements CommentService {
   
   
   
+=======
+                       .ansContent(ansContent)
+                       .userDto(UserDto.builder()
+                           .userNo(userNo)
+                           .build())
+                       .askNo(askNo)
+                       .build();
+                       
+    int addAnswerResult = commentMapper.insertAns(ans);
+    
+    commentMapper.updateAnswerStatus(ans);
+    
+    return Map.of("addAnswerResult", addAnswerResult);
+  }
+  
+>>>>>>> sujin
   
   
 }

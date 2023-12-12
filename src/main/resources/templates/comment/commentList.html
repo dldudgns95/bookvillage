@@ -28,7 +28,11 @@
               <td>조회수</td>
               <td>작성자</td>
               <td>작성일자</td>
+<<<<<<< HEAD
               <td></td>
+=======
+              <td>답변상태</td>
+>>>>>>> sujin
             </tr>
           </thead>
           <tbody>
@@ -52,12 +56,20 @@
                       <a th:href="@{/comment/increseHit.do(askNo =${b.askNo})}" th:text="${b.askTitle}"></a>
                   </th:block>
                 </td>
+<<<<<<< HEAD
 
                 <td th:text="${#numbers.formatInteger(b.hit, 1, 'COMMA')}"></td>
                 <td th:text="${b.userDto.email}"></td>
                 <td th:text="${#dates.format(b.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
 
                 <td></td>
+=======
+                <td th:text="${#numbers.formatInteger(b.hit, 1, 'COMMA')}"></td>
+                <td th:text="${b.userDto.email}"></td>
+                <td th:text="${#dates.format(b.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${b.status == 0 ? '답변 대기' : '답변 완료'}"></td>
+
+>>>>>>> sujin
               </tr>
             </th:block>
           </tbody>

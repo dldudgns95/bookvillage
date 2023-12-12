@@ -89,3 +89,7 @@
   padding: 5px;
   margin-right: 5px;
 }
+a:hover {
+  color: rgb(37, 94, 188);
+  font-weight: 600;
+}
