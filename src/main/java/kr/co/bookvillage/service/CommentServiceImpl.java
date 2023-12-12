@@ -2,17 +2,9 @@ package kr.co.bookvillage.service;
 
 import java.io.File;
 import java.util.ArrayList;
-<<<<<<< HEAD
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collector;
-=======
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
->>>>>>> sujin
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -228,12 +220,6 @@ public class CommentServiceImpl implements CommentService {
     return commentMapper.deleteAsk(askNo);
   }
   
-<<<<<<< HEAD
-  @Override
-  public Map<String, Object> addAns(HttpServletRequest request) {
-
-    String askContent = request.getParameter("askContent");
-=======
   
   
   // 댓글 삽입 + 답변 완료
@@ -242,85 +228,10 @@ public class CommentServiceImpl implements CommentService {
   public Map<String, Object> addtAnswer(HttpServletRequest request) {
     
     String ansContent = request.getParameter("ansContent");
->>>>>>> sujin
     int userNo = Integer.parseInt(request.getParameter("userNo"));
     int askNo = Integer.parseInt(request.getParameter("askNo"));
     
     AnswerDto ans = AnswerDto.builder()
-<<<<<<< HEAD
-                      .askContent(askContent)
-                      .userDto(UserDto.builder()
-                          .userNo(userNo)
-                          .build())
-                      .askNo(askNo)
-                      .build();
-    
-    int addAnsResult = commentMapper.insertAnswer(ans);
-    
-    return Map.of("addAnsResult", addAnsResult);
-    
-  }
-  
-  @Override
-  public Map<String, Object> loadListAns(HttpServletRequest request) {
-
-    int askNo = Integer.parseInt(request.getParameter("askNo"));
-    
-    int page = Integer.parseInt(request.getParameter("page"));
-    int total = commentMapper.getAnswerCount(askNo);
-    int display = 10;
-    
-    myPageUtils.setPaging(page, total, display);
-    
-    Map<String, Object> map = Map.of("askNo", askNo
-                                   , "begin", myPageUtils.getBegin()
-                                   , "end", myPageUtils.getEnd());
-    
-    List<AnswerDto> ansList = commentMapper.getAnsList(map);
-    String paging = myPageUtils.getAjaxPaging();
-    
-    Map<String, Object> result = new HashMap<>();
-    
-    result.put("ansList", ansList);
-    result.put("paging", paging);
-    return result;
-    
-  }
-  
-  @Override
-  public Map<String, Object> addAnsReply(HttpServletRequest request) {
-
-    String askContent = request.getParameter("askContent");
-    int userNo = Integer.parseInt(request.getParameter("userNo"));
-    int askNo = Integer.parseInt(request.getParameter("askNo"));
-    int groupNo = Integer.parseInt(request.getParameter("groupNo"));
-    
-    AnswerDto ans = AnswerDto.builder()
-                     .askContent(askContent)
-                     .userDto(UserDto.builder()
-                         .userNo(userNo)
-                         .build())
-                     .askNo(askNo)
-                     .groupNo(groupNo)
-                     .build();
-    
-    int addAnsResult = commentMapper.insertAnsReply(ans);
-    
-    return Map.of("addAnsResult", addAnsResult);
-  }
-  
-  
-  
-  @Override
-  public Map<String, Object> removeAns(int ansNo) {
-    int removeResult = commentMapper.deleteAns(ansNo);
-    return Map.of("removeResult", removeResult);
-  }
-  
-  
-  
-  
-=======
                        .ansContent(ansContent)
                        .userDto(UserDto.builder()
                            .userNo(userNo)
@@ -335,7 +246,6 @@ public class CommentServiceImpl implements CommentService {
     return Map.of("addAnswerResult", addAnswerResult);
   }
   
->>>>>>> sujin
   
   
 }

@@ -20,10 +20,7 @@ public class AskDto {
   private int hit;
   private Date createdDate;
   private Date modifiedDate;
-<<<<<<< HEAD
-=======
   private int status;   // 0 : 답변전, 1: 답변 완료
->>>>>>> sujin
   
  // private int userNo;
  // private String name;
