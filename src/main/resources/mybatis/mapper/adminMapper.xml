@@ -178,6 +178,7 @@
               FROM USER_T
              WHERE ${column} LIKE '%' || #{query} || '%')
      WHERE RN BETWEEN #{begin} AND #{end}
+     
   </select>
   
   <!-- 총 도서수 카운트-->
@@ -561,12 +562,6 @@
              WHERE FAC_STATUS = 0)
      WHERE  RN BETWEEN #{begin} AND #{end}
    </select>
-   
-  <select id="getFacApplyCountByUser" parameterMap="int" resultType="int">
-    SELECT COUNT(*)
-      FROM FAC_APPLY
-     WHERE USER_NO = #{userNo}
-  </select>
   
   <!-- 해당 유저의 시설이용신청 리스트 조회 -->
   <select id="getUserFacApplyList" parameterType="int" resultMap="FacApplyMap">

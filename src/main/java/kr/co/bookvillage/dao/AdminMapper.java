@@ -56,7 +56,6 @@ public interface AdminMapper {
   public int updateInactiveUser(int userNo);
   public int getFacApplyCount();
   public List<FacApplyDto> getFacApplyList(Map<String, Object> map);
-  public int getFacApplyCountByUser(int userNo);
   public List<FacApplyDto> getUserFacApplyList(int userNo);
   public boolean checkAddBook(String isbn);
   public int addUserBookCount(int userNo);
