@@ -107,8 +107,8 @@ public class AdminController {
   }
   
   @GetMapping("/facList.do")
-  public String facList(Model model) {
-    adminService.getFacList(model);
+  public String facList(HttpServletRequest request, Model model) {
+    adminService.getFacList(request, model);
     return "admin/facList";
   }
   

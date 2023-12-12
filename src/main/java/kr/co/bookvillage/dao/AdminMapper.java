@@ -28,7 +28,8 @@ public interface AdminMapper {
   public List<UserDto> getSearchBookList(Map<String, Object> map);
   public int addFacility(FacilityDto facilityDto);
   public int addFacImage(AttachFacDto attachFacDto);
-  public List<AttachFacDto> getFacList();
+  public int getFacCount();
+  public List<AttachFacDto> getFacList(Map<String, Object> map);
   public List<AttachFacDto> availableFacList(String facStart);
   public List<AttachFacDto> unavailableFacList(String facStart);
   public int addFacApply(Map<String, Object> map);
@@ -53,7 +54,8 @@ public interface AdminMapper {
   public int minusBookCount(int userNo);
   public int updateActiveUser(int userNo);
   public int updateInactiveUser(int userNo);
-  public List<FacApplyDto> getFacApplyList();
+  public int getFacApplyCount();
+  public List<FacApplyDto> getFacApplyList(Map<String, Object> map);
   public List<FacApplyDto> getUserFacApplyList(int userNo);
   public boolean checkAddBook(String isbn);
   public int addUserBookCount(int userNo);

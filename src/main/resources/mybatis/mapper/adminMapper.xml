@@ -250,11 +250,18 @@
     )
   </insert>
   
+  <select id="getFacCount" resultType="int">
+    SELECT COUNT(*)
+      FROM ATTACH_FAC
+  </select>
+  
   <!-- 전체 시설 조회 -->
-  <select id="getFacList" resultMap="AttachFacMap">
-    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
-      FROM ATTACH_FAC AF INNER JOIN FACILITY F
-        ON AF.FAC_NO = F.FAC_NO
+  <select id="getFacList" parameterType="Map" resultMap="AttachFacMap">
+    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, FAC_NO, FAC_NAME, FAC_CONTENT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_ATTACH_NO ASC) AS RN, FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
+              FROM ATTACH_FAC AF INNER JOIN FACILITY F
+                ON AF.FAC_NO = F.FAC_NO)
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 사용 가능한 시설 조회 -->
@@ -539,13 +546,21 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <!-- 시설이용신청 리스트 조회 -->
-  <select id="getFacApplyList" resultMap="FacApplyMap">
-    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
-      FROM FAC_APPLY FA INNER JOIN USER_T U
-        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
-        ON FA.FAC_NO = F.FAC_NO
+  <select id="getFacApplyCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FAC_APPLY
      WHERE FAC_STATUS = 0
+  </select>
+  
+  <!-- 시설이용신청 리스트 조회 -->
+  <select id="getFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, USER_NO, NAME, FAC_NO, FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_APPLY_NO ASC) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+             WHERE FAC_STATUS = 0)
+     WHERE  RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 해당 유저의 시설이용신청 리스트 조회 -->

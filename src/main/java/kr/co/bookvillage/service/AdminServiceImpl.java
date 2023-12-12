@@ -334,8 +334,16 @@ public class AdminServiceImpl implements AdminService {
   }
   
   @Override
-  public void getFacList(Model model) {
-    model.addAttribute("facList", adminMapper.getFacList());
+  public void getFacList(HttpServletRequest request, Model model) {
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.getFacCount();
+    int display = 5;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    model.addAttribute("facList", adminMapper.getFacList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/facList.do"));
   }
   
   @Override
@@ -504,7 +512,16 @@ public class AdminServiceImpl implements AdminService {
   
   @Override
   public void getFacApplyList(HttpServletRequest request, Model model) {
-    model.addAttribute("facApplyList", adminMapper.getFacApplyList());
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int total = adminMapper.getFacApplyCount();
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, total, display);
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("facApplyList", adminMapper.getFacApplyList(map));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "/admin/facApplyList.do"));
   }
   
   @Override
