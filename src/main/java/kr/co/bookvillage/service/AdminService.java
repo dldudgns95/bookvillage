@@ -55,5 +55,8 @@ public interface AdminService  {
   public int approveBookCheckoutByNumbers(List<String> list);
   public int approveBookCheckoutReturnByNumbers(List<String> list);
   public Map<String, Object> getAjaxBookCheckoutPaing(Map<String, Object> params);
+  public Map<String, Object> getAjaxFacApplyPaing(Map<String, Object> params);
+  public Map<String, Object> getAjaxBookApplyPaing(Map<String, Object> params);
+  public int deleteBookApply(HttpServletRequest request);
 
 }

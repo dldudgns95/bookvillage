@@ -331,13 +331,20 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <select id="getBookApplyCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>
+  
   <!-- 해당 유저의 희망도서 목록 조회 -->
-  <select id="getUserBookApplyList" parameterType="int" resultMap="BookApplyMap">
-    SELECT APPLY_NO, BA.USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
-      FROM BOOK_APPLY BA INNER JOIN USER_T U
-        ON BA.USER_NO = U.USER_NO
-     WHERE BA.USER_NO = #{userNo}
-     ORDER BY APPLY_NO DESC
+  <select id="getUserBookApplyList" parameterType="Map" resultMap="BookApplyMap">
+    SELECT APPLY_NO, USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY APPLY_NO DESC) AS RN, APPLY_NO, BA.USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
+              FROM BOOK_APPLY BA INNER JOIN USER_T U
+                ON BA.USER_NO = U.USER_NO
+             WHERE BA.USER_NO = #{userNo})
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 희망도서 상세 조회 -->
@@ -562,15 +569,22 @@
              WHERE FAC_STATUS = 0)
      WHERE  RN BETWEEN #{begin} AND #{end}
    </select>
+   
+   <select id="getFacApplyCountByUser" parameterType="int" resultType="int">
+     SELECT COUNT(*)
+       FROM FAC_APPLY
+      WHERE USER_NO = #{userNo}
+   </select>
   
   <!-- 해당 유저의 시설이용신청 리스트 조회 -->
-  <select id="getUserFacApplyList" parameterType="int" resultMap="FacApplyMap">
-    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
-      FROM FAC_APPLY FA INNER JOIN USER_T U
-        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
-        ON FA.FAC_NO = F.FAC_NO
-       AND FA.USER_NO = #{userNo}
-     ORDER BY FAC_START DESC
+  <select id="getUserFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, USER_NO, NAME, FAC_NO, FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_START DESC) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+               AND FA.USER_NO = #{userNo})
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 등록된 책인지 확인 -->
@@ -747,6 +761,12 @@
      WHERE USER_NO = #{userNo}
        AND STATUS = 0
   </select>
+  
+  <delete id="deleteBookApply" parameterType="int">
+    DELETE
+      FROM BOOK_APPLY
+     WHERE APPLY_NO = #{applyNo}
+  </delete>
   
   
 </mapper>
