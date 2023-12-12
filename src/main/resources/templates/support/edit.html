@@ -79,11 +79,12 @@
         <div id="attach_list"></div>
 
             <div>
+			  <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
+        	  <button type="submit" class="btn btn-success" id="btn_edit">작성완료</button>
               <a th:href="@{/support/detail.do(ntNo=${notice.ntNo})}">
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
-              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-        	  <button type="submit" class="btn btn-success" id="btn_edit">작성완료</button>
+
            </div>
 
       </form>

@@ -53,8 +53,9 @@
   /* 캘린더 크기 조절 */
   #calendar {
     width: 500px;
+    height: 500px;
   }
-  /* 모달 이미지 크기 조절 */  
+  /*  이미지 크기 조절 */  
   .facimg {
     width: 190px;
   }
@@ -120,8 +121,8 @@
       var todayFormat = year + '-' + month + '-' + day;
 
       if (info.date <= today) {
-        info.el.style.backgroundColor = '#D3D3D3';
-      }
+        info.el.style.backgroundColor = '#A9A9A9';
+      } 
     },
 
     dateClick: function(info) {
@@ -147,13 +148,13 @@
       var cellEl = info.dayEl;
 
       // 이미 회색으로 설정된 경우에만 파란색으로 변경
-      if (cellEl.style.backgroundColor !== 'rgb(211, 211, 211)') {
+      if (cellEl.style.backgroundColor !== 'rgb(169, 169, 169)') {
         // 모든 날짜의 셀 엘리먼트 가져오기
         var allCells = document.querySelectorAll('.fc-day');
 
         // 모든 셀의 배경색 초기화
         allCells.forEach(function(cell) {
-          if (cell.style.backgroundColor !== 'rgb(211, 211, 211)') {
+          if (cell.style.backgroundColor !== 'rgb(169, 169, 169)') {
             cell.style.backgroundColor = '';
           }
         });
@@ -176,7 +177,6 @@
             console.log(resData.checkResult);
             if (resData.checkResult === true) {
               alert(user.name + '님은 ' + info.dateStr + '일에 이용 신청하신 시설이 있습니다.\n같은 날에 2개의 시설은 이용이 불가합니다.');
-              document.querySelector('.child3').innerHTML = '';
               return;
             } else {
               fnfaclist(info, user);
