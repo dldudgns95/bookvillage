@@ -9,17 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 @Builder
-public class AnswerDto {
+public class AskImageDto {
   
-  private int ansNo;
-  private String ansContent;
-  private UserDto userDto; // int userNo
   private int askNo;
-  private String createdDate;
-  private int status;
-  private int depth;
-  private int groupNo;
-  
-  
+  private String imagePath;
+  private String filesystemName;
 
 }

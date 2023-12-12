@@ -223,7 +223,12 @@ public class UserController {
     userService.active(session, request, response);
   }
   
-  
+// 시설
+  @GetMapping("/facList.do")
+  public String facList(Model model) {
+    userService.getFacList(model);
+    return "admin/facList";
+  }
   
 
   
