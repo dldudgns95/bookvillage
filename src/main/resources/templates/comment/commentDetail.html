@@ -22,11 +22,7 @@
       <div>
         <div class="text-center">
           <th:block th:if="${session.user != null}">
-<<<<<<< HEAD
-            <!-- 블로그 편집 삭제 가능 -->
-=======
             <!-- 작성자는 블로그 편집 삭제 가능 -->
->>>>>>> sujin
             <th:block th:if="${session.user.userNo == ask.userDto.userNo}">
               <form id="frm_btn" method="post">
                 <input type="hidden" name="askNo" th:value="${ask.askNo}">
@@ -41,19 +37,12 @@
         <h1 class="title mt-4" th:text="${ask.askTitle}"></h1>
         <div th:text="|작성자 : ${ask.userDto.name}|"></div>
         <div th:text="|조회수 : ${#numbers.formatInteger(ask.hit, 1, 'COMMA')}|"></div>
-<<<<<<< HEAD
-        <div th:text="|작성일 : ${ask.createdDate}|"></div>
-        <div th:text="|수정일 : ${ask.modifiedDate}|"></div>
-=======
         <div th:text="|작성일 : ${#dates.format(ask.createdDate, 'yyyy-MM-dd HH:mm')}|"></div>
         <div th:text="|수정일 : ${#dates.format(ask.modifiedDate, 'yyyy-MM-dd HH:mm')}|"></div>
->>>>>>> sujin
         <div class="mt-3" th:utext="${ask.askContent}"></div>
         
       </div>
       
-<<<<<<< HEAD
-=======
      
     </div>
     
@@ -61,16 +50,10 @@
     
     
     
->>>>>>> sujin
     
     
 <script th:inline="javascript">
   
-<<<<<<< HEAD
-
-  
-=======
->>>>>>> sujin
   var frmBtn = $('#frm_btn');
   
   const fnEditAsk = () => {
@@ -88,16 +71,6 @@
       }
     })
   }
-<<<<<<< HEAD
-  
-  const fnModifyAsk = () =>{
-    let modifyResult = /*[[${modifyResult}]]*/ null;  // modifyResult가 전달되지 않으면 null을 사용한다.
-    if(modifyResult !== null){
-      if(modifyResult === 1){
-        alert('문의글이 수정되었습니다.');
-      } else{
-        alert('문의글이 수정되지 않았습니다.');
-=======
 
  const fnModifyResult = () => {
     let modifyResult =  null; 
@@ -106,180 +79,11 @@
         alert('게시글이 수정되었습니다.');
       } else {
         alert('게시글이 수정되지 않았습니다.');
->>>>>>> sujin
       }
     }
   }
 
 
-<<<<<<< HEAD
-
-  fnEditAsk();
-  fnRemoveAsk();
-  fnModifyAsk();
-
-</script>
-
-<hr>
-
-<!-- 댓글 작성 화면 -->
-
-<div>
-  <form id="frm_ans_add">
-    <div class="input-group mb-3">
-      <th:block th:if="${session.user == null}">
-        <input type="hidden" name="userNo" th:value="0">
-      </th:block>
-      <!-- 로그인 한 경우 -->
-      <th:block th:if="${session.user != null}"> 
-        <input type="hidden" name="userNo" th:value="${session.user.userNo}"
-      </th:block>
-      <input type="hidden" name="askNo" th:value="${ask.askNo}">
-      <textarea rows="5" name="askContent" class="form-control" id="askContent" ></textarea>
-      <button type="button"  class="btn btn-primary btn-sm" id="btn_ans_add">작성완료</button>
-    </div>
-  </form>
-</div>
-
-<hr class="my-3">
-
-<!-- 댓글 목록 -->
-<div id="ans_list"></div>
-<div id="paging"></div>
-
-<script th:inline="javascript">
-  
-  const fnAnsClick = () => {
-  $('#askContent').click(() => {
-    let user = /*[[${session.user}]]*/ null;
-    if(user === null){
-      if(confirm('로그인이 필요한 기능입니다. 로그인할까요?')){
-        location.href = '/user/login.form';
-      } else {
-        return;
-      }
-    }
-  })
-}
-
-// 댓글 삽입
- const fnAnsAdd = () => {
-    $('#btn_ans_add').click(() => {
-      let user = /*[[${session.user}]]*/ null;
-      if(user === null){
-        if(confirm('로그인이 필요한 기능입니다. 로그인할까요?')){
-          location.href = '/user/login.form';
-        } else {
-          return;
-        }
-      }
-      $.ajax({
-        // 요청
-        type: 'post',
-        url: '/comment/addAns.do',
-        data: $('#frm_ans_add').serialize(),
-        // 응답
-        dataType: 'json',
-        success: (resData) => {  // {"addCommentResult": 1}
-          if(resData.addAnsResult === 1){
-            alert('댓글이 등록되었습니다.');
-            $('#askContent').val('');
-            fnAnsList();
-          }
-        }
-      })
-    })
-  }
-  
-  
-var page = 1;
-
-// 목록.............
- const fnAnsList = () => {
-   $.ajax({
-     type:'get',
-     url: '/comment/ansList.do',
-     data: 'page=' + page + '&askNo=[[${ask.askNo}]]',
-     dataType:'json',
-     success: (resData) => {
-       $('#ans_list').empty();
-       $('#paging').empty();
-       
-       if(resData.ansList.length === 0){
-          $('#ans_list').html('<div class="text-center my-3">첫 번째 댓글의 주인공이 되어 보세요</div>');
-          $('#paging').text('');
-          return;
-       }
-
-       $.each(resData.ansList, (i, c) => {
-         let str = '';
-         if(c.depth === 0){
-           str += '<div>';
-         } else {
-           str += '<div style="padding-left: 32px;">';
-         }
-         if(c.status === 0){
-           str += '<div>삭제된 댓글입니다.</div>';
-         } else {
-            str += '  <div>' + c.userDto.name + '</div>';
-            str += '  <div>' + c.askContent + '</div>';
-            str += '  <div style="font-size: 12px;">' + c.createdDate + '</div>';
-            str += '  <div>';
-            if(c.depth === 0){
-              str += '  <button type="button" class="btn btn-outline-primary btn-sm btn_open_reply">답글달기</button>';
-            }
-            // 로그인 유저
-            let user = null;
-            if(user !== null && userNo === c.userDto.userNo){
-                str += '  <input type="hidden" value="' + c.userNo + '">';
-                str += '  <i class="fa-regular fa-circle-xmark ico_remove_ans"></i>';
-            }
-                str += '  </div>';
-                  /************************** 답글 입력 창 **************************/
-                str += '  <div class="blind frm_add_reply_wrap">';
-                str += '    <form class="frm_add_reply">';
-                // 로그인 여부 점검   
-                if(user == null){
-                    str += '      <input type="hidden" name="userNo" value="0">';
-                } else {
-                    str += '      <input type="hidden" name="userNo" value="' + user.userNo + '">';
-                }  
-                    str += '      <input type="hidden" name="askNo" value="[[${ask.askNo}]]">';
-                    str += '      <input type="hidden" name="groupNo" value="' + c.groupNo + '">';
-                    str += '      <div class="input-group mb-3">';
-                    str += '        <textarea rows="2" name="askContent" class="form-control" placeholder="답글을 입력하세요"></textarea>';
-                    str += '        <button type="button" class="btn btn-success btn-sm btn_add_reply">답글작성완료</button>';
-                    str += '      </div>';
-                    str += '    </form>';
-                    str += '  </div>';
-                    /******************************************************************/                
-                
-         }
-                    str += '</div>';
-                    str += '<hr class="my-3">';
-                    $('#ans_list').append(str);
-       })
-                  $('#paging').append(resData.paging);  // fnAjaxPaging() 함수가 호출되는 곳
-              
-     }
-   })
- }
-
-    const fnAjaxPaging = (p) => {
-          page = p;
-          fnAnsList();
-        }
-
-fnAnsClick();
-fnAnsAdd();
-fnAnsList();
-fnAjaxPaging();
-  
-</script>
-
-    </div>
-    
-=======
   fnEditAsk();
   fnRemoveAsk();
   fnModifyResult();
@@ -367,7 +171,6 @@ fnAjaxPaging();
 
 
 
->>>>>>> sujin
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>

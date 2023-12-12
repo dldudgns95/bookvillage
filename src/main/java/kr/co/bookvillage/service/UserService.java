@@ -50,13 +50,10 @@ public interface UserService {
   public void inactiveUserBatch(); 
   public void active(HttpSession session, HttpServletRequest request, HttpServletResponse response);
   
-<<<<<<< HEAD
-=======
   // 시설
   public void getFacList(Model model);
   
   
->>>>>>> sujin
 }
 
 
