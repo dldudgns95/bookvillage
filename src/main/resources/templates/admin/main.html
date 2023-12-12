@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+<head th:replace="~{/layout/header::head('관리자 페이지 메인')}"></head>
 
 <style>
   .flex_main {
@@ -21,7 +21,7 @@
     border-radius: 10px;
     margin: 0px 30px;
     text-align: center;
-    padding-top: 50px;
+    padding-top: 40px;
   }
   .flex_div:hover {
     background-color: lightgray;
@@ -45,17 +45,57 @@
   <div th:replace="~{/layout/header::header}"></div>
   
   <div class="flex_main">
-    <a th:href="@{/admin/userList.do}"><div class="flex_div"><h2><i class="fa-solid fa-user-large black"></i> 회원관리</h2></div></a>
-    <a th:href="@{/admin/bookApplyList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book-bookmark"></i> 희망도서</h2></div></a>
-    <a th:href="@{/admin/facList.do}"><div class="flex_div"><h2><i class="fa-solid fa-house"></i> 시설관리</h2></div></a>
-    <a th:href="@{/admin/facApplyList.do}"><div class="flex_div"><h2><i class="fa-solid fa-house"></i> 시설신청</h2></div></a>
+    <a th:href="@{/admin/userList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-user-large black"></i> 회원관리</h2>
+        <h6>(회원 검색,수정 ,삭제)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/bookApplyList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-book-bookmark"></i> 희망도서</h2>
+        <h6>(희망도서 확인 및 추가)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/facList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-house"></i> 시설관리</h2>
+        <h6>(시설 등록,수정,삭제)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/facApplyList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-house"></i> 시설신청</h2>
+        <h6>(시설이용 신청 승인 및 거절)</h6>
+      </div>
+    </a>
   </div>
   
   <div class="flex_main felx_main_bottom">
-    <a th:href="@{/admin/addBookList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서등록</h2></div></a>
-    <a th:href="@{/admin/bookList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서관리</h2></div></a>
-    <a th:href="@{/admin/bookCheckoutList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서대출</h2></div></a>
-    <a th:href="@{/admin/bookCheckoutReturnList.do}"><div class="flex_div"><h2><i class="fa-solid fa-book"></i> 도서반납</h2></div></a>
+    <a th:href="@{/admin/addBookList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-book"></i> 도서등록</h2>
+        <h6>(등록할 도서 검색 및 등록)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/bookList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-book"></i> 도서관리</h2>
+        <h6>(등록된 도서 검색,수정,삭제)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/bookCheckoutList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-book"></i> 도서대출</h2>
+        <h6>(대출신청 도서 승인)</h6>
+      </div>
+    </a>
+    <a th:href="@{/admin/bookCheckoutReturnList.do}">
+      <div class="flex_div">
+        <h2><i class="fa-solid fa-book"></i> 도서반납</h2>
+        <h6>(대출중인 도서 반납 확인)</h6>
+      </div>
+    </a>
   </div>
   
   <div th:replace="~{/layout/footer::footer}"></div>

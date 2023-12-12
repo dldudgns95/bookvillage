@@ -12,6 +12,7 @@
   }
   
   #side_list li {
+	  
   padding-top: 10px;
   padding-bottom: 10px;
   }
@@ -20,6 +21,7 @@
   transition: .3s;
 }
 	div.child2{
+		margin-top: 30px;
 		width: 800px;
 	    height: 500px;
 	    display: inline-block;
@@ -46,7 +48,7 @@
         </div>
       <div class="child2">
 	  <h5 style="text-align: center;">공지사항 수정하기</h5>	  
-      <form id="frm_notice_edit" method="post" th:action="@{/support/modify.do}">
+      <form class="frm_notice_edit" method="post" th:action="@{/support/modify.do}"  enctype="multipart/form-data">
         <div>
           <label for="ntTitle" class="form-label">제목</label>
           <input type="text" name="ntTitle" th:value="${notice.ntTitle}" id="ntTitle" class="form-control">
@@ -66,6 +68,7 @@
             <h5>신규 첨부</h5>
             <div class="input-group">
               <input type="file" name="files" id="files"  class="form-control" multiple>
+              <button class="btn btn-outline-secondary" type="button" id="btn_add_mac">(맥)첨부추가하기</button>
               <button class="btn btn-outline-secondary" type="button" id="btn_add_attach">첨부추가하기</button>
             </div>
             <div class="attached_list mt-3" id="attached_list"></div>        
@@ -80,9 +83,7 @@
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
               <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-        	  <input type="hidden" id="checkStatus" name="checkStatus" value="0">
-  			  <button type="submit" class="btn btn-success" id="btn_write_mac">(맥)작성완료</button>
-        	  <button type="submit" class="btn btn-success" id="btn_write">작성완료</button>
+        	  <button type="submit" class="btn btn-success" id="btn_edit">작성완료</button>
            </div>
 
       </form>
@@ -125,7 +126,12 @@
           })
           // 현재 게시글 번호(ntNo)를 FormData에 추가한다.
           formData.append('ntNo', '[[${notice.ntNo}]]');
-          // FormData 객체를 보내서 저장한다.
+	     // Thymeleaf 변수를 JavaScript 변수로 저장
+	      let checkStatusValue = 0;
+	
+	      // JavaScript 변수를 FormData에 추가
+	      formData.append('checkStatus', checkStatusValue);
+
           $.ajax({
             // 요청
             type: 'post',
@@ -148,7 +154,45 @@
           })
         })
       }
-    
+    const fnAddMacAttach = () => {
+        $('#btn_add_mac').click(() => {
+          // 폼을 FormData 객체로 생성한다.
+          let formData = new FormData();
+          // 첨부된 파일들을 FormData에 추가한다.
+          let files = $('#files').prop('files');
+          $.each(files, (i, file) => {
+            formData.append('files', file);  // 폼에 포함된 파라미터명은 files이다. files는 여러 개의 파일을 가지고 있다.
+          })
+          // 현재 게시글 번호(ntNo)를 FormData에 추가한다.
+          formData.append('ntNo', '[[${notice.ntNo}]]');
+	     // Thymeleaf 변수를 JavaScript 변수로 저장
+	      let checkStatusValue = 1;
+	
+	      // JavaScript 변수를 FormData에 추가
+	      formData.append('checkStatus', checkStatusValue);
+
+          $.ajax({
+            // 요청
+            type: 'post',
+            url: '/support/addAttach.do',
+            data: formData,
+            contentType: false,
+            processData: false,
+            // 응답
+            dataType: 'json',
+            success: (resData) => {  // resData = {"attachResult": true}
+              if(resData.attachResult){
+                alert('첨부 파일이 추가되었습니다.');
+                fnAttachList();
+                $('#attached_list').empty();
+              } else {
+                alert('첨부 파일이 추가되지 않았습니다.');
+              }
+              $('#files').val('');
+            }
+          })
+        })
+      }
       const fnAttachList = () => {
         $.ajax({
           // 요청
@@ -200,16 +244,13 @@
       }
       
       const fnModifyAttach = () => {
-		 $('#btn_write_mac').click((ev) => {
-          $(ev.target).prev().val(1);
-          })		  
     	  $('#frm_notice_edit').submit((ev) => {
           if($('#ntTitle').val() === ''){
             alert('제목은 반드시 입력해야 합니다.');
             $('#ntTitle').focus();
             ev.preventDefault();
             return;
-          } else if($('#files').val() !== ''){
+          } else if($('#files').val() !== ''){ㅎㅇ
         	  alert('새로운 첨부가 있는 경우 첨부추가하기 버튼을 먼저 클릭해 주세요.');
         	  $('#btn_add_attach').focus();
         	  ev.preventDefault();
@@ -217,7 +258,7 @@
           }
     	  })
       }
-    
+      fnAddMacAttach();
       fnFileCheck();
       fnAddAttach();
       fnAttachList();

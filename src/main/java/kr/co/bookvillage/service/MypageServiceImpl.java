@@ -178,6 +178,15 @@ public class MypageServiceImpl implements MypageService {
     
   }
   
+  @Override
+  public int removeReview(String isbn, int userNo) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("isbn", isbn);
+    map.put("userNo", userNo);
+    
+    return mypageMapper.deleteReview(map);
+  }
+  
   @Transactional(readOnly=true)
   @Override
   public void loadWishBookList(HttpServletRequest request, Model model) {

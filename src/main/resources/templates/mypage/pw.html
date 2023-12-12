@@ -6,15 +6,19 @@
 <style>
   .side_bar {
     width: 200px;
-    display: inline-block;
     text-align: center;
     margin-top: 30px;
-    position: fixed;
+    position: sticky;
+  }
+  
+    .side_bar li:hover {
+    background-color:  #f0f0f0;
+    transition: .3s;
   }
   
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   
 </style>
@@ -49,8 +53,8 @@
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
-    
+  <div class="main_wrap wrap_flex">
+    <div class="column-2">
     <div class="side_bar">
       <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
@@ -62,8 +66,9 @@
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
       </ul>     
     </div>
-    
-    <div class="wrap wrap_7" style="width: 70%; display: inline-block; margin-left: 320px;">
+    </div>
+    <div class="column-8">
+    <div class="wrap wrap_7" style="width: 800px;">
       
       <h1 class="title">비밀번호 변경하기</h1>
       
@@ -89,7 +94,7 @@
           <button type="button" class="btn btn-primary" id="btn_autoPw">90일 뒤 변경하기</button>
         </div> 
         </div>      
-        
+       </div> 
       </form>
       
     </div>

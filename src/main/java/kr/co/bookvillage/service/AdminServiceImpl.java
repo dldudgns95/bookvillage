@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dto.AttachFacDto;
+import kr.co.bookvillage.dto.BookCheckoutDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FacilityDto;
 import kr.co.bookvillage.util.AdminFileUtils;
@@ -153,16 +155,31 @@ public class AdminServiceImpl implements AdminService {
   public void getUserDetail(HttpServletRequest request, Model model) {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
+    int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("paging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
-    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(userNo));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(map));
     model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
     model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
+    model.addAttribute("checkResult", adminMapper.checkBookCheckout(userNo));
     
   }
   
   @Override
   public int deleteUser(HttpServletRequest request) {
     int userNo = Integer.parseInt(request.getParameter("userNo"));
+    int updateResult = 0;
+    List<String> isbn = adminMapper.checkBookCheckoutByUser(userNo);
+    if(!isbn.isEmpty()) {
+      updateResult = adminMapper.activeBooks(StringUtils.join(isbn, ","));
+    }
     return adminMapper.deleteUser(userNo);
   }
   
@@ -946,6 +963,73 @@ public class AdminServiceImpl implements AdminService {
   @Override
   public int activeBook(HttpServletRequest request) {
     return adminMapper.activeBook(request.getParameter("isbn"));
+  }
+  
+  @Override
+  public void cancleBookCheckoutBatch() {
+    adminMapper.activeBookByBookCheckout();
+    adminMapper.cancleBookCheckout();
+  }
+  
+  @Override
+  public void changeOverdueBatch() {
+    adminMapper.changeOverdue();
+    adminMapper.inactiveUserByBookCheckout();
+  }
+  
+  @Override
+  public void updateFacApply() {
+    adminMapper.updateFacApply();
+  }
+  
+  @Override
+  public int approveBookCheckoutByNumbers(List<String> list) {
+    List<Integer> numbers = new ArrayList<>();
+    List<Integer> usersNo = new ArrayList<>();
+    for(String str : list) {
+      String[] number = str.split(",");
+      numbers.add(Integer.parseInt(number[0]));
+      usersNo.add(Integer.parseInt(number[1]));
+    }
+    int updateResult = adminMapper.approveBookCheckoutByNumbers(StringUtils.join(numbers, ","));
+    for(int userNo : usersNo) {
+      updateResult = adminMapper.addUserBookCount(userNo);
+    }
+    return updateResult;
+  }
+  
+  @Override
+  public int approveBookCheckoutReturnByNumbers(List<String> list) {
+    List<Integer> numbers = new ArrayList<>();
+    List<Integer> usersNo = new ArrayList<>();
+    List<String> isbn = new ArrayList<>();
+    for(String str : list) {
+      String[] number = str.split(",");
+      numbers.add(Integer.parseInt(number[0]));
+      usersNo.add(Integer.parseInt(number[1]));
+      isbn.add(number[2]);
+    }
+    int updateResult = adminMapper.approveBookCheckoutReturnByNumbers(StringUtils.join(numbers, ","));
+    updateResult = adminMapper.activeBooks(StringUtils.join(isbn, ","));
+    for(int userNo : usersNo) {
+      updateResult = adminMapper.minusBookCount(userNo);
+    }
+    return updateResult;
+  }
+  
+  @Override
+  public Map<String, Object> getAjaxBookCheckoutPaing(Map<String, Object> params) {
+    int page = (int)params.get("page");
+    int userNo = (int)params.get("userNo");
+    int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    List<BookCheckoutDto> list;
+    return Map.of("bookCheckoutList", adminMapper.getUserBookCheckoutList(map)
+                , "bookCheckoutPaging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
   }
   
 

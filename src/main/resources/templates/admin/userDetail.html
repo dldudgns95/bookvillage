@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+<head th:replace="~{/layout/header::head('유저 상세 조회')}"></head>
 
 <style>
   .flex_admin {
@@ -151,7 +151,7 @@
                     <th scope="col"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="bookCheckout_body">
                   <th:block th:if="${#lists.isEmpty(bookCheckoutList)}">
                     <tr><td colspan="8">대출중인 도서가 없습니다.</td></tr>
                   </th:block>
@@ -201,6 +201,11 @@
                     </tr>
                   </th:block>
                 </tbody>
+                <tfoot>
+                  <td colspan="6">
+                    <div th:utext="${paging}" class="bookCheckout_foot"></div>
+                  </td>
+                </tfoot>
               </table>
             </div>
           </div>
@@ -320,7 +325,7 @@
                 </tbody>
                 <tfoot class="tfoot_center">
                   <td colspan="7">
-                    <div th:utext="${paging}"></div>
+                    <div></div>
                   </td>
                 </tfoot>
               </table>
@@ -334,7 +339,8 @@
   
   <script th:inline="javascript">
     const fnCheckBookCheckout = () => {
-      $('.frm_book_checkout').submit((ev) => {
+      //$('.frm_book_checkout').submit((ev) => {
+      $(document).on('submit','.frm_book_checkout',(ev) => {
         if(!confirm('해당 도서의 대출을 승인하시겠습니까?')){
           ev.preventDefault();
           return;
@@ -343,7 +349,9 @@
     }
     
     const fnCheckBookCheckoutReturn = () => {
-      $('.frm_book_checkout_return').submit((ev) => {
+      
+      //$('.frm_book_checkout_return').submit((ev) => {
+      $(document).on('submit','.frm_book_checkout_return',(ev) => {
         if(!confirm('해당 도서의 반납을 확인하셨습니까?')){
           ev.preventDefault();
           return;
@@ -395,6 +403,11 @@
     
     const fnUserDelete = () => {
       $('.btn_delete').click(() => {
+        let checkResult = /*[[${checkResult}]]*/ null;
+        if(checkResult == true) {
+          alert('대출중인 책이 존재하여 탈퇴가 불가능합니다.');
+          return;
+        }
         if(confirm('해당 유저를 탈퇴시키겠습니까?')){
           $('.frm_user').attr('action', '/admin/userDelete.do');
           $('.frm_user').attr('method', 'post');
@@ -402,6 +415,96 @@
         }
       })
     }
+    
+    const fnAjaxBookCheckoutPaging = (page) => {
+      var userNo = /*[[${user.userNo}]]*/ null;
+      var data = {
+        page: page,
+        userNo: userNo
+      };
+      $.ajax({
+        method: 'post',
+        url: '/admin/ajaxBookCheckoutPaing.do',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: (resData) => {
+          let body = '';
+          $.each(resData.bookCheckoutList, (i, book) => {
+            body += '<tr>';
+            body += ' <td scope="row">'+book.bookDto.isbn+'</td>';
+            body += ' <td scope="row" class="table_title">'+book.bookDto.title+'</td>';
+            body += ' <td scope="row">';
+            if(book.checkoutDate != null) {
+              body += yymmdd(book.checkoutDate);
+            }
+            body += ' </td>';
+            body += ' <td scope="row">';
+            if(book.startDate != null) {
+              body += yymmdd(book.startDate);
+            }
+            body += ' </td>';
+            body += ' <td scope="row">';
+            if(book.dueDate != null) {
+              body += yymmdd(book.dueDate);
+            }
+            body += ' </td>';
+            body += ' <td scope="row">';
+            if(book.endDate != null) {
+              body += yymmdd(book.endDate);
+            }
+            body += ' </td>';
+            body += ' <td scope="row">';
+            if(book.status == 0) {
+              body += '대출신청';
+            } else if(book.status == 1) {
+              body += '대출중';
+            } else if(book.status == 2) {
+              body += '반납완료';
+            } else if(book.status == 3) {
+              body += '연체중';
+            } else if(book.status == 4) {
+              body += '대출취소';
+            }
+            body += ' </td>';
+            body += ' <td scope="row">';
+            if(book.status == 0) {
+              body += ' <form class="frm_book_checkout" action="/admin/approvalUserBookCheckout.do" method="post">';
+              body += '   <input type="hidden" name="userNo" value="'+book.userDto.userNo+'">';
+              body += '   <input type="hidden" name="checkoutNo" value="'+book.checkoutNo+'">';
+              body += '   <button type="submit" class="btn btn-primary">대출승인</button>';
+              body += ' </form>';
+            } else if(book.status == 1) {
+              body += ' <form class="frm_book_checkout_return" action="/admin/approvalUserBookCheckoutReturn.do" method="post">';
+              body += '   <input type="hidden" name="userNo" value="'+book.userDto.userNo+'">';
+              body += '   <input type="hidden" name="checkoutNo" value="'+book.checkoutNo+'">';
+              body += '   <input type="hidden" name="status" value="'+book.status+'">';
+              body += '   <input type="hidden" name="isbn" value="'+book.bookDto.isbn+'">';
+              body += '   <button type="submit" class="btn btn-primary">반납확인</button>';
+              body += ' </form>';
+            }
+            body += ' </td>';
+            body += '</tr>';
+          })
+          $('.bookCheckout_body').html(body);
+          $('.bookCheckout_foot').html(resData.bookCheckoutPaging);
+        }
+      })
+    }
+    
+    function yymmdd(timestamp) {
+      var d = new Date(timestamp), // Convert the passed timestamp to milliseconds
+      yy = '' + d.getFullYear(),  
+      mm = ('0' + (d.getMonth() + 1)).slice(-2),  // Months are zero based. Add leading 0.
+      dd = ('0' + d.getDate()).slice(-2),         // Add leading 0.
+      
+      yy = yy.substring(2);
+      
+      // ie: 2013-02-18, 8:35 AM  
+      time = yy + '/' + mm + '/' + dd;
+          
+      return time;
+  }
     
     const fnUpdateApproveResult = () => {
       let updateApproveResult = /*[[${updateApproveResult}]]*/ null;
@@ -451,7 +554,7 @@
     fnCheckBookCheckoutReturn();
     fnUpdateCheckoutResult();
     fnUpdateReturnResult();
-    fnInactiveUser();
+    fnInactiveUser(); 
     fnactiveUser();
     fnUserDelete();
     fnUpdateApproveResult();
