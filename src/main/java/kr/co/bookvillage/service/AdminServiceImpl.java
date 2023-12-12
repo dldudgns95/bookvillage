@@ -155,19 +155,38 @@ public class AdminServiceImpl implements AdminService {
   public void getUserDetail(HttpServletRequest request, Model model) {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
+    model.addAttribute("user", adminMapper.getUserDetail(userNo));
+    
     Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
     int page = Integer.parseInt(opt.orElse("1"));
     int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
     int display = 10;
     
+    // 도서 대출정보 ajax 페이징 처리
     adminPageUtils.setPaging(page, bookCheckoutCount, display);
-    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    Map<String, Object> bookCheckoutMap = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
     
-    model.addAttribute("paging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
-    model.addAttribute("user", adminMapper.getUserDetail(userNo));
-    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(map));
-    model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
-    model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
+    model.addAttribute("bookCheckoutPaging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(bookCheckoutMap));
+    
+    // 시설이용 신청 정보 ajax 페이징 처리
+    int facApplyCount = adminMapper.getFacApplyCountByUser(userNo);
+    adminPageUtils.setPaging(page, facApplyCount, display);
+    
+    Map<String, Object> facApplyMap = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    
+    model.addAttribute("facApplyPaging", adminPageUtils.getAjaxPaging("fnAjaxFacApplyPaging"));
+    model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(facApplyMap));
+    
+    // 희망도서 신청정보 ajax 페이징 처리
+    int bookApplyCount = adminMapper.getBookApplyCount(userNo);
+    adminPageUtils.setPaging(page, bookApplyCount, display);
+    
+    Map<String, Object> bookApplyMap = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    model.addAttribute("bookApplyPaging", adminPageUtils.getAjaxPaging("fnAjaxBookApplyPaging"));
+    model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(bookApplyMap));
     model.addAttribute("checkResult", adminMapper.checkBookCheckout(userNo));
     
   }
@@ -1044,9 +1063,45 @@ public class AdminServiceImpl implements AdminService {
     adminPageUtils.setPaging(page, bookCheckoutCount, display);
     Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
     
-    List<BookCheckoutDto> list;
     return Map.of("bookCheckoutList", adminMapper.getUserBookCheckoutList(map)
                 , "bookCheckoutPaging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
+  }
+  
+  @Override
+  public Map<String, Object> getAjaxFacApplyPaing(Map<String, Object> params) {
+    
+    int page = (int)params.get("page");
+    int userNo = (int)params.get("userNo");
+    int bookCheckoutCount = adminMapper.getFacApplyCountByUser(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    return Map.of("facApplyPaging", adminPageUtils.getAjaxPaging("fnAjaxFacApplyPaging")
+                , "facApplyList", adminMapper.getUserFacApplyList(map));
+  }
+  
+  @Override
+  public Map<String, Object> getAjaxBookApplyPaing(Map<String, Object> params) {
+    
+    int page = (int)params.get("page");
+    int userNo = (int)params.get("userNo");
+    int bookCheckoutCount = adminMapper.getBookApplyCount(userNo);
+    int display = 10;
+    
+    adminPageUtils.setPaging(page, bookCheckoutCount, display);
+    Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
+    
+    return Map.of("bookApplyPaging", adminPageUtils.getAjaxPaging("fnAjaxBookApplyPaging")
+                , "bookApplyList", adminMapper.getUserBookApplyList(map));
+    
+  }
+  
+  @Override
+  public int deleteBookApply(HttpServletRequest request) {
+    int applyNo = Integer.parseInt(request.getParameter("applyNo"));
+    return adminMapper.deleteBookApply(applyNo);
   }
   
 
