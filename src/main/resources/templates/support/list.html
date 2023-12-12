@@ -12,12 +12,16 @@
     position: fixed;
   }
   
-    #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+  #side_list li {
+  padding-top: 10px;
+  padding-bottom: 10px;
   }
-  
+   #side_list li:hover {
+  background-color: #f0f0f0;
+  transition: .3s;
+}
   div.child2{
+	margin-top: 30px;	  
     width: 800px;
     display: inline-block;
     text-align: center; 
@@ -39,10 +43,10 @@
 <body>
   <div class="side_bar">
 	      <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">공지사항</h3>
-	        <ul id="side_list">
-	          <li style="margin:20px"><a th:href="@{/support/list.do}">공지사항</a></li>
-	      	  <li style="margin:20px"><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-	          <li style="margin:20px"><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	   		<ul id="side_list">
+	          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
+			  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
+		      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
 	        </ul>
   </div>
   <div class="child2">
@@ -148,7 +152,7 @@
       const fnAddResult = () => {
         let addResult = /*[[${addResult}]]*/ null;
         if(addResult !== null){
-          if(addResult === true){
+          if(addResult === 1){
             alert('공지사항이 업로드 되었습니다.');
             $('#notice_list').empty();
           } else {
@@ -199,5 +203,7 @@
       fnAddResult();
       fnRemoveResult();
    </script>
+  <div th:replace="~{/layout/footer::footer}"></div>
 
+</body>
 </html>

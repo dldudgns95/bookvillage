@@ -13,7 +13,10 @@
     <result column="HIT"           property="hit"/>
     <result column="CREATED_DATE"  property="createdDate"/>
     <result column="MODIFIED_DATE" property="modifiedDate"/>
+<<<<<<< HEAD
+=======
     <result column="STATUS"        property="status"/>
+>>>>>>> sujin
       <association javaType="UserDto"  property="userDto" >
         <id   column="UserDto"         property="userDto"/>
         <result column="USER_NO"       property="userNo" />
@@ -33,6 +36,24 @@
       </association>
   </resultMap>
   
+<<<<<<< HEAD
+  
+  <resultMap id="AnsMap" type="AnswerDto">
+    <id column="ANS_NO" property="askNo" />
+    <result column="ASK_CONTENT"    property="askContent" />
+    <result column="ASK_NO"         property="askNo" />
+    <result column="CREATED_DATE"   property="createdDate" />
+    <result column="STATUS"         property="status" />
+    <result column="DEPTH"          property="depth" />
+    <result column="GROUP_NO"       property="groupNo" />
+      <association javaType="UserDto" property="userDto">
+        <id column="USER_NO"          property="userNo"/>
+        <result column="NAME"         property="name" />
+      </association>
+  </resultMap>
+  
+=======
+>>>>>>> sujin
     
   <insert id="insertAsk" parameterType="AskDto">
     <selectKey order="BEFORE" keyProperty="askNo" resultType="int">
@@ -46,7 +67,10 @@
          , USER_NO
          , CREATED_DATE
          , MODIFIED_DATE
+<<<<<<< HEAD
+=======
          , STATUS
+>>>>>>> sujin
         ) VALUES(
              #{askNo}
            , #{askTitle}
@@ -54,7 +78,10 @@
            , #{userDto.userNo}
            , SYSDATE
            , SYSDATE
+<<<<<<< HEAD
+=======
            , 0
+>>>>>>> sujin
           )
   </insert>
   
@@ -77,9 +104,15 @@
   </select>
   
   <select id="getAskList" parameterType="Map" resultMap="AskMap">
+<<<<<<< HEAD
+      SELECT C.ASK_NO, C.ASK_TITLE, C.ASK_CONTENT, C.USER_NO, C.HIT, C.CREATED_DATE, C.MODIFIED_DATE, C.EMAIL
+      FROM (
+          SELECT ROW_NUMBER() OVER(ORDER BY A.ASK_NO DESC) AS RN, A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.USER_NO, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, U.EMAIL
+=======
       SELECT C.ASK_NO, C.ASK_TITLE, C.ASK_CONTENT, C.USER_NO, C.HIT, C.CREATED_DATE, C.MODIFIED_DATE, C.EMAIL, C.STATUS
       FROM (
           SELECT ROW_NUMBER() OVER(ORDER BY A.ASK_NO DESC) AS RN, A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.USER_NO, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, A.STATUS, U.EMAIL
+>>>>>>> sujin
           FROM USER_T U INNER JOIN ASK A 
               ON A.USER_NO = U.USER_NO
       ) C
@@ -94,7 +127,11 @@
   </update>
   
   <select id="getAsk" parameterType="int" resultMap="AskMap" >
+<<<<<<< HEAD
+    SELECT A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, U.USER_NO, U.EMAIL, U.NAME 
+=======
     SELECT A.ASK_NO, A.ASK_TITLE, A.ASK_CONTENT, A.HIT, A.CREATED_DATE, A.MODIFIED_DATE, A.STATUS, U.USER_NO, U.EMAIL, U.NAME 
+>>>>>>> sujin
       FROM USER_T U, ASK A
      WHERE U.USER_NO = A.USER_NO
        AND A.ASK_NO = #{askNo}
@@ -132,6 +169,75 @@
      WHERE ASK_NO = #{askNo}
   </delete>
   
+<<<<<<< HEAD
+  
+  <insert id="insertAnswer" parameterType="AnswerDto">
+    INSERT INTO ANSWER(
+        ANS_NO
+      , ASK_CONTENT
+      , USER_NO
+      , ASK_NO
+      , CREATED_DATE
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+      ) VALUES(
+          ANSWER_SEQ.NEXTVAL
+        , #{askContent}
+        , #{userDto.userNo}
+        , #{askNo}
+        , SYSDATE
+        , 1
+        , 0
+        , ANSWER_SEQ.CURRVAL
+          )
+  </insert>
+  
+  <select id="getAnswerCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM ANSWER
+     WHERE ASK_NO = #{askNo}
+  </select>
+  
+  <select id="getAnsList" parameterType="Map" resultMap="AnsMap">
+       SELECT A.ANS_NO, A.ASK_CONTENT, A.ASK_NO, A.CREATED_DATE, A.STATUS, A.DEPTH, A.GROUP_NO, A.USER_NO, A.NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY GROUP_NO DESC, DEPTH ASC, ANS_NO DESC) AS RN, C.ANS_NO, C.ASK_CONTENT, C.ASK_NO, C.CREATED_DATE, C.STATUS, C.DEPTH, C.GROUP_NO, U.USER_NO, U.NAME
+              FROM USER_T U INNER JOIN ANSWER C
+                ON U.USER_NO = C.USER_NO
+             WHERE C.ASK_NO = #{askNo}) A
+     WHERE A.RN BETWEEN #{begin} AND #{end}
+  </select>
+  
+  
+  <insert id="insertAnsReply" parameterType="AnswerDto">
+      INSERT INTO ANSWER (
+        ANS_NO
+      , ASK_CONTENT
+      , USER_NO
+      , ASK_NO
+      , CREATED_DATE
+      , STATUS
+      , DEPTH
+      , GROUP_NO
+    ) VALUES (
+        ANSWER_SEQ.NEXTVAL
+      , #{askContent}
+      , #{userDto.userNo}
+      , #{askNo}
+      , SYSDATE
+      , 1
+      , 1
+      , #{groupNo}
+    )
+  </insert>
+  
+  <update id="deleteAns" parameterType="int" >
+    UPDATE ANSWER
+      SET STATUS = 0
+    WHERE ANS_NO = #{asnNo}
+  </update>
+  
+=======
   <insert id="insertAns" parameterType="AnswerDto">
     INSERT INTO ANSWER (
       ANS_NO,
@@ -158,6 +264,7 @@
   
   
   
+>>>>>>> sujin
  
   
 </mapper>

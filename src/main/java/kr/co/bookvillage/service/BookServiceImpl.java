@@ -155,11 +155,15 @@ public class BookServiceImpl implements BookService {
   @Override
   public void insertWish(WishDto wishDto) {
     wishMapper.insertWish(wishDto);
+    wishDto.setStatus(1);
+    log.info("등록"+wishDto.getStatus());
   }
   // 관심도서 삭제
   @Override
   public void deleteWish(WishDto wishDto) {
     wishMapper.deleteWish(wishDto);
+    wishDto.setStatus(0);
+    log.info("삭제"+wishDto.getStatus());
   }
   
   // 대출 처리

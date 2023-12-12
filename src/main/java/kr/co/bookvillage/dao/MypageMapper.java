@@ -24,6 +24,7 @@ public interface MypageMapper {
   public int updateDueDate(int checkoutNo);                                      // 대출연기신청(반납예정일 + 7)
   public int getReviewCount(int userNo);                                         // 한줄평갯수
   public List<ScoreDto> getReviewList(Map<String, Object> map);                  // 한줄평리스트
+  public int deleteReview(Map<String, Object> map);                              // 한줄평 삭제
   public int getWishCount(int userNo);                                           // 관심도서갯수
   public List<WishDto> getWishBookList(Map<String, Object> map);                 // 관심도서리스트
   public int cancleCheckout(int checkoutNo);                                     // 도서대출신청 취소(대출상태를 대출취소로변경)

@@ -2,8 +2,8 @@
 
 //검색어(st) 없으면 검색 막기
 $(document).ready(function() {
-            $('#search').submit(function(event) {
-                var searchInputValue = $('#st').val().trim();
+            $('#search_main').submit(function(event) {
+                var searchInputValue = $('#st_main').val().trim();
                 if (!searchInputValue) {
                     event.preventDefault();
                     alert('검색어를 입력하세요.');
@@ -68,8 +68,6 @@ function saveReview() {
 }
 
 //관심도서
-
-
 // result에서 관심도서 추가
 $(document).ready(function() {
     function refresh(){
@@ -197,10 +195,7 @@ $(document).ready(function() {
       contentType: "application/json",
       data: JSON.stringify(formData),
       success: function(response) {
-        var confirmLogin = confirm('대출 신청되었습니다. 신청 내역 조회로 이동하시겠습니까?');
-        if (confirmLogin) {
-          window.location.href = '/mypage/booklist.do';
-        }
+
         console.log('Book Status update successfully.');
       },
       error: function(error) {
@@ -215,7 +210,11 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       success: function(response) {
         console.log('Checkout Status insert successfully.');
+        var confirmMyPage = confirm('대출 신청되었습니다. 신청 내역 조회로 이동하시겠습니까?');
         refresh();
+        if (confirmMyPage) {
+          window.location.href = '/mypage/booklist.do';
+        }
       },
       error: function(error) {
         console.log("Error:", error);

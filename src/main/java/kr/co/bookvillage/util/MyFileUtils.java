@@ -9,33 +9,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyFileUtils {
 
-  // 블로그 작성시 사용된 이미지가 저장될 경로 반환하기
-  public String getBlogImagePath() {
-    LocalDate today = LocalDate.now();
-    return "/Users/seoga-eul/blog/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
-  }
-  
-  // 블로그 이미지가 저장된 어제 경로를 반환
-  public String getBlogImagePathInYesterday() {
-    LocalDate date = LocalDate.now();
-    date = date.minusDays(1);  // 1일 전
-    return "/Users/seoga-eul/blog/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(date);
-  }
-  
   // 공지사항 작성시 첨부한 파일이 저장될 경로 반환하기
   public String getNoticePath() {
     LocalDate today = LocalDate.now();
-    return "/Users/seoga-eul/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    return "/Users/seoga-eul/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
-  public String getAskPath() {
+  public String getNoticeWindowPath() {
 	    LocalDate today = LocalDate.now();
-	    return "/Users/seoga-eul/upload/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
-	  }
+    return "/support/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+  }
   // 임시 파일이 저장될 경로 반환하기 (zip 파일)
   public String getTempPath() {
     return "/Users/seoga-eul/temp";
   }
-  
+  public String getNoticeImagePathInYesterday() {
+	  LocalDate date = LocalDate.now();
+	  date = date.minusDays(1);  // 1일 전
+	  return "/Users/seoga-eul/notice/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(date);
+	}  
   // 파일이 저장될 이름 반환하기
   public String getFilesystemName(String originalFilename) {
     
@@ -57,5 +48,6 @@ public class MyFileUtils {
   public String getTempFilename() {
     return System.currentTimeMillis() + "";
   }
+
   
 }

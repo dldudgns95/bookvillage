@@ -12,9 +12,9 @@
     <div class="wrap wrap_9" th:object="${ask}">
       
       
-      <div class="title">문의글을 작성하세요.</div>
+      <div class="title">답글을 작성하세요.</div>
       
-      <form id="frm_ask_add" method="post" th:action="@{/comment/addAsk.do}">
+      <form id="frm_dmd_add" method="post" th:action="@{/comment/addDmdWrite.do}">
         
         <div>
           <label for="askTitle">제목</label>
@@ -34,10 +34,6 @@
             <button type="button" class="btn btn-secondary">작성취소</button>
           </a>
           <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-<<<<<<< HEAD
-=======
-
->>>>>>> sujin
         </div>
         
       </form>

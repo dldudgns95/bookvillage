@@ -56,10 +56,7 @@
    	  , TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI')
     )
   </insert>
-<insert id="insertAttach" parameterType="AttachNtDto">
-<selectKey keyProperty="ntNo" resultType="int" order="BEFORE">
-    SELECT NOTICE_SEQ.CURRVAL FROM DUAL
-</selectKey>	
+<insert id="insertAttach" parameterType="AttachNtDto">	
     INSERT INTO ATTACH_NT (
         ATTACH_NT_NO
       , NT_PATH
@@ -75,7 +72,26 @@
       , #{ntFilesystemName}
       , 0
       , #{ntHasThumbnail}
-      , #{ntNo} <!-- 이 부분에서 #{ntNo}를 사용하면 됩니다. -->
+      , NOTICE_SEQ.CURRVAL
+    )
+</insert>
+<insert id="modifyAttach" parameterType="AttachNtDto">	
+    INSERT INTO ATTACH_NT (
+        ATTACH_NT_NO
+      , NT_PATH
+      , NT_ORIGINAL_FILENAME
+      , NT_FILESYSTEM_NAME
+      , NT_DOWNLOAD_COUNT
+      , NT_HAS_THUMBNAIL
+      , NT_NO
+    ) VALUES (
+        ATTACH_NT_SEQ.NEXTVAL
+      , #{ntPath}
+      , #{ntOriginalFilename}
+      , #{ntFilesystemName}
+      , 0
+      , #{ntHasThumbnail}
+      , #{ntNo}
     )
 </insert>
 <!-- 공지사항 리스트 가져오기 -->
@@ -139,6 +155,13 @@
       FROM NOTICE
      WHERE NT_NO = #{ntNo}
   </delete>
+  
+  <select id="getNoticeImageInYesterday" resultType="AttachNtDto">
+  SELECT NT_NO, NT_PATH, NT_FILESYSTEM_NAME
+    FROM ATTACH_NT
+   WHERE NT_PATH = '/notice/' || TO_CHAR(SYSDATE - 1, 'YYYY/MM/DD')
+  </select>
+  
   <select id="noticeSearchCount" parameterType="Map" resultType="int">
     SELECT COUNT(*)
       FROM NOTICE

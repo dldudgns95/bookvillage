@@ -6,10 +6,11 @@
 <style>
   .side_bar {
     width: 200px;
-    display: inline-block;
+    height: 600px;    
     text-align: center;
-    margin-top: 30px;
-    position: fixed;
+    margin-top: 30px;    
+    min-height: calc(100vh - 200px);
+    overflow-y: auto;
   }
   
   .side_bar li:hover {
@@ -18,16 +19,15 @@
   }
   
   #side_list li {
-    margin-top: 10px;
-    margin-bottom: 20px;
+    padding-top: 10px;
+    padding-bottom: 10px;
   }
   
   .mypage {
     width: 800px;
     height: 500px;
     display: inline-block;
-    text-align: center;
-    margin-left: 320px;
+    text-align: center;   
     padding-top: 30px;
   }
   
@@ -43,14 +43,16 @@
     table-layout: fixed;
     width: 800px;
   }
+
 </style>
 
 <body>
   
   <div th:replace="~{/layout/header::header}"></div>
   
-  <div class="main_wrap">
-    
+  <div class="main_wrap wrap_flex">
+    <th:block th:if="${session.user != null}">
+    <div class="column-2">
     <div class="side_bar">
       <h3 style="border-bottom: 1px solid gray; padding-bottom: 30px;">마이페이지</h3>
       <ul id="side_list">
@@ -62,7 +64,8 @@
         <li><a th:href="@{/mypage/applyBook.do}">희망도서신청내역</a></li>
       </ul>       
     </div>
-    <th:block th:if="${session.user != null}">
+    </div>
+    <div class="column-8">
     <div class="mypage" style="text-align: center;">
       <h3>대출조회및연기</h3>
       <div>
@@ -144,6 +147,7 @@
       </table>
     </div>   
   </div>
+  </div>
   </th:block>
   <th:block th:if="${session.user == null}">
     <div class="mypage"></div>
@@ -168,14 +172,15 @@
     
     const fnCancleCheckcout = () => {
       let deleteResult = /*[[${deleteResult}]]*/ null;
-      if(deleteResult !== null) {
-        if(deleteResult === 1) {
-          alert('대출취소신청이 완료되었습니다.');
-        } else {
-          alert('대출취소신청이 완료되지않았습니다.');
-          return;
-        }
-      }
+        if(deleteResult !== null) {       
+            if(deleteResult === 1) {
+                alert('대출취소신청이 완료되었습니다.');                
+            } else {
+              alert('대출취소신청이 완료되지않았습니다.');
+              return;
+            }          
+        }       
+
     }
     
     fnDelayCheckout();

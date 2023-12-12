@@ -55,21 +55,29 @@ public class ApplyController {
     return "apply/faclist";
   }
   
+  @GetMapping("/faclisttest.do")
+  public String faclisttest() {
+    return "apply/faclisttest";
+  }
+  
   @GetMapping("/fac.do")
   public String facList(Model model) {
     facService.getFacList(model);
     return "apply/fac";
   } 
     
+  @GetMapping("/wishbook.do")
+  public String wishbook() {
+    return "apply/wishbook";
+  }
   @GetMapping("/bookapply.do")
   public String bookapply() {
     return "apply/bookapply";
   }
-  
   @PostMapping("/bookapplyadd.do")
   public String addBlog(HttpServletRequest request, RedirectAttributes redirectAttributes) {
 	    int addResult = facService.addbook(request);
 	    redirectAttributes.addFlashAttribute("addResult", addResult);
-	    return "redirect:/apply/bookapply.do";
+	    return "redirect:/apply/wishbook.do";
 	}
 }
