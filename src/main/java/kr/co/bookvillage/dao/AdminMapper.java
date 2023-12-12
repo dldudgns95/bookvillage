@@ -54,10 +54,14 @@ public interface AdminMapper {
   public int minusBookCount(int userNo);
   public int updateActiveUser(int userNo);
   public int updateInactiveUser(int userNo);
+<<<<<<< HEAD
   public int getFacApplyCount();
   public List<FacApplyDto> getFacApplyList(Map<String, Object> map);
   //public List<FacApplyDto> getFacApplyList();
   public int getFacApplyCountByUser(int userNo);
+=======
+  public List<FacApplyDto> getFacApplyList();
+>>>>>>> parent of ad1215b (231212_lyh)
   public List<FacApplyDto> getUserFacApplyList(int userNo);
   public boolean checkAddBook(String isbn);
   public int addUserBookCount(int userNo);

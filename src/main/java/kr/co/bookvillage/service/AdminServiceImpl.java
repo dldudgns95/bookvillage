@@ -155,17 +155,17 @@ public class AdminServiceImpl implements AdminService {
   public void getUserDetail(HttpServletRequest request, Model model) {
     
     int userNo = Integer.parseInt(request.getParameter("userNo"));
-    int page = 1;
+    Optional<String> opt = Optional.ofNullable(request.getParameter("page"));
+    int page = Integer.parseInt(opt.orElse("1"));
     int bookCheckoutCount = adminMapper.getUserBookCheckoutCount(userNo);
     int display = 10;
     
     adminPageUtils.setPaging(page, bookCheckoutCount, display);
     Map<String, Object> map = Map.of("userNo", userNo, "begin", adminPageUtils.getBegin(), "end", adminPageUtils.getEnd());
     
-    model.addAttribute("bookCheckoutPaging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
-    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(map));
-    
+    model.addAttribute("paging", adminPageUtils.getAjaxPaging("fnAjaxBookCheckoutPaging"));
     model.addAttribute("user", adminMapper.getUserDetail(userNo));
+    model.addAttribute("bookCheckoutList", adminMapper.getUserBookCheckoutList(map));
     model.addAttribute("facApplyList", adminMapper.getUserFacApplyList(userNo));
     model.addAttribute("bookApplyList", adminMapper.getUserBookApplyList(userNo));
     model.addAttribute("checkResult", adminMapper.checkBookCheckout(userNo));

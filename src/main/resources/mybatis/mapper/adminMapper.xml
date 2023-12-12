@@ -552,6 +552,7 @@
      WHERE FAC_STATUS = 0
   </select>
   
+<<<<<<< HEAD
   <!-- 시설이용신청 리스트 조회 -->
   <select id="getFacApplyList" parameterType="Map" resultMap="FacApplyMap">
     SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, USER_NO, NAME, FAC_NO, FAC_NAME
@@ -569,6 +570,8 @@
      WHERE USER_NO = #{userNo}
   </select>
   
+=======
+>>>>>>> parent of ad1215b (231212_lyh)
   <!-- 해당 유저의 시설이용신청 리스트 조회 -->
   <select id="getUserFacApplyList" parameterType="int" resultMap="FacApplyMap">
     SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
