@@ -85,11 +85,12 @@
           <textarea rows="3" name="wish" id="wish" class="form-control"></textarea>
         </div>                    
         <div class="mt-3">
+		 <button type="submit" class="btn btn-success">작성완료</button>
+
 		  <a th:href="@{/main.do}">
 			<input type="hidden" name="userNo" th:value="${session.user.userNo}">  
             <button class="btn btn-secondary" type="button">작성취소</button>
           </a> 
-          <button type="submit" class="btn btn-success">작성완료</button>
           </div>
       </form>		
 	  </div>

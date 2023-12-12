@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.bookvillage.dto.AttachFacDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FaqDto;
 import kr.co.bookvillage.dto.InactiveUserDto;
@@ -52,6 +53,9 @@ public interface UserMapper {
   public int insertActiveUser(String email);
   public int deleteInactiveUser(String email);
   
+  //시설
+  public List<AttachFacDto> getFacList();
+
   
   
 }

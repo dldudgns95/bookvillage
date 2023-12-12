@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import kr.co.bookvillage.dao.AdminMapper;
 import kr.co.bookvillage.dao.MainMapper;
+import kr.co.bookvillage.dao.UserMapper;
 import kr.co.bookvillage.dto.AttachFacDto;
 import kr.co.bookvillage.dto.BookDto;
 import kr.co.bookvillage.dto.FacilityDto;
@@ -24,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class MainServiceImpl implements MainService {
   
   private final MainMapper mainMapper;
-  private final AdminMapper adminMapper;
+  private final UserMapper userMapper;
 
   @Override
     public List<BookDto> getReviewTop3() {
@@ -34,8 +36,16 @@ public class MainServiceImpl implements MainService {
   @Transactional(readOnly = true)
   @Override
   public List<AttachFacDto> getFacList() {
-    return adminMapper.getFacList();
+    return userMapper.getFacList();
   }
+  
+  
+//  //시설
+//   @GetMapping("/facList.do")
+//   public String facList(Model model) {
+//     userService.getFacList(model);
+//     return "admin/facList";
+//   }
   
   @Transactional(readOnly = true)
   @Override

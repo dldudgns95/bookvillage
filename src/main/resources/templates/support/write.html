@@ -62,12 +62,13 @@
         </div>
         <div class="attached_list mt-2" id="attached_list"></div>       
         <div class=" mt-3">
-      	  <a th:href="@{/support/list.do}">
-            <button class="btn btn-secondary" type="button">작성취소</button>
-          </a> 
+
           <input type="hidden" id="checkStatus" name="checkStatus" value="0">
   		  <button type="submit" class="btn btn-success" id="btn_write_mac">(맥)작성완료</button>
           <button type="submit" class="btn btn-success" id="btn_write">작성완료</button>
+          <a th:href="@{/support/list.do}">
+            <button class="btn btn-secondary" type="button">작성취소</button>
+          </a> 
         </div>          
       </form> 
       </div> 

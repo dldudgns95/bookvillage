@@ -645,6 +645,12 @@ public class UserServiceImpl implements UserService {
   }
 
   
+  // 시설
+  @Override
+  public void getFacList(Model model) {
+    model.addAttribute("facList", userMapper.getFacList());
+  }
+  
   
   
 }
