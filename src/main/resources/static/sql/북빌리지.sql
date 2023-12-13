@@ -159,34 +159,14 @@ CREATE TABLE ATTACH_FAC (
 
 -- 1:1 문의
 CREATE TABLE ASK (
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> main
 	ASK_NO	        NUMBER	            NOT NULL,
 	ASK_TITLE       VARCHAR2(100 BYTE)	NOT NULL,
 	ASK_CONTENT     CLOB	            NULL,
 	USER_NO         NUMBER              NOT NULL,
-<<<<<<< HEAD
     HIT             NUMBER             DEFAULT 0,
 	CREATED_DATE        DATE	            NULL,
 	MODIFIED_DATE       DATE	            NULL,
     STATUS          NUMBER              NOT NULL, -- 0 : 답변대기, 1: 답변완료
-=======
-   ASK_NO           NUMBER               NOT NULL,
-   ASK_TITLE       VARCHAR2(100 BYTE)   NOT NULL,
-   ASK_CONTENT     CLOB               NULL,
-   USER_NO         NUMBER              NOT NULL,
-    HIT             NUMBER             DEFAULT 0,
-   CREATED_DATE        DATE               NULL,
-   MODIFIED_DATE       DATE               NULL,
->>>>>>> main
-=======
-    HIT             NUMBER             DEFAULT 0,
-	CREATED_DATE        DATE	            NULL,
-	MODIFIED_DATE       DATE	            NULL,
-    STATUS          NUMBER              NOT NULL, -- 0 : 답변대기, 1: 답변완료
->>>>>>> main
     CONSTRAINT ASK_PK PRIMARY KEY (ASK_NO),
     CONSTRAINT ASK_FK FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL
 );
@@ -202,19 +182,11 @@ CREATE TABLE ASK_IMAGE_T (
 -- 1:1 문의 답변
 CREATE TABLE ANSWER (
     ANS_NO      NUMBER               NOT NULL,   --답변 번호
-<<<<<<< HEAD
-    ANS_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
-=======
     ASK_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
->>>>>>> main
     USER_NO     NUMBER               NOT NULL,   --회원 번호
     ASK_NO      NUMBER               NOT NULL,   --문의 번호
     CREATED_DATE DATE   NULL,
     STATUS     NUMBER              NOT NULL,  -- 1:정상, 0:삭제 (실제로 삭제되지 않는 게시판)
-<<<<<<< HEAD
-    DEPTH       NUMBER              NOT NULL,  -- 0:원글, 1:댓글, 2:대댓글, ...
-=======
->>>>>>> main
     CONSTRAINT PK_ANSWER PRIMARY KEY (ANS_NO),
     CONSTRAINT FK_USER_ANSWER FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL,
     CONSTRAINT FK_ASK_ANSWER FOREIGN KEY(ASK_NO) REFERENCES ASK(ASK_NO) ON DELETE CASCADE
@@ -479,11 +451,4 @@ SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_
             ON B.USER_NO = U.USER_NO
          WHERE B.USER_NO = 1) A
  WHERE A.RN BETWEEN 1 AND 10;
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> main
-=======
-
->>>>>>> main
