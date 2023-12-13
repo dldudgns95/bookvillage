@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('FAQ')}"></head>
+<head th:replace="~{layout/header::head('FAQ')}"></head>
 
 <style>
   .side_bar {
@@ -39,7 +39,7 @@
 
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   <div class="parent">
     <div>
       <div class="side_bar">
@@ -47,7 +47,7 @@
           <ul id="side_list">
           <li ><a th:href="@{/support/list.do}">공지사항</a></li>
 		  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-	      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	      <li ><a th:href="@{/comment/commentList.do}">문의</a></li>
         </ul>
       </div>
       <div class="child2">
@@ -102,7 +102,7 @@
   		fnModifyResult();
    </script>
 </div>
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 
 </body>
 </html>

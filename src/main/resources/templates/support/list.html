@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('공지사항')}"></head>
+<head th:replace="~{layout/header::head('공지사항')}"></head>
 
 <style>
   .side_bar {
@@ -38,7 +38,7 @@
 	  
   }  
 </style>
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 
 <body>
   <div class="side_bar">
@@ -46,7 +46,7 @@
 	   		<ul id="side_list">
 	          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
 			  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-		      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	    	  <li ><a th:href="@{/comment/commentList.do}">문의</a></li>
 	        </ul>
   </div>
   <div class="child2">
@@ -113,34 +113,7 @@
       var totalPage = 0;
     
      
-     const fnGetNoticeList = () => {
-    $.ajax({
-        // 요청
-        type: 'get',
-        url: '/support/getList.do',
-        data: 'page=' + page,
-        // 응답
-        dataType: 'json',
-        success: (resData) => {  
-            totalPage = resData.totalPage;
-            let str = '';
-            // 여기서 align-middle의 따옴표가 빠져있었습니다.
-            str += '<div><table class="table align-middle"><thead><tr><th>순번</th><th>제목</th><th>내용</th><th>작성일</th></tr></thead><tbody>';
-            $.each(resData.noticeList, (i, notice) => {
-				const truncatedTitle = notice.ntTitle.length > 10 ? notice.ntTitle.substring(0, 10) + '...' : notice.ntTitle;
-				const truncatedContent = notice.ntContent.length > 10 ? notice.ntContent.substring(0, 10) + '...' : notice.ntContent;
-				str += '<tr><td>' + notice.ntNo + '</td>';
-                str += '<td><a href="/support/detail.do?ntNo='+ notice.ntNo + '">' + truncatedTitle + '</a></td>';
-                str += '<td>' + truncatedContent + '</td>';                
-                str += '<td>' + notice.ntDate + '</td></tr>';
-
-            });
-            str += '</tbody><tfoot th:if="${not #lists.isEmpty(noticeList)}"><tr><td th:utext="${paging}"></td></tr></tfoot></table></div>';
-            // 여기서 순서를 바꾸어서 #notice_list에 먼저 추가하도록 수정했습니다.
-            $('#notice_list').append(str);
-        }
-    });
-}
+   
       const fnNoticeDetail = () => {
         $(document).on('click', '.notice', function(){
           location.href = '/support/detail.do?ntNo=' + $(this).data('nt_no');
@@ -203,7 +176,7 @@
       fnAddResult();
       fnRemoveResult();
    </script>
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 
 </body>
 </html>

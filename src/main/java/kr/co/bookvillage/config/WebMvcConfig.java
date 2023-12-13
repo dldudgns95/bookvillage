@@ -24,7 +24,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(requiredLoginInterceptor)
       .addPathPatterns("/user/modifyPw.form", "/mypage/**")
-      .addPathPatterns("/apply/bookapply.do", "/apply/faclist.do");
+      .addPathPatterns("/apply/bookapply.do", "/apply/faclist.do")
+      .addPathPatterns("/comment/commentList.do");
     registry.addInterceptor(shouldNotLoginInterceptor)
       .addPathPatterns("/user/agree.form", "/user/join.form", "/user/login.form");
     registry.addInterceptor(checkAdminLoginInterceptor)
@@ -36,8 +37,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     registry.addResourceHandler("/**")
       .addResourceLocations("classpath:/static/", "classpath:/templates/");
-    registry.addResourceHandler("/admin/**")
-    .addResourceLocations("file:/admin/");
+    registry.addResourceHandler("/fac/**")
+    .addResourceLocations("file:/fac/");
+    registry.addResourceHandler("/book/**")
+    .addResourceLocations("file:/book/");
     registry.addResourceHandler("/comment/**")
     .addResourceLocations("file:/comment/");
  

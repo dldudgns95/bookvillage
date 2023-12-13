@@ -107,8 +107,8 @@ public class AdminController {
   }
   
   @GetMapping("/facList.do")
-  public String facList(Model model) {
-    adminService.getFacList(model);
+  public String facList(HttpServletRequest request, Model model) {
+    adminService.getFacList(request, model);
     return "admin/facList";
   }
   
@@ -343,9 +343,27 @@ public class AdminController {
   }
   
   @ResponseBody
-  @PostMapping(value="ajaxBookCheckoutPaing.do", produces="application/json")
+  @PostMapping(value="/ajaxBookCheckoutPaing.do", produces="application/json")
   public Map<String, Object> ajaxBookCheckoutPaing(@RequestBody Map<String, Object> params){
     return adminService.getAjaxBookCheckoutPaing(params);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/ajaxFacApplyPaging.do", produces="application/json")
+  public Map<String, Object> ajaxFacApplyPaging(@RequestBody Map<String, Object> params){
+    return adminService.getAjaxFacApplyPaing(params);
+  }
+  
+  @ResponseBody
+  @PostMapping(value="/ajaxBookApplyPaging.do", produces="application/json")
+  public Map<String, Object> ajaxBookApplyPaging(@RequestBody Map<String, Object> params){
+    return adminService.getAjaxBookApplyPaing(params);
+  }
+  
+  @GetMapping("/deleteBookApply.do")
+  public String deleteBookApply(HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    redirectAttributes.addFlashAttribute("deleteResult", adminService.deleteBookApply(request));
+    return "redirect:/admin/bookApplyList.do";
   }
   
   // 임시

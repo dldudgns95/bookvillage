@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
+<head th:replace="~{layout/header::head(|${notice.ntNo}번 공지사항|)}"></head>
 <style>
     .side_bar {
     width: 200px;
@@ -35,7 +35,7 @@
 
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
 <div class="parent">
     <div>
         <div class="side_bar">
@@ -43,7 +43,7 @@
 		   <ul id="side_list">
 		          <li ><a th:href="@{/support/list.do}">공지사항</a></li>
 				  <li><a th:href="@{/support/faqlist.do}">FAQ</a></li>
-			      <li ><a th:href="@{/support/qnalist.do}">1:1문의</a></li>
+	  		      <li ><a th:href="@{/comment/commentList.do}">문의</a></li>
 		        </ul>
         </div>
       <div class="child2">
@@ -79,11 +79,12 @@
         <div id="attach_list"></div>
 
             <div>
+			  <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
+        	  <button type="submit" class="btn btn-success" id="btn_edit">작성완료</button>
               <a th:href="@{/support/detail.do(ntNo=${notice.ntNo})}">
                 <button class="btn btn-secondary" type="button">돌아가기</button>
               </a>
-              <input type="hidden" name="ntNo" th:value="${notice.ntNo}">
-        	  <button type="submit" class="btn btn-success" id="btn_edit">작성완료</button>
+
            </div>
 
       </form>
@@ -268,7 +269,7 @@
 		</script>  
       </div>
    </div>
-    <div th:replace="~{/layout/footer::footer}"></div>
+    <div th:replace="~{layout/footer::footer}"></div>
 
 </body>
 </html>

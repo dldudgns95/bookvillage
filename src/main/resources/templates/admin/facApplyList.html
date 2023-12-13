@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('시설이용 신청 목록')}"></head>
+<head th:replace="~{layout/header::head('시설이용 신청 목록')}"></head>
 
 <style>
   .flex_admin {
@@ -137,6 +137,9 @@
           </th:block>
         </tbody>
         <tfoot class="tfoot_center">
+          <td colspan="7">
+            <div th:utext="${paging}"></div>
+          </td>
         </tfoot>
       </table>
     </div>

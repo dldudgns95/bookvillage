@@ -27,11 +27,11 @@
     <typeAlias alias="BookApplyDto"              type="kr.co.bookvillage.dto.BookApplyDto"/>
     <typeAlias alias="BookCheckoutDto"           type="kr.co.bookvillage.dto.BookCheckoutDto"/>
     
-    <typeAlias alias="QnaDto"          			     type="kr.co.bookvillage.dto.QnaDto"/>
-    <typeAlias alias="AnswerDto"          		   type="kr.co.bookvillage.dto.AnswerDto"/>
-    <typeAlias alias="AttachAskDto"          	   type="kr.co.bookvillage.dto.AttachAskDto"/>
-    <typeAlias alias="AskDto"          	         type="kr.co.bookvillage.dto.AskDto"/>
-    <typeAlias alias="AskImageDto"          	   type="kr.co.bookvillage.dto.AskImageDto"/>
+    <typeAlias alias="QnaDto"                        type="kr.co.bookvillage.dto.QnaDto"/>
+    <typeAlias alias="AnswerDto"                   type="kr.co.bookvillage.dto.AnswerDto"/>
+    <typeAlias alias="AttachAskDto"                type="kr.co.bookvillage.dto.AttachAskDto"/>
+    <typeAlias alias="AskDto"                      type="kr.co.bookvillage.dto.AskDto"/>
+    <typeAlias alias="AskImageDto"                type="kr.co.bookvillage.dto.AskImageDto"/>
   </typeAliases>
 
 </configuration>

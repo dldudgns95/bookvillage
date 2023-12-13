@@ -72,7 +72,7 @@ public class MainController {
   
   @ResponseBody
   @GetMapping(value = "/mainFac.do", produces = "application/json")
-  public Map<String, Object> mainFac(Model model){
+  public Map<String, Object> mainFac(){
     List<AttachFacDto> facList =  mainService.getFacList();
     System.out.println("결과" + facList);
     return Map.of("facList", facList == null ? "" : facList);
