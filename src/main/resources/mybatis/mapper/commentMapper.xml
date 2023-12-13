@@ -47,6 +47,7 @@
          , CREATED_DATE
          , MODIFIED_DATE
          , STATUS
+
         ) VALUES(
              #{askNo}
            , #{askTitle}
@@ -55,6 +56,7 @@
            , SYSDATE
            , SYSDATE
            , 0
+
           )
   </insert>
   

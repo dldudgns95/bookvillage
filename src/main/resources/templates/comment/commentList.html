@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('QnA')}"></head>
+<head th:replace="~{layout/header::head('QnA')}"></head>
 
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
@@ -25,51 +25,21 @@
             <tr>
               <td>No.</td>
               <td>제목</td>
-              <td>조회수</td>
               <td>작성자</td>
               <td>작성일자</td>
-<<<<<<< HEAD
-              <td></td>
-=======
               <td>답변상태</td>
->>>>>>> sujin
             </tr>
           </thead>
           <tbody>
             <th:block th:each="b,vs:${askList}">
               <tr class="align-bottom">
                 <td th:text="${beginNo - vs.index}"></td>
-                <td>
-                  <!--로그인-->
-                  <th:block th:if="${session.user != null}">
-                    <!-- 내가 작성한 글이면 조회수 그대로 -->
-                    <th:block th:if="${session.user.userNo == b.userDto.userNo}">
-                      <a th:href="@{/comment/commentDetail.do(askNo=${b.askNo})}" th:text="${b.askTitle}"></a>
-                    </th:block>
-                    <!-- 내가 작성한 글 아니면 조회수 증가 -->
-                    <th:block th:if="${session.user.userNo != b.userDto.userNo}">
-                      <a th:href="@{/comment/increseHit.do(askNo =${b.askNo})}" th:text="${b.askTitle}"></a>
-                    </th:block>
-                  </th:block>
-                  <!-- 비로그인-->
-                  <th:block th:if="${session.user == null}">
-                      <a th:href="@{/comment/increseHit.do(askNo =${b.askNo})}" th:text="${b.askTitle}"></a>
-                  </th:block>
-                </td>
-<<<<<<< HEAD
-
-                <td th:text="${#numbers.formatInteger(b.hit, 1, 'COMMA')}"></td>
-                <td th:text="${b.userDto.email}"></td>
-                <td th:text="${#dates.format(b.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
-
-                <td></td>
-=======
-                <td th:text="${#numbers.formatInteger(b.hit, 1, 'COMMA')}"></td>
+                  
+                <td><a th:href="@{/comment/commentDetail.do(askNo=${b.askNo})}" th:text="${b.askTitle}"></a></td>
                 <td th:text="${b.userDto.email}"></td>
                 <td th:text="${#dates.format(b.createdDate, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="${b.status == 0 ? '답변 대기' : '답변 완료'}"></td>
 
->>>>>>> sujin
               </tr>
             </th:block>
           </tbody>
@@ -96,7 +66,7 @@
 
   </div>
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>
