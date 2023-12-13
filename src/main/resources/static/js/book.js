@@ -210,11 +210,8 @@ $(document).ready(function() {
       data: JSON.stringify(formData),
       success: function(response) {
         console.log('Checkout Status insert successfully.');
-        var confirmMyPage = confirm('대출 신청되었습니다. 신청 내역 조회로 이동하시겠습니까?');
         refresh();
-        if (confirmMyPage) {
-          window.location.href = '/mypage/booklist.do';
-        }
+        
       },
       error: function(error) {
         console.log("Error:", error);
