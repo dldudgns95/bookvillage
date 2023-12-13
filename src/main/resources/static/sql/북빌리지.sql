@@ -1,3 +1,6 @@
+-- 아이디   : GD
+-- 비밀번호 : 1111
+
 -- 시퀀스
 DROP SEQUENCE GOOD_SEQ;
 DROP SEQUENCE BOOK_CHECKOUT_SEQ;

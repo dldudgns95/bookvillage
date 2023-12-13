@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('유저 상세 조회')}"></head>
+<head th:replace="~{layout/header::head('유저 상세 조회')}"></head>
 
 <style>
   .flex_admin {
@@ -10,8 +10,8 @@
   }
   
   .admin_contents {
-    margin-left: 70px;
-    width:1000px;
+    margin-left: 30px;
+    width:1050px;
   }
   .tfoot_center {
     text-align: center; 
@@ -24,8 +24,16 @@
     --bs-btn-hover-bg: #e9ecef;
   }
   
-  .table td {
+  .table td, th {
     text-align: center;
+  }
+  
+  .table_title {
+    width: 300px;
+  }
+  
+  .td_name {
+    width: 120px;
   }
   
 </style>
@@ -202,8 +210,8 @@
                   </th:block>
                 </tbody>
                 <tfoot>
-                  <td colspan="6">
-                    <div th:utext="${paging}" class="bookCheckout_foot"></div>
+                  <td colspan="8">
+                    <div th:utext="${bookCheckoutPaging}" class="bookCheckout_foot"></div>
                   </td>
                 </tfoot>
               </table>
@@ -222,7 +230,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">회원명</th>
+                    <th scope="col" class="td_name">회원명</th>
                     <th scope="col">시설번호</th>
                     <th scope="col">시설명</th>
                     <th scope="col">신청날짜</th>
@@ -231,13 +239,13 @@
                     <th scope="col"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="fac_apply_body">
                   <th:block th:if="${#lists.isEmpty(facApplyList)}">
-                    <tr><td colspan="7">등록된 시설이 없습니다.</td></tr>
+                    <tr><td colspan="7">신청하신 시설이 없습니다.</td></tr>
                   </th:block>
                   <th:block th:each="facApply,vs:${facApplyList}">
                     <tr>
-                      <td scope="row" th:text="${facApply.userDto.name}"></td>
+                      <td scope="row" class="td_name" th:text="${facApply.userDto.name}"></td>
                       <td scope="row" th:text="${facApply.userDto.userNo}"></td>
                       <td scope="row" th:text="${facApply.facilityDto.facName}"></td>
                       <td scope="row" th:text="${facApply.facRegDate}"></td>
@@ -256,12 +264,12 @@
                       </td>
                       
                       <td scope="row" class="flex_admin" th:if="${facApply.facStatus == 0}">
-                        <form th:action="@{/admin/approveUserFacApply.do}" method="post">
+                        <form class="frm_approve_fac" th:action="@{/admin/approveUserFacApply.do}" method="post">
                           <input type="hidden" name="userNo" th:value="${user.userNo}">
                           <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                           <button type="submit" class="btn btn-primary">승인</button>
                         </form>
-                        <form th:action="@{/admin/refuseUserFacApply.do}" method="post">
+                        <form class="frm_refuse_fac" th:action="@{/admin/refuseUserFacApply.do}" method="post">
                           <input type="hidden" name="userNo" th:value="${user.userNo}">
                           <input type="hidden" name="facApplyNo" th:value="${facApply.facApplyNo}">
                           <button type="submit" class="btn btn-primary">거절</button>
@@ -270,7 +278,10 @@
                     </tr>
                   </th:block>
                 </tbody>
-                <tfoot class="tfoot_center">
+                <tfoot class="tfoot_center fac_apply_foot">
+                  <td colspan="7">
+                    <div th:utext="${facApplyPaging}" class="facApply_foot"></div>
+                  </td>
                 </tfoot>
               </table>
             </div>
@@ -288,7 +299,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">회원이름</th>
+                    <th scope="col" class="td_name">회원이름</th>
                     <th scope="col">신청도서명</th>
                     <th scope="col">저자</th>
                     <th scope="col">출판사</th>
@@ -296,13 +307,13 @@
                     <th scope="col"></th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody class="book_apply_body">
                   <th:block th:if="${#lists.isEmpty(bookApplyList)}">
-                    <tr><td colspan="6">검색된 회원이 없습니다.</td></tr>
+                    <tr><td colspan="6">희망도서 신청을 하지 않으셨습니다.</td></tr>
                   </th:block>
                   <th:block th:each="book,vs:${bookApplyList}">
                     <tr>
-                      <td scope="row" th:text="${book.userDto.name}"></td>
+                      <td scope="row" class="td_name" th:text="${book.userDto.name}"></td>
                       <td scope="row" th:text="${book.bookName}"></td>
                       <td scope="row" th:text="${book.author}"></td>
                       <td scope="row" th:text="${book.publisher}"></td>
@@ -323,9 +334,9 @@
                     </tr>
                   </th:block>
                 </tbody>
-                <tfoot class="tfoot_center">
-                  <td colspan="7">
-                    <div></div>
+                <tfoot class="tfoot_center book_apply_foot">
+                  <td colspan="6">
+                    <div th:utext="${bookApplyPaging}" class="bookApply_foot"></div>
                   </td>
                 </tfoot>
               </table>
@@ -412,6 +423,110 @@
           $('.frm_user').attr('action', '/admin/userDelete.do');
           $('.frm_user').attr('method', 'post');
           $('.frm_user').submit();
+        }
+      })
+    }
+    
+    const fnAjaxBookApplyPaging = (page) => {
+      var userNo = /*[[${user.userNo}]]*/ null;
+      var data = {
+        page: page,
+        userNo: userNo
+      };
+      $.ajax({
+        method: 'post',
+        url: '/admin/ajaxBookApplyPaging.do',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: (resData) => {
+          let body = '';
+          $.each(resData.bookApplyList, (i, book) => {
+            body += '<tr>';
+            body += '  <td scope="row" class="td_name">'+book.userDto.name+'</td>';
+            body += '  <td scope="row">'+book.bookName+'</td>';
+            body += '  <td scope="row">';
+            if(book.author != null) {
+              body += book.author;
+            }
+            body += '  </td>';
+            body += '  <td scope="row">';
+            if(book.publisher != null) {
+              body += book.publisher;
+            }
+            body += '  </td>';
+            body += '  <td scope="row">';
+            if(book.status == 0){
+              body += '도서신청완료';
+            } else if(book.status == 1) {
+              body += '도서추가완료';
+            }
+            body += '  </td>';
+            body += '  <td scope="row">';
+            body += '    <form action="/admin/bookApplyDetail.do" method="get">';
+            body += '      <input type="hidden" name="applyNo" value="'+book.applyNo+'">';            
+            body += '      <button type="submit" class="btn btn-primary">상세</button>';
+            body += '    </form>';
+            body += '  </td>';
+            body += '</tr>';
+          })
+          $('.book_apply_body').html(body);
+          $('.bookApply_foot').html(resData.bookApplyPaging);
+          
+        }
+      })
+    }
+    
+    const fnAjaxFacApplyPaging = (page) => {
+      var userNo = /*[[${user.userNo}]]*/ null;
+      var data = {
+        page: page,
+        userNo: userNo
+      };
+      $.ajax({
+        method: 'post',
+        url: '/admin/ajaxFacApplyPaging.do',
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        success: (resData) => {
+          let body = '';
+          $.each(resData.facApplyList, (i, facApply) => {
+            body += '<tr>';
+            body += ' <td scope="row" class="td_name">'+facApply.userDto.name+'</td>';
+            body += ' <td scope="row">'+facApply.userDto.userNo+'</td>';
+            body += ' <td scope="row">'+facApply.facilityDto.facName+'</td>';             
+            body += ' <td scope="row">'+yyyymmdd(facApply.facRegDate)+'</td>';             
+            body += ' <td scope="row">'+yyyymmdd(facApply.facStart)+'</td>';
+            body += ' <td scope="row">';
+            if(facApply.facStatus == 0){
+              body += '승인대기';
+            } else if(facApply.facStatus == 1) {
+              body += '승인';
+            } else if(facApply.facStatus == 2) {
+              body += '거절';
+            }
+            body += '  </td>';
+            if(facApply.facStatus == 0) {
+              body += '  <td scope="row" class="flex_admin">';
+              body += '    <form class="frm_approve_fac" method="post" action="/admin/approveUserFacApply.do">';
+              body += '      <input type="hidden" name="userNo" value="'+userNo+'">';
+              body += '      <input type="hidden" name="facApplyNo" value="'+facApply.facApplyNo+'">';
+              body += '      <button type="submit" class="btn btn-primary">승인</button>';
+              body += '    </form>';
+              body += '    <form class="frm_refuse_fac" method="post" action="/admin/refuseUserFacApply.do">';
+              body += '      <input type="hidden" name="userNo" value="'+userNo+'">';
+              body += '      <input type="hidden" name="facApplyNo" value="'+facApply.facApplyNo+'">';
+              body += '      <button type="submit" class="btn btn-primary">거절</button>';
+              body += '    </form>';
+            } else {
+              body += '  <td scope="row">';
+            }
+            body += '  </td>';
+            body += '</tr>';
+          })
+          $('.fac_apply_body').html(body);
+          $('.facApply_foot').html(resData.facApplyPaging);
         }
       })
     }
@@ -503,7 +618,37 @@
       time = yy + '/' + mm + '/' + dd;
           
       return time;
-  }
+    }
+    
+    function yyyymmdd(timestamp) {
+      var d = new Date(timestamp), // Convert the passed timestamp to milliseconds
+      yyyy = d.getFullYear(),  
+      mm = ('0' + (d.getMonth() + 1)).slice(-2),  // Months are zero based. Add leading 0.
+      dd = ('0' + d.getDate()).slice(-2),         // Add leading 0.
+      
+      
+      time = yyyy + '-' + mm + '-' + dd;
+          
+      return time;
+    }
+    
+    const fnCheckApproveFacApply = () => {
+      $(document).on('submit','.frm_approve_fac',(ev) => {
+        if(!confirm('해당 시설이용 신청을 승인하시겠습니까?')){
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
+    
+    const fnCheckRefuseFacApply = () => {
+      $(document).on('submit','.frm_refuse_fac',(ev) => {
+        if(!confirm('해당 시설이용 신청을 거절하시겠습니까?')){
+          ev.preventDefault();
+          return;
+        }
+      })
+    }
     
     const fnUpdateApproveResult = () => {
       let updateApproveResult = /*[[${updateApproveResult}]]*/ null;
@@ -556,6 +701,8 @@
     fnInactiveUser(); 
     fnactiveUser();
     fnUserDelete();
+    fnCheckApproveFacApply();
+    fnCheckRefuseFacApply();
     fnUpdateApproveResult();
     fnUpdateRefuseResult();
     fnUpdateActiveUserResult();
