@@ -18,13 +18,13 @@ public class AdminFileUtils {
   // 블로그 작성시 사용된 이미지가 저장될 경로 반환하기
   public String getFacImagePath() {
     LocalDate today = LocalDate.now();
-    return "/admin/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    return "/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
   
   // 도서 직접 등록시 사용된 이미지가 저장될 경로 반환하기
   public String getBookImagePath() {
     LocalDate today = LocalDate.now();
-    return "/admin/book/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+    return "/book/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
   }
   
   // 블로그 이미지가 저장된 어제 경로를 반환
@@ -37,7 +37,7 @@ public class AdminFileUtils {
   //시설 게시판 작성 시 첨부한 파일이 저장될 경로 반환하기
    public String getFacPath() {
      LocalDate today = LocalDate.now();
-     return "/admin/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
+     return "/fac/" + DateTimeFormatter.ofPattern("yyyy/MM/dd").format(today);
    }
   
   // 임시 파일이 저장될 경로 반환하기 (zip 파일)
