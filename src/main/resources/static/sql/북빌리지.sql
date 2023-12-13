@@ -163,16 +163,10 @@ CREATE TABLE ASK (
 	ASK_TITLE       VARCHAR2(100 BYTE)	NOT NULL,
 	ASK_CONTENT     CLOB	            NULL,
 	USER_NO         NUMBER              NOT NULL,
-<<<<<<< HEAD
     HIT             NUMBER             DEFAULT 0,
 	CREATED_DATE        DATE	            NULL,
 	MODIFIED_DATE       DATE	            NULL,
-=======
-    HIT             NUMBER              DEFAULT 0,
-	CREATED_DATE    DATE	            NULL,
-	MODIFIED_DATE   DATE	            NULL,
     STATUS          NUMBER              NOT NULL, -- 0 : 답변대기, 1: 답변완료
->>>>>>> sujin
     CONSTRAINT ASK_PK PRIMARY KEY (ASK_NO),
     CONSTRAINT ASK_FK FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL
 );
@@ -185,25 +179,15 @@ CREATE TABLE ASK_IMAGE_T (
     CONSTRAINT FK_ASK_IMAGE FOREIGN KEY (ASK_NO) REFERENCES ASK(ASK_NO) ON DELETE CASCADE
 );
 
-
-
 -- 1:1 문의 답변
 CREATE TABLE ANSWER (
     ANS_NO      NUMBER               NOT NULL,   --답변 번호
-<<<<<<< HEAD
-    ASK_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
+    ANS_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
     USER_NO     NUMBER               NOT NULL,   --회원 번호
     ASK_NO      NUMBER               NOT NULL,   --문의 번호
     CREATED_DATE DATE   NULL,
-=======
-    ANS_CONTENT VARCHAR2 (1000 BYTE) NOT NULL,   --답변 내용    
-    USER_NO     NUMBER               NOT NULL,   --회원 번호
-    ASK_NO      NUMBER               NOT NULL,   --문의 번호
-    CREATED_DATE VARCHAR2(30 BYTE)   NULL,
->>>>>>> sujin
     STATUS     NUMBER              NOT NULL,  -- 1:정상, 0:삭제 (실제로 삭제되지 않는 게시판)
-    DEPTH      NUMBER              NOT NULL,  -- 0:원글, 1:댓글, 2:대댓글, ...
-    GROUP_NO   NUMBER              NOT NULL,  -- 원글과 모든 댓글(댓글, 대댓글)은 동일한 GROUP_NO를 가져야 함
+    DEPTH       NUMBER              NOT NULL,  -- 0:원글, 1:댓글, 2:대댓글, ...
     CONSTRAINT PK_ANSWER PRIMARY KEY (ANS_NO),
     CONSTRAINT FK_USER_ANSWER FOREIGN KEY (USER_NO) REFERENCES USER_T(USER_NO) ON DELETE SET NULL,
     CONSTRAINT FK_ASK_ANSWER FOREIGN KEY(ASK_NO) REFERENCES ASK(ASK_NO) ON DELETE CASCADE
@@ -460,10 +444,6 @@ INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, ST
 INSERT INTO BOOK_APPLY(APPLY_NO, USER_NO, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS)
       VALUES(BOOK_APPLY_SEQ.NEXTVAL, 7, '죄의 경계 ', '야쿠마루 가쿠', '북플라자', '추리소설이 읽고싶어요.', 0);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> sujin
 commit;
 
 SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_NO
@@ -472,8 +452,4 @@ SELECT A.APPLY_NO, A.BOOK_NAME, A.AUTHOR, A.PUBLISHER, A.WISH, A.STATUS, A.USER_
             ON B.USER_NO = U.USER_NO
          WHERE B.USER_NO = 1) A
  WHERE A.RN BETWEEN 1 AND 10;
-<<<<<<< HEAD
-=======
- 
->>>>>>> sujin
 

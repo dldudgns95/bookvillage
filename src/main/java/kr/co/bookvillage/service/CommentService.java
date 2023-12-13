@@ -28,6 +28,8 @@ public interface CommentService {
   
   public Map<String, Object> addtAnswer(HttpServletRequest request);
   
+  public List<AnswerDto> getAnsList();
+  
   
   
 }

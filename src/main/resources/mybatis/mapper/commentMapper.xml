@@ -33,6 +33,18 @@
       </association>
   </resultMap>
   
+  <resultMap id="AnswerMap" type="AnswerDto">
+    <id column="ANS_NO"            property="ansNo" />
+    <result  column="ANS_CONTENT"  property="ansContent"/>    
+    <result  column="ASK_NO"       property="askNo"/>    
+    <result  column="CREATED_DATE" property="createdDate"/>    
+    <result  column="STATUS"       property="status"/>    
+    <result  column="DEPTH"       property="depth"/>    
+      <association javaType="UserDto" property="userDto">
+        <id column="USER_NO" property="userNo" />
+      </association>    
+  </resultMap>
+  
     
   <insert id="insertAsk" parameterType="AskDto">
     <selectKey order="BEFORE" keyProperty="askNo" resultType="int">
@@ -134,29 +146,37 @@
   
   <insert id="insertAns" parameterType="AnswerDto">
     INSERT INTO ANSWER (
-      ANS_NO,
-      ANS_CONTENT,
-      USER_NO,
-      ASK_NO,
-      CREATED_DATE
+      ANS_NO
+      , ANS_CONTENT
+      , USER_NO
+      , ASK_NO
+      , CREATED_DATE
+      , STATUS 
+      , DEPTH
     ) VALUES (
-      ANSWER_SEQ.NEXTVAL,
-      #{ansContent},
-      #{userDto.userNo},
-      #{askNo},
-      SYSDATE
+        ANSWER_SEQ.NEXTVAL
+      , #{ansContent}
+      , #{userDto.userNo}
+      , #{askNo}
+      , SYSDATE
+      , 1
+      , 0
     )
   </insert>
 
   
   <update id="updateAnswerStatus" parameterType="AnswerDto">
-      UPDATE ASK
-         SET STATUS = 1
-       WHERE ASK_NO = {askNo}
+    UPDATE ASK 
+       SET STATUS = 1 
+     WHERE ASK_NO = #{askNo}
   </update>
   
   
-  
+   <select id="AnsList" parameterType="int" resultMap="AnswerMap">
+     SELECT ANS_NO, ANS_CONTENT, USER_NO, ASK_NO,  CREATED_DATE, STATUS, DEPTH
+       FROM ANSWER
+      ORDER BY CREATED_DATE
+   </select>
   
  
   

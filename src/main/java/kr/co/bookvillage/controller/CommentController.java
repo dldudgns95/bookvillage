@@ -1,5 +1,6 @@
 package kr.co.bookvillage.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,12 +11,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.bookvillage.dto.AnswerDto;
 import kr.co.bookvillage.dto.AskDto;
+import kr.co.bookvillage.dto.NoticeDto;
 import kr.co.bookvillage.service.CommentService;
 import lombok.RequiredArgsConstructor;
 
@@ -64,9 +68,11 @@ public class CommentController {
   }
 
   
+  //@RequestMapping(value="/commentDetail.do", method= {RequestMethod.GET, RequestMethod.POST})
   @GetMapping("/commentDetail.do")
   public String commentDetail(@RequestParam(value = "askNo" , required = false, defaultValue = "0") int askNo
                              , Model model) {
+    System.out.println("확인");
     AskDto ask = commentService.getAsk(askNo);
     model.addAttribute("ask", ask);
     return "comment/commentDetail";
@@ -103,8 +109,13 @@ public class CommentController {
   public Map<String, Object> answerAdd(HttpServletRequest request){
     return commentService.addtAnswer(request);
   }
-  
-  
+
+  // 댓글 목록
+  @ResponseBody
+  @GetMapping(value = "/getAnsList.do", produces = "application/json")
+  public List<AnswerDto> getAnsList() {
+    return commentService.getAnsList();
+  }
   
   
   

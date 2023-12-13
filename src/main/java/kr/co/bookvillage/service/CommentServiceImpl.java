@@ -24,6 +24,7 @@ import kr.co.bookvillage.dto.AnswerDto;
 import kr.co.bookvillage.dto.AskDto;
 import kr.co.bookvillage.dto.AskImageDto;
 import kr.co.bookvillage.dto.UserDto;
+import kr.co.bookvillage.util.AdminPageUtils;
 import kr.co.bookvillage.util.CommentMyFileUtils;
 import kr.co.bookvillage.util.MyPageUtils;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
    private final CommentMyFileUtils commentMyFileUtils;
    private final CommentMapper commentMapper;
    private final MyPageUtils myPageUtils;
+   private final AdminPageUtils adminPageUtils;
    
    @Override
   public Map<String, Object> imageUpload(MultipartHttpServletRequest multipartRequest) {
@@ -130,15 +132,15 @@ public class CommentServiceImpl implements CommentService {
     int total = commentMapper.getAskCount();
     int display = 10;
     
-    myPageUtils.setPaging(page, total, display);
+    adminPageUtils.setPaging(page, total, display);
     
-    Map<String, Object> map = Map.of("begin", myPageUtils.getBegin()
-                                   , "end", myPageUtils.getEnd());
+    Map<String, Object> map = Map.of("begin", adminPageUtils.getBegin()
+                                   , "end", adminPageUtils.getEnd());
     
     List<AskDto> askList = commentMapper.getAskList(map);
     
     model.addAttribute("askList", askList);
-    model.addAttribute("paging", myPageUtils.getMvcPaging("/comment/commentList.do"));
+    model.addAttribute("paging", adminPageUtils.getMvcPaging("/comment/commentList.do"));
     model.addAttribute("beginNo", total - (page - 1) * display);
     
   }
@@ -245,6 +247,13 @@ public class CommentServiceImpl implements CommentService {
     
     return Map.of("addAnswerResult", addAnswerResult);
   }
+  
+  
+  @Override
+  public List<AnswerDto> getAnsList() {
+    return commentMapper.AnsList();
+  }
+  
   
   
   

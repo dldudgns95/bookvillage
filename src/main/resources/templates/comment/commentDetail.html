@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('QnA')}"></head>
+<head th:replace="~{layout/header::head('QnA')}"></head>
 <style>
 .blind {
   display: none;
@@ -13,7 +13,7 @@
 </style>
 <body>
   
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   
   <div class="main_wrap">
     
@@ -23,7 +23,7 @@
         <div class="text-center">
           <th:block th:if="${session.user != null}">
             <!-- 작성자는 블로그 편집 삭제 가능 -->
-            <th:block th:if="${session.user.userNo == ask.userDto.userNo}">
+            <th:block th:if="${session.user.userNo == ask.userDto.userNo or session.user.auth == 9}">
               <form id="frm_btn" method="post">
                 <input type="hidden" name="askNo" th:value="${ask.askNo}">
                 <input type="hidden" name="askTitle" th:value="${ask.askTitle}">
@@ -41,14 +41,38 @@
         <div th:text="|수정일 : ${#dates.format(ask.modifiedDate, 'yyyy-MM-dd HH:mm')}|"></div>
         <div class="mt-3" th:utext="${ask.askContent}"></div>
         
+        <hr>
+        
+      <!-- 댓글 작성 화면 -->
+      <div>
+        <th:block th:if="${session.user.auth == 9}">
+        <form id="frm_comment_add">
+          <div class="input-group mb-3">
+            <!-- 로그인 안 한 경우 -->
+            <th:block th:if="${session.user == null}">              
+              <input type="hidden" name="userNo" th:value="0">
+            </th:block>
+            <!-- 로그인 한 경우 -->
+            <th:block th:if="${session.user != null}">              
+              <input type="hidden" name="userNo" th:value="${session.user.userNo}">
+            </th:block>
+            <input type="hidden" name="askNo" th:value="${ask.askNo}">
+            
+            <textarea rows="5" class="form-control" name="ansContent" id="ansContent" placeholder="댓글을 작성해 주세요"></textarea>
+            <button type="button" class="btn btn-primary btn-sm" id="btn_comment_add">작성완료</button>
+          </div>
+        </form>
+        </th:block>
       </div>
       
-     
+         <div  class="mb-3" id="commentContainer"></div>
+
     </div>
     
   </div>
-    
-    
+    <!-- 목록 -->
+    <!-- 답변 -->
+
     
     
     
@@ -84,38 +108,17 @@
   }
 
 
+
+
+
   fnEditAsk();
   fnRemoveAsk();
   fnModifyResult();
 
-</script>
 
 
-<hr>
 
-<!-- 답글 작성 화면 -->
-
-      <!-- 댓글 작성 화면 -->
-      <div>
-        <form id="frm_comment_add">
-          <div class="input-group mb-3">
-            <!-- 로그인 안 한 경우 -->
-            <th:block th:if="${session.user == null}">              
-              <input type="hidden" name="userNo" th:value="0">
-            </th:block>
-            <!-- 로그인 한 경우 -->
-            <th:block th:if="${session.user != null}">              
-              <input type="hidden" name="userNo" th:value="${session.user.userNo}">
-            </th:block>
-            <input type="hidden" name="askNo" th:value="${ask.askNo}">
-            <textarea rows="5" class="form-control" id="ansContent" placeholder="댓글을 작성해 주세요"></textarea>
-            <button type="button" class="btn btn-primary btn-sm" id="btn_comment_add">작성완료</button>
-          </div>
-        </form>
-      </div>
-
-<script>
-  
+    
  const fnContentsClick = () => {
       $('#ansContent').click(() => {
         let user = /*[[${session.user}]]*/ null;
@@ -132,7 +135,7 @@
       })
     }
     
-    const fnCommentAdd = () => {
+const fnCommentAdd = () => {
           $('#btn_comment_add').click(() => {
             let user = /*[[${session.user}]]*/ null;
             if(user === null){
@@ -149,31 +152,48 @@
               data: $('#frm_comment_add').serialize(),
               // 응답
               dataType: 'json',
-              success: (resData) => {  // {"addCommentResult": 1}
-                if(resData.addCommentResult === 1){
+              success: (resData) => { 
+                if (resData.addAnswerResult === 1) {
                   alert('댓글이 등록되었습니다.');
                   $('#ansContent').val('');
                   fnCommentList();
+                  
                 }
               }
             })
           })
         }
-         
-    
-    
+        
+const fnCommentList = () => {
+  $.ajax({
+    type: 'GET',
+    url: '/comment/getAnsList.do',
+    dataType: 'json',
+    success: (commentList) => {
+      $('#commentContainer').html(''); // 기존 댓글을 지웁니다.
+      commentList.forEach((comment) => {
+        $('#commentContainer').append(`<div>${comment.ansContent}</div>`);
+      });
+    }
+  });
+};
+
     
     
     
   fnContentsClick();
   fnCommentAdd();
+  fnCommentList();
+
+
+
 </script>
 
 
 
   </div>
   
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
   
 </body>
 </html>

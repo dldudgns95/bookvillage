@@ -26,6 +26,7 @@ public interface CommentMapper {
   
   public int insertAns(AnswerDto ans);
   public int updateAnswerStatus(AnswerDto ans);
+  public List<AnswerDto> AnsList();
 
   
   
