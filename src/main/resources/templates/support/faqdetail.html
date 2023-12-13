@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{/layout/header::head('FAQ')}"></head>
+<head th:replace="~{layout/header::head('FAQ')}"></head>
 
 <style>
   .side_bar {
@@ -39,7 +39,7 @@
 
 <body>
 
-  <div th:replace="~{/layout/header::header}"></div>
+  <div th:replace="~{layout/header::header}"></div>
   <div class="parent">
     <div>
       <div class="side_bar">
@@ -102,7 +102,7 @@
   		fnModifyResult();
    </script>
 </div>
-  <div th:replace="~{/layout/footer::footer}"></div>
+  <div th:replace="~{layout/footer::footer}"></div>
 
 </body>
 </html>
