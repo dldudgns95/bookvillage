@@ -182,7 +182,7 @@ CREATE TABLE ASK_IMAGE_T (
 -- 1:1 문의 답변
 CREATE TABLE ANSWER (
     ANS_NO      NUMBER               NOT NULL,   --답변 번호
-    ASK_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
+    ANS_CONTENT VARCHAR2 (4000 BYTE) NOT NULL,   --답변 내용    
     USER_NO     NUMBER               NOT NULL,   --회원 번호
     ASK_NO      NUMBER               NOT NULL,   --문의 번호
     CREATED_DATE DATE   NULL,
