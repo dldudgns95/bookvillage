@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.bookvillage.dto.BookApplyDto;
+import kr.co.bookvillage.dto.UserDto;
 import kr.co.bookvillage.service.MypageService;
 import lombok.RequiredArgsConstructor;
 

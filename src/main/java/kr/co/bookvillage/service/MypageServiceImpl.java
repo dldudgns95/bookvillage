@@ -144,6 +144,7 @@ public class MypageServiceImpl implements MypageService {
     model.addAttribute("bookList", bookList);
     model.addAttribute("paging", adminPageUtils.getMvcPaging(request.getContextPath() + "mypage/booklist.do"));
     model.addAttribute("beginNo", total - (page -1) * display);
+    model.addAttribute("bookcount", mypageMapper.getUserBookCount(userNo));
 
   }
   

@@ -13,7 +13,7 @@
     <result  column="DUE_DATE"      property="dueDate" />
     <result  column="END_DATE"      property="endDate" />
     <association javaType="UserDto" property="userDto">
-    <id column="USER_NO" property="userNo" />     
+    <id column="USER_NO" property="userNo" />   
     </association>
     <association javaType="BookDto" property="bookDto">
       <id        column="ISBN"           property="isbn"/>
@@ -118,6 +118,12 @@
          , PW_MODIFIED_DATE = SYSDATE
      WHERE USER_NO = #{userNo}
   </update>
+  
+  <select id="getUserBookCount" parameterType="int" resultType="int">
+    SELECT BOOKCOUNT
+      FROM USER_T
+     WHERE USER_NO = #{userNo}
+  </select>
   
   <!-- 접속유저의 대출권수 -->
   <select id="getUserBookCheckoutCount" parameterType="int" resultType="int">

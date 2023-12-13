@@ -75,7 +75,7 @@
             <li th:text="|회원상태:대출불가|"></li>
           </th:block>
           <th:block th:if="${session.user.status == 1}">
-            <li th:text="|회원상태:대출가능 ${session.user.bookcount}권 대출중|"></li>
+            <li th:text="|회원상태:대출가능 ${bookcount}권 대출중|"></li>
           </th:block>        
         </ul>
      

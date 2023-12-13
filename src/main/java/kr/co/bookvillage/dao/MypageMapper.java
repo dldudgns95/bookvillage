@@ -19,6 +19,7 @@ public interface MypageMapper {
   public int getMobileCheck(String mobile);                                      // 휴대전화번호 중복확인
   public int updateUser(UserDto userDto);                                        // 사용자정보 수정
   public int updateUserPw(UserDto userDto);                                      // 비밀번호 수정
+  public int getUserBookCount(int userNo);                                       // 유저의대출권수카운트
   public int getUserBookCheckoutCount(int userNo);                               // 대출내역 갯수
   public List<BookCheckoutDto> getUserBookCheckoutList(Map<String, Object> map); // 도서대출내역 가져오기
   public int updateDueDate(int checkoutNo);                                      // 대출연기신청(반납예정일 + 7)
