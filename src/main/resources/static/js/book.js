@@ -211,6 +211,7 @@ $(document).ready(function() {
       success: function(response) {
         console.log('Checkout Status insert successfully.');
         refresh();
+        alert('대출 신청되었습니다.');
         
       },
       error: function(error) {
