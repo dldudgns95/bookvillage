@@ -204,7 +204,7 @@
 
    
   
-  <script>
+  <script th:inline="javascript">
     
  
     
@@ -311,7 +311,7 @@
  // 시설신청 더보기 누르면 신청 페이지로 이동
  $(document).ready(function(){
    $('#btn_facGo').on('click', function(){
-     window.location.href = 'http://localhost:8080/apply/faclist.do';
+     window.location.href = '/apply/faclist.do';
    })
  })
 
@@ -341,22 +341,11 @@
     $.ajax({
         type: 'GET',
         url: '/main/mainFac.do',
-        contentType: 'application/json',
         success: function (response) {
-            response.facList.forEach(function (facList) {
-                // var truncatedTitle = facList.facName.substring(0, 20) + (facList.facName.length > 20 ? '...' : '');
-              var statusText = facList.status === 1  ? '예약불가' : '예약가능';
-              var firstFacName = response.facList[0].facilityDto.facName;
-
-        response.facList.forEach(function (facList) {
-            var facName = facList.facilityDto.facName;
-// var facImage = facList.facFilesystemName !== null ? `${facList.facPath}/${facList.facFilesystemName}` : 'ready_img.jpg';
-
-//fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facImage}"><br>${facName}<br></div>`);
-
-            fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facList.facPath}/${facList.facFilesystemName}"><br>${facName}<br></div>`);
-            });
- });
+          console.log(response);
+          response.facList.forEach(function (facility) {
+            fac.appendSlide(`<div class="swiper-slide swiper-slide4"><img class="facImg" src="${facility.facPath}/${facility.facFilesystemName}"><br>${facility.facilityDto.facName}<br></div>`);
+          });
         },
         error: function (error) {
             console.log('Error fetching book data: ' + error);
