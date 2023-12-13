@@ -30,8 +30,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
     registry.addInterceptor(checkAdminLoginInterceptor)
     .addPathPatterns("/admin/**")
     .addPathPatterns("/support/write.form", "/support/faqwrite.form");
-
-    
   }
   
   @Override
@@ -40,6 +38,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
       .addResourceLocations("classpath:/static/", "classpath:/templates/");
     registry.addResourceHandler("/admin/**")
     .addResourceLocations("file:/admin/");
+    registry.addResourceHandler("/comment/**")
+    .addResourceLocations("file:/comment/");
  
   }
   

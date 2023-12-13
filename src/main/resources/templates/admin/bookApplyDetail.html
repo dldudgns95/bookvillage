@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+<head th:replace="~{layout/header::head('희망도서 신청 상세 조회')}"></head>
 
 <style>
   .flex_admin {
@@ -94,6 +94,7 @@
           <input type="hidden" name="searchBookName" th:value="${bookApply.bookName}">
           <button type="button" class="btn btn-primary btn_update">희망도서 추가완료</button>
           <button type="button" class="btn btn-primary btn_go_search">도서 추가하기</button>
+          <button type="button" class="btn btn-primary btn_delete">희망도서 신청 삭제</button>
         </form>
         <form class="frm_book_search" method="get" th:action="@{/admin/goBookSearch.do}">
         </form>
@@ -123,8 +124,19 @@
     })
   }
   
+  const fnBookDelete = () => {
+    $('.btn_delete').click((ev) => {
+      if(confirm('희망도서 신청을 삭제하시겠습니까?')){
+        const frm = $(ev.target).closest('.frm_book_apply');
+        frm.attr('action', '/admin/deleteBookApply.do');
+        frm.submit();
+      }
+    })
+  }
+  
   fnBookApplyUpdate();
   fnGoBookSearch();
+  fnBookDelete();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>

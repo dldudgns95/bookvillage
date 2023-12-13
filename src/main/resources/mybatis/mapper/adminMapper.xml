@@ -250,11 +250,18 @@
     )
   </insert>
   
+  <select id="getFacCount" resultType="int">
+    SELECT COUNT(*)
+      FROM ATTACH_FAC
+  </select>
+  
   <!-- 전체 시설 조회 -->
-  <select id="getFacList" resultMap="AttachFacMap">
-    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
-      FROM ATTACH_FAC AF INNER JOIN FACILITY F
-        ON AF.FAC_NO = F.FAC_NO
+  <select id="getFacList" parameterType="Map" resultMap="AttachFacMap">
+    SELECT FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, FAC_NO, FAC_NAME, FAC_CONTENT
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_ATTACH_NO ASC) AS RN, FAC_ATTACH_NO,FAC_PATH, FAC_ORIGINAL_FILENAME, FAC_FILESYSTEM_NAME, FAC_HAS_THUMBNAIL, F.FAC_NO, FAC_NAME, FAC_CONTENT
+              FROM ATTACH_FAC AF INNER JOIN FACILITY F
+                ON AF.FAC_NO = F.FAC_NO)
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 사용 가능한 시설 조회 -->
@@ -324,12 +331,20 @@
      WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
+  <select id="getBookApplyCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_APPLY
+     WHERE USER_NO = #{userNo}
+  </select>
+  
   <!-- 해당 유저의 희망도서 목록 조회 -->
-  <select id="getUserBookApplyList" parameterType="int" resultMap="BookApplyMap">
-    SELECT APPLY_NO, BA.USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
-      FROM BOOK_APPLY BA INNER JOIN USER_T U
-        ON BA.USER_NO = U.USER_NO
-     WHERE BA.USER_NO = #{userNo}
+  <select id="getUserBookApplyList" parameterType="Map" resultMap="BookApplyMap">
+    SELECT APPLY_NO, USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, STATUS
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY APPLY_NO DESC) AS RN, APPLY_NO, BA.USER_NO, NAME, BOOK_NAME, AUTHOR, PUBLISHER, WISH, BA.STATUS
+              FROM BOOK_APPLY BA INNER JOIN USER_T U
+                ON BA.USER_NO = U.USER_NO
+             WHERE BA.USER_NO = #{userNo})
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 희망도서 상세 조회 -->
@@ -340,14 +355,21 @@
      WHERE APPLY_NO = #{applyNo}
   </select>
   
+  <select id="getUserBookCheckoutCount" parameterType="int" resultType="int">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+  </select>
+  
   <!-- 해당 유저의 대출 목록 조회 -->
-  <select id="getUserBookCheckoutList" parameterType="int" resultMap="BookCheckoutMap">
-    SELECT CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
-      FROM BOOK_CHECKOUT BC INNER JOIN USER_T U
-        ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
-        ON BC.ISBN = B.ISBN
-     WHERE BC.USER_NO = #{userNo}
-     ORDER BY CHECKOUT_NO DESC
+  <select id="getUserBookCheckoutList" parameterType="Map" resultMap="BookCheckoutMap">
+    SELECT CHECKOUT_NO, STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, USER_NO, NAME, ISBN, TITLE
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY CHECKOUT_NO DESC) AS RN, CHECKOUT_NO, BC.STATUS, CHECKOUT_DATE, START_DATE, DUE_DATE, END_DATE, BC.USER_NO, NAME, BC.ISBN, TITLE
+              FROM BOOK_CHECKOUT BC INNER JOIN USER_T U
+                ON BC.USER_NO = U.USER_NO INNER JOIN BOOK B
+                ON BC.ISBN = B.ISBN
+             WHERE BC.USER_NO = #{userNo})
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 대출 신청한 도서 수 카운트 -->
@@ -531,22 +553,38 @@
      WHERE USER_NO = #{userNo}
   </update>
   
-  <!-- 시설이용신청 리스트 조회 -->
-  <select id="getFacApplyList" resultMap="FacApplyMap">
-    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
-      FROM FAC_APPLY FA INNER JOIN USER_T U
-        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
-        ON FA.FAC_NO = F.FAC_NO
+  <select id="getFacApplyCount" resultType="int">
+    SELECT COUNT(*)
+      FROM FAC_APPLY
      WHERE FAC_STATUS = 0
   </select>
   
+  <!-- 시설이용신청 리스트 조회 -->
+  <select id="getFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, USER_NO, NAME, FAC_NO, FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_APPLY_NO ASC) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+             WHERE FAC_STATUS = 0)
+     WHERE  RN BETWEEN #{begin} AND #{end}
+   </select>
+   
+   <select id="getFacApplyCountByUser" parameterType="int" resultType="int">
+     SELECT COUNT(*)
+       FROM FAC_APPLY
+      WHERE USER_NO = #{userNo}
+   </select>
+  
   <!-- 해당 유저의 시설이용신청 리스트 조회 -->
-  <select id="getUserFacApplyList" parameterType="int" resultMap="FacApplyMap">
-    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
-      FROM FAC_APPLY FA INNER JOIN USER_T U
-        ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
-        ON FA.FAC_NO = F.FAC_NO
-       AND FA.USER_NO = #{userNo}
+  <select id="getUserFacApplyList" parameterType="Map" resultMap="FacApplyMap">
+    SELECT FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, USER_NO, NAME, FAC_NO, FAC_NAME
+      FROM (SELECT ROW_NUMBER() OVER(ORDER BY FAC_START DESC) AS RN, FAC_APPLY_NO, FAC_REG_DATE, FAC_START, FAC_STATUS, FA.USER_NO, NAME, FA.FAC_NO, FAC_NAME
+              FROM FAC_APPLY FA INNER JOIN USER_T U
+                ON FA.USER_NO = U.USER_NO INNER JOIN FACILITY F
+                ON FA.FAC_NO = F.FAC_NO
+               AND FA.USER_NO = #{userNo})
+     WHERE RN BETWEEN #{begin} AND #{end}
   </select>
   
   <!-- 등록된 책인지 확인 -->
@@ -640,13 +678,95 @@
              WHERE BC.ISBN = #{isbn}
                AND BC.STATUS NOT IN (2,4)
   </select>
+  <!-- 대출중인 책이 있는지 확인 -->
+  <select id="checkBookCheckout" parameterType="int" resultType="boolean">
+    SELECT COUNT(*)
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+       AND STATUS = 1
+  </select>
   
   
+  <!-- 대출신청 3일이상 지난 책 대출 가능으로 변경 -->
+  <update id="activeBookByBookCheckout">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN IN (SELECT ISBN
+                      FROM BOOK_CHECKOUT
+                     WHERE STATUS = 0
+                       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) &gt; 3)
+  </update>
   
+  <!-- 대출신청 3일이상 지나면 자동으로 취소 -->
+  <update id="cancleBookCheckout">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 4
+     WHERE STATUS = 0
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') - TRUNC(CHECKOUT_DATE) &gt; 3
+  </update>
   
+  <!-- 반납예정일 지나면 연체로 변경 -->
+  <update id="changeOverdue">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 3
+     WHERE STATUS = 1
+       AND TO_DATE(SYSDATE, 'YY/MM/DD') &gt; TRUNC(DUE_DATE)
+  </update>
   
+  <!-- 연체인 회원들 대출 불가능하게 변경 -->
+  <update id="inactiveUserByBookCheckout">
+    UPDATE USER_T
+       SET STATUS = 0
+     WHERE USER_NO IN (SELECT USER_NO
+                         FROM BOOK_CHECKOUT
+                        WHERE STATUS = 3)
+  </update>
   
+  <!-- 시설 이용신청에서 시작날짜가 지나도 승인대기상태면 자동 거절 -->
+  <update id="updateFacApply">
+    UPDATE FAC_APPLY
+       SET FAC_STATUS = 2
+     WHERE TO_DATE(SYSDATE, 'YY/MM/DD') &gt; FAC_START
+  </update>
   
+  <!-- 선택된 도서들 대출 신청 승인 업데이트 -->
+  <update id="approveBookCheckoutByNumbers" parameterType="String">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 1
+         , START_DATE = SYSDATE
+         , DUE_DATE = SYSDATE + 7
+         , DELAY = 0
+     WHERE CHECKOUT_NO IN (${numbers})
+  </update>
+  
+  <!-- 선택된 도서들 대출 반납 승인 업데이트 -->
+  <update id="approveBookCheckoutReturnByNumbers" parameterType="String">
+    UPDATE BOOK_CHECKOUT
+       SET STATUS = 2
+         , END_DATE = SYSDATE
+     WHERE CHECKOUT_NO IN (${numbers})
+  </update>
+  
+  <!-- 선택된 도서들 반납 완료 시 도서 상태 업데이트 -->
+  <update id="activeBooks" parameterType="String">
+    UPDATE BOOK
+       SET STATUS = 1
+     WHERE ISBN IN (${isbn})
+  </update>
+  
+  <!-- 회원 삭제 중 해당 유저의 대출신청중인 도서 확인 -->
+  <select id="checkBookCheckoutByUser" parameterType="int" resultType="String">
+    SELECT ISBN
+      FROM BOOK_CHECKOUT
+     WHERE USER_NO = #{userNo}
+       AND STATUS = 0
+  </select>
+  
+  <delete id="deleteBookApply" parameterType="int">
+    DELETE
+      FROM BOOK_APPLY
+     WHERE APPLY_NO = #{applyNo}
+  </delete>
   
   
 </mapper>

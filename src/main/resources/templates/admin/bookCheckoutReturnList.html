@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('관리자게시판목록')}"></head>
+<head th:replace="~{layout/header::head('대출중인 도서 목록')}"></head>
 
 <style>
   .flex_admin {
@@ -10,7 +10,7 @@
   }
   
   .admin_contents {
-    margin-left: 70px;
+    margin-left: 30px;
   }
   .tfoot_center {
     text-align: center; 
@@ -32,7 +32,7 @@
   }
   
   .book_checkout_return {
-    width: 1000px;
+    width: 1050px;
   }
   
   .table {
@@ -43,8 +43,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 300px;
+    width: 250px;
     height: 41px;
+  }
+  
+  .table {
+    table-layout: fixed;
+    text-align: center;
+  }
+  
+  .td_check {
+    width:60px;
   }
   
 </style>
@@ -69,9 +78,15 @@
     
     <div class="admin_contents">
       <div class="book_checkout_return">
+        <div class="flex_admin">
+          <button type="button" class="btn btn-primary btn_check">선택도서 반납확인</button>
+        </div>
         <table class="table">
           <thead>
             <tr>
+              <th scope="col" class="td_check">
+                <input class="form-check-input check_all" type="checkbox" id="flexCheckDefault">
+              </th>
               <th scope="col">대출번호</th>
               <th scope="col">대출회원번호</th>
               <th scope="col">대출회원이름</th>
@@ -87,6 +102,9 @@
             </th:block>
             <th:block th:each="book,vs:${bookCheckoutList}">
               <tr>
+                <td scope="row" class="td_check">
+                  <input class="form-check-input check_one" type="checkbox" th:value="|${book.checkoutNo},${book.userDto.userNo},${book.bookDto.isbn}|">
+                </td>
                 <td scope="row" th:text="${book.checkoutNo}"></td>
                 <td scope="row" th:text="${book.userDto.userNo}"></td>
                 <td scope="row" th:text="${book.userDto.name}"></td>
@@ -142,6 +160,10 @@
         </table>
       </div>
     </div>
+    
+    <form id="frm_check" method="post" th:action="@{/admin/approveCheckBookCheckoutReturn.do}">
+      <input type="hidden" name="numbers" id="numbersInput">
+    </form>
 
   </div>
   
@@ -217,9 +239,51 @@
       })
     }
     
+    const fnCheckOne = () => {
+      $(document).on('click', '.check_one', () => {
+        var total = 0;
+        $.each($('.check_one'), (i, elem) => {
+          total += $(elem).prop('checked');
+        })
+        $('.check_all').prop('checked', total === $('.check_one').length);
+      })
+    }
+    
+    const fnCheckAll = () => {
+      $('.check_all').click((ev) => {
+        $('.check_one').prop('checked', $(ev.target).prop('checked'));
+      })
+    }
+    
+    const fnUpdateCheckList = () => {
+      $('.btn_check').click(() => {
+        var arr = [];
+        var checkOne = $('.check_one');
+        $.each(checkOne, function(i, elem){
+          if($(elem).is(':checked')){
+            arr.push($(elem).val());
+          }
+        })
+        if(arr.length === 0) {
+          alert('선택된 도서가 없습니다.');
+          return;
+        }
+        if(!confirm('선택한 도서의 반납을 확인하시겠습니까?')) {
+          return;
+        }
+        $('#numbersInput').val(JSON.stringify(arr));
+        $('#frm_check').submit();
+          
+      })
+      
+    }
+    
     fnCheckBookCheckout();
     fnUpdateResult();
     fnCheckSearchText();
+    fnCheckOne();
+    fnCheckAll();
+    fnUpdateCheckList();
   </script>
   
   <div th:replace="~{/layout/footer::footer}"></div>
