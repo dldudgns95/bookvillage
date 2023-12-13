@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   
-<head th:replace="~{/layout/header::head('유저 상세 조회')}"></head>
+<head th:replace="~{layout/header::head('유저 상세 조회')}"></head>
 
 <style>
   .flex_admin {
@@ -30,6 +30,10 @@
   
   .table_title {
     width: 300px;
+  }
+  
+  .td_name {
+    width: 120px;
   }
   
 </style>
@@ -226,7 +230,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">회원명</th>
+                    <th scope="col" class="td_name">회원명</th>
                     <th scope="col">시설번호</th>
                     <th scope="col">시설명</th>
                     <th scope="col">신청날짜</th>
@@ -241,7 +245,7 @@
                   </th:block>
                   <th:block th:each="facApply,vs:${facApplyList}">
                     <tr>
-                      <td scope="row" th:text="${facApply.userDto.name}"></td>
+                      <td scope="row" class="td_name" th:text="${facApply.userDto.name}"></td>
                       <td scope="row" th:text="${facApply.userDto.userNo}"></td>
                       <td scope="row" th:text="${facApply.facilityDto.facName}"></td>
                       <td scope="row" th:text="${facApply.facRegDate}"></td>
@@ -295,7 +299,7 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">회원이름</th>
+                    <th scope="col" class="td_name">회원이름</th>
                     <th scope="col">신청도서명</th>
                     <th scope="col">저자</th>
                     <th scope="col">출판사</th>
@@ -309,7 +313,7 @@
                   </th:block>
                   <th:block th:each="book,vs:${bookApplyList}">
                     <tr>
-                      <td scope="row" th:text="${book.userDto.name}"></td>
+                      <td scope="row" class="td_name" th:text="${book.userDto.name}"></td>
                       <td scope="row" th:text="${book.bookName}"></td>
                       <td scope="row" th:text="${book.author}"></td>
                       <td scope="row" th:text="${book.publisher}"></td>
@@ -439,10 +443,18 @@
           let body = '';
           $.each(resData.bookApplyList, (i, book) => {
             body += '<tr>';
-            body += '  <td scope="row">'+book.userDto.name+'</td>';
+            body += '  <td scope="row" class="td_name">'+book.userDto.name+'</td>';
             body += '  <td scope="row">'+book.bookName+'</td>';
-            body += '  <td scope="row">'+book.author+'</td>';
-            body += '  <td scope="row">'+book.publisher+'</td>';
+            body += '  <td scope="row">';
+            if(book.author != null) {
+              body += book.author;
+            }
+            body += '  </td>';
+            body += '  <td scope="row">';
+            if(book.publisher != null) {
+              body += book.publisher;
+            }
+            body += '  </td>';
             body += '  <td scope="row">';
             if(book.status == 0){
               body += '도서신청완료';
@@ -459,7 +471,7 @@
             body += '</tr>';
           })
           $('.book_apply_body').html(body);
-          $('.book_apply_foot').html(resData.bookApplyPaging);
+          $('.bookApply_foot').html(resData.bookApplyPaging);
           
         }
       })
@@ -481,7 +493,7 @@
           let body = '';
           $.each(resData.facApplyList, (i, facApply) => {
             body += '<tr>';
-            body += ' <td scope="row">'+facApply.userDto.name+'</td>';
+            body += ' <td scope="row" class="td_name">'+facApply.userDto.name+'</td>';
             body += ' <td scope="row">'+facApply.userDto.userNo+'</td>';
             body += ' <td scope="row">'+facApply.facilityDto.facName+'</td>';             
             body += ' <td scope="row">'+yyyymmdd(facApply.facRegDate)+'</td>';             
@@ -514,7 +526,7 @@
             body += '</tr>';
           })
           $('.fac_apply_body').html(body);
-          $('.fac_apply_foot').html(resData.facApplyPaging);
+          $('.facApply_foot').html(resData.facApplyPaging);
         }
       })
     }
