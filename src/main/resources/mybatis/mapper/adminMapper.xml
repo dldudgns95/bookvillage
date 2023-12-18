@@ -123,13 +123,16 @@
     )
   </insert>
   
+  <!-- 책 내용 수정하기 -->
   <update id="editBook" parameterType="bookDto">
     UPDATE BOOK
        SET TITLE = #{title}
          , COVER = #{cover}
          , AUTHOR = #{author}
          , PUBLISHER = #{publisher}
+         <if test='pubdate != null'>
          , PUBDATE = #{pubdate}
+         </if>
          , DESCRIPTION = #{description}
          , CATEGORY_NAME = #{categoryName}
      WHERE ISBN = #{isbn}
