@@ -154,7 +154,6 @@
       , ASK_NO
       , CREATED_DATE
       , STATUS 
-      , DEPTH
     ) VALUES (
         ANSWER_SEQ.NEXTVAL
       , #{ansContent}
@@ -162,7 +161,6 @@
       , #{askNo}
       , SYSDATE
       , 1
-      , 0
     )
   </insert>
 
@@ -175,7 +173,7 @@
   
   
    <select id="AnsList" parameterType="int" resultMap="AnswerMap">
-     SELECT ANS_NO, ANS_CONTENT, USER_NO, ASK_NO,  CREATED_DATE, STATUS, DEPTH
+     SELECT ANS_NO, ANS_CONTENT, USER_NO, ASK_NO,  CREATED_DATE, STATUS
        FROM ANSWER
       ORDER BY CREATED_DATE
    </select>
